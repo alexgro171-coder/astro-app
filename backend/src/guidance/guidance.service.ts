@@ -83,7 +83,7 @@ export class GuidanceService {
         },
       },
       update: {
-        sections,
+        sections: sections as any,
         concernId: activeConcern?.id,
         aiModelVersion: this.aiService.getModelVersion(),
         generatedAt: new Date(),
@@ -91,7 +91,7 @@ export class GuidanceService {
       create: {
         userId: user.id,
         date,
-        sections,
+        sections: sections as any,
         concernId: activeConcern?.id,
         aiModelVersion: this.aiService.getModelVersion(),
       },
