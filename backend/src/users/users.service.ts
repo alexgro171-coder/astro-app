@@ -63,16 +63,16 @@ export class UsersService {
     // Get timezone
     const timezone = await this.astrologyService.getTimezone(location.country_code);
 
-    // Update user with birth data
+    // Update user with birth data (convert strings to numbers for Prisma)
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: {
         birthDate: new Date(birthDate),
         birthTime: birthTime || 'unknown',
-        birthPlace: placeName,
-        birthLat: location.latitude,
-        birthLon: location.longitude,
-        birthTimezone: timezone,
+        birthPlace: location.place_name || placeName,
+        birthLat: parseFloat(String(location.latitude)),
+        birthLon: parseFloat(String(location.longitude)),
+        birthTimezone: String(timezone),
       },
     });
 
