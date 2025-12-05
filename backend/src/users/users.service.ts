@@ -72,7 +72,7 @@ export class UsersService {
         birthPlace: location.place_name || placeName,
         birthLat: parseFloat(String(location.latitude)),
         birthLon: parseFloat(String(location.longitude)),
-        birthTimezone: String(timezone),
+        birthTimezone: parseFloat(String(timezone)) || 0,
       },
     });
 
