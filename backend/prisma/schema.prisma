@@ -1,0 +1,240 @@
+// Prisma Schema for Astro App
+// Personal Astrologer - Daily Guidance Application
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  hashedPassword  String?   @map("hashed_password")
+  name            String?
+  
+  // Birth data
+  birthDate       DateTime? @map("birth_date")
+  birthTime       String?   @map("birth_time") // Format: "HH:MM" or "unknown"
+  birthPlace      String?   @map("birth_place")
+  birthLat        Float?    @map("birth_lat")
+  birthLon        Float?    @map("birth_lon")
+  birthTimezone   Float?    @map("birth_timezone")
+  
+  // Preferences
+  language        Language  @default(EN)
+  timezone        String    @default("UTC")
+  notifyTime      String?   @map("notify_time") // Preferred notification time "HH:MM"
+  notifyEnabled   Boolean   @default(true) @map("notify_enabled")
+  
+  // Social login
+  googleId        String?   @unique @map("google_id")
+  appleId         String?   @unique @map("apple_id")
+  
+  // Status
+  isActive        Boolean   @default(true) @map("is_active")
+  emailVerified   Boolean   @default(false) @map("email_verified")
+  onboardingComplete Boolean @default(false) @map("onboarding_complete")
+  
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  natalChart      NatalChart?
+  concerns        Concern[]
+  dailyGuidances  DailyGuidance[]
+  feedbacks       GuidanceFeedback[]
+  devices         UserDevice[]
+  refreshTokens   RefreshToken[]
+  
+  @@map("users")
+}
+
+model RefreshToken {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  @@map("refresh_tokens")
+}
+
+model UserDevice {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceToken String   @map("device_token")
+  platform    Platform
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@unique([userId, deviceToken])
+  @@map("user_devices")
+}
+
+// ============================================
+// ASTROLOGY DATA
+// ============================================
+
+model NatalChart {
+  id          String   @id @default(cuid())
+  userId      String   @unique @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Raw API response (for debugging/auditing)
+  rawData     Json     @map("raw_data")
+  
+  // Parsed summary for AI prompts
+  summary     Json     // Structured data: planets, houses, aspects
+  
+  // Key placements (for quick access)
+  sunSign     String?  @map("sun_sign")
+  moonSign    String?  @map("moon_sign")
+  ascendant   String?
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@map("natal_charts")
+}
+
+model DailyTransit {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  date        DateTime @db.Date
+  
+  // Raw API response
+  rawData     Json     @map("raw_data")
+  
+  // Parsed transits for AI
+  transits    Json     // Array of relevant transits
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  @@unique([userId, date])
+  @@map("daily_transits")
+}
+
+// ============================================
+// CONCERNS (User's current focus/problems)
+// ============================================
+
+model Concern {
+  id              String        @id @default(cuid())
+  userId          String        @map("user_id")
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  textOriginal    String        @map("text_original")
+  category        ConcernCategory
+  secondaryCategories ConcernCategory[] @map("secondary_categories")
+  modelConfidence Float?        @map("model_confidence")
+  
+  status          ConcernStatus @default(ACTIVE)
+  startDate       DateTime      @default(now()) @map("start_date")
+  endDate         DateTime?     @map("end_date")
+  
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  
+  // Relations
+  dailyGuidances  DailyGuidance[]
+  
+  @@map("concerns")
+}
+
+// ============================================
+// DAILY GUIDANCE
+// ============================================
+
+model DailyGuidance {
+  id            String    @id @default(cuid())
+  userId        String    @map("user_id")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date          DateTime  @db.Date
+  
+  // Active concern at time of generation (optional)
+  concernId     String?   @map("concern_id")
+  concern       Concern?  @relation(fields: [concernId], references: [id])
+  
+  // Guidance content per section
+  sections      Json      // { health: {...}, job: {...}, ... }
+  
+  // Metadata
+  aiModelVersion String?  @map("ai_model_version")
+  generatedAt   DateTime  @default(now()) @map("generated_at")
+  
+  createdAt     DateTime  @default(now()) @map("created_at")
+  
+  // Relations
+  feedbacks     GuidanceFeedback[]
+  
+  @@unique([userId, date])
+  @@map("daily_guidances")
+}
+
+model GuidanceFeedback {
+  id              String        @id @default(cuid())
+  userId          String        @map("user_id")
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guidanceId      String        @map("guidance_id")
+  guidance        DailyGuidance @relation(fields: [guidanceId], references: [id], onDelete: Cascade)
+  
+  // Ratings per section (1-5)
+  healthRating    Int?          @map("health_rating")
+  jobRating       Int?          @map("job_rating")
+  businessRating  Int?          @map("business_rating")
+  loveRating      Int?          @map("love_rating")
+  partnershipRating Int?        @map("partnership_rating")
+  growthRating    Int?          @map("growth_rating")
+  
+  overallRating   Int?          @map("overall_rating")
+  freeText        String?       @map("free_text")
+  
+  createdAt       DateTime      @default(now()) @map("created_at")
+  
+  @@unique([userId, guidanceId])
+  @@map("guidance_feedbacks")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Language {
+  EN
+  RO
+}
+
+enum Platform {
+  IOS
+  ANDROID
+}
+
+enum ConcernCategory {
+  HEALTH
+  JOB
+  BUSINESS_DECISION
+  MONEY
+  PARTNERSHIP
+  COUPLE
+  FAMILY
+  PERSONAL_GROWTH
+  OTHER
+}
+
+enum ConcernStatus {
+  ACTIVE
+  RESOLVED
+  ARCHIVED
+}
+
