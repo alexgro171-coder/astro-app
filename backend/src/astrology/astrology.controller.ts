@@ -15,7 +15,7 @@ export class AstrologyController {
   @Get('geo-search')
   @ApiOperation({ summary: 'Search for a location by name' })
   @ApiQuery({ name: 'place', required: true })
-  async searchLocation(@Query('place') place: string) {
+  async searchLocation(@Query('place') place: string): Promise<any> {
     const results = await this.astrologyService.getGeoDetails(place);
     return {
       results: results.slice(0, 10), // Limit to 10 results
