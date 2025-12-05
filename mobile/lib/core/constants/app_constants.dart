@@ -1,7 +1,7 @@
 class AppConstants {
   // API Configuration
-  static const String apiBaseUrl = 'https://api.innerwisdomapp.com/api/v1/v1';
-  static const String apiBaseUrlDev = 'http://64.225.97.205/api/v1/v1';
+  static const String apiBaseUrl = 'https://api.innerwisdomapp.com/api/v1';
+  static const String apiBaseUrlDev = 'http://64.225.97.205/api/v1';
   
   // App Info
   static const String appName = 'Inner Wisdom';

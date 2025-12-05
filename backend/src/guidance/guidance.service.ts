@@ -62,6 +62,9 @@ export class GuidanceService {
     // Get active concern
     const activeConcern = await this.concernsService.findActive(user.id);
 
+    // Get previous days' guidance for continuity (last 3 days)
+    const previousDays = await this.getPreviousDaysData(user.id, date, 3);
+
     // Generate guidance using AI
     const sections = await this.aiService.generateDailyGuidance({
       natalSummary: natalChart.summary,
@@ -70,6 +73,7 @@ export class GuidanceService {
         category: activeConcern.category,
         text: activeConcern.textOriginal,
       } : undefined,
+      previousDays,
       language: user.language,
       userName: user.name || undefined,
     });
@@ -102,6 +106,45 @@ export class GuidanceService {
 
     this.logger.log(`Generated guidance for user ${user.id} for date ${date.toISOString()}`);
     return guidance;
+  }
+
+  /**
+   * Get previous days' guidance data for AI context
+   */
+  private async getPreviousDaysData(userId: string, currentDate: Date, days: number) {
+    const previousGuidances = await this.prisma.dailyGuidance.findMany({
+      where: {
+        userId,
+        date: {
+          lt: currentDate,
+        },
+      },
+      orderBy: { date: 'desc' },
+      take: days,
+      include: {
+        concern: {
+          select: {
+            textOriginal: true,
+          },
+        },
+      },
+    });
+
+    return previousGuidances.map(g => {
+      const sections = g.sections as any;
+      return {
+        date: g.date.toISOString().split('T')[0],
+        scores: {
+          health: sections.health?.score || 5,
+          job: sections.job?.score || 5,
+          business_money: sections.business_money?.score || 5,
+          love: sections.love?.score || 5,
+          partnerships: sections.partnerships?.score || 5,
+          personal_growth: sections.personal_growth?.score || 5,
+        },
+        concernText: g.concern?.textOriginal,
+      };
+    });
   }
 
   /**
@@ -185,6 +228,11 @@ export class GuidanceService {
     return {
       id: guidance.id,
       date: guidance.date,
+      dailySummary: sections.dailySummary || {
+        content: 'Welcome to your daily guidance.',
+        mood: 'Balanced',
+        focusArea: 'Personal Growth',
+      },
       sections: {
         health: {
           title: guidance.concern?.category === 'HEALTH' ? 'Health & Energy ⭐' : 'Health & Energy',

@@ -92,6 +92,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildContent() {
     final sections = _guidance?['sections'] as Map<String, dynamic>?;
+    final dailySummary = _guidance?['dailySummary'] as Map<String, dynamic>?;
 
     return RefreshIndicator(
       onRefresh: _loadData,
@@ -149,6 +150,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   
                   const SizedBox(height: 24),
+                  
+                  // Daily Summary Card - Personal AI Message
+                  if (dailySummary != null)
+                    _buildDailySummaryCard(dailySummary),
+                  
+                  const SizedBox(height: 16),
                   
                   // Active concern card
                   if (_guidance?['activeConcern'] != null)
@@ -337,6 +344,167 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildDailySummaryCard(Map<String, dynamic> summary) {
+    final mood = summary['mood'] as String? ?? 'Balanced';
+    final focusArea = summary['focusArea'] as String? ?? 'Personal Growth';
+    final content = summary['content'] as String? ?? '';
+
+    // Mood colors
+    final moodColors = {
+      'Transformative': Colors.purple,
+      'Dynamic': Colors.orange,
+      'Harmonious': Colors.green,
+      'Reflective': Colors.blue,
+      'Challenging': Colors.red,
+      'Balanced': AppColors.accent,
+      'Energetic': Colors.amber,
+      'Peaceful': Colors.teal,
+      'Creative': Colors.pink,
+      'Focused': Colors.indigo,
+    };
+
+    final moodColor = moodColors[mood] ?? AppColors.accent;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.surface,
+            moodColor.withOpacity(0.15),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: moodColor.withOpacity(0.3),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: moodColor.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with mood and focus
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: moodColor.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _getMoodIcon(mood),
+                      size: 16,
+                      color: moodColor,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      mood,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: moodColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  Icon(
+                    Icons.gps_fixed,
+                    size: 14,
+                    color: AppColors.textSecondary,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Focus: $focusArea',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Title
+          Row(
+            children: [
+              Icon(
+                Icons.auto_awesome,
+                size: 20,
+                color: AppColors.accent,
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Your Daily Message',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Content
+          Text(
+            content,
+            style: const TextStyle(
+              fontSize: 14,
+              color: AppColors.textSecondary,
+              height: 1.6,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getMoodIcon(String mood) {
+    switch (mood.toLowerCase()) {
+      case 'transformative':
+        return Icons.change_circle;
+      case 'dynamic':
+        return Icons.flash_on;
+      case 'harmonious':
+        return Icons.balance;
+      case 'reflective':
+        return Icons.self_improvement;
+      case 'challenging':
+        return Icons.fitness_center;
+      case 'energetic':
+        return Icons.bolt;
+      case 'peaceful':
+        return Icons.spa;
+      case 'creative':
+        return Icons.palette;
+      case 'focused':
+        return Icons.center_focus_strong;
+      default:
+        return Icons.stars;
+    }
   }
 
   String _getFormattedDate() {
