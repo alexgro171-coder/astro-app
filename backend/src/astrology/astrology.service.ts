@@ -103,11 +103,15 @@ export class AstrologyService {
     };
 
     try {
-      // Get planets data (natal_chart_interpretation requires premium plan)
-      const planetsResponse = await this.apiClient.post('/planets', birthData);
+      // Get natal chart data (premium endpoints)
+      const [planetsResponse, interpretationResponse] = await Promise.all([
+        this.apiClient.post('/planets', birthData),
+        this.apiClient.post('/general_house_report/tropical', birthData),
+      ]);
 
       const rawData = {
         planets: planetsResponse.data,
+        interpretation: interpretationResponse.data,
       };
 
       // Parse summary for AI prompts
