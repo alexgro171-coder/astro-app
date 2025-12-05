@@ -145,7 +145,7 @@ export class AstrologyService {
   }
 
   /**
-   * Get daily transits for a user
+   * Get daily transits for a user (Premium plan)
    */
   async getDailyTransits(user: User, date: Date = new Date()) {
     if (!user.birthDate || !user.birthLat || !user.birthLon) {
