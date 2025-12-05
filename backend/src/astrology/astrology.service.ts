@@ -52,9 +52,10 @@ export class AstrologyService {
     try {
       const response = await this.apiClient.post('/geo_details', {
         place: placeName,
+        maxRows: 10,
       });
 
-      return response.data.geonames || response.data;
+      return response.data.geonames || response.data || [];
     } catch (error) {
       this.logger.error(`Failed to get geo details for "${placeName}":`, error.message);
       throw new BadRequestException('Failed to lookup location');
