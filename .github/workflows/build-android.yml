@@ -34,62 +34,24 @@ jobs:
         working-directory: mobile
         run: flutter pub get
 
-      - name: Create keystore
-        working-directory: mobile/android
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app-release-key.jks
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
-
-      - name: Create key.properties
-        working-directory: mobile/android
-        run: |
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> key.properties
-          echo "storeFile=app-release-key.jks" >> key.properties
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
-
-      - name: Build APK (Debug - for testing)
+      - name: Build APK (Debug for beta testing)
         working-directory: mobile
         run: flutter build apk --debug
-        if: ${{ secrets.KEYSTORE_BASE64 == '' }}
-
-      - name: Build APK (Release - signed)
-        working-directory: mobile
-        run: flutter build apk --release
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
 
       - name: Rename APK
         run: |
-          if [ -f mobile/build/app/outputs/flutter-apk/app-release.apk ]; then
-            mv mobile/build/app/outputs/flutter-apk/app-release.apk mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.0-release.apk
-          elif [ -f mobile/build/app/outputs/flutter-apk/app-debug.apk ]; then
-            mv mobile/build/app/outputs/flutter-apk/app-debug.apk mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.0-beta.apk
-          fi
+          mv mobile/build/app/outputs/flutter-apk/app-debug.apk mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.0-beta.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: inner-wisdom-apk
-          path: mobile/build/app/outputs/flutter-apk/*.apk
+          name: InnerWisdom-Beta-APK
+          path: mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.0-beta.apk
           retention-days: 30
 
-      - name: Get APK size
+      - name: Get APK info
         run: |
-          APK_FILE=$(ls mobile/build/app/outputs/flutter-apk/*.apk 2>/dev/null | head -1)
-          if [ -f "$APK_FILE" ]; then
-            SIZE=$(du -h "$APK_FILE" | cut -f1)
-            echo "📱 APK Size: $SIZE"
-            echo "APK_SIZE=$SIZE" >> $GITHUB_ENV
-          fi
-
-      - name: Create Release (on tag)
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: mobile/build/app/outputs/flutter-apk/*.apk
-          draft: false
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          APK_FILE="mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.0-beta.apk"
+          SIZE=$(du -h "$APK_FILE" | cut -f1)
+          echo "📱 APK built successfully!"
+          echo "📦 Size: $SIZE"
