@@ -146,47 +146,64 @@ export class AstrologyService {
 
   /**
    * Get daily transits for a user (Premium plan)
+   * 
+   * IMPORTANT: The date parameter should be stored at UTC midnight
+   * representing the user's local calendar date.
+   * We use getUTC* methods to extract the calendar date correctly.
    */
   async getDailyTransits(user: User, date: Date = new Date()) {
     if (!user.birthDate || !user.birthLat || !user.birthLon) {
       throw new BadRequestException('Missing birth data');
     }
 
-    const dateStr = date.toISOString().split('T')[0];
+    // Use UTC methods to get the calendar date components
+    // This ensures we get the correct date regardless of server timezone
+    const transitYear = date.getUTCFullYear();
+    const transitMonth = date.getUTCMonth() + 1; // 0-indexed
+    const transitDay = date.getUTCDate();
+    
+    const dateStr = `${transitYear}-${String(transitMonth).padStart(2, '0')}-${String(transitDay).padStart(2, '0')}`;
+    
+    this.logger.log(`Getting transits for date: ${dateStr} (from UTC: ${date.toISOString()})`);
 
     // Check cache first
     const cached = await this.prisma.dailyTransit.findUnique({
       where: {
         userId_date: {
           userId: user.id,
-          date: new Date(dateStr),
+          date: new Date(`${dateStr}T00:00:00.000Z`),
         },
       },
     });
 
     if (cached) {
+      this.logger.log(`Returning cached transits for ${dateStr}`);
       return cached;
     }
 
+    // Birth data - also use UTC methods for consistency
     const birthDate = new Date(user.birthDate);
     const [hour, minute] = (user.birthTime || '12:00').split(':').map(Number);
 
     const requestData = {
-      day: birthDate.getDate(),
-      month: birthDate.getMonth() + 1,
-      year: birthDate.getFullYear(),
+      // Birth data
+      day: birthDate.getUTCDate(),
+      month: birthDate.getUTCMonth() + 1,
+      year: birthDate.getUTCFullYear(),
       hour: hour || 12,
       min: minute || 0,
       lat: user.birthLat,
       lon: user.birthLon,
       tzone: user.birthTimezone || 0,
-      // Transit date
+      // Transit date - the date we want transits for
       transit_date: {
-        day: date.getDate(),
-        month: date.getMonth() + 1,
-        year: date.getFullYear(),
+        day: transitDay,
+        month: transitMonth,
+        year: transitYear,
       },
     };
+
+    this.logger.log(`Requesting transits from AstrologyAPI for transit_date: ${JSON.stringify(requestData.transit_date)}`);
 
     try {
       const response = await this.apiClient.post('/natal_transits/daily', requestData);
@@ -194,11 +211,11 @@ export class AstrologyService {
       // Parse relevant transits
       const transits = this.parseTransits(response.data);
 
-      // Store in database
+      // Store in database at UTC midnight
       const dailyTransit = await this.prisma.dailyTransit.create({
         data: {
           userId: user.id,
-          date: new Date(dateStr),
+          date: new Date(`${dateStr}T00:00:00.000Z`),
           rawData: response.data,
           transits,
         },
@@ -206,7 +223,7 @@ export class AstrologyService {
 
       return dailyTransit;
     } catch (error) {
-      this.logger.error('Failed to get daily transits:', error.message);
+      this.logger.error(`Failed to get daily transits for ${dateStr}:`, error.message);
       throw new BadRequestException('Failed to get daily transits');
     }
   }

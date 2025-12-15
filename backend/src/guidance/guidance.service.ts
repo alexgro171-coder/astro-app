@@ -63,70 +63,46 @@ export class GuidanceService {
   }
 
   /**
-   * Get today's date at 00:00:00 in the user's timezone, stored as UTC
+   * Get today's date at UTC midnight based on user's local date
    * 
-   * This ensures consistent date boundaries across timezones.
-   * We store the local midnight as a UTC timestamp to avoid timezone conversion issues.
+   * This ensures consistent date storage across timezones.
+   * We store the user's local DATE at UTC midnight for consistent querying.
    * 
    * Example: User in Europe/Bucharest (UTC+2) at 2025-12-15 01:00 local time
    * - Their "today" is 2025-12-15
-   * - We store: 2025-12-14T22:00:00.000Z (midnight Bucharest in UTC)
+   * - We store: 2025-12-15T00:00:00.000Z (the calendar date at UTC midnight)
+   * 
+   * This way, when we query the astrology API with getUTCDate(), getUTCMonth(), etc.,
+   * we get the correct calendar date (15 Dec) regardless of timezone.
    */
   private getTodayInTimezone(timezone: string): Date {
     try {
       const now = new Date();
       
-      // Get the date parts in user's timezone
+      // Get the date parts in user's timezone using Intl.DateTimeFormat
       const options: Intl.DateTimeFormatOptions = {
         timeZone: timezone,
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
       };
       
-      // Get current time in user's timezone to extract timezone offset
-      const parts = new Intl.DateTimeFormat('en-CA', options).formatToParts(now);
-      const dateParts: Record<string, string> = {};
-      parts.forEach(p => {
-        if (p.type !== 'literal') dateParts[p.type] = p.value;
-      });
+      // en-CA locale gives YYYY-MM-DD format
+      const formatter = new Intl.DateTimeFormat('en-CA', options);
+      const dateString = formatter.format(now); // e.g., "2025-12-15"
       
-      // Build date string from parts (YYYY-MM-DD format)
-      const dateString = `${dateParts.year}-${dateParts.month}-${dateParts.day}`;
+      // Create date at UTC midnight for this calendar date
+      // This preserves the calendar date for database queries and API calls
+      const todayUTC = new Date(`${dateString}T00:00:00.000Z`);
       
-      // Calculate timezone offset by comparing local midnight with UTC
-      // Create a date object for midnight in the user's timezone
-      const localMidnight = new Date(`${dateString}T00:00:00`);
+      this.logger.debug(`User timezone: ${timezone}, local date: ${dateString}, stored as: ${todayUTC.toISOString()}`);
       
-      // Get the offset in minutes for this specific timezone
-      const tzOffset = this.getTimezoneOffset(timezone, localMidnight);
-      
-      // Create UTC date that represents midnight in user's timezone
-      const utcMidnight = new Date(localMidnight.getTime() + tzOffset * 60000);
-      
-      return utcMidnight;
+      return todayUTC;
     } catch (e) {
       this.logger.warn(`Invalid timezone ${timezone}, falling back to UTC: ${e}`);
       const today = new Date();
       today.setUTCHours(0, 0, 0, 0);
       return today;
-    }
-  }
-
-  /**
-   * Get timezone offset in minutes for a specific timezone and date
-   */
-  private getTimezoneOffset(timezone: string, date: Date): number {
-    try {
-      // Format the date in both UTC and the target timezone
-      const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
-      const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
-      return (utcDate.getTime() - tzDate.getTime()) / 60000;
-    } catch {
-      return 0; // Default to UTC if timezone is invalid
     }
   }
 
