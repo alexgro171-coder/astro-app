@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../constants/app_constants.dart';
@@ -31,36 +32,57 @@ class ApiClient {
       onRequest: (options, handler) async {
         // Add auth token if available
         final token = await _storage.read(key: AppConstants.accessTokenKey);
-        print('API Request: ${options.method} ${options.path}');
-        print('Token available: ${token != null ? "YES (${token.substring(0, 20)}...)" : "NO"}');
+        if (kDebugMode) {
+          print('API Request: ${options.method} ${options.path}');
+          print('Token available: ${token != null ? "YES" : "NO"}');
+        }
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
         }
+        
+        // Add user timezone for guidance endpoints
+        if (options.path.contains('/guidance')) {
+          options.headers['X-User-Timezone'] = _getLocalTimezone();
+        }
+        
         return handler.next(options);
       },
       onResponse: (response, handler) {
-        print('API Response: ${response.statusCode} for ${response.requestOptions.path}');
+        if (kDebugMode) {
+          print('API Response: ${response.statusCode} for ${response.requestOptions.path}');
+        }
         return handler.next(response);
       },
       onError: (error, handler) async {
-        print('API Error: ${error.response?.statusCode} - ${error.message} for ${error.requestOptions.path}');
+        if (kDebugMode) {
+          print('API Error: ${error.response?.statusCode} - ${error.message} for ${error.requestOptions.path}');
+        }
         // Handle 401 - try refresh token
         if (error.response?.statusCode == 401) {
-          print('Attempting token refresh...');
+          if (kDebugMode) print('Attempting token refresh...');
           final refreshed = await _refreshToken();
           if (refreshed) {
-            print('Token refreshed successfully, retrying request');
+            if (kDebugMode) print('Token refreshed successfully, retrying request');
             // Retry the request
             final token = await _storage.read(key: AppConstants.accessTokenKey);
             error.requestOptions.headers['Authorization'] = 'Bearer $token';
             final response = await _dio.fetch(error.requestOptions);
             return handler.resolve(response);
           }
-          print('Token refresh failed');
+          if (kDebugMode) print('Token refresh failed');
         }
         return handler.next(error);
       },
     ));
+  }
+
+  /// Get local timezone name
+  String _getLocalTimezone() {
+    try {
+      return DateTime.now().timeZoneName;
+    } catch (e) {
+      return 'UTC';
+    }
   }
 
   Future<bool> _refreshToken() async {
@@ -89,7 +111,8 @@ class ApiClient {
     }
   }
 
-  // Auth
+  // ==================== AUTH ====================
+  
   Future<Response> signup(Map<String, dynamic> data) {
     return _dio.post('/auth/signup', data: data);
   }
@@ -102,7 +125,8 @@ class ApiClient {
     return _dio.post('/auth/logout');
   }
 
-  // User Profile
+  // ==================== USER PROFILE ====================
+  
   Future<Response> getProfile() {
     return _dio.get('/me');
   }
@@ -115,7 +139,8 @@ class ApiClient {
     return _dio.post('/me/birth-data', data: data);
   }
 
-  // Astrology
+  // ==================== ASTROLOGY ====================
+  
   Future<Response> searchLocation(String place) {
     return _dio.get('/astrology/geo-search', queryParameters: {'place': place});
   }
@@ -128,7 +153,8 @@ class ApiClient {
     return _dio.get('/astrology/transits/today');
   }
 
-  // Concerns
+  // ==================== CONCERNS ====================
+  
   Future<Response> createConcern(Map<String, dynamic> data) {
     return _dio.post('/concerns', data: data);
   }
@@ -145,38 +171,51 @@ class ApiClient {
     return _dio.post('/concerns/$id/resolve');
   }
 
-  // Guidance
+  // ==================== GUIDANCE ====================
+  
+  /// Get today's guidance (ON-DEMAND generation)
+  /// 
+  /// This triggers guidance generation if not already cached.
+  /// The X-User-Timezone header is automatically added.
   Future<Response> getTodayGuidance() {
     return _dio.get('/guidance/today');
   }
 
-  Future<Response> getGuidanceHistory({String? from, String? to}) {
+  /// Get guidance history with pagination
+  Future<Response> getGuidanceHistory({int page = 1, int limit = 10}) {
     return _dio.get('/guidance/history', queryParameters: {
-      if (from != null) 'from': from,
-      if (to != null) 'to': to,
+      'page': page,
+      'limit': limit,
     });
   }
 
+  /// Submit feedback for a guidance
   Future<Response> submitFeedback(String id, Map<String, dynamic> data) {
     return _dio.post('/guidance/$id/feedback', data: data);
   }
 
-  // Save tokens
+  /// Force regenerate today's guidance
+  Future<Response> regenerateGuidance() {
+    return _dio.post('/guidance/regenerate');
+  }
+
+  // ==================== TOKEN MANAGEMENT ====================
+  
+  /// Save authentication tokens
   Future<void> saveTokens(String accessToken, String refreshToken) async {
     await _storage.write(key: AppConstants.accessTokenKey, value: accessToken);
     await _storage.write(key: AppConstants.refreshTokenKey, value: refreshToken);
   }
 
-  // Clear tokens
+  /// Clear authentication tokens (logout)
   Future<void> clearTokens() async {
     await _storage.delete(key: AppConstants.accessTokenKey);
     await _storage.delete(key: AppConstants.refreshTokenKey);
   }
 
-  // Check if logged in
+  /// Check if user is logged in (has valid token)
   Future<bool> isLoggedIn() async {
     final token = await _storage.read(key: AppConstants.accessTokenKey);
     return token != null;
   }
 }
-

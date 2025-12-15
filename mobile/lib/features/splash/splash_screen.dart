@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/services/notification_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -36,10 +38,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     );
 
     _controller.forward();
-    _checkAuthAndNavigate();
+    _initializeAndNavigate();
   }
 
-  Future<void> _checkAuthAndNavigate() async {
+  Future<void> _initializeAndNavigate() async {
+    // Initialize notifications (request permissions if first time)
+    await _initializeNotifications();
+    
     await Future.delayed(AppConstants.splashDuration);
 
     if (!mounted) return;
@@ -55,16 +60,51 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         final response = await apiClient.getProfile();
         final user = response.data;
         
+        // Schedule daily notification for logged-in users
+        await _scheduleDailyNotification();
+        
         if (user['onboardingComplete'] == true) {
           context.go('/home');
         } else {
           context.go('/birth-data');
         }
       } catch (e) {
+        print('SplashScreen: Error getting profile: $e');
         context.go('/login');
       }
     } else {
       context.go('/onboarding');
+    }
+  }
+
+  /// Initialize notifications and request permissions
+  Future<void> _initializeNotifications() async {
+    if (kIsWeb) return;
+    
+    try {
+      final notificationService = NotificationService();
+      
+      // Check if already have permission
+      final hasPermission = await notificationService.areNotificationsEnabled();
+      
+      if (!hasPermission) {
+        // Request permission (will be shown to user)
+        await notificationService.requestPermissions();
+      }
+    } catch (e) {
+      print('SplashScreen: Error initializing notifications: $e');
+    }
+  }
+
+  /// Schedule daily notification at 08:00
+  Future<void> _scheduleDailyNotification() async {
+    if (kIsWeb) return;
+    
+    try {
+      final notificationService = NotificationService();
+      await notificationService.scheduleDailyGuidanceNotification();
+    } catch (e) {
+      print('SplashScreen: Error scheduling notification: $e');
     }
   }
 
@@ -145,4 +185,3 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     );
   }
 }
-
