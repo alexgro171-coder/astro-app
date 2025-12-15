@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import '../constants/app_constants.dart';
 
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -16,8 +17,14 @@ class ApiClient {
       publicKey: 'InnerWisdomApp',
     ),
   );
+  
+  // Cache the IANA timezone identifier
+  String _cachedTimezone = 'UTC';
 
   ApiClient() {
+    // Initialize timezone on construction
+    _initTimezone();
+    
     _dio = Dio(BaseOptions(
       baseUrl: AppConstants.apiBaseUrl, // Production URL with HTTPS
       connectTimeout: AppConstants.apiTimeout,
@@ -40,9 +47,14 @@ class ApiClient {
           options.headers['Authorization'] = 'Bearer $token';
         }
         
-        // Add user timezone for guidance endpoints
+        // Add user timezone for guidance endpoints (IANA format like "Europe/Bucharest")
         if (options.path.contains('/guidance')) {
-          options.headers['X-User-Timezone'] = _getLocalTimezone();
+          // Refresh timezone in case it changed (e.g., user traveled)
+          await _initTimezone();
+          options.headers['X-User-Timezone'] = _cachedTimezone;
+          if (kDebugMode) {
+            print('Using timezone: $_cachedTimezone');
+          }
         }
         
         return handler.next(options);
@@ -76,12 +88,18 @@ class ApiClient {
     ));
   }
 
-  /// Get local timezone name
-  String _getLocalTimezone() {
+  /// Initialize and cache the IANA timezone identifier
+  /// Uses flutter_timezone to get proper IANA names like "Europe/Bucharest"
+  /// instead of abbreviations like "EET" or "EEST"
+  Future<void> _initTimezone() async {
     try {
-      return DateTime.now().timeZoneName;
+      // flutter_timezone returns IANA identifiers like "Europe/Bucharest"
+      _cachedTimezone = await FlutterTimezone.getLocalTimezone();
     } catch (e) {
-      return 'UTC';
+      if (kDebugMode) {
+        print('Error getting timezone: $e');
+      }
+      _cachedTimezone = 'UTC';
     }
   }
 
@@ -179,6 +197,41 @@ class ApiClient {
   /// The X-User-Timezone header is automatically added.
   Future<Response> getTodayGuidance() {
     return _dio.get('/guidance/today');
+  }
+
+  /// Get a specific guidance by ID
+  /// 
+  /// If the ID is 'today' or matches today's guidance, returns today's guidance.
+  /// Otherwise fetches from history.
+  Future<Response> getGuidanceById(String id) async {
+    // If 'today' is passed, get today's guidance
+    if (id == 'today') {
+      return getTodayGuidance();
+    }
+    
+    // Try to get from history - the backend returns the specific guidance
+    // For now, we'll get history and find the matching one
+    // TODO: Add dedicated /guidance/:id endpoint in backend
+    final historyResponse = await getGuidanceHistory(limit: 30);
+    final history = historyResponse.data as List<dynamic>;
+    
+    // Find the guidance with matching ID
+    final guidance = history.firstWhere(
+      (g) => g['id'] == id,
+      orElse: () => null,
+    );
+    
+    if (guidance != null) {
+      // Return a response-like object with the found guidance
+      return Response(
+        requestOptions: historyResponse.requestOptions,
+        data: guidance,
+        statusCode: 200,
+      );
+    }
+    
+    // Fallback to today's guidance if not found
+    return getTodayGuidance();
   }
 
   /// Get guidance history with pagination

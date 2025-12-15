@@ -34,13 +34,17 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
 
     try {
       final apiClient = ref.read(apiClientProvider);
-      final response = await apiClient.getTodayGuidance();
+      
+      // Use the guidanceId parameter to fetch the specific guidance
+      // If guidanceId is 'today' or empty, it will fetch today's guidance
+      final response = await apiClient.getGuidanceById(widget.guidanceId);
       
       setState(() {
         _guidance = response.data;
         _isLoading = false;
       });
     } catch (e) {
+      print('GuidanceDetailScreen error: $e');
       setState(() {
         _error = 'Failed to load guidance';
         _isLoading = false;
