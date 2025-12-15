@@ -10,12 +10,16 @@ import '../../features/auth/birth_data_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/guidance/guidance_detail_screen.dart';
 import '../../features/concerns/add_concern_screen.dart';
+import '../../features/concerns/concerns_screen.dart';
+import '../../features/history/history_screen.dart';
 import '../../features/profile/profile_screen.dart';
+import '../../features/shell/main_shell.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     routes: [
+      // Auth & Onboarding routes (no shell)
       GoRoute(
         path: '/',
         builder: (context, state) => const SplashScreen(),
@@ -36,10 +40,55 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/birth-data',
         builder: (context, state) => const BirthDataScreen(),
       ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
+      
+      // Main app routes with shell (bottom navigation)
+      ShellRoute(
+        builder: (context, state, child) => MainShell(child: child),
+        routes: [
+          GoRoute(
+            path: '/home',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const HomeScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+          GoRoute(
+            path: '/history',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const HistoryScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+          GoRoute(
+            path: '/concerns',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const ConcernsScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+          GoRoute(
+            path: '/profile',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const ProfileScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+        ],
       ),
+      
+      // Detail routes (no shell - full screen)
       GoRoute(
         path: '/guidance/:id',
         builder: (context, state) => GuidanceDetailScreen(
@@ -50,11 +99,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/add-concern',
         builder: (context, state) => const AddConcernScreen(),
       ),
-      GoRoute(
-        path: '/profile',
-        builder: (context, state) => const ProfileScreen(),
-      ),
     ],
   );
 });
-
