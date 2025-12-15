@@ -19,6 +19,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Map<String, dynamic>? _user;
   bool _isLoading = true;
   String? _error;
+  bool _isDailySummaryExpanded = false;
 
   @override
   void initState() {
@@ -560,35 +561,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           
           const SizedBox(height: 12),
           
-          // Content (truncated)
-          Text(
-            content,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-              height: 1.6,
+          // Content - expandable
+          AnimatedCrossFade(
+            firstChild: Text(
+              content,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+                height: 1.6,
+              ),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
+            secondChild: Text(
+              content,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+                height: 1.6,
+              ),
+            ),
+            crossFadeState: _isDailySummaryExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 300),
           ),
           
           const SizedBox(height: 12),
           
-          // Read more button
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                if (_guidance != null && _guidance!['id'] != null) {
-                  context.push('/guidance/${_guidance!['id']}');
-                }
-              },
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
+          // View more / View less button
+          InkWell(
+            onTap: () {
+              setState(() {
+                _isDailySummaryExpanded = !_isDailySummaryExpanded;
+              });
+            },
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Read full guidance'),
-                  SizedBox(width: 4),
-                  Icon(Icons.arrow_forward, size: 16),
+                  Text(
+                    _isDailySummaryExpanded ? 'View less' : 'View more',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: moodColor,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  AnimatedRotation(
+                    turns: _isDailySummaryExpanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 20,
+                      color: moodColor,
+                    ),
+                  ),
                 ],
               ),
             ),
