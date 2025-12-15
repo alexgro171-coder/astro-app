@@ -42,8 +42,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         _isLoading = false;
       });
     } catch (e) {
+      print('HomeScreen error: $e');
       setState(() {
-        _error = 'Failed to load data';
+        _error = 'Failed to load data: ${e.toString()}';
         _isLoading = false;
       });
     }

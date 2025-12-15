@@ -9,11 +9,16 @@ final apiClientProvider = Provider<ApiClient>((ref) {
 
 class ApiClient {
   late final Dio _dio;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage(
+    webOptions: WebOptions(
+      dbName: 'InnerWisdomApp',
+      publicKey: 'InnerWisdomApp',
+    ),
+  );
 
   ApiClient() {
     _dio = Dio(BaseOptions(
-      baseUrl: AppConstants.apiBaseUrlDev, // Change to apiBaseUrl for production
+      baseUrl: AppConstants.apiBaseUrl, // Production URL with HTTPS
       connectTimeout: AppConstants.apiTimeout,
       receiveTimeout: AppConstants.apiTimeout,
       headers: {
@@ -26,22 +31,32 @@ class ApiClient {
       onRequest: (options, handler) async {
         // Add auth token if available
         final token = await _storage.read(key: AppConstants.accessTokenKey);
+        print('API Request: ${options.method} ${options.path}');
+        print('Token available: ${token != null ? "YES (${token.substring(0, 20)}...)" : "NO"}');
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
         }
         return handler.next(options);
       },
+      onResponse: (response, handler) {
+        print('API Response: ${response.statusCode} for ${response.requestOptions.path}');
+        return handler.next(response);
+      },
       onError: (error, handler) async {
+        print('API Error: ${error.response?.statusCode} - ${error.message} for ${error.requestOptions.path}');
         // Handle 401 - try refresh token
         if (error.response?.statusCode == 401) {
+          print('Attempting token refresh...');
           final refreshed = await _refreshToken();
           if (refreshed) {
+            print('Token refreshed successfully, retrying request');
             // Retry the request
             final token = await _storage.read(key: AppConstants.accessTokenKey);
             error.requestOptions.headers['Authorization'] = 'Bearer $token';
             final response = await _dio.fetch(error.requestOptions);
             return handler.resolve(response);
           }
+          print('Token refresh failed');
         }
         return handler.next(error);
       },
