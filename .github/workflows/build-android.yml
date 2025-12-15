@@ -39,18 +39,18 @@ jobs:
 
       - name: Rename APK
         run: |
-          mv mobile/build/app/outputs/flutter-apk/app-debug.apk mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.0-beta.apk
+          mv mobile/build/app/outputs/flutter-apk/app-debug.apk mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.1-beta.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: InnerWisdom-Beta-APK
-          path: mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.0-beta.apk
+          path: mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.1-beta.apk
           retention-days: 30
 
       - name: Get APK info
         run: |
-          APK_FILE="mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.0-beta.apk"
+          APK_FILE="mobile/build/app/outputs/flutter-apk/InnerWisdom-v1.0.1-beta.apk"
           SIZE=$(du -h "$APK_FILE" | cut -f1)
           echo "📱 APK built successfully!"
           echo "📦 Size: $SIZE"
