@@ -82,6 +82,7 @@ export class AstrologyService {
 
   /**
    * Generate and store natal chart for a user
+   * Uses Western/Tropical astrology system (not Vedic/Sidereal)
    */
   async generateNatalChart(user: User) {
     if (!user.birthDate || !user.birthLat || !user.birthLon) {
@@ -91,10 +92,11 @@ export class AstrologyService {
     const birthDate = new Date(user.birthDate);
     const [hour, minute] = (user.birthTime || '12:00').split(':').map(Number);
 
+    // Use UTC methods for consistent date extraction regardless of server timezone
     const birthData = {
-      day: birthDate.getDate(),
-      month: birthDate.getMonth() + 1,
-      year: birthDate.getFullYear(),
+      day: birthDate.getUTCDate(),
+      month: birthDate.getUTCMonth() + 1,
+      year: birthDate.getUTCFullYear(),
       hour: hour || 12,
       min: minute || 0,
       lat: user.birthLat,
@@ -102,20 +104,28 @@ export class AstrologyService {
       tzone: user.birthTimezone || 0,
     };
 
+    this.logger.log(`Generating natal chart for birth data: ${JSON.stringify(birthData)}`);
+
     try {
-      // Get natal chart data (premium endpoints)
-      const [planetsResponse, interpretationResponse] = await Promise.all([
-        this.apiClient.post('/planets', birthData),
+      // Use Western/Tropical horoscope endpoint (not Vedic/Sidereal)
+      const [westernResponse, interpretationResponse] = await Promise.all([
+        this.apiClient.post('/western_horoscope', birthData),
         this.apiClient.post('/general_house_report/tropical', birthData),
       ]);
 
       const rawData = {
-        planets: planetsResponse.data,
+        planets: westernResponse.data.planets,
+        houses: westernResponse.data.houses,
+        aspects: westernResponse.data.aspects,
+        ascendant: westernResponse.data.ascendant,
+        midheaven: westernResponse.data.midheaven,
         interpretation: interpretationResponse.data,
       };
 
-      // Parse summary for AI prompts
-      const summary = this.parseNatalChartSummary(planetsResponse.data);
+      // Parse summary for AI prompts (using Western format)
+      const summary = this.parseWesternNatalChartSummary(westernResponse.data);
+
+      this.logger.log(`Natal chart generated - Sun: ${summary.sun?.sign}, Moon: ${summary.moon?.sign}`);
 
       // Store in database
       const natalChart = await this.prisma.natalChart.upsert({
@@ -229,7 +239,79 @@ export class AstrologyService {
   }
 
   /**
-   * Parse natal chart data into a summary for AI prompts
+   * Parse Western horoscope data into a summary for AI prompts
+   * Format uses underscore naming (full_degree, is_retro, etc.)
+   */
+  private parseWesternNatalChartSummary(westernData: any): any {
+    const planets: Record<string, any> = {};
+
+    // Parse planets array from Western horoscope response
+    if (westernData.planets && Array.isArray(westernData.planets)) {
+      for (const planet of westernData.planets) {
+        const name = planet.name?.toLowerCase();
+        // Handle special cases like "Part of Fortune" -> "partoffortune"
+        const key = name?.replace(/\s+/g, '');
+        planets[key] = {
+          sign: planet.sign,
+          house: planet.house,
+          degree: planet.full_degree,
+          normDegree: planet.norm_degree,
+          isRetro: planet.is_retro === 'true',
+        };
+      }
+    }
+
+    // Parse ascendant from degree to sign
+    let ascendantSign = null;
+    if (westernData.ascendant !== undefined) {
+      ascendantSign = this.degreeToSign(westernData.ascendant);
+    }
+
+    // Parse midheaven from degree to sign  
+    let midheavenSign = null;
+    if (westernData.midheaven !== undefined) {
+      midheavenSign = this.degreeToSign(westernData.midheaven);
+    }
+
+    return {
+      sun: planets['sun'],
+      moon: planets['moon'],
+      mercury: planets['mercury'],
+      venus: planets['venus'],
+      mars: planets['mars'],
+      jupiter: planets['jupiter'],
+      saturn: planets['saturn'],
+      uranus: planets['uranus'],
+      neptune: planets['neptune'],
+      pluto: planets['pluto'],
+      ascendant: ascendantSign ? { sign: ascendantSign, degree: westernData.ascendant } : planets['ascendant'],
+      midheaven: midheavenSign ? { sign: midheavenSign, degree: westernData.midheaven } : planets['midheaven'],
+      node: planets['node'],
+      chiron: planets['chiron'],
+      lilith: westernData.lilith ? {
+        sign: westernData.lilith.sign,
+        house: westernData.lilith.house,
+        degree: westernData.lilith.full_degree,
+      } : null,
+    };
+  }
+
+  /**
+   * Convert zodiac degree (0-360) to sign name
+   */
+  private degreeToSign(degree: number): string {
+    const signs = [
+      'Aries', 'Taurus', 'Gemini', 'Cancer', 
+      'Leo', 'Virgo', 'Libra', 'Scorpio',
+      'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+    ];
+    const signIndex = Math.floor(degree / 30) % 12;
+    return signs[signIndex];
+  }
+
+  /**
+   * Parse natal chart data into a summary for AI prompts (legacy Vedic format)
+   * @deprecated Use parseWesternNatalChartSummary for Western astrology
    */
   private parseNatalChartSummary(planetsData: any): any {
     const planets: Record<string, any> = {};
