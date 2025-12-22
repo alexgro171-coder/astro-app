@@ -330,7 +330,7 @@ model UserContextProfile {
 model GuidanceAudio {
   id                  String    @id @default(cuid())
   userId              String    @map("user_id")
-  guidanceId          String    @map("guidance_id")
+  guidanceId          String    @unique @map("guidance_id")
   guidance            DailyGuidance @relation(fields: [guidanceId], references: [id], onDelete: Cascade)
   
   status              AudioStatus @default(PENDING)
