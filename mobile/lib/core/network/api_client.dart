@@ -252,6 +252,129 @@ class ApiClient {
     return _dio.post('/guidance/regenerate');
   }
 
+  // ==================== BILLING & SUBSCRIPTIONS ====================
+  
+  /// Get current user entitlements
+  Future<Response> getEntitlements() {
+    return _dio.get('/billing/entitlements');
+  }
+
+  /// Get current subscription details
+  Future<Response> getSubscription() {
+    return _dio.get('/billing/subscription');
+  }
+
+  /// Get trial information
+  Future<Response> getTrialInfo() {
+    return _dio.get('/billing/trial');
+  }
+
+  /// Get available subscription plans
+  Future<Response> getPlans() {
+    return _dio.get('/billing/plans');
+  }
+
+  /// Verify Apple receipt
+  Future<Response> verifyAppleReceipt({
+    required String receiptData,
+    required String productId,
+    bool sandbox = false,
+  }) {
+    return _dio.post('/billing/iap/apple/verify', data: {
+      'receiptData': receiptData,
+      'productId': productId,
+      'sandbox': sandbox,
+    });
+  }
+
+  /// Verify Google Play purchase
+  Future<Response> verifyGooglePurchase({
+    required String purchaseToken,
+    required String productId,
+    String? packageName,
+  }) {
+    return _dio.post('/billing/iap/google/verify', data: {
+      'purchaseToken': purchaseToken,
+      'productId': productId,
+      if (packageName != null) 'packageName': packageName,
+    });
+  }
+
+  /// Restore purchases
+  Future<Response> restorePurchases({
+    required String platform,
+    String? receiptData,
+    String? purchaseToken,
+    String? productId,
+  }) {
+    return _dio.post('/billing/iap/restore', data: {
+      'platform': platform,
+      if (receiptData != null) 'receiptData': receiptData,
+      if (purchaseToken != null) 'purchaseToken': purchaseToken,
+      if (productId != null) 'productId': productId,
+    });
+  }
+
+  /// Cancel subscription
+  Future<Response> cancelSubscription({String? reason, bool immediate = false}) {
+    return _dio.post('/billing/cancel', data: {
+      if (reason != null) 'reason': reason,
+      'immediate': immediate,
+    });
+  }
+
+  /// Request refund
+  Future<Response> requestRefund(String reason, {String? paymentId}) {
+    return _dio.post('/billing/refund-request', data: {
+      'reason': reason,
+      if (paymentId != null) 'paymentId': paymentId,
+    });
+  }
+
+  /// Get payment history
+  Future<Response> getPaymentHistory() {
+    return _dio.get('/billing/payments');
+  }
+
+  // ==================== ONBOARDING & CONTEXT ====================
+
+  /// Get onboarding questions
+  Future<Response> getOnboardingQuestions() {
+    return _dio.get('/onboarding/questions');
+  }
+
+  /// Save context answers
+  Future<Response> saveContextAnswers(Map<String, dynamic> data) {
+    return _dio.post('/onboarding/context', data: data);
+  }
+
+  /// Get saved context profile
+  Future<Response> getContextProfile() {
+    return _dio.get('/onboarding/context');
+  }
+
+  /// Get onboarding status
+  Future<Response> getOnboardingStatus() {
+    return _dio.get('/onboarding/status');
+  }
+
+  // ==================== AUDIO TTS ====================
+
+  /// Get audio for today's guidance (Premium only)
+  Future<Response> getTodayAudio() {
+    return _dio.get('/guidance/today/audio');
+  }
+
+  /// Request audio generation for specific guidance
+  Future<Response> requestAudioGeneration(String guidanceId) {
+    return _dio.post('/guidance/$guidanceId/audio');
+  }
+
+  /// Get audio status for specific guidance
+  Future<Response> getAudioStatus(String guidanceId) {
+    return _dio.get('/guidance/$guidanceId/audio');
+  }
+
   // ==================== TOKEN MANAGEMENT ====================
   
   /// Save authentication tokens

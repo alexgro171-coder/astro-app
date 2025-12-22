@@ -53,6 +53,15 @@ dependencies:
   timezone: ^0.10.0
   flutter_timezone: ^3.0.1
   permission_handler: ^11.3.1
+  
+  # In-App Purchases
+  in_app_purchase: ^3.2.0
+  in_app_purchase_android: ^0.3.6+1
+  in_app_purchase_storekit: ^0.3.18
+  
+  # Audio Player (for TTS)
+  just_audio: ^0.9.42
+  audio_session: ^0.1.21
 
 dev_dependencies:
   flutter_test:
