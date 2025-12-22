@@ -20,10 +20,13 @@ class ApiClient {
   
   // Cache the IANA timezone identifier
   String _cachedTimezone = 'UTC';
+  
+  // Completer to ensure timezone is initialized before first API call
+  late final Future<void> _timezoneInitialized;
 
   ApiClient() {
-    // Initialize timezone on construction
-    _initTimezone();
+    // Initialize timezone asynchronously and track completion
+    _timezoneInitialized = _initTimezone();
     
     _dio = Dio(BaseOptions(
       baseUrl: AppConstants.apiBaseUrl, // Production URL with HTTPS
@@ -37,6 +40,9 @@ class ApiClient {
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
+        // Ensure timezone is initialized before any request
+        await _timezoneInitialized;
+        
         // Add auth token if available
         final token = await _storage.read(key: AppConstants.accessTokenKey);
         if (kDebugMode) {

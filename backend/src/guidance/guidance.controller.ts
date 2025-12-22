@@ -106,6 +106,6 @@ export class GuidanceController {
     @Headers('x-user-timezone') timezone?: string,
   ) {
     const guidance = await this.guidanceService.regenerateGuidance(user, timezone);
-    return this.guidanceService['formatGuidanceResponse'](guidance);
+    return this.guidanceService.formatGuidanceResponse(guidance);
   }
 }

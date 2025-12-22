@@ -59,7 +59,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // SafeArea only on top (status bar/notch), bottom is handled by MainShell's bottomNavigationBar
     return SafeArea(
+      bottom: false, // Don't apply SafeArea to bottom - Scaffold handles it
       child: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppColors.accent))
           : _error != null
@@ -211,7 +213,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          // Add padding at bottom to account for bottom navigation bar
+          SliverToBoxAdapter(
+            child: SizedBox(height: MediaQuery.of(context).padding.bottom + 80),
+          ),
         ],
       ),
     );

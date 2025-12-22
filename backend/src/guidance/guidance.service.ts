@@ -309,7 +309,7 @@ export class GuidanceService {
   /**
    * Format guidance for API response
    */
-  private formatGuidanceResponse(guidance: any) {
+  formatGuidanceResponse(guidance: any) {
     const sections = guidance.sections as any;
 
     return {
