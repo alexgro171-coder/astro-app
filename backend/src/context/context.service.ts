@@ -148,9 +148,9 @@ export class ContextService {
         userId,
         profileId: existing.id,
         version: existing.version,
-        answersJson: existing.answersJson,
+        answersJson: existing.answersJson as any,
         summary60w: existing.summary60w,
-        summaryTags: existing.summaryTags,
+        summaryTags: existing.summaryTags as any,
       },
     });
 
@@ -242,12 +242,12 @@ export class ContextService {
       return null;
     }
 
-    const tags = profile.summaryTags as ContextTags;
+    const tags = profile.summaryTags as unknown as ContextTags;
 
     return {
       summary60w: profile.summary60w,
       tags,
-      tonePreference: tags.tone_preference || 'balanced',
+      tonePreference: tags?.tone_preference || 'balanced',
     };
   }
 
