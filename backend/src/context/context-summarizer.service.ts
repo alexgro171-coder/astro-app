@@ -241,8 +241,9 @@ Generate the JSON output now.`;
       [WorkStatus.SELF_EMPLOYED]: 'Self-employed',
       [WorkStatus.ENTREPRENEUR]: 'Entrepreneur',
     };
-    if (workMap[answers.workStatus]) {
-      parts.push(workMap[answers.workStatus]);
+    const workLabel = workMap[answers.workStatus];
+    if (workLabel) {
+      parts.push(workLabel);
     }
 
     // Scores summary

@@ -38,9 +38,9 @@ export class ContextService {
     return {
       id: profile.id,
       version: profile.version,
-      answers: profile.answersJson as ContextAnswersDto,
+      answers: profile.answersJson as unknown as ContextAnswersDto,
       summary60w: profile.summary60w,
-      summaryTags: profile.summaryTags as ContextTags,
+      summaryTags: profile.summaryTags as unknown as ContextTags,
       nextReviewAt: profile.nextReviewAt,
       completedAt: profile.completedAt,
       createdAt: profile.createdAt,
