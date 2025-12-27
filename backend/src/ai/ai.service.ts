@@ -269,7 +269,7 @@ Generate warm, personalized guidance with actionable micro-recommendations.`;
    * Get tone instructions based on user preference
    */
   private getToneInstructions(tone: string, sensitivityMode: boolean): string {
-    const baseInstructions = {
+    const baseInstructions: Record<string, string> = {
       direct: `TONE: Be direct and practical. Focus on clear, actionable advice. Get to the point quickly. Use confident language.`,
       empathetic: `TONE: Be empathetic and reflective. Acknowledge emotions and provide gentle guidance. Use warm, supportive language. Validate their feelings.`,
       balanced: `TONE: Strike a balance between practical advice and emotional support. Be warm but focused. Offer both validation and action steps.`,
