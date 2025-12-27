@@ -107,7 +107,9 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
       });
 
       if (!mounted) return;
-      context.go('/home');
+      
+      // Continue to Context Wizard (personal context questionnaire)
+      context.go('/context-wizard', extra: {'isOnboarding': true});
     } catch (e) {
       setState(() {
         _errorMessage = 'Could not save birth data. Please check the location and try again.';

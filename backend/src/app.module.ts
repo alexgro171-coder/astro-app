@@ -15,6 +15,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { HealthModule } from './health/health.module';
 import { BillingModule } from './billing/billing.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
+import { ContextModule } from './context/context.module';
 import { AdminModule } from './admin/admin.module';
 import { TtsModule } from './tts/tts.module';
 
@@ -53,6 +54,7 @@ import { TtsModule } from './tts/tts.module';
     // Monetization & Premium features
     BillingModule,
     OnboardingModule,
+    ContextModule,
     TtsModule,
     
     // Administration

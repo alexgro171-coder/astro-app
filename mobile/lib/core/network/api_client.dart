@@ -342,24 +342,46 @@ class ApiClient {
     return _dio.get('/billing/payments');
   }
 
-  // ==================== ONBOARDING & CONTEXT ====================
+  // ==================== CONTEXT PROFILE (V1 Questionnaire) ====================
 
-  /// Get onboarding questions
-  Future<Response> getOnboardingQuestions() {
-    return _dio.get('/onboarding/questions');
-  }
-
-  /// Save context answers
-  Future<Response> saveContextAnswers(Map<String, dynamic> data) {
-    return _dio.post('/onboarding/context', data: data);
-  }
-
-  /// Get saved context profile
+  /// Get context profile
   Future<Response> getContextProfile() {
-    return _dio.get('/onboarding/context');
+    return _dio.get('/context/profile');
   }
 
-  /// Get onboarding status
+  /// Get context review status (for 90-day check)
+  Future<Response> getContextStatus() {
+    return _dio.get('/context/status');
+  }
+
+  /// Create context profile (onboarding)
+  Future<Response> createContextProfile(Map<String, dynamic> answers) {
+    return _dio.post('/context/profile', data: answers);
+  }
+
+  /// Update context profile (settings / 90-day refresh)
+  Future<Response> updateContextProfile(Map<String, dynamic> answers) {
+    return _dio.put('/context/profile', data: answers);
+  }
+
+  /// Defer context review (user selected "No changes")
+  Future<Response> deferContextReview() {
+    return _dio.post('/context/review/defer');
+  }
+
+  /// Delete context profile
+  Future<Response> deleteContextProfile() {
+    return _dio.delete('/context/profile');
+  }
+
+  /// Get context profile history
+  Future<Response> getContextHistory() {
+    return _dio.get('/context/history');
+  }
+
+  // ==================== ONBOARDING STATUS ====================
+
+  /// Get onboarding status (legacy)
   Future<Response> getOnboardingStatus() {
     return _dio.get('/onboarding/status');
   }

@@ -32,6 +32,30 @@ interface PreviousDayData {
   concernText?: string;
 }
 
+/**
+ * Personal context from V1 questionnaire (Premium only)
+ */
+interface PersonalContext {
+  summary60w: string;
+  tags: {
+    relationship_status: string;
+    seeking_relationship: boolean | null;
+    has_children: boolean;
+    children_count: number;
+    work_status: string;
+    industry: string | null;
+    health_score: number;
+    social_score: number;
+    romance_score: number;
+    finance_score: number;
+    career_score: number;
+    growth_score: number;
+    priorities: string[];
+    tone_preference: 'direct' | 'empathetic' | 'balanced';
+    sensitivity_mode: boolean;
+  };
+}
+
 interface GuidanceContext {
   natalSummary: any;
   transits: any[];
@@ -42,6 +66,8 @@ interface GuidanceContext {
   previousDays?: PreviousDayData[];
   language: Language;
   userName?: string;
+  // NEW: Personal context for Premium users
+  personalContext?: PersonalContext | null;
 }
 
 @Injectable()
@@ -116,85 +142,88 @@ Respond ONLY with valid JSON, no other text.`;
 
   /**
    * Generate daily guidance based on natal chart, transits, and user context
+   * 
+   * For Premium users with personal context, guidance is more tailored.
+   * Input is kept under 800 words using precomputed summaries.
    */
   async generateDailyGuidance(context: GuidanceContext): Promise<GuidanceSections> {
     const languageInstructions = context.language === 'RO' 
       ? 'Respond entirely in Romanian. Use formal but warm language.'
       : 'Respond entirely in English. Use professional but approachable language.';
 
-    // Build previous days context for continuity
+    // Determine tone based on personal context (Premium) or default
+    const tonePreference = context.personalContext?.tags?.tone_preference || 'balanced';
+    const sensitivityMode = context.personalContext?.tags?.sensitivity_mode || false;
+
+    const toneInstructions = this.getToneInstructions(tonePreference, sensitivityMode);
+
+    // Build previous days context for continuity (compact)
     let previousDaysContext = '';
     if (context.previousDays && context.previousDays.length > 0) {
       previousDaysContext = `
-PREVIOUS DAYS EVOLUTION (for context and continuity):
-${context.previousDays.map(day => `
-- ${day.date}: Health ${day.scores.health}/10, Career ${day.scores.job}/10, Money ${day.scores.business_money}/10, Love ${day.scores.love}/10, Partnerships ${day.scores.partnerships}/10, Growth ${day.scores.personal_growth}/10
-  ${day.concernText ? `Focus was on: "${day.concernText}"` : ''}
-`).join('')}
-
-Use this history to:
-1. Reference improvements or changes ("Yesterday's energy was challenging, but today...")
-2. Show awareness of their journey ("Over the past days, I've noticed...")
-3. Create narrative continuity ("Building on yesterday's focus on...")
+PREVIOUS DAYS (for continuity):
+${context.previousDays.map(day => 
+  `- ${day.date}: H:${day.scores.health} C:${day.scores.job} M:${day.scores.business_money} L:${day.scores.love} P:${day.scores.partnerships} G:${day.scores.personal_growth}${day.concernText ? ` Focus: "${day.concernText.substring(0, 40)}..."` : ''}`
+).join('\n')}
 `;
     }
 
-    const systemPrompt = `You are a caring personal astrologer who has been accompanying this user on their daily journey. You know their chart intimately and track their progress day by day.
+    // Build personal context section (Premium only, max 60 words)
+    let personalContextSection = '';
+    if (context.personalContext) {
+      const { summary60w, tags } = context.personalContext;
+      personalContextSection = `
+PERSONAL CONTEXT (tailored guidance):
+${summary60w}
+Key priorities: ${tags.priorities?.join(', ') || 'general well-being'}
+Life scores: Health ${tags.health_score}/5, Social ${tags.social_score}/5, Romance ${tags.romance_score}/5, Finance ${tags.finance_score}/5, Career ${tags.career_score}/5, Growth ${tags.growth_score}/5
+`;
+    }
 
-Your approach:
-- Be personal and warm - you're a trusted guide, not a generic horoscope
-- Reference previous days when relevant to show you're paying attention
-- Be constructive and empowering, never fatalistic
-- Offer practical, actionable advice
-- Connect astrological influences to real-life situations
-- When there's an active concern, weave it into your overall narrative
+    const systemPrompt = `You are a caring personal astrologer providing daily guidance. Your role is to generate actionable, supportive guidance based on astrological transits and the user's personal context.
+
+${toneInstructions}
 
 ${languageInstructions}
 
-You will receive:
-1. The user's natal chart summary
-2. Today's transits
-3. An active concern (if any)
-4. Previous days' scores and concerns (if available)
+RULES:
+- No medical, financial, or legal advice - encourage professional consultation for serious issues
+- Be constructive and empowering, never fatalistic or fear-inducing
+- Include 2-3 practical micro-actions per section
+- Keep each section guidance to 90-120 words
+${sensitivityMode ? '- SENSITIVITY MODE: Avoid deterministic language, anxiety-inducing phrases, or worst-case scenarios' : ''}
 
-Your response must be a JSON object with:
-
-1. "dailySummary": A personalized overview containing:
-   - "content": 2-3 paragraphs summarizing today's energy. Start with a warm greeting using their name if available. Reference their concern and how today's transits affect it. Mention trends from previous days if available. End with an encouraging insight.
-   - "mood": One word describing today's overall energy (e.g., "Transformative", "Reflective", "Dynamic", "Harmonious", "Challenging")
-   - "focusArea": The most important area to focus on today
-
-2. Six sections with "content" (2-3 paragraphs) and "score" (1-10):
-   - "health", "job", "business_money", "love", "partnerships", "personal_growth"
-
-Example structure:
+Your response must be valid JSON with this structure:
 {
   "dailySummary": {
-    "content": "Good morning, [Name]! Today's cosmic weather brings...",
-    "mood": "Transformative",
-    "focusArea": "Personal Growth"
+    "content": "90-120 words overview of today's energy",
+    "mood": "One word (Transformative/Reflective/Dynamic/Harmonious/Challenging/Energetic/Peaceful)",
+    "focusArea": "Most important area today"
   },
-  "health": { "content": "...", "score": 7 },
-  ...
+  "health": { "content": "90-120 words", "score": 1-10, "actions": ["action1", "action2"] },
+  "job": { "content": "...", "score": 1-10, "actions": [...] },
+  "business_money": { "content": "...", "score": 1-10, "actions": [...] },
+  "love": { "content": "...", "score": 1-10, "actions": [...] },
+  "partnerships": { "content": "...", "score": 1-10, "actions": [...] },
+  "personal_growth": { "content": "...", "score": 1-10, "actions": [...] }
 }
 
 ${context.activeConcern ? `
-IMPORTANT: The user has shared this concern: "${context.activeConcern.text}"
-This is in the ${context.activeConcern.category} area. Make this the central theme of your daily summary and give it extra attention in the relevant section.` : ''}`;
+IMPORTANT FOCUS: The user's current concern is "${context.activeConcern.text}" (${context.activeConcern.category}). 
+Weave this into the daily summary and give extra attention in the relevant section.` : ''}`;
 
-    const userPrompt = `Generate today's personalized guidance for ${context.userName || 'the user'}.
+    // Build compact user prompt (target: 600-800 words total input)
+    const userPrompt = `Generate today's guidance for ${context.userName || 'the user'}.
 
-NATAL CHART SUMMARY:
-${JSON.stringify(context.natalSummary, null, 2)}
+NATAL CHART (compact):
+${this.compactNatalSummary(context.natalSummary)}
 
 TODAY'S TRANSITS:
-${JSON.stringify(context.transits, null, 2)}
+${this.compactTransits(context.transits)}
+${personalContextSection}${previousDaysContext}
+${context.activeConcern ? `ACTIVE CONCERN: "${context.activeConcern.text}"` : ''}
 
-${context.activeConcern ? `ACTIVE CONCERN (${context.activeConcern.category}):
-"${context.activeConcern.text}"` : 'No specific concern at this time.'}
-${previousDaysContext}
-
-Generate a warm, personalized daily guidance that makes them feel accompanied on their journey.`;
+Generate warm, personalized guidance with actionable micro-recommendations.`;
 
     try {
       const response = await this.openai.chat.completions.create({
@@ -234,6 +263,88 @@ Generate a warm, personalized daily guidance that makes them feel accompanied on
    */
   getModelVersion(): string {
     return this.model;
+  }
+
+  /**
+   * Get tone instructions based on user preference
+   */
+  private getToneInstructions(tone: string, sensitivityMode: boolean): string {
+    const baseInstructions = {
+      direct: `TONE: Be direct and practical. Focus on clear, actionable advice. Get to the point quickly. Use confident language.`,
+      empathetic: `TONE: Be empathetic and reflective. Acknowledge emotions and provide gentle guidance. Use warm, supportive language. Validate their feelings.`,
+      balanced: `TONE: Strike a balance between practical advice and emotional support. Be warm but focused. Offer both validation and action steps.`,
+    };
+
+    let instructions = baseInstructions[tone] || baseInstructions.balanced;
+
+    if (sensitivityMode) {
+      instructions += `\n\nSENSITIVITY: Avoid phrases like "you must", "danger", "crisis", "beware". Use gentle alternatives like "consider", "opportunity to", "you might explore". Frame challenges as growth opportunities.`;
+    }
+
+    return instructions;
+  }
+
+  /**
+   * Compact natal summary to ~200 words max
+   */
+  private compactNatalSummary(natalSummary: any): string {
+    if (!natalSummary) return 'Natal chart data unavailable.';
+
+    // If already a string, truncate if needed
+    if (typeof natalSummary === 'string') {
+      const words = natalSummary.split(/\s+/);
+      if (words.length > 200) {
+        return words.slice(0, 200).join(' ') + '...';
+      }
+      return natalSummary;
+    }
+
+    // Extract key elements from structured natal data
+    const parts: string[] = [];
+
+    if (natalSummary.sunSign) parts.push(`Sun: ${natalSummary.sunSign}`);
+    if (natalSummary.moonSign) parts.push(`Moon: ${natalSummary.moonSign}`);
+    if (natalSummary.ascendant) parts.push(`Ascendant: ${natalSummary.ascendant}`);
+
+    // Add key planetary positions if available
+    if (natalSummary.planets) {
+      const keyPlanets = ['Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn'];
+      for (const planet of keyPlanets) {
+        if (natalSummary.planets[planet]) {
+          parts.push(`${planet}: ${natalSummary.planets[planet]}`);
+        }
+      }
+    }
+
+    // Add summary if available
+    if (natalSummary.summary && typeof natalSummary.summary === 'string') {
+      parts.push(natalSummary.summary.substring(0, 300));
+    }
+
+    return parts.join('. ') || JSON.stringify(natalSummary).substring(0, 500);
+  }
+
+  /**
+   * Compact transits to ~200 words max
+   */
+  private compactTransits(transits: any[]): string {
+    if (!transits || transits.length === 0) {
+      return 'No significant transits today.';
+    }
+
+    // Take most significant transits (first 5-7)
+    const significantTransits = transits.slice(0, 7);
+
+    return significantTransits
+      .map((t) => {
+        if (typeof t === 'string') return t;
+        if (t.aspect && t.planet1 && t.planet2) {
+          return `${t.planet1} ${t.aspect} ${t.planet2}${t.orb ? ` (${t.orb}°)` : ''}`;
+        }
+        if (t.description) return t.description.substring(0, 100);
+        return JSON.stringify(t).substring(0, 80);
+      })
+      .join('; ');
   }
 }
 

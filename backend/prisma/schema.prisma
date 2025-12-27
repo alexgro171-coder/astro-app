@@ -298,7 +298,7 @@ model Refund {
 }
 
 // ============================================
-// USER CONTEXT & PERSONALIZATION
+// USER CONTEXT & PERSONALIZATION (V1 Questionnaire)
 // ============================================
 
 model UserContextProfile {
@@ -306,21 +306,70 @@ model UserContextProfile {
   userId              String    @unique @map("user_id")
   user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  // Onboarding answers (structured JSON)
-  answers             Json      // { question_id: answer, ... }
+  // Version tracking (increments on each update)
+  version             Int       @default(1)
   
-  // AI-friendly summary (generated from answers)
-  summary             String?   @db.Text
+  // Structured answers from questionnaire V1
+  answersJson         Json      @map("answers_json")
+  // {
+  //   relationship_status: string,
+  //   seeking_relationship: boolean | null,
+  //   has_children: boolean,
+  //   children: [{age: number, gender: string}],
+  //   work_status: string,
+  //   industry: string | null,
+  //   health_score: 1-5,
+  //   social_score: 1-5,
+  //   romance_score: 1-5,
+  //   finance_score: 1-5,
+  //   career_score: 1-5,
+  //   growth_score: 1-5,
+  //   priorities: string[] (max 2),
+  //   guidance_style: string,
+  //   sensitivity_mode: boolean
+  // }
   
-  // Preferences
-  preferredTone       String?   @map("preferred_tone") // supportive, direct, spiritual
-  priorityAreas       String[]  @map("priority_areas") // health, career, love, etc.
+  // AI-generated summary (max 60 words, in English)
+  summary60w          String    @map("summary_60w") @db.Text
   
-  completedAt         DateTime? @map("completed_at")
+  // Structured tags for quick access in prompts
+  summaryTags         Json      @map("summary_tags")
+  // {
+  //   relationship_status, seeking_relationship, has_children, children_count,
+  //   work_status, industry, health_score, social_score, romance_score,
+  //   finance_score, career_score, growth_score, priorities, tone_preference,
+  //   sensitivity_mode
+  // }
+  
+  // Next review date (90 days from creation/update)
+  nextReviewAt        DateTime  @map("next_review_at")
+  
+  completedAt         DateTime  @default(now()) @map("completed_at")
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
   
+  // Relations
+  history             UserContextProfileHistory[]
+  
   @@map("user_context_profiles")
+}
+
+// History table for tracking profile changes
+model UserContextProfileHistory {
+  id                  String    @id @default(cuid())
+  userId              String    @map("user_id")
+  profileId           String    @map("profile_id")
+  profile             UserContextProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  version             Int
+  answersJson         Json      @map("answers_json")
+  summary60w          String    @map("summary_60w") @db.Text
+  summaryTags         Json      @map("summary_tags")
+  
+  createdAt           DateTime  @default(now()) @map("created_at")
+  
+  @@index([userId, version])
+  @@map("user_context_profile_history")
 }
 
 // ============================================

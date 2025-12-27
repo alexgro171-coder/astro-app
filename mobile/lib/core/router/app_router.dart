@@ -14,6 +14,8 @@ import '../../features/concerns/concerns_screen.dart';
 import '../../features/history/history_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/shell/main_shell.dart';
+import '../../features/context/screens/context_wizard_screen.dart';
+import '../../features/context/models/context_answers.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -39,6 +41,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/birth-data',
         builder: (context, state) => const BirthDataScreen(),
+      ),
+      
+      // Context Wizard (onboarding step after birth data)
+      GoRoute(
+        path: '/context-wizard',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ContextWizardScreen(
+            isOnboarding: extra?['isOnboarding'] as bool? ?? false,
+            existingAnswers: extra?['existingAnswers'] as ContextAnswers?,
+          );
+        },
       ),
       
       // Main app routes with shell (bottom navigation)

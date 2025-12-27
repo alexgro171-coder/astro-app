@@ -1,8 +1,10 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Inject, forwardRef } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AstrologyService } from '../astrology/astrology.service';
 import { AiService } from '../ai/ai.service';
 import { ConcernsService } from '../concerns/concerns.service';
+import { ContextService } from '../context/context.service';
+import { EntitlementsService } from '../billing/entitlements/entitlements.service';
 import { User } from '@prisma/client';
 
 @Injectable()
@@ -14,6 +16,9 @@ export class GuidanceService {
     private astrologyService: AstrologyService,
     private aiService: AiService,
     private concernsService: ConcernsService,
+    private contextService: ContextService,
+    @Inject(forwardRef(() => EntitlementsService))
+    private entitlementsService: EntitlementsService,
   ) {}
 
   /**
@@ -113,6 +118,8 @@ export class GuidanceService {
    * - AstrologyAPI for daily transits
    * - OpenAI GPT for AI-generated guidance
    * 
+   * For Premium users with personal context, guidance is more personalized.
+   * 
    * Called ON-DEMAND when user opens the app, NOT at scheduled times
    */
   async generateGuidance(user: User, date: Date = new Date()) {
@@ -136,8 +143,33 @@ export class GuidanceService {
     // Step 4: Get previous days' guidance for AI context (from database)
     const previousDays = await this.getPreviousDaysData(user.id, normalizedDate, 3);
 
-    // Step 5: Generate guidance using AI (calls OpenAI)
-    this.logger.log(`Generating guidance via OpenAI for user ${user.id}`);
+    // Step 5: Check entitlements and get personal context (Premium only)
+    let personalContext = null;
+    let usedPersonalContext = false;
+
+    try {
+      const entitlements = await this.entitlementsService.resolveEntitlements(user.id);
+      
+      if (entitlements.canUsePersonalContext) {
+        const context = await this.contextService.getContextForAI(user.id);
+        if (context) {
+          personalContext = {
+            summary60w: context.summary60w,
+            tags: context.tags,
+          };
+          usedPersonalContext = true;
+          this.logger.log(`Including personal context for Premium user ${user.id}`);
+        }
+      } else {
+        this.logger.debug(`Personal context not included for user ${user.id} (not Premium)`);
+      }
+    } catch (error) {
+      this.logger.warn(`Failed to get entitlements/context for user ${user.id}: ${error.message}`);
+      // Continue without personal context
+    }
+
+    // Step 6: Generate guidance using AI (calls OpenAI)
+    this.logger.log(`Generating guidance via OpenAI for user ${user.id}${usedPersonalContext ? ' (with personal context)' : ''}`);
     const sections = await this.aiService.generateDailyGuidance({
       natalSummary: natalChart.summary,
       transits: transits.transits as any[],
@@ -148,9 +180,10 @@ export class GuidanceService {
       previousDays,
       language: user.language,
       userName: user.name || undefined,
+      personalContext, // NEW: Include for Premium users
     });
 
-    // Step 6: Save guidance to database (upsert for idempotency)
+    // Step 7: Save guidance to database (upsert for idempotency)
     const guidance = await this.prisma.dailyGuidance.upsert({
       where: {
         userId_date: {
@@ -162,6 +195,7 @@ export class GuidanceService {
         sections: sections as any,
         concernId: activeConcern?.id,
         aiModelVersion: this.aiService.getModelVersion(),
+        usedPersonalContext, // Track if personal context was used
         generatedAt: new Date(),
       },
       create: {
@@ -170,6 +204,7 @@ export class GuidanceService {
         sections: sections as any,
         concernId: activeConcern?.id,
         aiModelVersion: this.aiService.getModelVersion(),
+        usedPersonalContext, // Track if personal context was used
       },
       include: {
         concern: true,
@@ -312,6 +347,17 @@ export class GuidanceService {
   formatGuidanceResponse(guidance: any) {
     const sections = guidance.sections as any;
 
+    // Helper to format section with actions
+    const formatSection = (key: string, title: string, isHighlighted: boolean) => {
+      const section = sections[key] || {};
+      return {
+        title: isHighlighted ? `${title} ⭐` : title,
+        content: section.content || 'Guidance unavailable.',
+        score: section.score || 5,
+        actions: section.actions || [], // NEW: Include micro-actions
+      };
+    };
+
     return {
       id: guidance.id,
       date: guidance.date,
@@ -321,43 +367,34 @@ export class GuidanceService {
         focusArea: 'Personal Growth',
       },
       sections: {
-        health: {
-          title: guidance.concern?.category === 'HEALTH' ? 'Health & Energy ⭐' : 'Health & Energy',
-          ...sections.health,
-        },
-        job: {
-          title: guidance.concern?.category === 'JOB' ? 'Career & Job ⭐' : 'Career & Job',
-          ...sections.job,
-        },
-        business_money: {
-          title: ['BUSINESS_DECISION', 'MONEY'].includes(guidance.concern?.category) 
-            ? 'Business & Money ⭐' 
-            : 'Business & Money',
-          ...sections.business_money,
-        },
-        love: {
-          title: ['COUPLE', 'FAMILY'].includes(guidance.concern?.category)
-            ? 'Love & Romance ⭐'
-            : 'Love & Romance',
-          ...sections.love,
-        },
-        partnerships: {
-          title: guidance.concern?.category === 'PARTNERSHIP' 
-            ? 'Partnerships ⭐' 
-            : 'Partnerships',
-          ...sections.partnerships,
-        },
-        personal_growth: {
-          title: guidance.concern?.category === 'PERSONAL_GROWTH'
-            ? 'Personal Growth ⭐'
-            : 'Personal Growth',
-          ...sections.personal_growth,
-        },
+        health: formatSection('health', 'Health & Energy', guidance.concern?.category === 'HEALTH'),
+        job: formatSection('job', 'Career & Job', guidance.concern?.category === 'JOB'),
+        business_money: formatSection(
+          'business_money',
+          'Business & Money',
+          ['BUSINESS_DECISION', 'MONEY'].includes(guidance.concern?.category),
+        ),
+        love: formatSection(
+          'love',
+          'Love & Romance',
+          ['COUPLE', 'FAMILY'].includes(guidance.concern?.category),
+        ),
+        partnerships: formatSection(
+          'partnerships',
+          'Partnerships',
+          guidance.concern?.category === 'PARTNERSHIP',
+        ),
+        personal_growth: formatSection(
+          'personal_growth',
+          'Personal Growth',
+          guidance.concern?.category === 'PERSONAL_GROWTH',
+        ),
       },
       activeConcern: guidance.concern ? {
         category: guidance.concern.category,
         text: guidance.concern.textOriginal,
       } : null,
+      usedPersonalContext: guidance.usedPersonalContext || false, // NEW: Indicate if Premium personalization was used
       generatedAt: guidance.generatedAt,
     };
   }
