@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "356409230876",
+    "project_id": "astro-app-4dc35",
+    "storage_bucket": "astro-app-4dc35.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356409230876:android:e0d807acf042d74b5e01d9",
+        "android_client_info": {
+          "package_name": "com.innerwisdom.astro_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2wVM2eTaRNEkoTv1Q4UP_n7AUb8OS53c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
