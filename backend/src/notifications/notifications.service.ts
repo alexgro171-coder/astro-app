@@ -2,8 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Language } from '@prisma/client';
-// Note: Firebase Admin SDK would be imported here when configured
-// import * as admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class NotificationsService {
@@ -28,14 +27,16 @@ export class NotificationsService {
     }
 
     try {
-      // Firebase initialization would go here
-      // admin.initializeApp({
-      //   credential: admin.credential.cert({
-      //     projectId,
-      //     privateKey: privateKey.replace(/\\n/g, '\n'),
-      //     clientEmail,
-      //   }),
-      // });
+      // Check if Firebase is already initialized
+      if (admin.apps.length === 0) {
+        admin.initializeApp({
+          credential: admin.credential.cert({
+            projectId,
+            privateKey: privateKey.replace(/\\n/g, '\n'),
+            clientEmail,
+          }),
+        });
+      }
       
       this.firebaseInitialized = true;
       this.logger.log('Firebase initialized successfully');
@@ -102,7 +103,7 @@ export class NotificationsService {
   }
 
   /**
-   * Send a push notification
+   * Send a push notification via Firebase Cloud Messaging
    */
   private async sendPushNotification(
     token: string,
@@ -118,29 +119,32 @@ export class NotificationsService {
       return;
     }
 
-    // Firebase messaging would go here
-    // const message = {
-    //   token,
-    //   notification: {
-    //     title: notification.title,
-    //     body: notification.body,
-    //   },
-    //   data: notification.data,
-    //   android: {
-    //     priority: 'high' as const,
-    //   },
-    //   apns: {
-    //     payload: {
-    //       aps: {
-    //         sound: 'default',
-    //       },
-    //     },
-    //   },
-    // };
-    //
-    // await admin.messaging().send(message);
-    
-    this.logger.debug(`Notification sent to ${token}`);
+    const message: admin.messaging.Message = {
+      token,
+      notification: {
+        title: notification.title,
+        body: notification.body,
+      },
+      data: notification.data,
+      android: {
+        priority: 'high',
+        notification: {
+          sound: 'default',
+          channelId: 'daily_guidance',
+        },
+      },
+      apns: {
+        payload: {
+          aps: {
+            sound: 'default',
+            badge: 1,
+          },
+        },
+      },
+    };
+
+    const response = await admin.messaging().send(message);
+    this.logger.debug(`Notification sent successfully: ${response}`);
   }
 
   /**
@@ -174,5 +178,29 @@ export class NotificationsService {
       await this.sendPushNotification(device.deviceToken, { title, body, data });
     }
   }
-}
 
+  /**
+   * Send notification to multiple users
+   */
+  async sendBulkNotification(
+    userIds: string[],
+    title: string,
+    body: string,
+    data?: Record<string, string>,
+  ): Promise<{ success: number; failed: number }> {
+    let success = 0;
+    let failed = 0;
+
+    for (const userId of userIds) {
+      try {
+        await this.sendCustomNotification(userId, title, body, data);
+        success++;
+      } catch (error) {
+        this.logger.error(`Failed to send notification to user ${userId}:`, error.message);
+        failed++;
+      }
+    }
+
+    return { success, failed };
+  }
+}
