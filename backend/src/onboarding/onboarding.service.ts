@@ -1,11 +1,12 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaveContextAnswersDto, ONBOARDING_QUESTIONS } from './dto/context-answers.dto';
 
 /**
- * OnboardingService
+ * OnboardingService (Legacy)
  * 
- * Manages user context profiles for personalized AI guidance.
+ * This service is kept for backward compatibility.
+ * New implementations should use ContextService from the context module.
  * 
  * Premium users: Context is used in AI prompts
  * Standard users: Context is stored but NOT used in prompts
@@ -27,12 +28,12 @@ export class OnboardingService {
     return {
       questions: ONBOARDING_QUESTIONS,
       completed: !!existingProfile?.completedAt,
-      existingAnswers: existingProfile?.answers || null,
+      existingAnswers: existingProfile?.answersJson || null,
     };
   }
 
   /**
-   * Save or update user's context answers
+   * Save or update user's context answers (Legacy - use ContextService instead)
    */
   async saveContextAnswers(userId: string, dto: SaveContextAnswersDto) {
     // Convert array of answers to object
@@ -41,24 +42,36 @@ export class OnboardingService {
       answersObject[answer.questionId] = answer.answer;
     }
 
-    // Generate AI-friendly summary from answers
-    const summary = this.generateContextSummary(answersObject);
+    // Generate basic summary from answers
+    const summary60w = this.generateContextSummary(answersObject);
+
+    // Calculate next review date (90 days)
+    const nextReviewAt = new Date();
+    nextReviewAt.setDate(nextReviewAt.getDate() + 90);
+
+    // Build summary tags
+    const summaryTags = {
+      tone_preference: dto.preferredTone || 'balanced',
+      priorities: dto.priorityAreas || [],
+      sensitivity_mode: false,
+    };
 
     const contextProfile = await this.prisma.userContextProfile.upsert({
       where: { userId },
       update: {
-        answers: answersObject,
-        summary,
-        preferredTone: dto.preferredTone || null,
-        priorityAreas: dto.priorityAreas || [],
+        answersJson: answersObject,
+        summary60w,
+        summaryTags,
+        nextReviewAt,
         completedAt: new Date(),
       },
       create: {
         userId,
-        answers: answersObject,
-        summary,
-        preferredTone: dto.preferredTone || null,
-        priorityAreas: dto.priorityAreas || [],
+        version: 1,
+        answersJson: answersObject,
+        summary60w,
+        summaryTags,
+        nextReviewAt,
         completedAt: new Date(),
       },
     });
@@ -68,7 +81,7 @@ export class OnboardingService {
     return {
       success: true,
       profileId: contextProfile.id,
-      summary,
+      summary: summary60w,
     };
   }
 
@@ -83,8 +96,6 @@ export class OnboardingService {
 
   /**
    * Get context summary for AI prompt (only for Premium users)
-   * 
-   * This returns a formatted string that can be injected into the AI prompt.
    */
   async getContextForAI(userId: string): Promise<string | null> {
     const profile = await this.prisma.userContextProfile.findUnique({
@@ -95,12 +106,11 @@ export class OnboardingService {
       return null;
     }
 
-    return profile.summary;
+    return profile.summary60w;
   }
 
   /**
    * Generate a human-readable summary from answers
-   * This is what gets injected into the AI prompt for Premium users
    */
   private generateContextSummary(answers: Record<string, any>): string {
     const parts: string[] = [];
@@ -111,13 +121,15 @@ export class OnboardingService {
     }
 
     // Career
-    if (answers.career_situation) {
-      parts.push(`Career: ${answers.career_situation}`);
+    if (answers.career_situation || answers.workStatus) {
+      parts.push(`Career: ${answers.career_situation || answers.workStatus}`);
     }
 
     // Life focus areas
     if (answers.main_life_focus && Array.isArray(answers.main_life_focus)) {
       parts.push(`Focus areas: ${answers.main_life_focus.join(', ')}`);
+    } else if (answers.priorities && Array.isArray(answers.priorities)) {
+      parts.push(`Focus areas: ${answers.priorities.join(', ')}`);
     }
 
     // Stress level
@@ -135,7 +147,7 @@ export class OnboardingService {
       parts.push(`Astrology knowledge: ${answers.astrology_experience}`);
     }
 
-    return parts.join('. ') + '.';
+    return parts.length > 0 ? parts.join('. ') + '.' : 'No context provided.';
   }
 
   /**
@@ -146,7 +158,8 @@ export class OnboardingService {
       where: { userId },
     });
 
-    return profile?.preferredTone || 'balanced';
+    const tags = profile?.summaryTags as Record<string, any> | null;
+    return tags?.tone_preference || 'balanced';
   }
 
   /**
@@ -165,6 +178,14 @@ export class OnboardingService {
    * Delete user's context profile
    */
   async deleteProfile(userId: string): Promise<void> {
+    // Delete history first
+    await this.prisma.userContextProfileHistory.deleteMany({
+      where: { userId },
+    }).catch(() => {
+      // Ignore if doesn't exist
+    });
+
+    // Delete main profile
     await this.prisma.userContextProfile.delete({
       where: { userId },
     }).catch(() => {
@@ -172,4 +193,3 @@ export class OnboardingService {
     });
   }
 }
-

@@ -63,13 +63,15 @@ export class OnboardingController {
       };
     }
 
+    const tags = profile.summaryTags as Record<string, any> | null;
+
     return {
       completed: !!profile.completedAt,
       profile: {
-        answers: profile.answers,
-        summary: profile.summary,
-        preferredTone: profile.preferredTone,
-        priorityAreas: profile.priorityAreas,
+        answers: profile.answersJson,
+        summary: profile.summary60w,
+        preferredTone: tags?.tone_preference || 'balanced',
+        priorityAreas: tags?.priorities || [],
         completedAt: profile.completedAt,
       },
     };
