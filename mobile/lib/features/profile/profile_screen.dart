@@ -6,6 +6,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/utils/zodiac_utils.dart';
 import '../shell/main_shell.dart';
+import '../context/widgets/context_settings_card.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -92,6 +93,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   // Natal Chart Info
                   if (_user?['natalChart'] != null)
                     _buildNatalChartCard(),
+
+                  const SizedBox(height: 24),
+
+                  // Personal Context Card
+                  const Padding(
+                    padding: EdgeInsets.only(left: 4, bottom: 12),
+                    child: Text(
+                      'Personal Context',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                  const ContextSettingsCard(),
 
                   const SizedBox(height: 24),
 

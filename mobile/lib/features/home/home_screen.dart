@@ -6,6 +6,8 @@ import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/utils/zodiac_utils.dart';
 import '../shell/main_shell.dart';
+import '../context/services/context_service.dart';
+import '../context/widgets/context_review_modal.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -27,8 +29,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Set navigation index
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(currentNavIndexProvider.notifier).state = 0;
+      // Check for 90-day context review
+      _checkContextReview();
     });
     _loadData();
+  }
+
+  /// Check if user needs to review their personal context (90-day check)
+  Future<void> _checkContextReview() async {
+    try {
+      final status = await ref.read(contextStatusProvider.future);
+      
+      if (status.hasProfile && status.needsReview && mounted) {
+        // Show review modal
+        final wantsToUpdate = await ContextReviewModal.show(context);
+        
+        if (wantsToUpdate == true && mounted) {
+          // Navigate to context wizard for editing
+          final profileResponse = await ref.read(contextServiceProvider).getProfile();
+          if (profileResponse.profile != null && mounted) {
+            context.push('/context-wizard', extra: {
+              'isOnboarding': false,
+              'existingAnswers': profileResponse.profile!.answers,
+            });
+          }
+        }
+      }
+    } catch (e) {
+      // Silently fail - don't block the main app flow
+      debugPrint('Error checking context review: $e');
+    }
   }
 
   Future<void> _loadData() async {

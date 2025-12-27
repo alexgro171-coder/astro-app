@@ -29,7 +29,7 @@ class ContextService {
   /// Get current context profile
   Future<ContextProfileResponse> getProfile() async {
     try {
-      final response = await _apiClient.get('/context/profile');
+      final response = await _apiClient.getContextProfile();
       return ContextProfileResponse.fromJson(response.data as Map<String, dynamic>);
     } catch (e) {
       if (kDebugMode) print('Error getting context profile: $e');
@@ -40,7 +40,7 @@ class ContextService {
   /// Get context review status (for 90-day check)
   Future<ContextStatus> getStatus() async {
     try {
-      final response = await _apiClient.get('/context/status');
+      final response = await _apiClient.getContextStatus();
       return ContextStatus.fromJson(response.data as Map<String, dynamic>);
     } catch (e) {
       if (kDebugMode) print('Error getting context status: $e');
