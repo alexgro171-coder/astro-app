@@ -48,6 +48,7 @@ class DefaultFirebaseOptions {
     projectId: 'astro-app-4dc35',
     storageBucket: 'astro-app-4dc35.firebasestorage.app',
     iosBundleId: 'com.innerwisdom.astroapp',
+    iosClientId: '356409230876-d5bgkv0l43gd20sae2ggga9h17ct4t71.apps.googleusercontent.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(

@@ -145,6 +145,19 @@ class ApiClient {
     return _dio.post('/auth/login', data: data);
   }
 
+  /// Firebase authentication (Google/Apple Sign-In)
+  Future<Response> firebaseAuth({
+    required String idToken,
+    required String provider,
+    String? name,
+  }) {
+    return _dio.post('/auth/firebase', data: {
+      'idToken': idToken,
+      'provider': provider,
+      if (name != null) 'name': name,
+    });
+  }
+
   Future<Response> logout() {
     return _dio.post('/auth/logout');
   }

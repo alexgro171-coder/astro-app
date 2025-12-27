@@ -9,15 +9,20 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { FirebaseAuthService } from './firebase-auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { FirebaseAuthDto } from './dto/firebase-auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly firebaseAuthService: FirebaseAuthService,
+  ) {}
 
   @Post('signup')
   @ApiOperation({ summary: 'Register a new user' })
@@ -46,6 +51,16 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout user' })
   async logout(@Req() req: any, @Body() body?: { refreshToken?: string }) {
     return this.authService.logout(req.user.id, body?.refreshToken);
+  }
+
+  @Post('firebase')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ 
+    summary: 'Authenticate with Firebase (Google/Apple Sign-In)',
+    description: 'Verify Firebase ID token and return JWT tokens. Creates account if user does not exist.',
+  })
+  async firebaseAuth(@Body() firebaseAuthDto: FirebaseAuthDto) {
+    return this.firebaseAuthService.authenticateWithFirebase(firebaseAuthDto);
   }
 }
 
