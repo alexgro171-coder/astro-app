@@ -18,7 +18,7 @@ export class NotificationsService {
 
   private initializeFirebase() {
     const projectId = this.configService.get<string>('FIREBASE_PROJECT_ID');
-    const privateKey = this.configService.get<string>('FIREBASE_PRIVATE_KEY');
+    let privateKey = this.configService.get<string>('FIREBASE_PRIVATE_KEY');
     const clientEmail = this.configService.get<string>('FIREBASE_CLIENT_EMAIL');
 
     if (!projectId || !privateKey || !clientEmail) {
@@ -27,12 +27,19 @@ export class NotificationsService {
     }
 
     try {
+      // Handle different formats of private key from .env
+      // Sometimes it's stored with literal \n, sometimes with actual newlines
+      // Also handle double-escaped \\n
+      privateKey = privateKey
+        .replace(/\\\\n/g, '\n')  // Handle \\n (double escaped)
+        .replace(/\\n/g, '\n');   // Handle \n (single escaped)
+      
       // Check if Firebase is already initialized
       if (admin.apps.length === 0) {
         admin.initializeApp({
           credential: admin.credential.cert({
             projectId,
-            privateKey: privateKey.replace(/\\n/g, '\n'),
+            privateKey,
             clientEmail,
           }),
         });
