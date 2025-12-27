@@ -416,6 +416,21 @@ class ApiClient {
     return _dio.get('/guidance/$guidanceId/audio');
   }
 
+  // ==================== DEVICE REGISTRATION (FCM) ====================
+
+  /// Register device for push notifications
+  /// [deviceToken] - FCM token
+  /// [platform] - 'IOS' or 'ANDROID'
+  Future<Response> registerDevice({
+    required String deviceToken,
+    required String platform,
+  }) {
+    return _dio.post('/me/device', data: {
+      'deviceToken': deviceToken,
+      'platform': platform,
+    });
+  }
+
   // ==================== TOKEN MANAGEMENT ====================
   
   /// Save authentication tokens

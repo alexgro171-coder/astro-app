@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/services/social_auth_service.dart';
+import '../../core/services/fcm_service.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -32,6 +34,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  /// Register FCM token after successful login
+  Future<void> _registerFcmToken() async {
+    if (kIsWeb) return;
+    
+    try {
+      final fcmService = FCMService(ref);
+      // Request permissions and get token
+      await fcmService.requestPermissionsAndGetToken();
+      // Register with backend
+      await fcmService.registerTokenWithBackend();
+    } catch (e) {
+      debugPrint('LoginScreen: Error registering FCM token: $e');
+      // Don't block login flow if FCM registration fails
+    }
+  }
+
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -49,6 +67,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+
+      // Register FCM token for push notifications
+      await _registerFcmToken();
 
       if (!mounted) return;
 
@@ -93,6 +114,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
 
+      // Register FCM token for push notifications
+      await _registerFcmToken();
+
       if (!mounted) return;
 
       final user = data['user'];
@@ -134,6 +158,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+
+      // Register FCM token for push notifications
+      await _registerFcmToken();
 
       if (!mounted) return;
 

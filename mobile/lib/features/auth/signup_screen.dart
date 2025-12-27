@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
+import '../../core/services/fcm_service.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -30,6 +32,22 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     super.dispose();
   }
 
+  /// Register FCM token after successful signup
+  Future<void> _registerFcmToken() async {
+    if (kIsWeb) return;
+    
+    try {
+      final fcmService = FCMService(ref);
+      // Request permissions and get token
+      await fcmService.requestPermissionsAndGetToken();
+      // Register with backend
+      await fcmService.registerTokenWithBackend();
+    } catch (e) {
+      debugPrint('SignupScreen: Error registering FCM token: $e');
+      // Don't block signup flow if FCM registration fails
+    }
+  }
+
   Future<void> _signup() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -49,6 +67,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+
+      // Register FCM token for push notifications
+      await _registerFcmToken();
 
       if (!mounted) return;
       context.go('/birth-data');

@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'core/services/notification_service.dart';
+import 'core/services/fcm_service.dart';
 import 'firebase_options.dart';
 
 /// Global navigator key for navigation from notification tap
@@ -40,6 +41,8 @@ void main() async {
   // Initialize notification service (skip on web)
   if (!kIsWeb) {
     await NotificationService().initialize();
+    // Initialize FCM service for push notifications
+    await FCMService().initialize();
   }
 
   runApp(const ProviderScope(child: AstroApp()));
@@ -89,11 +92,23 @@ class _AstroAppState extends ConsumerState<AstroApp> with WidgetsBindingObserver
   void _setupNotificationHandler() {
     if (kIsWeb) return;
     
+    // Local notification tap handler
     NotificationService().onNotificationTap = (String? payload) {
-      print('main.dart: Notification tapped with payload: $payload');
+      print('main.dart: Local notification tapped with payload: $payload');
       
       if (payload == 'daily_guidance') {
         // Set pending navigation - will be handled when router is ready
+        ref.read(pendingNavigationProvider.notifier).state = '/home';
+        _handlePendingNavigation();
+      }
+    };
+    
+    // FCM notification tap handler
+    FCMService().onNotificationTap = (Map<String, dynamic> data) {
+      print('main.dart: FCM notification tapped with data: $data');
+      
+      final screen = data['screen'] as String?;
+      if (screen == 'guidance' || screen == 'daily_guidance') {
         ref.read(pendingNavigationProvider.notifier).state = '/home';
         _handlePendingNavigation();
       }
