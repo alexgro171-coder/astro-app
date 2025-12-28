@@ -52,11 +52,14 @@ export class AstrologyService {
     // Normalize place name by removing diacritics for better API compatibility
     const normalizedPlace = this.removeDiacritics(placeName);
     
-    this.logger.log(`Looking up location: "${placeName}" (normalized: "${normalizedPlace}")`);
+    // Extract just the city name (API doesn't work well with "City, Country" format)
+    const cityOnly = this.extractCityName(normalizedPlace);
+    
+    this.logger.log(`Looking up location: "${placeName}" (normalized: "${normalizedPlace}", city: "${cityOnly}")`);
     
     try {
       const response = await this.apiClient.post('/geo_details', {
-        place: normalizedPlace,
+        place: cityOnly,
         maxRows: 10,
       });
 
@@ -68,6 +71,15 @@ export class AstrologyService {
       this.logger.error(`Failed to get geo details for "${placeName}":`, error.message);
       throw new BadRequestException('Failed to lookup location');
     }
+  }
+
+  /**
+   * Extract city name from "City, Country" format
+   */
+  private extractCityName(placeName: string): string {
+    // Split by comma and take the first part (city name)
+    const parts = placeName.split(',').map(p => p.trim());
+    return parts[0] || placeName;
   }
 
   /**
