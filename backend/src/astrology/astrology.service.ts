@@ -49,17 +49,32 @@ export class AstrologyService {
    * Get geo details for a place name
    */
   async getGeoDetails(placeName: string): Promise<GeoLocation[]> {
+    // Normalize place name by removing diacritics for better API compatibility
+    const normalizedPlace = this.removeDiacritics(placeName);
+    
+    this.logger.log(`Looking up location: "${placeName}" (normalized: "${normalizedPlace}")`);
+    
     try {
       const response = await this.apiClient.post('/geo_details', {
-        place: placeName,
+        place: normalizedPlace,
         maxRows: 10,
       });
 
-      return response.data.geonames || response.data || [];
+      const results = response.data.geonames || response.data || [];
+      this.logger.log(`Geo lookup returned ${results.length} results`);
+      
+      return results;
     } catch (error) {
       this.logger.error(`Failed to get geo details for "${placeName}":`, error.message);
       throw new BadRequestException('Failed to lookup location');
     }
+  }
+
+  /**
+   * Remove diacritics/accents from a string for better API compatibility
+   */
+  private removeDiacritics(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
   /**

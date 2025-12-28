@@ -386,27 +386,32 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
                           // Score indicator
                           Row(
                             children: [
-                              ...List.generate(10, (index) {
-                                return Container(
-                                  width: 12,
-                                  height: 12,
-                                  margin: const EdgeInsets.only(right: 4),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: index < score
-                                        ? color
-                                        : AppColors.surfaceLight,
-                                    boxShadow: index < score
-                                        ? [
-                                            BoxShadow(
-                                              color: color.withOpacity(0.4),
-                                              blurRadius: 4,
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                );
-                              }),
+                              Flexible(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: List.generate(10, (index) {
+                                    return Container(
+                                      width: 8,
+                                      height: 8,
+                                      margin: EdgeInsets.only(right: index < 9 ? 3 : 0),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: index < score
+                                            ? color
+                                            : AppColors.surfaceLight,
+                                        boxShadow: index < score
+                                            ? [
+                                                BoxShadow(
+                                                  color: color.withOpacity(0.4),
+                                                  blurRadius: 3,
+                                                ),
+                                              ]
+                                            : null,
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
                               const SizedBox(width: 8),
                               Text(
                                 '$score/10',

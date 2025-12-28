@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,7 +7,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
-import '../../core/services/fcm_service.dart';
+import '../../core/services/fcm_service.dart' show fcmServiceProvider;
+import '../../core/services/social_auth_service.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -19,7 +22,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _socialAuthService = SocialAuthService();
   bool _isLoading = false;
+  bool _isSocialLoading = false;
   bool _obscurePassword = true;
   String? _errorMessage;
   String _selectedLanguage = 'EN';
@@ -37,7 +42,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     if (kIsWeb) return;
     
     try {
-      final fcmService = FCMService(ref);
+      final fcmService = ref.read(fcmServiceProvider);
       // Request permissions and get token
       await fcmService.requestPermissionsAndGetToken();
       // Register with backend
@@ -80,6 +85,96 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isSocialLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final result = await _socialAuthService.signInWithGoogle();
+      if (result == null) {
+        // User cancelled
+        return;
+      }
+
+      final apiClient = ref.read(apiClientProvider);
+      final response = await apiClient.firebaseAuth(
+        idToken: result.idToken,
+        provider: result.provider,
+        name: result.name,
+      );
+
+      final data = response.data;
+      await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+
+      // Register FCM token for push notifications
+      await _registerFcmToken();
+
+      if (!mounted) return;
+
+      final user = data['user'];
+      if (user['onboardingComplete'] == true) {
+        context.go('/home');
+      } else {
+        context.go('/birth-data');
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Google sign-in failed. Please try again.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _isSocialLoading = false);
+      }
+    }
+  }
+
+  Future<void> _signInWithApple() async {
+    setState(() {
+      _isSocialLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final result = await _socialAuthService.signInWithApple();
+      if (result == null) {
+        // User cancelled
+        return;
+      }
+
+      final apiClient = ref.read(apiClientProvider);
+      final response = await apiClient.firebaseAuth(
+        idToken: result.idToken,
+        provider: result.provider,
+        name: result.name,
+      );
+
+      final data = response.data;
+      await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+
+      // Register FCM token for push notifications
+      await _registerFcmToken();
+
+      if (!mounted) return;
+
+      final user = data['user'];
+      if (user['onboardingComplete'] == true) {
+        context.go('/home');
+      } else {
+        context.go('/birth-data');
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Apple sign-in failed. Please try again.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _isSocialLoading = false);
       }
     }
   }
@@ -292,7 +387,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _isLoading ? null : _signup,
+                      onPressed: _isLoading || _isSocialLoading ? null : _signup,
                       child: _isLoading
                           ? const SizedBox(
                               width: 20,
@@ -304,6 +399,96 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             )
                           : const Text('Create Account'),
                     ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // Divider with "or"
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          color: AppColors.textMuted.withOpacity(0.3),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'or continue with',
+                          style: TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          color: AppColors.textMuted.withOpacity(0.3),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Social sign-up buttons
+                  Row(
+                    children: [
+                      // Google Sign-In
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: _isLoading || _isSocialLoading ? null : _signInWithGoogle,
+                          icon: _isSocialLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : Image.network(
+                                  'https://www.google.com/favicon.ico',
+                                  width: 20,
+                                  height: 20,
+                                  errorBuilder: (_, __, ___) => const Icon(Icons.g_mobiledata, size: 24),
+                                ),
+                          label: const Text('Google'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.textPrimary,
+                            side: BorderSide(color: AppColors.textMuted.withOpacity(0.3)),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Apple Sign-In (iOS only) - Temporarily disabled until Apple Developer Program is activated
+                      if (!kIsWeb && Platform.isIOS)
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _isLoading || _isSocialLoading ? null : () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Apple Sign-In coming soon! Please use Google or email.'),
+                                  duration: Duration(seconds: 3),
+                                ),
+                              );
+                            },
+                            icon: _isSocialLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : const Icon(Icons.apple, size: 24),
+                            label: const Text('Apple'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.textPrimary,
+                              side: BorderSide(color: AppColors.textMuted.withOpacity(0.3)),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
 
                   const SizedBox(height: 24),

@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/services/social_auth_service.dart';
-import '../../core/services/fcm_service.dart';
+import '../../core/services/fcm_service.dart' show fcmServiceProvider;
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -39,7 +39,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (kIsWeb) return;
     
     try {
-      final fcmService = FCMService(ref);
+      final fcmService = ref.read(fcmServiceProvider);
       // Request permissions and get token
       await fcmService.requestPermissionsAndGetToken();
       // Register with backend
@@ -422,11 +422,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      // Apple Sign-In (iOS only)
+                      // Apple Sign-In (iOS only) - Temporarily disabled until Apple Developer Program is activated
                       if (Platform.isIOS)
                         Expanded(
                           child: OutlinedButton.icon(
-                            onPressed: _isLoading || _isSocialLoading ? null : _signInWithApple,
+                            onPressed: _isLoading || _isSocialLoading ? null : () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Apple Sign-In coming soon! Please use Google or email.'),
+                                  duration: Duration(seconds: 3),
+                                ),
+                              );
+                            },
                             icon: _isSocialLoading
                                 ? const SizedBox(
                                     width: 20,

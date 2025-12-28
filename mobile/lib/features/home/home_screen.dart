@@ -194,7 +194,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   crossAxisCount: 2,
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
-                  childAspectRatio: 1.1,
+                  childAspectRatio: 0.95,
                 ),
                 delegate: SliverChildListDelegate([
                   _buildGridCard(
