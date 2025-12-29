@@ -141,12 +141,12 @@ class _NavItem extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected 
               ? AppColors.accent.withOpacity(0.15)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -158,7 +158,7 @@ class _NavItem extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   child: Icon(
                     icon,
-                    size: 26,
+                    size: 22,
                     color: isSelected 
                         ? AppColors.accent 
                         : AppColors.textMuted,
@@ -187,11 +187,11 @@ class _NavItem extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 200),
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: isSelected 
                     ? AppColors.accent 
