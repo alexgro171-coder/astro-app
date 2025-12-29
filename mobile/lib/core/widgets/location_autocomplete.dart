@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,13 +29,21 @@ class LocationResult {
   });
 
   factory LocationResult.fromJson(Map<String, dynamic> json) {
+    // Handle latitude/longitude as either String or num
+    double parseCoord(dynamic value) {
+      if (value == null) return 0.0;
+      if (value is num) return value.toDouble();
+      if (value is String) return double.tryParse(value) ?? 0.0;
+      return 0.0;
+    }
+    
     return LocationResult(
       placeName: json['placeName'] ?? '',
       adminName: json['adminName'],
       countryName: json['countryName'] ?? '',
       countryCode: json['countryCode'] ?? '',
-      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
-      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
+      latitude: parseCoord(json['latitude']),
+      longitude: parseCoord(json['longitude']),
       timezoneId: json['timezoneId'],
       displayName: json['displayName'] ?? json['placeName'] ?? '',
     );
@@ -149,8 +158,11 @@ class _LocationAutocompleteState extends ConsumerState<LocationAutocomplete> {
 
   Future<void> _searchLocations(String query) async {
     try {
+      debugPrint('[LocationAutocomplete] Searching for: $query');
       final apiClient = ref.read(apiClientProvider);
       final response = await apiClient.searchLocation(query);
+      
+      debugPrint('[LocationAutocomplete] Response: ${response.data}');
       
       if (!mounted) return;
       
@@ -158,18 +170,24 @@ class _LocationAutocompleteState extends ConsumerState<LocationAutocomplete> {
           ?.map((r) => LocationResult.fromJson(r))
           .toList() ?? [];
       
+      debugPrint('[LocationAutocomplete] Parsed ${results.length} results');
+      
       setState(() {
         _suggestions = results;
         _isLoading = false;
       });
       
       if (results.isNotEmpty && _focusNode.hasFocus) {
+        debugPrint('[LocationAutocomplete] Showing overlay with ${results.length} items');
         _showOverlay = true;
         _updateOverlay();
       } else {
+        debugPrint('[LocationAutocomplete] No results or not focused, hiding overlay');
         _removeOverlay();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('[LocationAutocomplete] ERROR: $e');
+      debugPrint('[LocationAutocomplete] Stack: $stackTrace');
       if (mounted) {
         setState(() {
           _suggestions = [];
