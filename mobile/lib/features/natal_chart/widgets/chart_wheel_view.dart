@@ -20,10 +20,33 @@ class ChartWheelView extends ConsumerWidget {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          // Chart wheel container
+          // Hint text
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.touch_app_rounded,
+                  size: 16,
+                  color: AppColors.textMuted,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Tap to view fullscreen • Pinch to zoom',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textMuted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Chart wheel container with zoom
           wheelSvgAsync.when(
             data: (svg) => svg != null
-                ? _buildSvgWheel(svg)
+                ? _buildInteractiveChart(context, svg)
                 : _buildFallbackWheel(context),
             loading: () => _buildLoadingWheel(),
             error: (_, __) => _buildFallbackWheel(context),
@@ -41,21 +64,42 @@ class ChartWheelView extends ConsumerWidget {
     );
   }
 
-  Widget _buildSvgWheel(String svgString) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.accent.withOpacity(0.2),
+  Widget _buildInteractiveChart(BuildContext context, String svgString) {
+    return GestureDetector(
+      onTap: () => _openFullscreenChart(context, svgString),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: AppColors.accent.withOpacity(0.2),
+          ),
+        ),
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: InteractiveViewer(
+              minScale: 1.0,
+              maxScale: 4.0,
+              child: SvgPicture.string(
+                svgString,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
         ),
       ),
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: SvgPicture.string(
-          svgString,
-          fit: BoxFit.contain,
+    );
+  }
+
+  void _openFullscreenChart(BuildContext context, String svgString) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => _FullscreenChartView(
+          svgString: svgString,
+          placements: placements,
         ),
       ),
     );
@@ -94,21 +138,41 @@ class ChartWheelView extends ConsumerWidget {
   }
 
   Widget _buildFallbackWheel(BuildContext context) {
-    // Simple fallback using CustomPaint when SVG is not available
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.accent.withOpacity(0.2),
+    return GestureDetector(
+      onTap: () => _openFullscreenFallback(context),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: AppColors.accent.withOpacity(0.2),
+          ),
+        ),
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: InteractiveViewer(
+              minScale: 1.0,
+              maxScale: 4.0,
+              child: CustomPaint(
+                painter: _SimpleChartWheelPainter(placements),
+                child: Container(),
+              ),
+            ),
+          ),
         ),
       ),
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: CustomPaint(
-          painter: _SimpleChartWheelPainter(placements),
-          child: Container(),
+    );
+  }
+
+  void _openFullscreenFallback(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => _FullscreenChartView(
+          svgString: null,
+          placements: placements,
         ),
       ),
     );
@@ -194,6 +258,207 @@ class ChartWheelView extends ConsumerWidget {
             }).toList(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Fullscreen chart view with enhanced zoom capabilities
+class _FullscreenChartView extends StatefulWidget {
+  final String? svgString;
+  final NatalPlacements placements;
+
+  const _FullscreenChartView({
+    required this.svgString,
+    required this.placements,
+  });
+
+  @override
+  State<_FullscreenChartView> createState() => _FullscreenChartViewState();
+}
+
+class _FullscreenChartViewState extends State<_FullscreenChartView> {
+  final TransformationController _transformationController = TransformationController();
+  double _currentScale = 1.0;
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
+  }
+
+  void _resetZoom() {
+    _transformationController.value = Matrix4.identity();
+    setState(() {
+      _currentScale = 1.0;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0a0a14),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: AppColors.textPrimary),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text(
+          'Natal Chart',
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: AppColors.textPrimary),
+            onPressed: _resetZoom,
+            tooltip: 'Reset zoom',
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Zoom indicator
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.zoom_in_rounded,
+                  size: 18,
+                  color: AppColors.accent,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Zoom: ${(_currentScale * 100).toInt()}%',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Text(
+                  'Pinch to zoom • Drag to pan',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textMuted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Chart
+          Expanded(
+            child: InteractiveViewer(
+              transformationController: _transformationController,
+              minScale: 0.5,
+              maxScale: 5.0,
+              boundaryMargin: const EdgeInsets.all(100),
+              onInteractionUpdate: (details) {
+                setState(() {
+                  _currentScale = _transformationController.value.getMaxScaleOnAxis();
+                });
+              },
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: widget.svgString != null
+                      ? SvgPicture.string(
+                          widget.svgString!,
+                          fit: BoxFit.contain,
+                        )
+                      : CustomPaint(
+                          size: const Size(400, 400),
+                          painter: _SimpleChartWheelPainter(widget.placements),
+                        ),
+                ),
+              ),
+            ),
+          ),
+          
+          // Bottom controls
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildZoomButton(
+                    icon: Icons.zoom_out_rounded,
+                    label: 'Zoom Out',
+                    onTap: () {
+                      final currentScale = _transformationController.value.getMaxScaleOnAxis();
+                      final newScale = (currentScale - 0.5).clamp(0.5, 5.0);
+                      _transformationController.value = Matrix4.identity()..scale(newScale);
+                      setState(() {
+                        _currentScale = newScale;
+                      });
+                    },
+                  ),
+                  _buildZoomButton(
+                    icon: Icons.fit_screen_rounded,
+                    label: 'Fit',
+                    onTap: _resetZoom,
+                  ),
+                  _buildZoomButton(
+                    icon: Icons.zoom_in_rounded,
+                    label: 'Zoom In',
+                    onTap: () {
+                      final currentScale = _transformationController.value.getMaxScaleOnAxis();
+                      final newScale = (currentScale + 0.5).clamp(0.5, 5.0);
+                      _transformationController.value = Matrix4.identity()..scale(newScale);
+                      setState(() {
+                        _currentScale = newScale;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildZoomButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.accent.withOpacity(0.3),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: AppColors.accent, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -292,4 +557,3 @@ class _SimpleChartWheelPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
