@@ -235,7 +235,9 @@ export class AstrologyService {
         isDst: isDst,
       });
 
-      return response.data.timezone || 0;
+      // Ensure timezone is returned as a number (float)
+      const tz = response.data.timezone;
+      return typeof tz === 'string' ? parseFloat(tz) : (tz || 0);
     } catch (error) {
       this.logger.error(`Failed to get timezone for "${countryCode}":`, error.message);
       // Return 0 as fallback
