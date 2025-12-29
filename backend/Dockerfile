@@ -1,7 +1,7 @@
 FROM node:20-slim
 
-# Install OpenSSL (required by Prisma)
-RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Install OpenSSL (required by Prisma) and procps (for nest watch mode)
+RUN apt-get update && apt-get install -y openssl procps && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
