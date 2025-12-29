@@ -16,10 +16,22 @@ final natalChartDataProvider = FutureProvider<NatalChartData?>((ref) async {
 });
 
 /// Provider for natal chart wheel SVG
+/// Can be invalidated and refreshed by calling ref.refresh(natalChartWheelProvider)
 final natalChartWheelProvider = FutureProvider<String?>((ref) async {
   final service = ref.watch(natalChartServiceProvider);
   return service.getWheelSvg();
 });
+
+/// Provider with force regenerate option
+final natalChartWheelForceProvider = FutureProvider.family<String?, bool>(
+  (ref, forceRegenerate) async {
+    final service = ref.watch(natalChartServiceProvider);
+    if (forceRegenerate) {
+      await service.regenerateWheel();
+    }
+    return service.getWheelSvg(forceRegenerate: forceRegenerate);
+  },
+);
 
 /// Provider for a single interpretation (with loading state)
 final interpretationProvider = FutureProvider.family<NatalInterpretation?, String>(
@@ -93,10 +105,15 @@ class NatalChartService {
   }
 
   /// Get wheel chart SVG
-  Future<String?> getWheelSvg() async {
+  /// @param forceRegenerate - If true, forces backend to regenerate SVG
+  Future<String?> getWheelSvg({bool forceRegenerate = false}) async {
     try {
+      String path = '/natal-chart/wheel.svg';
+      if (forceRegenerate) {
+        path += '?force=true';
+      }
       final response = await _apiClient.get(
-        '/natal-chart/wheel.svg',
+        path,
         options: ApiClient.svgOptions(),
       );
       if (response.statusCode == 200) {
@@ -106,6 +123,17 @@ class NatalChartService {
     } catch (e) {
       debugPrint('Error fetching wheel SVG: $e');
       return null;
+    }
+  }
+
+  /// Force regenerate wheel chart SVG (clears cache and regenerates)
+  Future<bool> regenerateWheel() async {
+    try {
+      final response = await _apiClient.post('/natal-chart/wheel/regenerate');
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error regenerating wheel: $e');
+      return false;
     }
   }
 

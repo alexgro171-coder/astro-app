@@ -7,20 +7,48 @@ import '../../../core/theme/app_theme.dart';
 import '../models/natal_placement.dart';
 import '../services/natal_chart_service.dart';
 
-class ChartWheelView extends ConsumerWidget {
+class ChartWheelView extends ConsumerStatefulWidget {
   final NatalPlacements placements;
 
   const ChartWheelView({super.key, required this.placements});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChartWheelView> createState() => _ChartWheelViewState();
+}
+
+class _ChartWheelViewState extends ConsumerState<ChartWheelView> {
+  bool _isRefreshing = false;
+
+  Future<void> _refreshChart() async {
+    if (_isRefreshing) return;
+    
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    try {
+      final service = ref.read(natalChartServiceProvider);
+      await service.regenerateWheel();
+      // Invalidate the provider to fetch new data
+      ref.invalidate(natalChartWheelProvider);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isRefreshing = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final wheelSvgAsync = ref.watch(natalChartWheelProvider);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          // Hint text
+          // Hint text with refresh button
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
@@ -37,6 +65,49 @@ class ChartWheelView extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.textMuted,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: _isRefreshing ? null : _refreshChart,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: AppColors.accent.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (_isRefreshing)
+                          const SizedBox(
+                            width: 12,
+                            height: 12,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.accent,
+                            ),
+                          )
+                        else
+                          Icon(
+                            Icons.refresh_rounded,
+                            size: 14,
+                            color: AppColors.accent,
+                          ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Refresh',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: AppColors.accent,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -99,7 +170,7 @@ class ChartWheelView extends ConsumerWidget {
       MaterialPageRoute(
         builder: (context) => _FullscreenChartView(
           svgString: svgString,
-          placements: placements,
+          placements: widget.placements,
         ),
       ),
     );
@@ -157,7 +228,7 @@ class ChartWheelView extends ConsumerWidget {
               minScale: 1.0,
               maxScale: 4.0,
               child: CustomPaint(
-                painter: _SimpleChartWheelPainter(placements),
+                painter: _SimpleChartWheelPainter(widget.placements),
                 child: Container(),
               ),
             ),
@@ -172,7 +243,7 @@ class ChartWheelView extends ConsumerWidget {
       MaterialPageRoute(
         builder: (context) => _FullscreenChartView(
           svgString: null,
-          placements: placements,
+          placements: widget.placements,
         ),
       ),
     );
@@ -203,7 +274,7 @@ class ChartWheelView extends ConsumerWidget {
           Wrap(
             spacing: 16,
             runSpacing: 8,
-            children: placements.planets.map((p) {
+            children: widget.placements.planets.map((p) {
               final info = PlanetInfo.planets[p.planet];
               return Row(
                 mainAxisSize: MainAxisSize.min,

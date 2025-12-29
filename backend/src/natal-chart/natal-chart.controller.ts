@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Param,
+  Query,
   UseGuards,
   Res,
   HttpStatus,
@@ -134,12 +135,19 @@ export class NatalChartController {
 
   /**
    * GET /natal-chart/wheel.svg - Get wheel chart as SVG
+   * Query params:
+   *   - force=true: Force regenerate SVG (ignore cache)
    */
   @Get('wheel.svg')
-  async getWheelSvg(@CurrentUser('id') userId: string, @Res() res: Response) {
-    this.logger.log(`Getting wheel SVG for user ${userId}`);
+  async getWheelSvg(
+    @CurrentUser('id') userId: string,
+    @Query('force') force: string,
+    @Res() res: Response,
+  ) {
+    const forceRegenerate = force === 'true';
+    this.logger.log(`Getting wheel SVG for user ${userId}${forceRegenerate ? ' (force regenerate)' : ''}`);
     
-    const svg = await this.renderService.getWheelSvg(userId);
+    const svg = await this.renderService.getWheelSvg(userId, forceRegenerate);
     
     if (!svg) {
       return res.status(HttpStatus.NOT_FOUND).json({
@@ -148,8 +156,28 @@ export class NatalChartController {
     }
 
     res.setHeader('Content-Type', 'image/svg+xml');
-    res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 1 day
+    // Don't cache if force regenerated, otherwise cache for 1 day
+    if (forceRegenerate) {
+      res.setHeader('Cache-Control', 'no-cache');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+    }
     return res.send(svg);
+  }
+
+  /**
+   * POST /natal-chart/wheel/regenerate - Force regenerate wheel SVG
+   */
+  @Post('wheel/regenerate')
+  async regenerateWheel(@CurrentUser('id') userId: string) {
+    this.logger.log(`Force regenerating wheel SVG for user ${userId}`);
+    await this.renderService.invalidateCache(userId);
+    const svg = await this.renderService.getWheelSvg(userId, true);
+    
+    return {
+      message: 'Wheel SVG regenerated successfully',
+      hasWheel: !!svg,
+    };
   }
 }
 
