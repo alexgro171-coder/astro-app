@@ -75,8 +75,17 @@ class ApiClient {
         if (kDebugMode) {
           print('API Error: ${error.response?.statusCode} - ${error.message} for ${error.requestOptions.path}');
         }
-        // Handle 401 - try refresh token
+        // Handle 401 - try refresh token (but not for auth endpoints)
         if (error.response?.statusCode == 401) {
+          final path = error.requestOptions.path;
+          
+          // Don't attempt refresh for auth endpoints (prevents infinite loop)
+          if (path.contains('/auth/refresh') || path.contains('/auth/login') || path.contains('/auth/signup')) {
+            if (kDebugMode) print('Auth endpoint failed, clearing tokens');
+            await clearTokens();
+            return handler.next(error);
+          }
+          
           if (kDebugMode) print('Attempting token refresh...');
           final refreshed = await _refreshToken();
           if (refreshed) {
@@ -87,7 +96,10 @@ class ApiClient {
             final response = await _dio.fetch(error.requestOptions);
             return handler.resolve(response);
           }
-          if (kDebugMode) print('Token refresh failed');
+          
+          // Refresh failed - clear tokens and propagate error
+          if (kDebugMode) print('Token refresh failed, clearing tokens');
+          await clearTokens();
         }
         return handler.next(error);
       },
