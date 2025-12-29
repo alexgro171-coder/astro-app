@@ -56,58 +56,46 @@ class _ChartWheelViewState extends ConsumerState<ChartWheelView> {
               children: [
                 Icon(
                   Icons.touch_app_rounded,
-                  size: 16,
+                  size: 14,
                   color: AppColors.textMuted,
                 ),
-                const SizedBox(width: 6),
-                Text(
-                  'Tap to view fullscreen • Pinch to zoom',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textMuted,
+                const SizedBox(width: 4),
+                Flexible(
+                  child: Text(
+                    'Tap for fullscreen • Pinch to zoom',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppColors.textMuted,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: _isRefreshing ? null : _refreshChart,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
                       color: AppColors.accent.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         color: AppColors.accent.withOpacity(0.3),
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (_isRefreshing)
-                          const SizedBox(
-                            width: 12,
-                            height: 12,
+                    child: _isRefreshing
+                        ? const SizedBox(
+                            width: 14,
+                            height: 14,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               color: AppColors.accent,
                             ),
                           )
-                        else
-                          Icon(
+                        : Icon(
                             Icons.refresh_rounded,
                             size: 14,
                             color: AppColors.accent,
                           ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Refresh',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: AppColors.accent,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ],
