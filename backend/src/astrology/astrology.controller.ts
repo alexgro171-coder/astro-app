@@ -6,12 +6,14 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '@prisma/client';
 
 @ApiTags('astrology')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('astrology')
 export class AstrologyController {
   constructor(private readonly astrologyService: AstrologyService) {}
 
+  /**
+   * PUBLIC endpoint - no auth required
+   * Used during onboarding for location autocomplete
+   */
   @Get('geo-search')
   @ApiOperation({ summary: 'Search for a location by name (for autocomplete)' })
   @ApiQuery({ name: 'place', required: true, description: 'Place name to search for' })
@@ -27,6 +29,8 @@ export class AstrologyController {
   }
 
   @Get('natal-chart')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get user natal chart' })
   async getNatalChart(@CurrentUser() user: User) {
     const chart = await this.astrologyService.getNatalChart(user.id);
@@ -49,6 +53,8 @@ export class AstrologyController {
   }
 
   @Get('transits/today')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get today\'s transits for the user' })
   async getTodayTransits(@CurrentUser() user: User) {
     const transits = await this.astrologyService.getDailyTransits(user, new Date());
