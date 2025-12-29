@@ -386,38 +386,45 @@ class _FullscreenChartViewState extends State<_FullscreenChartView> {
           // Bottom controls
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildZoomButton(
-                    icon: Icons.zoom_out_rounded,
-                    label: 'Zoom Out',
-                    onTap: () {
-                      final currentScale = _transformationController.value.getMaxScaleOnAxis();
-                      final newScale = (currentScale - 0.5).clamp(0.5, 5.0);
-                      _transformationController.value = Matrix4.identity()..scale(newScale);
-                      setState(() {
-                        _currentScale = newScale;
-                      });
-                    },
+                  Expanded(
+                    child: _buildZoomButton(
+                      icon: Icons.zoom_out_rounded,
+                      label: '-',
+                      onTap: () {
+                        final currentScale = _transformationController.value.getMaxScaleOnAxis();
+                        final newScale = (currentScale - 0.5).clamp(0.5, 5.0);
+                        _transformationController.value = Matrix4.identity()..scale(newScale);
+                        setState(() {
+                          _currentScale = newScale;
+                        });
+                      },
+                    ),
                   ),
-                  _buildZoomButton(
-                    icon: Icons.fit_screen_rounded,
-                    label: 'Fit',
-                    onTap: _resetZoom,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildZoomButton(
+                      icon: Icons.fit_screen_rounded,
+                      label: 'Fit',
+                      onTap: _resetZoom,
+                    ),
                   ),
-                  _buildZoomButton(
-                    icon: Icons.zoom_in_rounded,
-                    label: 'Zoom In',
-                    onTap: () {
-                      final currentScale = _transformationController.value.getMaxScaleOnAxis();
-                      final newScale = (currentScale + 0.5).clamp(0.5, 5.0);
-                      _transformationController.value = Matrix4.identity()..scale(newScale);
-                      setState(() {
-                        _currentScale = newScale;
-                      });
-                    },
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildZoomButton(
+                      icon: Icons.zoom_in_rounded,
+                      label: '+',
+                      onTap: () {
+                        final currentScale = _transformationController.value.getMaxScaleOnAxis();
+                        final newScale = (currentScale + 0.5).clamp(0.5, 5.0);
+                        _transformationController.value = Matrix4.identity()..scale(newScale);
+                        setState(() {
+                          _currentScale = newScale;
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -436,7 +443,7 @@ class _FullscreenChartViewState extends State<_FullscreenChartView> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
@@ -445,10 +452,10 @@ class _FullscreenChartViewState extends State<_FullscreenChartView> {
           ),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: AppColors.accent, size: 20),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             Text(
               label,
               style: const TextStyle(
