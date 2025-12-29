@@ -334,7 +334,7 @@ Output only the interpretation text, nothing else.`;
 
   /**
    * Generate all PRO interpretations for a user (after purchase)
-   * Generates in the specified language
+   * Generates in the specified language - processes in parallel batches for speed
    */
   async generateProInterpretations(userId: string, language: Language = 'EN'): Promise<NatalInterpretationDto[]> {
     // Verify purchase
@@ -362,36 +362,63 @@ Output only the interpretation text, nothing else.`;
     const placementsData = placements.placementsJson as NatalPlacementsDto;
     const interpretations: NatalInterpretationDto[] = [];
 
-    this.logger.log(`Generating PRO interpretations for user ${userId} in language ${language}`);
+    this.logger.log(`Generating PRO interpretations for user ${userId} in language ${language} (${placementsData.planets.length} planets)`);
 
-    // Generate for each planet
-    for (const planet of placementsData.planets) {
-      // Check if already exists in user's language
-      let existing = await this.prisma.natalInterpretationPro.findUnique({
-        where: {
-          userId_planetKey_language: { userId, planetKey: planet.planet, language },
-        },
-      });
+    // Process planets in parallel batches of 3 for better performance
+    const batchSize = 3;
+    for (let i = 0; i < placementsData.planets.length; i += batchSize) {
+      const batch = placementsData.planets.slice(i, i + batchSize);
+      this.logger.log(`Processing batch ${Math.floor(i / batchSize) + 1}: ${batch.map(p => p.planet).join(', ')}`);
+      
+      const batchResults = await Promise.all(
+        batch.map(async (planet) => {
+          try {
+            // Check if already exists in user's language
+            let existing = await this.prisma.natalInterpretationPro.findUnique({
+              where: {
+                userId_planetKey_language: { userId, planetKey: planet.planet, language },
+              },
+            });
 
-      if (!existing) {
-        const text = await this.generateProInterpretation(planet.planet, planet.sign, planet.house, language);
-        
-        existing = await this.prisma.natalInterpretationPro.create({
-          data: {
-            userId,
-            placementsId: placements.id,
-            planetKey: planet.planet,
-            sign: planet.sign,
-            house: planet.house,
-            language,
-            text,
-          },
-        });
-      }
+            if (!existing) {
+              this.logger.log(`Generating PRO interpretation for ${planet.planet}...`);
+              const text = await this.generateProInterpretation(planet.planet, planet.sign, planet.house, language);
+              
+              existing = await this.prisma.natalInterpretationPro.create({
+                data: {
+                  userId,
+                  placementsId: placements.id,
+                  planetKey: planet.planet,
+                  sign: planet.sign,
+                  house: planet.house,
+                  language,
+                  text,
+                },
+              });
+              this.logger.log(`PRO interpretation for ${planet.planet} saved.`);
+            } else {
+              this.logger.log(`PRO interpretation for ${planet.planet} already exists.`);
+            }
 
-      interpretations.push(this.mapInterpretation(existing, true));
+            return this.mapInterpretation(existing, true);
+          } catch (error) {
+            this.logger.error(`Failed to generate PRO interpretation for ${planet.planet}: ${error.message}`);
+            // Return a fallback interpretation instead of failing the entire batch
+            return {
+              planetKey: planet.planet,
+              sign: planet.sign,
+              house: planet.house,
+              text: `Unable to generate interpretation for ${planet.planet} at this time. Please try again later.`,
+              isPro: true,
+            } as NatalInterpretationDto;
+          }
+        })
+      );
+      
+      interpretations.push(...batchResults);
     }
 
+    this.logger.log(`Completed PRO interpretations for user ${userId}: ${interpretations.length} total`);
     return interpretations;
   }
 
