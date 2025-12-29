@@ -309,10 +309,7 @@ Output only the interpretation text, nothing else.`;
     } catch (error) {
       this.logger.error(`Failed to generate interpretation for ${planet} in ${sign}:`, error);
       // Fallback text in the appropriate language
-      if (language === 'RO') {
-        return `${planet} în ${sign} în casa ${house} influențează ${this.getPlanetThemeRo(planet)}. Această plasare sugerează tendințe naturale care pot fi dezvoltate prin conștientizare și practică.`;
-      }
-      return `${planet} in ${sign} in the ${this.ordinal(house)} house influences your ${this.getPlanetTheme(planet)}. This placement suggests natural tendencies that can be developed through awareness and practice.`;
+      return this.getFallbackInterpretation(planet, sign, house, language);
     }
   }
 
@@ -435,34 +432,147 @@ Output only the interpretation text, nothing else.`;
 
   /**
    * Get language instruction for AI prompts
+   * Supports: EN, RO, FR, DE, ES, IT, HU, PL
    */
   private getLanguageInstruction(language: Language): string {
-    switch (language) {
-      case 'RO':
-        return '- IMPORTANT: Write entirely in Romanian. Use warm, formal language.';
-      case 'EN':
-      default:
-        return '- Write in English.';
-    }
+    const instructions: Record<Language, string> = {
+      EN: '- Write in English.',
+      RO: '- IMPORTANT: Write entirely in Romanian. Use warm, formal language.',
+      FR: '- IMPORTANT: Write entirely in French. Use elegant, formal language.',
+      DE: '- IMPORTANT: Write entirely in German. Use clear, precise language.',
+      ES: '- IMPORTANT: Write entirely in Spanish. Use warm, engaging language.',
+      IT: '- IMPORTANT: Write entirely in Italian. Use expressive, warm language.',
+      HU: '- IMPORTANT: Write entirely in Hungarian. Use formal but friendly language.',
+      PL: '- IMPORTANT: Write entirely in Polish. Use polite, formal language.',
+    };
+    return instructions[language] || instructions.EN;
   }
 
   /**
-   * Get planet theme in Romanian
+   * Get planet theme in the specified language (for fallback texts)
    */
-  private getPlanetThemeRo(planet: string): string {
-    const themes: Record<string, string> = {
-      'Sun': 'identitatea și expresia de sine',
-      'Moon': 'emoțiile și instinctele',
-      'Mercury': 'comunicarea și gândirea',
-      'Venus': 'relațiile și valorile',
-      'Mars': 'energia și acțiunea',
-      'Jupiter': 'expansiunea și norocul',
-      'Saturn': 'disciplina și responsabilitatea',
-      'Uranus': 'inovația și schimbarea',
-      'Neptune': 'intuiția și visele',
-      'Pluto': 'transformarea și puterea',
+  private getPlanetThemeLocalized(planet: string, language: Language): string {
+    const themes: Record<Language, Record<string, string>> = {
+      EN: {
+        'Sun': 'identity and self-expression',
+        'Moon': 'emotions and instincts',
+        'Mercury': 'communication and thinking',
+        'Venus': 'relationships and values',
+        'Mars': 'energy and action',
+        'Jupiter': 'expansion and luck',
+        'Saturn': 'discipline and responsibility',
+        'Uranus': 'innovation and change',
+        'Neptune': 'intuition and dreams',
+        'Pluto': 'transformation and power',
+      },
+      RO: {
+        'Sun': 'identitatea și expresia de sine',
+        'Moon': 'emoțiile și instinctele',
+        'Mercury': 'comunicarea și gândirea',
+        'Venus': 'relațiile și valorile',
+        'Mars': 'energia și acțiunea',
+        'Jupiter': 'expansiunea și norocul',
+        'Saturn': 'disciplina și responsabilitatea',
+        'Uranus': 'inovația și schimbarea',
+        'Neptune': 'intuiția și visele',
+        'Pluto': 'transformarea și puterea',
+      },
+      FR: {
+        'Sun': "l'identité et l'expression de soi",
+        'Moon': 'les émotions et les instincts',
+        'Mercury': 'la communication et la pensée',
+        'Venus': 'les relations et les valeurs',
+        'Mars': "l'énergie et l'action",
+        'Jupiter': "l'expansion et la chance",
+        'Saturn': 'la discipline et la responsabilité',
+        'Uranus': "l'innovation et le changement",
+        'Neptune': "l'intuition et les rêves",
+        'Pluto': 'la transformation et le pouvoir',
+      },
+      DE: {
+        'Sun': 'Identität und Selbstausdruck',
+        'Moon': 'Emotionen und Instinkte',
+        'Mercury': 'Kommunikation und Denken',
+        'Venus': 'Beziehungen und Werte',
+        'Mars': 'Energie und Handlung',
+        'Jupiter': 'Expansion und Glück',
+        'Saturn': 'Disziplin und Verantwortung',
+        'Uranus': 'Innovation und Wandel',
+        'Neptune': 'Intuition und Träume',
+        'Pluto': 'Transformation und Macht',
+      },
+      ES: {
+        'Sun': 'la identidad y la autoexpresión',
+        'Moon': 'las emociones y los instintos',
+        'Mercury': 'la comunicación y el pensamiento',
+        'Venus': 'las relaciones y los valores',
+        'Mars': 'la energía y la acción',
+        'Jupiter': 'la expansión y la suerte',
+        'Saturn': 'la disciplina y la responsabilidad',
+        'Uranus': 'la innovación y el cambio',
+        'Neptune': 'la intuición y los sueños',
+        'Pluto': 'la transformación y el poder',
+      },
+      IT: {
+        'Sun': "l'identità e l'autoespressione",
+        'Moon': 'le emozioni e gli istinti',
+        'Mercury': 'la comunicazione e il pensiero',
+        'Venus': 'le relazioni e i valori',
+        'Mars': "l'energia e l'azione",
+        'Jupiter': "l'espansione e la fortuna",
+        'Saturn': 'la disciplina e la responsabilità',
+        'Uranus': "l'innovazione e il cambiamento",
+        'Neptune': "l'intuizione e i sogni",
+        'Pluto': 'la trasformazione e il potere',
+      },
+      HU: {
+        'Sun': 'az identitást és az önkifejezést',
+        'Moon': 'az érzelmeket és az ösztönöket',
+        'Mercury': 'a kommunikációt és a gondolkodást',
+        'Venus': 'a kapcsolatokat és az értékeket',
+        'Mars': 'az energiát és a cselekvést',
+        'Jupiter': 'a terjeszkedést és a szerencsét',
+        'Saturn': 'a fegyelmet és a felelősséget',
+        'Uranus': 'az innovációt és a változást',
+        'Neptune': 'az intuíciót és az álmokat',
+        'Pluto': 'az átalakulást és a hatalmat',
+      },
+      PL: {
+        'Sun': 'tożsamość i wyrażanie siebie',
+        'Moon': 'emocje i instynkty',
+        'Mercury': 'komunikację i myślenie',
+        'Venus': 'relacje i wartości',
+        'Mars': 'energię i działanie',
+        'Jupiter': 'ekspansję i szczęście',
+        'Saturn': 'dyscyplinę i odpowiedzialność',
+        'Uranus': 'innowację i zmianę',
+        'Neptune': 'intuicję i marzenia',
+        'Pluto': 'transformację i moc',
+      },
     };
-    return themes[planet] || 'dezvoltarea personală';
+
+    const langThemes = themes[language] || themes.EN;
+    return langThemes[planet] || langThemes['Sun'];
+  }
+
+  /**
+   * Get fallback interpretation text in the specified language
+   */
+  private getFallbackInterpretation(planet: string, sign: string, house: number, language: Language): string {
+    const theme = this.getPlanetThemeLocalized(planet, language);
+    
+    const templates: Record<Language, string> = {
+      EN: `${planet} in ${sign} in the ${this.ordinal(house)} house influences your ${theme}. This placement suggests natural tendencies that can be developed through awareness and practice.`,
+      RO: `${planet} în ${sign} în casa ${house} influențează ${theme}. Această plasare sugerează tendințe naturale care pot fi dezvoltate prin conștientizare și practică.`,
+      FR: `${planet} en ${sign} dans la maison ${house} influence ${theme}. Ce placement suggère des tendances naturelles qui peuvent être développées par la conscience et la pratique.`,
+      DE: `${planet} in ${sign} im ${house}. Haus beeinflusst ${theme}. Diese Platzierung deutet auf natürliche Tendenzen hin, die durch Bewusstsein und Übung entwickelt werden können.`,
+      ES: `${planet} en ${sign} en la casa ${house} influye en ${theme}. Esta ubicación sugiere tendencias naturales que pueden desarrollarse a través de la conciencia y la práctica.`,
+      IT: `${planet} in ${sign} nella ${house}ª casa influenza ${theme}. Questo posizionamento suggerisce tendenze naturali che possono essere sviluppate attraverso consapevolezza e pratica.`,
+      HU: `A ${planet} a ${sign} jegyében a ${house}. házban befolyásolja ${theme}. Ez az elhelyezkedés természetes hajlamokra utal, amelyek tudatossággal és gyakorlással fejleszthetők.`,
+      PL: `${planet} w ${sign} w ${house}. domu wpływa na ${theme}. To położenie sugeruje naturalne tendencje, które można rozwijać poprzez świadomość i praktykę.`,
+    };
+
+    return templates[language] || templates.EN;
   }
 
   /**

@@ -555,8 +555,14 @@ model AuditLog {
 // ============================================
 
 enum Language {
-  EN
-  RO
+  EN  // English
+  RO  // Romanian
+  FR  // French
+  DE  // German
+  ES  // Spanish
+  IT  // Italian
+  HU  // Hungarian
+  PL  // Polish
 }
 
 enum Platform {

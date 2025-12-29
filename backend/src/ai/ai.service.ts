@@ -147,9 +147,7 @@ Respond ONLY with valid JSON, no other text.`;
    * Input is kept under 800 words using precomputed summaries.
    */
   async generateDailyGuidance(context: GuidanceContext): Promise<GuidanceSections> {
-    const languageInstructions = context.language === 'RO' 
-      ? 'Respond entirely in Romanian. Use formal but warm language.'
-      : 'Respond entirely in English. Use professional but approachable language.';
+    const languageInstructions = this.getLanguageInstructions(context.language);
 
     // Determine tone based on personal context (Premium) or default
     const tonePreference = context.personalContext?.tags?.tone_preference || 'balanced';
@@ -282,6 +280,24 @@ Generate warm, personalized guidance with actionable micro-recommendations.`;
     }
 
     return instructions;
+  }
+
+  /**
+   * Get language-specific instructions for AI prompts
+   * Supports: EN, RO, FR, DE, ES, IT, HU, PL
+   */
+  private getLanguageInstructions(language: Language): string {
+    const instructions: Record<Language, string> = {
+      EN: 'Respond entirely in English. Use professional but approachable language.',
+      RO: 'IMPORTANT: Respond entirely in Romanian. Use formal but warm language. Avoid anglicisms.',
+      FR: 'IMPORTANT: Respond entirely in French. Use elegant, formal language with a warm tone.',
+      DE: 'IMPORTANT: Respond entirely in German. Use clear, precise language. Maintain a professional but friendly tone.',
+      ES: 'IMPORTANT: Respond entirely in Spanish. Use warm, engaging language. Be expressive but professional.',
+      IT: 'IMPORTANT: Respond entirely in Italian. Use expressive, warm language. Embrace emotional nuance.',
+      HU: 'IMPORTANT: Respond entirely in Hungarian. Use formal but friendly language (magázódás when appropriate).',
+      PL: 'IMPORTANT: Respond entirely in Polish. Use polite, formal language. Be respectful and warm.',
+    };
+    return instructions[language] || instructions.EN;
   }
 
   /**

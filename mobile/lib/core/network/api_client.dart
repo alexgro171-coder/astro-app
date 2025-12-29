@@ -172,6 +172,10 @@ class ApiClient {
     return _dio.put('/me', data: data);
   }
 
+  Future<Response> updateLanguage(String languageCode) {
+    return _dio.put('/me', data: {'language': languageCode});
+  }
+
   Future<Response> setBirthData(Map<String, dynamic> data) {
     return _dio.post('/me/birth-data', data: data);
   }

@@ -284,6 +284,7 @@ export class TtsService {
 
   /**
    * Get localized strings for TTS script
+   * Supports: EN, RO, FR, DE, ES, IT, HU, PL
    */
   private getLocalizedTtsStrings(language: Language): {
     intro: string;
@@ -296,8 +297,19 @@ export class TtsService {
     growthTitle: string;
     outro: string;
   } {
-    if (language === 'RO') {
-      return {
+    const localizations: Record<Language, ReturnType<typeof this.getLocalizedTtsStrings>> = {
+      EN: {
+        intro: 'Good morning. Here is your daily astrological guidance.',
+        dailySummaryTitle: "Today's overview",
+        healthTitle: 'Health and Wellness',
+        jobTitle: 'Career and Work',
+        businessTitle: 'Business and Decisions',
+        loveTitle: 'Love and Relationships',
+        partnershipTitle: 'Partnerships',
+        growthTitle: 'Personal Growth',
+        outro: 'May the stars guide your path today. Have a wonderful day.',
+      },
+      RO: {
         intro: 'Bună dimineața. Iată ghidarea ta astrologică zilnică.',
         dailySummaryTitle: 'Prezentarea zilei',
         healthTitle: 'Sănătate și Bunăstare',
@@ -307,21 +319,76 @@ export class TtsService {
         partnershipTitle: 'Parteneriate',
         growthTitle: 'Dezvoltare Personală',
         outro: 'Fie ca stelele să-ți ghideze calea astăzi. O zi minunată!',
-      };
-    }
-
-    // Default: English
-    return {
-      intro: 'Good morning. Here is your daily astrological guidance.',
-      dailySummaryTitle: "Today's overview",
-      healthTitle: 'Health and Wellness',
-      jobTitle: 'Career and Work',
-      businessTitle: 'Business and Decisions',
-      loveTitle: 'Love and Relationships',
-      partnershipTitle: 'Partnerships',
-      growthTitle: 'Personal Growth',
-      outro: 'May the stars guide your path today. Have a wonderful day.',
+      },
+      FR: {
+        intro: 'Bonjour. Voici vos conseils astrologiques du jour.',
+        dailySummaryTitle: "Aperçu du jour",
+        healthTitle: 'Santé et Bien-être',
+        jobTitle: 'Carrière et Travail',
+        businessTitle: 'Affaires et Décisions',
+        loveTitle: 'Amour et Relations',
+        partnershipTitle: 'Partenariats',
+        growthTitle: 'Développement Personnel',
+        outro: 'Que les étoiles guident votre chemin aujourd\'hui. Passez une merveilleuse journée!',
+      },
+      DE: {
+        intro: 'Guten Morgen. Hier ist Ihre tägliche astrologische Führung.',
+        dailySummaryTitle: 'Tagesübersicht',
+        healthTitle: 'Gesundheit und Wohlbefinden',
+        jobTitle: 'Karriere und Arbeit',
+        businessTitle: 'Geschäft und Entscheidungen',
+        loveTitle: 'Liebe und Beziehungen',
+        partnershipTitle: 'Partnerschaften',
+        growthTitle: 'Persönliche Entwicklung',
+        outro: 'Mögen die Sterne heute Ihren Weg leiten. Einen wundervollen Tag!',
+      },
+      ES: {
+        intro: 'Buenos días. Aquí está tu guía astrológica diaria.',
+        dailySummaryTitle: 'Resumen del día',
+        healthTitle: 'Salud y Bienestar',
+        jobTitle: 'Carrera y Trabajo',
+        businessTitle: 'Negocios y Decisiones',
+        loveTitle: 'Amor y Relaciones',
+        partnershipTitle: 'Asociaciones',
+        growthTitle: 'Crecimiento Personal',
+        outro: 'Que las estrellas guíen tu camino hoy. ¡Que tengas un día maravilloso!',
+      },
+      IT: {
+        intro: 'Buongiorno. Ecco la tua guida astrologica quotidiana.',
+        dailySummaryTitle: 'Panoramica del giorno',
+        healthTitle: 'Salute e Benessere',
+        jobTitle: 'Carriera e Lavoro',
+        businessTitle: 'Affari e Decisioni',
+        loveTitle: 'Amore e Relazioni',
+        partnershipTitle: 'Partnership',
+        growthTitle: 'Crescita Personale',
+        outro: 'Che le stelle guidino il tuo cammino oggi. Buona giornata!',
+      },
+      HU: {
+        intro: 'Jó reggelt. Itt van a mai asztrológiai útmutatód.',
+        dailySummaryTitle: 'A nap áttekintése',
+        healthTitle: 'Egészség és Jólét',
+        jobTitle: 'Karrier és Munka',
+        businessTitle: 'Üzlet és Döntések',
+        loveTitle: 'Szerelem és Kapcsolatok',
+        partnershipTitle: 'Partnerségek',
+        growthTitle: 'Személyes Fejlődés',
+        outro: 'A csillagok vezessék utadat ma. Csodálatos napot!',
+      },
+      PL: {
+        intro: 'Dzień dobry. Oto twoja codzienna wskazówka astrologiczna.',
+        dailySummaryTitle: 'Przegląd dnia',
+        healthTitle: 'Zdrowie i Samopoczucie',
+        jobTitle: 'Kariera i Praca',
+        businessTitle: 'Biznes i Decyzje',
+        loveTitle: 'Miłość i Związki',
+        partnershipTitle: 'Partnerstwa',
+        growthTitle: 'Rozwój Osobisty',
+        outro: 'Niech gwiazdy prowadzą twoją drogę dziś. Wspaniałego dnia!',
+      },
     };
+
+    return localizations[language] || localizations.EN;
   }
 
   /**
