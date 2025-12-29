@@ -155,14 +155,22 @@ class NatalChartService {
   Future<List<NatalInterpretation>?> generateProInterpretations() async {
     try {
       final response = await _apiClient.post('/natal-chart/pro/generate');
-      if (response.statusCode == 200 && response.data != null) {
-        return (response.data['interpretations'] as List)
-            .map((i) => NatalInterpretation.fromJson(i))
-            .toList();
+      debugPrint('Pro generate response: ${response.statusCode} - ${response.data}');
+      
+      // Accept both 200 and 201 status codes
+      if ((response.statusCode == 200 || response.statusCode == 201) && response.data != null) {
+        final interpretations = response.data['interpretations'] as List?;
+        if (interpretations != null) {
+          return interpretations
+              .map((i) => NatalInterpretation.fromJson(i))
+              .toList();
+        }
       }
+      debugPrint('Pro generate failed: statusCode=${response.statusCode}');
       return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint('Error generating pro interpretations: $e');
+      debugPrint('Stack trace: $stackTrace');
       return null;
     }
   }
