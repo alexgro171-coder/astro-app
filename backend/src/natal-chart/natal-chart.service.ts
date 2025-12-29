@@ -36,6 +36,7 @@ export class NatalChartService {
 
   /**
    * Get placements for a user (creates if not exists from natal chart)
+   * Also updates existing placements if they're missing ascendant data
    */
   async getOrCreatePlacements(userId: string): Promise<any> {
     // Check if placements already exist
@@ -44,6 +45,38 @@ export class NatalChartService {
     });
 
     if (placements) {
+      // Check if we need to update (missing ascendant/midheaven)
+      const existingData = placements.placementsJson as any;
+      const needsUpdate = !existingData?.ascendantLongitude || !existingData?.midheavenLongitude;
+      
+      if (needsUpdate) {
+        this.logger.log(`Placements for user ${userId} missing ASC/MC, re-extracting...`);
+        
+        const natalChart = await this.prisma.natalChart.findUnique({
+          where: { userId },
+        });
+        
+        if (natalChart) {
+          const rawData = natalChart.rawData as any;
+          const summary = natalChart.summary as any;
+          const placementsData = this.extractPlacementsFromNatalChart(rawData, summary);
+          
+          placements = await this.prisma.natalPlacements.update({
+            where: { userId },
+            data: {
+              placementsJson: placementsData as any,
+              updatedAt: new Date(),
+            },
+          });
+          
+          // Also invalidate wheel cache since placements changed
+          await this.prisma.natalChartWheel.deleteMany({
+            where: { userId },
+          });
+          this.logger.log(`Updated placements and invalidated wheel cache for user ${userId}`);
+        }
+      }
+      
       return placements;
     }
 
@@ -122,16 +155,53 @@ export class NatalChartService {
       }
     }
 
-    // Get Ascendant and MC
+    // Get Ascendant and MC from multiple possible sources
     let ascendantLongitude: number | undefined;
     let midheavenLongitude: number | undefined;
 
+    // Try explicit ascendant field
     if (rawData?.ascendant) {
       ascendantLongitude = parseFloat(rawData.ascendant.fullDegree || rawData.ascendant.degree || 0);
+      this.logger.log(`Found ascendant in rawData.ascendant: ${ascendantLongitude}°`);
     }
+    
+    // Try summary.ascendant
+    if (ascendantLongitude === undefined && summary?.ascendant) {
+      ascendantLongitude = parseFloat(summary.ascendant.longitude || summary.ascendant.fullDegree || summary.ascendant.degree || 0);
+      this.logger.log(`Found ascendant in summary.ascendant: ${ascendantLongitude}°`);
+    }
+    
+    // Fallback: Use House 1 cusp as Ascendant (they are the same by definition)
+    if ((ascendantLongitude === undefined || ascendantLongitude === 0) && houses.length > 0) {
+      const house1 = houses.find(h => h.house === 1);
+      if (house1 && house1.cuspLongitude) {
+        ascendantLongitude = house1.cuspLongitude;
+        this.logger.log(`Using House 1 cusp as ascendant: ${ascendantLongitude}°`);
+      }
+    }
+
+    // Try explicit midheaven field
     if (rawData?.midheaven) {
       midheavenLongitude = parseFloat(rawData.midheaven.fullDegree || rawData.midheaven.degree || 0);
+      this.logger.log(`Found midheaven in rawData.midheaven: ${midheavenLongitude}°`);
     }
+    
+    // Try summary.midheaven
+    if (midheavenLongitude === undefined && summary?.midheaven) {
+      midheavenLongitude = parseFloat(summary.midheaven.longitude || summary.midheaven.fullDegree || summary.midheaven.degree || 0);
+      this.logger.log(`Found midheaven in summary.midheaven: ${midheavenLongitude}°`);
+    }
+    
+    // Fallback: Use House 10 cusp as MC (they are the same by definition)
+    if ((midheavenLongitude === undefined || midheavenLongitude === 0) && houses.length > 0) {
+      const house10 = houses.find(h => h.house === 10);
+      if (house10 && house10.cuspLongitude) {
+        midheavenLongitude = house10.cuspLongitude;
+        this.logger.log(`Using House 10 cusp as midheaven: ${midheavenLongitude}°`);
+      }
+    }
+
+    this.logger.log(`Extracted placements: ${planets.length} planets, ${houses.length} houses, ASC=${ascendantLongitude}°, MC=${midheavenLongitude}°`);
 
     return {
       planets,

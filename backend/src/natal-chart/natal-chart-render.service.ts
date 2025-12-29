@@ -95,8 +95,23 @@ export class NatalChartRenderService {
     const planetRadius = 70;
     const innerRadius = 40;
 
-    // Get ascendant for chart orientation (default to 0° Aries if not available)
-    const ascendant = placements.ascendantLongitude ?? 0;
+    // Get ascendant for chart orientation
+    // Priority: 1) ascendantLongitude, 2) House 1 cusp, 3) fallback to 0
+    let ascendant = placements.ascendantLongitude;
+    
+    // If no ascendant, use House 1 cusp (which IS the Ascendant by definition)
+    if (ascendant === undefined || ascendant === null) {
+      const house1 = placements.houses?.find(h => h.house === 1);
+      if (house1) {
+        ascendant = house1.cuspLongitude;
+        this.logger.log(`Using House 1 cusp (${ascendant}°) as Ascendant`);
+      }
+    }
+    
+    // Final fallback to 0° Aries
+    ascendant = ascendant ?? 0;
+    
+    this.logger.log(`Chart orientation: Ascendant at ${ascendant}° zodiacal longitude`);
 
     const zodiacSigns = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
     const zodiacNames = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 
