@@ -164,12 +164,15 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textPrimary,
+                          Flexible(
+                            child: Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           if (isFree) ...[
@@ -202,6 +205,7 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
                           fontSize: 13,
                           color: AppColors.textSecondary,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
