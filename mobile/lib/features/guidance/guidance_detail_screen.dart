@@ -383,36 +383,21 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          // Score indicator
+                          // Score indicator - simplified linear progress
                           Row(
                             children: [
-                              Flexible(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: List.generate(10, (index) {
-                                    return Container(
-                                      width: 8,
-                                      height: 8,
-                                      margin: EdgeInsets.only(right: index < 9 ? 3 : 0),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: index < score
-                                            ? color
-                                            : AppColors.surfaceLight,
-                                        boxShadow: index < score
-                                            ? [
-                                                BoxShadow(
-                                                  color: color.withOpacity(0.4),
-                                                  blurRadius: 3,
-                                                ),
-                                              ]
-                                            : null,
-                                      ),
-                                    );
-                                  }),
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: LinearProgressIndicator(
+                                    value: score / 10,
+                                    backgroundColor: AppColors.surfaceLight,
+                                    valueColor: AlwaysStoppedAnimation<Color>(color),
+                                    minHeight: 8,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: 12),
                               Text(
                                 '$score/10',
                                 style: TextStyle(

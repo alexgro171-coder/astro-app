@@ -18,6 +18,7 @@ import { OnboardingModule } from './onboarding/onboarding.module';
 import { ContextModule } from './context/context.module';
 import { AdminModule } from './admin/admin.module';
 import { TtsModule } from './tts/tts.module';
+import { NatalChartModule } from './natal-chart/natal-chart.module';
 
 @Module({
   imports: [
@@ -59,6 +60,9 @@ import { TtsModule } from './tts/tts.module';
     
     // Administration
     AdminModule,
+    
+    // Natal Chart interpretations
+    NatalChartModule,
   ],
 })
 export class AppModule {}

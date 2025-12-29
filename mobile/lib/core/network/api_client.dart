@@ -450,4 +450,24 @@ class ApiClient {
     final token = await _storage.read(key: AppConstants.accessTokenKey);
     return token != null;
   }
+
+  // ==================== GENERIC METHODS ====================
+
+  /// Generic GET request with optional custom options
+  Future<Response> get(String path, {Options? options, Map<String, dynamic>? queryParameters}) {
+    return _dio.get(path, options: options, queryParameters: queryParameters);
+  }
+
+  /// Generic POST request
+  Future<Response> post(String path, {dynamic data, Options? options}) {
+    return _dio.post(path, data: data, options: options);
+  }
+
+  /// Helper for SVG response options
+  static Options svgOptions() {
+    return Options(
+      responseType: ResponseType.plain,
+      headers: {'Accept': 'image/svg+xml'},
+    );
+  }
 }

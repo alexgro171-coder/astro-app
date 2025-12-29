@@ -373,6 +373,108 @@ model UserContextProfileHistory {
 }
 
 // ============================================
+// NATAL CHART INTERPRETATIONS (FREE & PRO)
+// ============================================
+
+model NatalPlacements {
+  id                  String    @id @default(cuid())
+  userId              String    @unique @map("user_id")
+  
+  // Structured placements data
+  placementsJson      Json      @map("placements_json")
+  // {
+  //   planets: [{planet, sign, house, longitude, isRetrograde}],
+  //   houses: [{house, cuspLongitude, sign}] | null,
+  //   ascendantLongitude, midheavenLongitude
+  // }
+  
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  freeInterpretations NatalInterpretationFree[]
+  proInterpretations  NatalInterpretationPro[]
+  wheelSvg            NatalChartWheel?
+  
+  @@map("natal_placements")
+}
+
+model NatalInterpretationFree {
+  id                  String    @id @default(cuid())
+  userId              String    @map("user_id")
+  placementsId        String    @map("placements_id")
+  placements          NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
+  
+  planetKey           String    @map("planet_key") // Sun, Moon, Mercury, etc.
+  sign                String
+  house               Int
+  
+  // 60 words interpretation (FREE)
+  text                String    @db.Text
+  
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  
+  @@unique([userId, planetKey])
+  @@map("natal_interpretations_free")
+}
+
+model NatalInterpretationPro {
+  id                  String    @id @default(cuid())
+  userId              String    @map("user_id")
+  placementsId        String    @map("placements_id")
+  placements          NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
+  
+  planetKey           String    @map("planet_key")
+  sign                String
+  house               Int
+  
+  // 150-200 words interpretation (PRO)
+  text                String    @db.Text
+  
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  
+  @@unique([userId, planetKey])
+  @@map("natal_interpretations_pro")
+}
+
+model NatalChartWheel {
+  id                  String    @id @default(cuid())
+  userId              String    @unique @map("user_id")
+  placementsId        String    @unique @map("placements_id")
+  placements          NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
+  
+  // SVG content
+  wheelSvg            String    @map("wheel_svg") @db.Text
+  
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  
+  @@map("natal_chart_wheels")
+}
+
+// Pro purchase tracking
+model NatalProPurchase {
+  id                  String    @id @default(cuid())
+  userId              String    @unique @map("user_id")
+  
+  // Purchase details
+  purchaseId          String?   @map("purchase_id")
+  provider            PaymentProvider?
+  amount              Int       @default(999) // $9.99 in cents
+  currency            String    @default("USD")
+  
+  // Status
+  status              PurchaseStatus @default(COMPLETED)
+  
+  purchasedAt         DateTime  @default(now()) @map("purchased_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  
+  @@map("natal_pro_purchases")
+}
+
+// ============================================
 // AUDIO TTS
 // ============================================
 
@@ -537,5 +639,12 @@ enum ActorType {
   USER
   ADMIN
   SYSTEM
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
 }
 

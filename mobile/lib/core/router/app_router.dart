@@ -16,6 +16,12 @@ import '../../features/profile/profile_screen.dart';
 import '../../features/shell/main_shell.dart';
 import '../../features/context/screens/context_wizard_screen.dart';
 import '../../features/context/models/context_answers.dart';
+import '../../features/for_you/for_you_screen.dart';
+import '../../features/for_you/free_learn_screen.dart';
+import '../../features/natal_chart/natal_chart_screen.dart';
+import '../../features/natal_chart/pro_natal_offer_screen.dart';
+import '../../features/natal_chart/pro_natal_checkout_screen.dart';
+import '../widgets/placeholder_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -99,6 +105,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               },
             ),
           ),
+          GoRoute(
+            path: '/for-you',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const ForYouScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
         ],
       ),
       
@@ -112,6 +128,39 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/add-concern',
         builder: (context, state) => const AddConcernScreen(),
+      ),
+      
+      // Natal Chart routes
+      GoRoute(
+        path: '/natal-chart',
+        builder: (context, state) => const NatalChartScreen(),
+      ),
+      GoRoute(
+        path: '/pro-natal-offer',
+        builder: (context, state) => const ProNatalOfferScreen(),
+      ),
+      GoRoute(
+        path: '/pro-natal-checkout',
+        builder: (context, state) => const ProNatalCheckoutScreen(),
+      ),
+      
+      // Free Learn Screen
+      GoRoute(
+        path: '/free-learn',
+        builder: (context, state) => const FreeLearnScreen(),
+      ),
+      
+      // Generic placeholder for coming soon features
+      GoRoute(
+        path: '/placeholder',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return PlaceholderScreen(
+            title: extra?['title'] as String? ?? 'Coming Soon',
+            subtitle: extra?['subtitle'] as String? ?? 'This feature is coming soon',
+            icon: extra?['icon'] as IconData?,
+          );
+        },
       ),
     ],
   );

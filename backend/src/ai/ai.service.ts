@@ -346,5 +346,26 @@ Generate warm, personalized guidance with actionable micro-recommendations.`;
       })
       .join('; ');
   }
+
+  /**
+   * Generate plain text response from a prompt (for natal chart interpretations)
+   */
+  async generateText(prompt: string): Promise<string> {
+    try {
+      const response = await this.openai.chat.completions.create({
+        model: this.model,
+        messages: [
+          { role: 'user', content: prompt },
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+      });
+
+      return response.choices[0].message.content || '';
+    } catch (error) {
+      this.logger.error('Failed to generate text:', error.message);
+      throw error;
+    }
+  }
 }
 

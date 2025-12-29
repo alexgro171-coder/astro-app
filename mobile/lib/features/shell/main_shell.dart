@@ -82,6 +82,12 @@ class _MainShellState extends ConsumerState<MainShell> {
                 isSelected: currentIndex == 3,
                 onTap: () => _onNavTap(context, 3),
               ),
+              _NavItem(
+                icon: Icons.auto_awesome_rounded,
+                label: 'For You',
+                isSelected: currentIndex == 4,
+                onTap: () => _onNavTap(context, 4),
+              ),
             ],
           ),
         ),
@@ -104,6 +110,9 @@ class _MainShellState extends ConsumerState<MainShell> {
         break;
       case 3:
         context.go('/profile');
+        break;
+      case 4:
+        context.go('/for-you');
         break;
     }
   }
