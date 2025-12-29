@@ -13,12 +13,16 @@ export class AstrologyController {
   constructor(private readonly astrologyService: AstrologyService) {}
 
   @Get('geo-search')
-  @ApiOperation({ summary: 'Search for a location by name' })
-  @ApiQuery({ name: 'place', required: true })
+  @ApiOperation({ summary: 'Search for a location by name (for autocomplete)' })
+  @ApiQuery({ name: 'place', required: true, description: 'Place name to search for' })
   async searchLocation(@Query('place') place: string): Promise<any> {
-    const results = await this.astrologyService.getGeoDetails(place);
+    if (!place || place.trim().length < 2) {
+      return { results: [] };
+    }
+    
+    const results = await this.astrologyService.getGeoDetails(place.trim());
     return {
-      results: results.slice(0, 10), // Limit to 10 results
+      results: results.slice(0, 10), // Limit to 10 results for autocomplete
     };
   }
 

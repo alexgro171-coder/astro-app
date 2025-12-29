@@ -4,12 +4,25 @@ import { PrismaService } from '../prisma/prisma.service';
 import axios, { AxiosInstance } from 'axios';
 import { User } from '@prisma/client';
 
-interface GeoLocation {
+interface GeoLocationRaw {
   place_name: string;
   latitude: number;
   longitude: number;
   country_code: string;
+  country_name?: string;
+  admin_name?: string; // State/Region
   timezone_id: string;
+}
+
+interface GeoLocationFormatted {
+  placeName: string;
+  adminName?: string;
+  countryName: string;
+  countryCode: string;
+  latitude: number;
+  longitude: number;
+  timezoneId?: string;
+  displayName: string; // Full formatted name for display
 }
 
 interface NatalChartData {
@@ -46,16 +59,44 @@ export class AstrologyService {
   }
 
   /**
-   * Get geo details for a place name
+   * Get geo details for a place name - returns formatted results for autocomplete
    */
-  async getGeoDetails(placeName: string): Promise<GeoLocation[]> {
+  async getGeoDetails(placeName: string): Promise<GeoLocationFormatted[]> {
     // Normalize place name by removing diacritics for better API compatibility
     const normalizedPlace = this.removeDiacritics(placeName);
     
-    // Extract just the city name (API doesn't work well with "City, Country" format)
-    const cityOnly = this.extractCityName(normalizedPlace);
+    this.logger.log(`Looking up location: "${placeName}" (normalized: "${normalizedPlace}")`);
     
-    this.logger.log(`Looking up location: "${placeName}" (normalized: "${normalizedPlace}", city: "${cityOnly}")`);
+    try {
+      const response = await this.apiClient.post('/geo_details', {
+        place: normalizedPlace,
+        maxRows: 15, // Get more results for better matching
+      });
+
+      const rawResults: GeoLocationRaw[] = response.data.geonames || response.data || [];
+      this.logger.log(`Geo lookup returned ${rawResults.length} results`);
+      
+      // Format results for autocomplete
+      const formattedResults = rawResults.map(r => this.formatGeoLocation(r));
+      
+      // Remove duplicates (same display name)
+      const uniqueResults = formattedResults.filter((item, index, self) =>
+        index === self.findIndex(t => t.displayName === item.displayName)
+      );
+      
+      return uniqueResults;
+    } catch (error) {
+      this.logger.error(`Failed to get geo details for "${placeName}":`, error.message);
+      throw new BadRequestException('Failed to lookup location');
+    }
+  }
+
+  /**
+   * Get geo details (raw format) - for internal use
+   */
+  async getGeoDetailsRaw(placeName: string): Promise<GeoLocationRaw[]> {
+    const normalizedPlace = this.removeDiacritics(placeName);
+    const cityOnly = this.extractCityName(normalizedPlace);
     
     try {
       const response = await this.apiClient.post('/geo_details', {
@@ -63,14 +104,109 @@ export class AstrologyService {
         maxRows: 10,
       });
 
-      const results = response.data.geonames || response.data || [];
-      this.logger.log(`Geo lookup returned ${results.length} results`);
-      
-      return results;
+      return response.data.geonames || response.data || [];
     } catch (error) {
       this.logger.error(`Failed to get geo details for "${placeName}":`, error.message);
       throw new BadRequestException('Failed to lookup location');
     }
+  }
+
+  /**
+   * Format raw geo location to structured format with display name
+   */
+  private formatGeoLocation(raw: GeoLocationRaw): GeoLocationFormatted {
+    const countryName = raw.country_name || this.getCountryName(raw.country_code);
+    const adminName = raw.admin_name || undefined;
+    
+    // Build display name: "City, State, Country" or "City, Country"
+    let displayName = raw.place_name;
+    if (adminName) {
+      displayName += `, ${adminName}`;
+    }
+    displayName += `, ${countryName}`;
+
+    return {
+      placeName: raw.place_name,
+      adminName,
+      countryName,
+      countryCode: raw.country_code,
+      latitude: raw.latitude,
+      longitude: raw.longitude,
+      timezoneId: raw.timezone_id,
+      displayName,
+    };
+  }
+
+  /**
+   * Get country name from country code
+   */
+  private getCountryName(countryCode: string): string {
+    const countries: Record<string, string> = {
+      'US': 'United States',
+      'MX': 'Mexico',
+      'CR': 'Costa Rica',
+      'CA': 'Canada',
+      'GB': 'United Kingdom',
+      'DE': 'Germany',
+      'FR': 'France',
+      'IT': 'Italy',
+      'ES': 'Spain',
+      'PT': 'Portugal',
+      'RO': 'Romania',
+      'MD': 'Moldova',
+      'UA': 'Ukraine',
+      'RU': 'Russia',
+      'PL': 'Poland',
+      'CZ': 'Czech Republic',
+      'AT': 'Austria',
+      'CH': 'Switzerland',
+      'NL': 'Netherlands',
+      'BE': 'Belgium',
+      'SE': 'Sweden',
+      'NO': 'Norway',
+      'DK': 'Denmark',
+      'FI': 'Finland',
+      'GR': 'Greece',
+      'TR': 'Turkey',
+      'AU': 'Australia',
+      'NZ': 'New Zealand',
+      'JP': 'Japan',
+      'CN': 'China',
+      'IN': 'India',
+      'BR': 'Brazil',
+      'AR': 'Argentina',
+      'CL': 'Chile',
+      'CO': 'Colombia',
+      'PE': 'Peru',
+      'VE': 'Venezuela',
+      'ZA': 'South Africa',
+      'EG': 'Egypt',
+      'IL': 'Israel',
+      'AE': 'United Arab Emirates',
+      'SA': 'Saudi Arabia',
+      'SG': 'Singapore',
+      'MY': 'Malaysia',
+      'TH': 'Thailand',
+      'VN': 'Vietnam',
+      'PH': 'Philippines',
+      'ID': 'Indonesia',
+      'KR': 'South Korea',
+      'HU': 'Hungary',
+      'BG': 'Bulgaria',
+      'HR': 'Croatia',
+      'RS': 'Serbia',
+      'SK': 'Slovakia',
+      'SI': 'Slovenia',
+      'IE': 'Ireland',
+      'IS': 'Iceland',
+      'LU': 'Luxembourg',
+      'MT': 'Malta',
+      'CY': 'Cyprus',
+      'EE': 'Estonia',
+      'LV': 'Latvia',
+      'LT': 'Lithuania',
+    };
+    return countries[countryCode] || countryCode;
   }
 
   /**

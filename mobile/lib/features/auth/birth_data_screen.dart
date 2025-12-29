@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
+import '../../core/widgets/location_autocomplete.dart';
 
 class BirthDataScreen extends ConsumerStatefulWidget {
   const BirthDataScreen({super.key});
@@ -15,17 +16,16 @@ class BirthDataScreen extends ConsumerStatefulWidget {
 
 class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _placeController = TextEditingController();
   
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   bool _unknownTime = false;
   bool _isLoading = false;
   String? _errorMessage;
+  LocationResult? _selectedLocation;
 
   @override
   void dispose() {
-    _placeController.dispose();
     super.dispose();
   }
 
@@ -84,6 +84,10 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
       setState(() => _errorMessage = 'Please select your birth date');
       return;
     }
+    if (_selectedLocation == null) {
+      setState(() => _errorMessage = 'Please select a birth place from the suggestions');
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -100,10 +104,11 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
         birthTime = '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}';
       }
 
+      // Send pre-resolved location data (no ambiguity!)
       await apiClient.setBirthData({
         'birthDate': DateFormat('yyyy-MM-dd').format(_selectedDate!),
         'birthTime': birthTime,
-        'placeName': _placeController.text.trim(),
+        'location': _selectedLocation!.toJson(),
       });
 
       if (!mounted) return;
@@ -112,7 +117,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
       context.go('/context-wizard', extra: {'isOnboarding': true});
     } catch (e) {
       setState(() {
-        _errorMessage = 'Could not save birth data. Please check the location and try again.';
+        _errorMessage = 'Could not save birth data. Please try again.';
       });
     } finally {
       if (mounted) {
@@ -314,7 +319,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
 
                   const SizedBox(height: 20),
 
-                  // Birth Place
+                  // Birth Place with Autocomplete
                   const Text(
                     'Birth Place',
                     style: TextStyle(
@@ -324,20 +329,48 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _placeController,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      hintText: 'City, Country (e.g., Bucharest, Romania)',
-                      prefixIcon: Icon(Icons.location_on_outlined, color: AppColors.textMuted),
-                    ),
+                  LocationAutocomplete(
+                    hintText: 'Start typing a city name...',
+                    initialValue: _selectedLocation,
+                    onSelected: (location) {
+                      setState(() {
+                        _selectedLocation = location;
+                        _errorMessage = null;
+                      });
+                    },
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your birth place';
+                      if (_selectedLocation == null) {
+                        return 'Please select a location from the suggestions';
                       }
                       return null;
                     },
                   ),
+                  if (_selectedLocation != null) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.green.withOpacity(0.3)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Selected: ${_selectedLocation!.displayName}',
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
 
                   const SizedBox(height: 40),
 

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AstrologyService } from '../astrology/astrology.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -7,6 +7,8 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     private prisma: PrismaService,
     private astrologyService: AstrologyService,
@@ -49,30 +51,55 @@ export class UsersService {
   }
 
   async setBirthData(userId: string, birthDataDto: BirthDataDto) {
-    const { birthDate, birthTime, placeName } = birthDataDto;
+    const { birthDate, birthTime, placeName, location } = birthDataDto;
 
-    // Get geo details from AstrologyAPI
-    const geoDetails = await this.astrologyService.getGeoDetails(placeName);
-    
-    if (!geoDetails || geoDetails.length === 0) {
-      throw new BadRequestException('Could not find location. Please try a different place name.');
+    let birthPlace: string;
+    let birthLat: number;
+    let birthLon: number;
+    let birthTimezone: number;
+
+    // Check if we have pre-resolved location data (from autocomplete)
+    if (location) {
+      // Use the pre-selected location - no ambiguity!
+      birthPlace = location.adminName 
+        ? `${location.placeName}, ${location.adminName}, ${location.countryName}`
+        : `${location.placeName}, ${location.countryName}`;
+      birthLat = location.latitude;
+      birthLon = location.longitude;
+      
+      // Get timezone from country code
+      birthTimezone = await this.astrologyService.getTimezone(location.countryCode);
+      
+      this.logger.log(`Using pre-selected location: ${birthPlace} (${birthLat}, ${birthLon})`);
+    } else if (placeName) {
+      // Legacy fallback: lookup by place name (may be ambiguous)
+      this.logger.warn(`Using legacy placeName lookup for: ${placeName}`);
+      
+      const geoDetails = await this.astrologyService.getGeoDetails(placeName);
+      
+      if (!geoDetails || geoDetails.length === 0) {
+        throw new BadRequestException('Could not find location. Please try a different place name.');
+      }
+
+      const geoLocation = geoDetails[0];
+      birthPlace = geoLocation.displayName || placeName;
+      birthLat = geoLocation.latitude;
+      birthLon = geoLocation.longitude;
+      birthTimezone = await this.astrologyService.getTimezone(geoLocation.countryCode);
+    } else {
+      throw new BadRequestException('Please provide a birth location.');
     }
 
-    const location = geoDetails[0];
-
-    // Get timezone
-    const timezone = await this.astrologyService.getTimezone(location.country_code);
-
-    // Update user with birth data (convert strings to numbers for Prisma)
+    // Update user with birth data
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: {
         birthDate: new Date(birthDate),
         birthTime: birthTime || 'unknown',
-        birthPlace: location.place_name || placeName,
-        birthLat: parseFloat(String(location.latitude)),
-        birthLon: parseFloat(String(location.longitude)),
-        birthTimezone: parseFloat(String(timezone)) || 0,
+        birthPlace,
+        birthLat,
+        birthLon,
+        birthTimezone,
       },
     });
 
