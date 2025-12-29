@@ -14,6 +14,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { NatalChartService } from './natal-chart.service';
 import { NatalChartRenderService } from './natal-chart-render.service';
+import { User } from '@prisma/client';
 
 @Controller('natal-chart')
 @UseGuards(JwtAuthGuard)
@@ -63,14 +64,15 @@ export class NatalChartController {
 
   /**
    * GET /natal-chart/interpretation/:planetKey - Get single interpretation (lazy load)
+   * Returns interpretation in user's preferred language
    */
   @Get('interpretation/:planetKey')
   async getInterpretation(
-    @CurrentUser('id') userId: string,
+    @CurrentUser() user: User,
     @Param('planetKey') planetKey: string,
   ) {
-    this.logger.log(`Getting interpretation for ${planetKey} for user ${userId}`);
-    const interpretation = await this.natalChartService.getInterpretation(userId, planetKey);
+    this.logger.log(`Getting interpretation for ${planetKey} for user ${user.id} (lang: ${user.language})`);
+    const interpretation = await this.natalChartService.getInterpretation(user.id, planetKey, user.language);
     
     if (!interpretation) {
       return {
@@ -120,12 +122,13 @@ export class NatalChartController {
 
   /**
    * POST /natal-chart/pro/generate - Generate PRO interpretations (after purchase)
+   * Generates in user's preferred language
    */
   @Post('pro/generate')
-  async generateProInterpretations(@CurrentUser('id') userId: string) {
-    this.logger.log(`Generating pro interpretations for user ${userId}`);
+  async generateProInterpretations(@CurrentUser() user: User) {
+    this.logger.log(`Generating pro interpretations for user ${user.id} (lang: ${user.language})`);
     
-    const interpretations = await this.natalChartService.generateProInterpretations(userId);
+    const interpretations = await this.natalChartService.generateProInterpretations(user.id, user.language);
     
     return {
       message: 'Pro interpretations generated successfully',

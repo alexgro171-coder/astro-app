@@ -2,6 +2,7 @@ import { Injectable, Logger, NotFoundException, BadRequestException } from '@nes
 import { PrismaService } from '../prisma/prisma.service';
 import { AiService } from '../ai/ai.service';
 import { NatalPlacementsDto, NatalInterpretationDto, NatalChartDataDto } from './dto/natal-placement.dto';
+import { Language } from '@prisma/client';
 
 @Injectable()
 export class NatalChartService {
@@ -232,12 +233,13 @@ export class NatalChartService {
 
   /**
    * Get a single FREE interpretation (lazy load)
+   * Respects user's language preference - generates in that language
    */
-  async getInterpretation(userId: string, planetKey: string): Promise<NatalInterpretationDto | null> {
-    // Check if interpretation exists
+  async getInterpretation(userId: string, planetKey: string, language: Language = 'EN'): Promise<NatalInterpretationDto | null> {
+    // Check if interpretation exists in user's language
     let interpretation = await this.prisma.natalInterpretationFree.findUnique({
       where: {
-        userId_planetKey: { userId, planetKey },
+        userId_planetKey_language: { userId, planetKey, language },
       },
     });
 
@@ -245,7 +247,7 @@ export class NatalChartService {
       return this.mapInterpretation(interpretation);
     }
 
-    // Generate new interpretation
+    // Generate new interpretation in user's language
     const placements = await this.getOrCreatePlacements(userId);
     if (!placements) {
       return null;
@@ -259,10 +261,11 @@ export class NatalChartService {
       return null;
     }
 
-    // Generate interpretation via AI
-    const text = await this.generateFreeInterpretation(planet.planet, planet.sign, planet.house);
+    // Generate interpretation via AI in user's language
+    this.logger.log(`Generating FREE interpretation for ${planet.planet} in language ${language}`);
+    const text = await this.generateFreeInterpretation(planet.planet, planet.sign, planet.house, language);
 
-    // Save to database
+    // Save to database with language
     interpretation = await this.prisma.natalInterpretationFree.create({
       data: {
         userId,
@@ -270,6 +273,7 @@ export class NatalChartService {
         planetKey: planet.planet,
         sign: planet.sign,
         house: planet.house,
+        language,
         text,
       },
     });
@@ -279,8 +283,11 @@ export class NatalChartService {
 
   /**
    * Generate FREE interpretation via AI (~60 words)
+   * Generates in the specified language
    */
-  private async generateFreeInterpretation(planet: string, sign: string, house: number): Promise<string> {
+  private async generateFreeInterpretation(planet: string, sign: string, house: number, language: Language = 'EN'): Promise<string> {
+    const languageInstruction = this.getLanguageInstruction(language);
+    
     const prompt = `You are an astrology expert. Generate a concise natal chart interpretation for:
 Planet: ${planet}
 Sign: ${sign}
@@ -292,6 +299,7 @@ Requirements:
 - Focus on personality traits and tendencies
 - Do not use deterministic language
 - Be encouraging and constructive
+${languageInstruction}
 
 Output only the interpretation text, nothing else.`;
 
@@ -300,6 +308,10 @@ Output only the interpretation text, nothing else.`;
       return response.trim();
     } catch (error) {
       this.logger.error(`Failed to generate interpretation for ${planet} in ${sign}:`, error);
+      // Fallback text in the appropriate language
+      if (language === 'RO') {
+        return `${planet} în ${sign} în casa ${house} influențează ${this.getPlanetThemeRo(planet)}. Această plasare sugerează tendințe naturale care pot fi dezvoltate prin conștientizare și practică.`;
+      }
       return `${planet} in ${sign} in the ${this.ordinal(house)} house influences your ${this.getPlanetTheme(planet)}. This placement suggests natural tendencies that can be developed through awareness and practice.`;
     }
   }
@@ -325,8 +337,9 @@ Output only the interpretation text, nothing else.`;
 
   /**
    * Generate all PRO interpretations for a user (after purchase)
+   * Generates in the specified language
    */
-  async generateProInterpretations(userId: string): Promise<NatalInterpretationDto[]> {
+  async generateProInterpretations(userId: string, language: Language = 'EN'): Promise<NatalInterpretationDto[]> {
     // Verify purchase
     const purchase = await this.prisma.natalProPurchase.findUnique({
       where: { userId },
@@ -352,17 +365,19 @@ Output only the interpretation text, nothing else.`;
     const placementsData = placements.placementsJson as NatalPlacementsDto;
     const interpretations: NatalInterpretationDto[] = [];
 
+    this.logger.log(`Generating PRO interpretations for user ${userId} in language ${language}`);
+
     // Generate for each planet
     for (const planet of placementsData.planets) {
-      // Check if already exists
+      // Check if already exists in user's language
       let existing = await this.prisma.natalInterpretationPro.findUnique({
         where: {
-          userId_planetKey: { userId, planetKey: planet.planet },
+          userId_planetKey_language: { userId, planetKey: planet.planet, language },
         },
       });
 
       if (!existing) {
-        const text = await this.generateProInterpretation(planet.planet, planet.sign, planet.house);
+        const text = await this.generateProInterpretation(planet.planet, planet.sign, planet.house, language);
         
         existing = await this.prisma.natalInterpretationPro.create({
           data: {
@@ -371,6 +386,7 @@ Output only the interpretation text, nothing else.`;
             planetKey: planet.planet,
             sign: planet.sign,
             house: planet.house,
+            language,
             text,
           },
         });
@@ -384,8 +400,11 @@ Output only the interpretation text, nothing else.`;
 
   /**
    * Generate PRO interpretation via AI (~150-200 words)
+   * Generates in the specified language
    */
-  private async generateProInterpretation(planet: string, sign: string, house: number): Promise<string> {
+  private async generateProInterpretation(planet: string, sign: string, house: number, language: Language = 'EN'): Promise<string> {
+    const languageInstruction = this.getLanguageInstruction(language);
+    
     const prompt = `You are an expert astrologer providing a detailed natal chart reading. Generate a comprehensive interpretation for:
 
 Planet: ${planet}
@@ -401,6 +420,7 @@ Requirements:
 - Be encouraging while remaining realistic
 - Use accessible language (avoid jargon)
 - Do not use deterministic language like "you will" or "this will happen"
+${languageInstruction}
 
 Output only the interpretation text, nothing else.`;
 
@@ -411,6 +431,38 @@ Output only the interpretation text, nothing else.`;
       this.logger.error(`Failed to generate PRO interpretation for ${planet} in ${sign}:`, error);
       throw new BadRequestException('Failed to generate interpretation');
     }
+  }
+
+  /**
+   * Get language instruction for AI prompts
+   */
+  private getLanguageInstruction(language: Language): string {
+    switch (language) {
+      case 'RO':
+        return '- IMPORTANT: Write entirely in Romanian. Use warm, formal language.';
+      case 'EN':
+      default:
+        return '- Write in English.';
+    }
+  }
+
+  /**
+   * Get planet theme in Romanian
+   */
+  private getPlanetThemeRo(planet: string): string {
+    const themes: Record<string, string> = {
+      'Sun': 'identitatea și expresia de sine',
+      'Moon': 'emoțiile și instinctele',
+      'Mercury': 'comunicarea și gândirea',
+      'Venus': 'relațiile și valorile',
+      'Mars': 'energia și acțiunea',
+      'Jupiter': 'expansiunea și norocul',
+      'Saturn': 'disciplina și responsabilitatea',
+      'Uranus': 'inovația și schimbarea',
+      'Neptune': 'intuiția și visele',
+      'Pluto': 'transformarea și puterea',
+    };
+    return themes[planet] || 'dezvoltarea personală';
   }
 
   /**

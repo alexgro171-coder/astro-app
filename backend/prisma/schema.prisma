@@ -408,6 +408,7 @@ model NatalInterpretationFree {
   planetKey           String    @map("planet_key") // Sun, Moon, Mercury, etc.
   sign                String
   house               Int
+  language            Language  @default(EN) // Language of the interpretation
   
   // 60 words interpretation (FREE)
   text                String    @db.Text
@@ -415,7 +416,7 @@ model NatalInterpretationFree {
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
   
-  @@unique([userId, planetKey])
+  @@unique([userId, planetKey, language])
   @@map("natal_interpretations_free")
 }
 
@@ -428,6 +429,7 @@ model NatalInterpretationPro {
   planetKey           String    @map("planet_key")
   sign                String
   house               Int
+  language            Language  @default(EN) // Language of the interpretation
   
   // 150-200 words interpretation (PRO)
   text                String    @db.Text
@@ -435,7 +437,7 @@ model NatalInterpretationPro {
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
   
-  @@unique([userId, planetKey])
+  @@unique([userId, planetKey, language])
   @@map("natal_interpretations_pro")
 }
 

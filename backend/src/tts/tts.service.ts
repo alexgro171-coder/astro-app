@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { Language } from '@prisma/client';
 
 const execAsync = promisify(exec);
 
@@ -162,6 +163,14 @@ export class TtsService {
     });
 
     try {
+      // Get user's language preference
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { language: true },
+      });
+      const language = user?.language || 'EN';
+      this.logger.log(`TTS language for user ${userId}: ${language}`);
+
       // Get guidance content
       const guidance = await this.prisma.dailyGuidance.findUnique({
         where: { id: guidanceId },
@@ -171,8 +180,8 @@ export class TtsService {
         throw new Error('Guidance not found');
       }
 
-      // Build text for TTS
-      const text = this.buildAudioScript(guidance.sections as any);
+      // Build text for TTS in user's language
+      const text = this.buildAudioScript(guidance.sections as any, language);
 
       // Generate audio file
       const filename = `${guidanceId}-${Date.now()}.mp3`;
@@ -221,6 +230,7 @@ export class TtsService {
 
   /**
    * Build audio script from guidance sections
+   * Supports English (EN) and Romanian (RO)
    */
   private buildAudioScript(sections: {
     dailySummary?: { content?: string };
@@ -230,43 +240,88 @@ export class TtsService {
     love?: { content?: string };
     partnership?: { content?: string };
     growth?: { content?: string };
-  }): string {
+  }, language: Language = 'EN'): string {
     const parts: string[] = [];
 
+    // Get localized strings
+    const localized = this.getLocalizedTtsStrings(language);
+
     // Intro
-    parts.push('Good morning. Here is your daily astrological guidance.');
+    parts.push(localized.intro);
     parts.push('');
 
     // Daily summary
     if (sections.dailySummary?.content) {
-      parts.push('Today\'s overview:');
+      parts.push(localized.dailySummaryTitle);
       parts.push(sections.dailySummary.content);
       parts.push('');
     }
 
     // Sections in order
     const sectionOrder = [
-      { key: 'health', title: 'Health and Wellness' },
-      { key: 'job', title: 'Career and Work' },
-      { key: 'business', title: 'Business and Decisions' },
-      { key: 'love', title: 'Love and Relationships' },
-      { key: 'partnership', title: 'Partnerships' },
-      { key: 'growth', title: 'Personal Growth' },
+      { key: 'health', titleKey: 'healthTitle' },
+      { key: 'job', titleKey: 'jobTitle' },
+      { key: 'business', titleKey: 'businessTitle' },
+      { key: 'love', titleKey: 'loveTitle' },
+      { key: 'partnership', titleKey: 'partnershipTitle' },
+      { key: 'growth', titleKey: 'growthTitle' },
     ];
 
     for (const section of sectionOrder) {
       const content = (sections as any)[section.key]?.content;
       if (content) {
-        parts.push(`${section.title}:`);
+        parts.push(`${(localized as any)[section.titleKey]}:`);
         parts.push(content);
         parts.push('');
       }
     }
 
     // Outro
-    parts.push('May the stars guide your path today. Have a wonderful day.');
+    parts.push(localized.outro);
 
     return parts.join('\n');
+  }
+
+  /**
+   * Get localized strings for TTS script
+   */
+  private getLocalizedTtsStrings(language: Language): {
+    intro: string;
+    dailySummaryTitle: string;
+    healthTitle: string;
+    jobTitle: string;
+    businessTitle: string;
+    loveTitle: string;
+    partnershipTitle: string;
+    growthTitle: string;
+    outro: string;
+  } {
+    if (language === 'RO') {
+      return {
+        intro: 'Bună dimineața. Iată ghidarea ta astrologică zilnică.',
+        dailySummaryTitle: 'Prezentarea zilei',
+        healthTitle: 'Sănătate și Bunăstare',
+        jobTitle: 'Carieră și Muncă',
+        businessTitle: 'Afaceri și Decizii',
+        loveTitle: 'Dragoste și Relații',
+        partnershipTitle: 'Parteneriate',
+        growthTitle: 'Dezvoltare Personală',
+        outro: 'Fie ca stelele să-ți ghideze calea astăzi. O zi minunată!',
+      };
+    }
+
+    // Default: English
+    return {
+      intro: 'Good morning. Here is your daily astrological guidance.',
+      dailySummaryTitle: "Today's overview",
+      healthTitle: 'Health and Wellness',
+      jobTitle: 'Career and Work',
+      businessTitle: 'Business and Decisions',
+      loveTitle: 'Love and Relationships',
+      partnershipTitle: 'Partnerships',
+      growthTitle: 'Personal Growth',
+      outro: 'May the stars guide your path today. Have a wonderful day.',
+    };
   }
 
   /**
