@@ -6,6 +6,9 @@ import '../../../core/theme/app_theme.dart';
 import '../models/natal_placement.dart';
 import '../services/natal_chart_service.dart';
 
+/// Provider for Pro generation loading state
+final proGeneratingProvider = StateProvider<bool>((ref) => false);
+
 class PlacementsTableView extends ConsumerWidget {
   final NatalChartData chartData;
 
@@ -55,17 +58,52 @@ class PlacementsTableView extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          // Planet interpretations
+          // Show Pro or Free interpretations badge
+          if (chartData.hasProAccess && chartData.proInterpretations != null)
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF9C27B0).withOpacity(0.2),
+                    const Color(0xFFE91E63).withOpacity(0.1),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFF9C27B0).withOpacity(0.5)),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.workspace_premium_rounded, size: 16, color: Color(0xFFFFD700)),
+                  SizedBox(width: 6),
+                  Text(
+                    'Pro Interpretations',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF9C27B0),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          // Planet interpretations (Pro if available, otherwise Free)
           ...chartData.placements.planets.map((planet) => _buildInterpretationCard(
                 context,
                 ref,
                 planet,
-                chartData.freeInterpretations,
+                // Prefer Pro interpretations if available
+                chartData.hasProAccess && chartData.proInterpretations != null
+                    ? chartData.proInterpretations!
+                    : chartData.freeInterpretations,
               )),
 
           // Pro upsell
           const SizedBox(height: 32),
-          if (!chartData.hasProAccess) _buildProUpsell(context),
+          if (!chartData.hasProAccess) _buildProUpsell(context, ref),
 
           // Bottom padding
           SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
@@ -457,7 +495,9 @@ class PlacementsTableView extends ConsumerWidget {
     );
   }
 
-  Widget _buildProUpsell(BuildContext context) {
+  Widget _buildProUpsell(BuildContext context, WidgetRef ref) {
+    final isGenerating = ref.watch(proGeneratingProvider);
+    
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -499,28 +539,128 @@ class PlacementsTableView extends ConsumerWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          const SizedBox(height: 8),
+          // Free badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.green.withOpacity(0.5)),
+            ),
+            child: const Text(
+              '🎁 FREE for Early Adopters!',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.green,
+              ),
+            ),
+          ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => context.push('/pro-natal-offer'),
+            onPressed: isGenerating ? null : () => _generateProInterpretations(context, ref),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF9C27B0),
               foregroundColor: Colors.white,
+              disabledBackgroundColor: const Color(0xFF9C27B0).withOpacity(0.5),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text(
-              'Get Pro • \$9.99',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            child: isGenerating
+                ? const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Text(
+                        'Generating...',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  )
+                : const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.auto_awesome, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        'Unlock Pro Interpretations',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _generateProInterpretations(BuildContext context, WidgetRef ref) async {
+    // Set loading state
+    ref.read(proGeneratingProvider.notifier).state = true;
+    
+    try {
+      final service = ref.read(natalChartServiceProvider);
+      final result = await service.generateProInterpretations();
+      
+      if (result != null && result.isNotEmpty) {
+        // Success! Refresh the natal chart data to show Pro interpretations
+        ref.invalidate(natalChartDataProvider);
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.white),
+                  SizedBox(width: 12),
+                  Expanded(child: Text('Pro interpretations generated! Scroll up to see them.')),
+                ],
+              ),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to generate interpretations. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      // Reset loading state
+      ref.read(proGeneratingProvider.notifier).state = false;
+    }
   }
 
   String _getHouseTheme(int house) {
