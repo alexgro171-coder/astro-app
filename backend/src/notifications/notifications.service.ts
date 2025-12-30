@@ -82,8 +82,12 @@ export class NotificationsService {
       : 'Discover what the stars have in store for you today.';
 
     for (const device of devices) {
+      // Use fcmToken if available, otherwise fall back to legacy deviceToken
+      const token = device.fcmToken || device.deviceToken;
+      if (!token) continue;
+
       try {
-        await this.sendPushNotification(device.deviceToken, {
+        await this.sendPushNotification(token, {
           title,
           body,
           data: {
@@ -178,7 +182,9 @@ export class NotificationsService {
     });
 
     for (const device of devices) {
-      await this.sendPushNotification(device.deviceToken, { title, body, data });
+      const token = device.fcmToken || device.deviceToken;
+      if (!token) continue;
+      await this.sendPushNotification(token, { title, body, data });
     }
   }
 
