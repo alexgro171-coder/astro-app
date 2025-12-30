@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -87,9 +88,16 @@ class KarmicService {
   }
 
   /// Generate karmic astrology reading
+  /// Uses longer timeout (90s) as AI generation can take time
   Future<KarmicStatus> generateReading() async {
     try {
-      final response = await _apiClient.post('/for-you/karmic/generate');
+      final response = await _apiClient.post(
+        '/for-you/karmic/generate',
+        options: Options(
+          receiveTimeout: const Duration(seconds: 90),
+          sendTimeout: const Duration(seconds: 90),
+        ),
+      );
       if ((response.statusCode == 200 || response.statusCode == 201) && response.data != null) {
         return KarmicStatus.fromJson(response.data);
       }
