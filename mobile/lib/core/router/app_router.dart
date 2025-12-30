@@ -21,6 +21,8 @@ import '../../features/for_you/free_learn_screen.dart';
 import '../../features/natal_chart/natal_chart_screen.dart';
 import '../../features/natal_chart/pro_natal_offer_screen.dart';
 import '../../features/natal_chart/pro_natal_checkout_screen.dart';
+import '../../features/karmic/karmic_offer_screen.dart';
+import '../../features/karmic/karmic_result_screen.dart';
 import '../widgets/placeholder_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -148,6 +150,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/free-learn',
         builder: (context, state) => const FreeLearnScreen(),
+      ),
+      
+      // Karmic Astrology
+      GoRoute(
+        path: '/karmic-astrology',
+        builder: (context, state) => const KarmicOfferScreen(),
+      ),
+      GoRoute(
+        path: '/karmic-result',
+        builder: (context, state) => const KarmicResultScreen(),
       ),
       
       // Generic placeholder for coming soon features

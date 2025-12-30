@@ -507,6 +507,65 @@ model NatalProPurchase {
 }
 
 // ============================================
+// ONE-TIME PURCHASES (for paid products like Karmic Astrology)
+// ============================================
+
+model UserPurchase {
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+
+  // Product identification
+  productKey String @map("product_key") // e.g., "karmic_astrology", "solar_return", etc.
+
+  // Purchase details
+  purchaseId String?          @map("purchase_id") // External payment reference
+  provider   PaymentProvider?
+  amount     Int // Amount in cents
+  currency   String           @default("USD")
+
+  // Status
+  status PurchaseStatus @default(COMPLETED)
+
+  purchasedAt DateTime @default(now()) @map("purchased_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, productKey])
+  @@index([userId])
+  @@index([productKey])
+  @@map("user_purchases")
+}
+
+// ============================================
+// KARMIC ASTROLOGY READINGS
+// ============================================
+
+model KarmicAstrologyReading {
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+  locale String // Language of the reading (e.g., "en", "ro")
+
+  // Generation status
+  status   KarmicReadingStatus @default(PENDING)
+  errorMsg String?             @map("error_msg")
+
+  // Content (generated text)
+  content String? @db.Text
+
+  // Input snapshot (node + retrogrades used for generation)
+  inputSnapshotJson Json? @map("input_snapshot_json")
+
+  // Metadata
+  promptVariant String? @map("prompt_variant") // "standard" or "extended"
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([userId, locale])
+  @@index([userId])
+  @@map("karmic_astrology_readings")
+}
+
+// ============================================
 // AUDIO TTS
 // ============================================
 
@@ -690,4 +749,10 @@ enum PurchaseStatus {
   COMPLETED
   REFUNDED
   FAILED
+}
+
+enum KarmicReadingStatus {
+  PENDING // Generation in progress
+  READY   // Content available
+  FAILED  // Generation failed
 }

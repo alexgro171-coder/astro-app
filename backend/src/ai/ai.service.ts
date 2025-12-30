@@ -366,15 +366,21 @@ Generate warm, personalized guidance with actionable micro-recommendations.`;
   /**
    * Generate plain text response from a prompt (for natal chart interpretations)
    */
-  async generateText(prompt: string): Promise<string> {
+  async generateText(systemPromptOrPrompt: string, userPrompt?: string): Promise<string> {
     try {
+      // Support both single prompt and system+user prompt variants
+      const messages = userPrompt
+        ? [
+            { role: 'system' as const, content: systemPromptOrPrompt },
+            { role: 'user' as const, content: userPrompt },
+          ]
+        : [{ role: 'user' as const, content: systemPromptOrPrompt }];
+
       const response = await this.openai.chat.completions.create({
         model: this.model,
-        messages: [
-          { role: 'user', content: prompt },
-        ],
+        messages,
         temperature: 0.7,
-        max_tokens: 500,
+        max_tokens: userPrompt ? 4000 : 500, // More tokens for structured requests
       });
 
       return response.choices[0].message.content || '';

@@ -97,6 +97,15 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
               }),
             ),
             
+            // Karmic Astrology - NEW
+            _buildMenuItem(
+              icon: Icons.auto_awesome_rounded,
+              title: 'Karmic Astrology',
+              subtitle: 'Soul lessons & past life patterns',
+              color: const Color(0xFF7C4DFF),
+              onTap: () => context.push('/karmic-astrology'),
+            ),
+            
             _buildMenuItem(
               icon: Icons.school_rounded,
               title: 'Learn Astrology',

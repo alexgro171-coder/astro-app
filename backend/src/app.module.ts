@@ -19,6 +19,7 @@ import { ContextModule } from './context/context.module';
 import { AdminModule } from './admin/admin.module';
 import { TtsModule } from './tts/tts.module';
 import { NatalChartModule } from './natal-chart/natal-chart.module';
+import { KarmicModule } from './karmic/karmic.module';
 
 @Module({
   imports: [
@@ -63,6 +64,9 @@ import { NatalChartModule } from './natal-chart/natal-chart.module';
     
     // Natal Chart interpretations
     NatalChartModule,
+    
+    // For You features (Karmic Astrology, etc.)
+    KarmicModule,
   ],
 })
 export class AppModule {}
