@@ -261,7 +261,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: AppColors.border.withOpacity(0.5),
+                color: AppColors.surfaceLight.withOpacity(0.5),
               ),
             ),
             child: SelectableText(

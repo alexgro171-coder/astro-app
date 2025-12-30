@@ -8,7 +8,7 @@ import { User, Language, KarmicReadingStatus } from '@prisma/client';
 const KARMIC_PRODUCT_KEY = 'karmic_astrology';
 
 // Node planet names (varies by API)
-const NODE_NAMES = ['North Node', 'Rahu', 'True Node', 'Mean Node'];
+const NODE_NAMES = ['North Node', 'Node', 'Rahu', 'True Node', 'Mean Node'];
 
 interface NodePlacement {
   sign: string;

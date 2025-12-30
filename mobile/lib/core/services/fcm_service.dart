@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../network/api_client.dart';
+import 'device_service.dart';
 
 /// Provider for FCMService
 final fcmServiceProvider = Provider<FCMService>((ref) {
@@ -207,8 +208,11 @@ class FCMService {
     try {
       final platform = Platform.isIOS ? 'IOS' : 'ANDROID';
       final apiClient = _ref!.read(apiClientProvider);
+      final deviceService = _ref!.read(deviceServiceProvider);
+      final deviceId = await deviceService.getOrCreateDeviceId();
       
       await apiClient.registerDevice(
+        deviceId: deviceId,
         deviceToken: token,
         platform: platform,
       );
