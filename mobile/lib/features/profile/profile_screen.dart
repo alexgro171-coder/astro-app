@@ -8,6 +8,7 @@ import '../../core/utils/zodiac_utils.dart';
 import '../shell/main_shell.dart';
 import '../context/widgets/context_settings_card.dart';
 import '../natal_chart/services/natal_chart_service.dart';
+import '../karmic/services/karmic_service.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -85,6 +86,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       // Clear all user-specific cached data
       ref.invalidate(natalChartDataProvider);
       ref.invalidate(natalChartWheelProvider);
+      ref.invalidate(karmicStatusProvider);
       
       if (mounted) {
         context.go('/login');
