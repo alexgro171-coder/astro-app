@@ -74,13 +74,26 @@ export class GuidanceService {
       data: { lastActiveAt: new Date() },
     });
 
-    // Step 3: Check if guidance exists
-    let guidance = await this.prisma.dailyGuidance.findUnique({
+    // Step 3: Check if guidance exists (try localDateStr first, then fall back to date)
+    let guidance = await this.prisma.dailyGuidance.findFirst({
       where: {
-        userId_localDateStr: { userId: user.id, localDateStr },
+        userId: user.id,
+        OR: [
+          { localDateStr },
+          { date: today, localDateStr: null }, // Legacy rows without localDateStr
+        ],
       },
       include: { concern: true },
     });
+
+    // If found legacy row, update it with localDateStr
+    if (guidance && !guidance.localDateStr) {
+      await this.prisma.dailyGuidance.update({
+        where: { id: guidance.id },
+        data: { localDateStr },
+      });
+      guidance.localDateStr = localDateStr;
+    }
 
     // Step 4: Handle based on status
     if (guidance) {

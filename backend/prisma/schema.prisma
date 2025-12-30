@@ -181,10 +181,10 @@ model DailyGuidance {
   userId       String   @map("user_id")
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   date         DateTime @db.Date
-  localDateStr String   @map("local_date_str") // "YYYY-MM-DD" in user's timezone
+  localDateStr String?  @map("local_date_str") // "YYYY-MM-DD" in user's timezone (optional for legacy)
 
   // Generation status for lazy compute
-  status   GuidanceStatus @default(PENDING)
+  status   GuidanceStatus @default(READY) // Default READY for existing rows
   errorMsg String?        @map("error_msg")
 
   // Active concern at time of generation (optional)
@@ -205,12 +205,13 @@ model DailyGuidance {
   priority String? // "high" | "low" - for queue ordering
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Relations
   feedbacks GuidanceFeedback[]
   audio     GuidanceAudio?
 
+  @@unique([userId, date]) // Keep legacy unique constraint
   @@unique([userId, localDateStr]) // IDEMPOTENCY: unique per user+date string
   @@index([userId])
   @@index([status])
