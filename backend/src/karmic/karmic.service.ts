@@ -26,7 +26,7 @@ interface KarmicInputSnapshot {
   retrogrades: RetrogradePlanet[];
 }
 
-interface KarmicStatusResponse {
+export interface KarmicStatusResponse {
   betaFree: boolean;
   priceUsd: number;
   locale: string;
