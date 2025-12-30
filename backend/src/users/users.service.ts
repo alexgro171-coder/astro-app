@@ -128,26 +128,114 @@ export class UsersService {
     return { message: 'Account deleted successfully' };
   }
 
-  async registerDevice(userId: string, deviceToken: string, platform: 'IOS' | 'ANDROID') {
-    await this.prisma.userDevice.upsert({
+  /**
+   * Register device with timezone and FCM token
+   * This is the new comprehensive device registration endpoint
+   */
+  async registerDeviceV2(
+    userId: string,
+    data: {
+      deviceId: string;
+      platform: 'IOS' | 'ANDROID';
+      timezoneIana?: string;
+      utcOffsetMinutes?: number;
+      fcmToken?: string;
+      deviceToken?: string; // Legacy field
+    },
+  ) {
+    const { deviceId, platform, timezoneIana, utcOffsetMinutes, fcmToken, deviceToken } = data;
+
+    // If FCM token provided and it's already in use by another record, clear it first
+    if (fcmToken) {
+      await this.prisma.userDevice.updateMany({
+        where: {
+          fcmToken,
+          NOT: {
+            userId,
+            deviceId,
+          },
+        },
+        data: {
+          fcmToken: null,
+        },
+      });
+    }
+
+    // Upsert device record
+    const device = await this.prisma.userDevice.upsert({
       where: {
-        userId_deviceToken: {
+        userId_deviceId: {
           userId,
-          deviceToken,
+          deviceId,
         },
       },
       update: {
-        isActive: true,
         platform,
+        timezoneIana: timezoneIana || undefined,
+        utcOffsetMinutes: utcOffsetMinutes ?? undefined,
+        fcmToken: fcmToken?.trim() || undefined,
+        deviceToken: deviceToken || undefined,
+        isActive: true,
+        lastSeenAt: new Date(),
       },
       create: {
         userId,
-        deviceToken,
+        deviceId,
         platform,
+        timezoneIana,
+        utcOffsetMinutes,
+        fcmToken: fcmToken?.trim(),
+        deviceToken,
+        lastSeenAt: new Date(),
       },
     });
 
-    return { message: 'Device registered successfully' };
+    // Update user's timezone if not already set or device is most recent
+    if (timezoneIana) {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { timezoneIana: true },
+      });
+
+      // Set user's IANA timezone if it's null (first device registered)
+      if (!user?.timezoneIana) {
+        await this.prisma.user.update({
+          where: { id: userId },
+          data: { timezoneIana },
+        });
+        this.logger.log(`Updated user ${userId} timezoneIana to ${timezoneIana}`);
+      }
+    }
+
+    // Update user's lastActiveAt
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { lastActiveAt: new Date() },
+    });
+
+    this.logger.log(`Device registered for user ${userId}: ${deviceId} (${platform}), tz=${timezoneIana}`);
+
+    return {
+      message: 'Device registered successfully',
+      deviceId: device.id,
+      timezoneIana: device.timezoneIana,
+    };
+  }
+
+  /**
+   * Legacy device registration (backward compatibility)
+   * @deprecated Use registerDeviceV2 instead
+   */
+  async registerDevice(userId: string, deviceToken: string, platform: 'IOS' | 'ANDROID') {
+    // Generate a device ID from the token for legacy compatibility
+    const deviceId = `legacy-${deviceToken.substring(0, 32)}`;
+
+    return this.registerDeviceV2(userId, {
+      deviceId,
+      platform,
+      deviceToken,
+      fcmToken: deviceToken, // Assume the token is also the FCM token
+    });
   }
 
   async findByEmail(email: string): Promise<User | null> {

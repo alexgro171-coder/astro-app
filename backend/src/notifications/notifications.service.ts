@@ -206,4 +206,112 @@ export class NotificationsService {
 
     return { success, failed };
   }
+
+  /**
+   * Send re-engagement push notification to inactive users
+   * 
+   * Triggered by cron job for users inactive >= 48h at 11:50 local time
+   */
+  async sendReengagementPush(
+    userId: string,
+    fcmTokens: string[],
+    language: Language,
+  ): Promise<void> {
+    if (!this.firebaseInitialized) {
+      this.logger.debug('Firebase not initialized, skipping re-engagement push');
+      return;
+    }
+
+    // Localized messages for re-engagement
+    const messages: Record<string, { title: string; body: string }> = {
+      EN: {
+        title: 'Your daily guidance is waiting ✨',
+        body: 'The stars have insights for you today. Tap to discover what awaits!',
+      },
+      RO: {
+        title: 'Ghidarea ta zilnică te așteaptă ✨',
+        body: 'Astrele au un mesaj pentru tine. Descoperă ce îți rezervă ziua!',
+      },
+      FR: {
+        title: 'Votre guidance quotidienne vous attend ✨',
+        body: 'Les étoiles ont des révélations pour vous. Découvrez ce qui vous attend!',
+      },
+      DE: {
+        title: 'Ihre tägliche Anleitung wartet ✨',
+        body: 'Die Sterne haben Erkenntnisse für Sie. Entdecken Sie, was auf Sie wartet!',
+      },
+      ES: {
+        title: 'Tu guía diaria te espera ✨',
+        body: '¡Las estrellas tienen mensajes para ti hoy. Descubre lo que te aguarda!',
+      },
+      IT: {
+        title: 'La tua guida quotidiana ti aspetta ✨',
+        body: 'Le stelle hanno intuizioni per te oggi. Scopri cosa ti attende!',
+      },
+      HU: {
+        title: 'A napi útmutatásod vár rád ✨',
+        body: 'A csillagok üzenetet hoztak neked. Fedezd fel, mi vár rád ma!',
+      },
+      PL: {
+        title: 'Twoja codzienna wskazówka czeka ✨',
+        body: 'Gwiazdy mają dla Ciebie przesłanie. Odkryj, co Cię dziś czeka!',
+      },
+    };
+
+    const msg = messages[language] || messages.EN;
+
+    for (const token of fcmTokens) {
+      try {
+        await this.sendPushNotification(token, {
+          title: msg.title,
+          body: msg.body,
+          data: {
+            type: 'REENGAGEMENT',
+            screen: 'guidance',
+          },
+        });
+      } catch (error) {
+        this.logger.error(`Failed to send re-engagement push to token: ${error.message}`);
+
+        // Mark device as inactive if token is invalid
+        if (this.isInvalidTokenError(error)) {
+          await this.prisma.userDevice.updateMany({
+            where: { fcmToken: token },
+            data: { isActive: false, fcmToken: null },
+          });
+        }
+      }
+    }
+
+    this.logger.debug(`Sent re-engagement push to user ${userId} (${fcmTokens.length} tokens)`);
+  }
+
+  /**
+   * Send push to FCM tokens directly (for re-engagement)
+   */
+  async sendToTokens(
+    tokens: string[],
+    title: string,
+    body: string,
+    data?: Record<string, string>,
+  ): Promise<{ success: number; failed: number }> {
+    if (!this.firebaseInitialized) {
+      return { success: 0, failed: tokens.length };
+    }
+
+    let success = 0;
+    let failed = 0;
+
+    for (const token of tokens) {
+      try {
+        await this.sendPushNotification(token, { title, body, data });
+        success++;
+      } catch (error) {
+        this.logger.error(`Failed to send to token: ${error.message}`);
+        failed++;
+      }
+    }
+
+    return { success, failed };
+  }
 }

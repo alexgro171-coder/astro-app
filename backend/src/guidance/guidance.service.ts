@@ -5,7 +5,14 @@ import { AiService } from '../ai/ai.service';
 import { ConcernsService } from '../concerns/concerns.service';
 import { ContextService } from '../context/context.service';
 import { EntitlementsService } from '../billing/entitlements/entitlements.service';
-import { User } from '@prisma/client';
+import { User, GuidanceStatus, DailyGuidance } from '@prisma/client';
+import { GuidanceQueueService } from './guidance-queue.service';
+
+// Maximum time to wait for generation before returning PENDING
+const MAX_WAIT_MS = 10000;
+
+// Maximum backfill days
+const MAX_BACKFILL_DAYS = 3;
 
 @Injectable()
 export class GuidanceService {
@@ -19,137 +26,234 @@ export class GuidanceService {
     private contextService: ContextService,
     @Inject(forwardRef(() => EntitlementsService))
     private entitlementsService: EntitlementsService,
+    @Inject(forwardRef(() => GuidanceQueueService))
+    private guidanceQueueService: GuidanceQueueService,
   ) {}
 
   /**
-   * Get today's guidance for a user (ON-DEMAND generation)
+   * Resolve user's IANA timezone from various sources
+   */
+  resolveUserTimezone(user: User, headerTimezone?: string): string {
+    // Priority: header > user.timezoneIana > user.timezone > UTC
+    if (headerTimezone && this.isValidTimezone(headerTimezone)) {
+      return headerTimezone;
+    }
+    if (user.timezoneIana && this.isValidTimezone(user.timezoneIana)) {
+      return user.timezoneIana;
+    }
+    if (user.timezone && this.isValidTimezone(user.timezone)) {
+      return user.timezone;
+    }
+    return 'UTC';
+  }
+
+  /**
+   * Get today's guidance for a user (LAZY COMPUTE)
    * 
    * Flow:
-   * 1. Calculate "today" based on user's timezone
-   * 2. Check if guidance already exists for today
-   * 3. If exists → return immediately (cached)
-   * 4. If not → generate on-demand (calls AstrologyAPI + OpenAI)
-   * 
-   * @param user - Authenticated user
-   * @param timezone - User's timezone (from header or profile)
+   * 1. Calculate "today" based on user's timezone -> localDateStr
+   * 2. Check DB for existing guidance
+   * 3. If READY -> return immediately
+   * 4. If PENDING -> wait or return pending status
+   * 5. If not exists -> create PENDING record, enqueue job, optionally wait
+   * 6. Trigger backfill for past 3 days (low priority)
    */
   async getTodayGuidance(user: User, timezone?: string) {
-    // Determine user's timezone
-    const userTimezone = timezone || user.timezone || 'UTC';
-    
-    // Calculate "today" in user's timezone
-    const today = this.getTodayInTimezone(userTimezone);
-    
-    this.logger.log(`Getting guidance for user ${user.id}, timezone: ${userTimezone}, date: ${today.toISOString()}`);
+    // Step 1: Resolve timezone and get today's date string
+    const userTimezone = this.resolveUserTimezone(user, timezone);
+    const localDateStr = this.getLocalDateStr(userTimezone);
+    const today = this.localDateStrToDate(localDateStr);
 
-    // Check if guidance already exists (cache hit)
+    this.logger.log(
+      `Getting guidance for user ${user.id}, timezone: ${userTimezone}, date: ${localDateStr}`,
+    );
+
+    // Step 2: Update user's lastActiveAt
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { lastActiveAt: new Date() },
+    });
+
+    // Step 3: Check if guidance exists
     let guidance = await this.prisma.dailyGuidance.findUnique({
       where: {
-        userId_date: {
+        userId_localDateStr: { userId: user.id, localDateStr },
+      },
+      include: { concern: true },
+    });
+
+    // Step 4: Handle based on status
+    if (guidance) {
+      if (guidance.status === 'READY') {
+        this.logger.log(`Returning cached READY guidance for user ${user.id}`);
+        // Trigger backfill in background (non-blocking)
+        this.triggerBackfill(user.id, userTimezone, localDateStr);
+        return this.formatGuidanceResponse(guidance);
+      }
+
+      if (guidance.status === 'FAILED') {
+        // Allow retry - delete failed record and regenerate
+        this.logger.log(`Previous guidance FAILED, retrying for user ${user.id}`);
+        await this.prisma.dailyGuidance.delete({
+          where: { id: guidance.id },
+        });
+        guidance = null;
+      }
+
+      if (guidance?.status === 'PENDING') {
+        // Wait for completion
+        this.logger.log(`Guidance PENDING, waiting for completion...`);
+        const completed = await this.guidanceQueueService.waitForJobCompletion(
+          user.id,
+          localDateStr,
+          MAX_WAIT_MS,
+        );
+
+        if (completed) {
+          const readyGuidance = await this.prisma.dailyGuidance.findUnique({
+            where: { userId_localDateStr: { userId: user.id, localDateStr } },
+            include: { concern: true },
+          });
+          if (readyGuidance?.status === 'READY') {
+            this.triggerBackfill(user.id, userTimezone, localDateStr);
+            return this.formatGuidanceResponse(readyGuidance);
+          }
+        }
+
+        // Still pending after wait
+        return {
+          status: 'PENDING',
+          message: 'Your guidance is being generated. Please try again in a few seconds.',
+          date: localDateStr,
+        };
+      }
+    }
+
+    // Step 5: No guidance exists - create PENDING record and enqueue
+    this.logger.log(`No guidance found, creating PENDING record for user ${user.id}`);
+
+    try {
+      guidance = await this.prisma.dailyGuidance.create({
+        data: {
           userId: user.id,
           date: today,
+          localDateStr,
+          status: 'PENDING',
+          priority: 'high',
         },
-      },
-      include: {
-        concern: true,
+        include: { concern: true },
+      });
+    } catch (error) {
+      // Handle unique constraint violation (another request created it)
+      if (error.code === 'P2002') {
+        this.logger.debug(`Concurrent request created guidance, fetching...`);
+        guidance = await this.prisma.dailyGuidance.findUnique({
+          where: { userId_localDateStr: { userId: user.id, localDateStr } },
+          include: { concern: true },
+        });
+        if (guidance?.status === 'READY') {
+          return this.formatGuidanceResponse(guidance);
+        }
+      } else {
+        throw error;
+      }
+    }
+
+    // Enqueue high-priority job
+    await this.guidanceQueueService.enqueueGuidanceJob({
+      userId: user.id,
+      localDateStr,
+      priority: 'high',
+    });
+
+    // Wait for completion
+    const completed = await this.guidanceQueueService.waitForJobCompletion(
+      user.id,
+      localDateStr,
+      MAX_WAIT_MS,
+    );
+
+    if (completed) {
+      const readyGuidance = await this.prisma.dailyGuidance.findUnique({
+        where: { userId_localDateStr: { userId: user.id, localDateStr } },
+        include: { concern: true },
+      });
+      if (readyGuidance?.status === 'READY') {
+        this.triggerBackfill(user.id, userTimezone, localDateStr);
+        return this.formatGuidanceResponse(readyGuidance);
+      }
+    }
+
+    // Return pending status
+    return {
+      status: 'PENDING',
+      message: 'Your guidance is being generated. Please try again in a few seconds.',
+      date: localDateStr,
+    };
+  }
+
+  /**
+   * Trigger backfill for past days (non-blocking)
+   */
+  private triggerBackfill(userId: string, timezone: string, currentDateStr: string): void {
+    // Fire and forget
+    this.guidanceQueueService.enqueueBackfillJobs(userId, timezone, currentDateStr).catch((err) => {
+      this.logger.error(`Backfill enqueue failed for user ${userId}: ${err.message}`);
+    });
+  }
+
+  /**
+   * Generate guidance for a specific date (called by queue processor)
+   * This is the actual generation logic with idempotency checks
+   */
+  async generateGuidanceForDate(user: User, date: Date, localDateStr: string): Promise<void> {
+    const logPrefix = `[User ${user.id}] [Date ${localDateStr}]`;
+
+    // Idempotency check: is it already READY?
+    const existing = await this.prisma.dailyGuidance.findUnique({
+      where: { userId_localDateStr: { userId: user.id, localDateStr } },
+      select: { status: true },
+    });
+
+    if (existing?.status === 'READY') {
+      this.logger.log(`${logPrefix} Already READY, skipping generation`);
+      return;
+    }
+
+    // Ensure PENDING record exists
+    await this.prisma.dailyGuidance.upsert({
+      where: { userId_localDateStr: { userId: user.id, localDateStr } },
+      update: { status: 'PENDING' },
+      create: {
+        userId: user.id,
+        date,
+        localDateStr,
+        status: 'PENDING',
       },
     });
 
-    // If no guidance exists, generate it ON-DEMAND
-    // This is where AstrologyAPI and OpenAI are called
-    if (!guidance) {
-      this.logger.log(`No cached guidance found, generating on-demand for user ${user.id}`);
-      guidance = await this.generateGuidance(user, today);
-    } else {
-      this.logger.log(`Returning cached guidance for user ${user.id}`);
-    }
-
-    return this.formatGuidanceResponse(guidance);
-  }
-
-  /**
-   * Get today's date at UTC midnight based on user's local date
-   * 
-   * This ensures consistent date storage across timezones.
-   * We store the user's local DATE at UTC midnight for consistent querying.
-   * 
-   * Example: User in Europe/Bucharest (UTC+2) at 2025-12-15 01:00 local time
-   * - Their "today" is 2025-12-15
-   * - We store: 2025-12-15T00:00:00.000Z (the calendar date at UTC midnight)
-   * 
-   * This way, when we query the astrology API with getUTCDate(), getUTCMonth(), etc.,
-   * we get the correct calendar date (15 Dec) regardless of timezone.
-   */
-  private getTodayInTimezone(timezone: string): Date {
-    try {
-      const now = new Date();
-      
-      // Get the date parts in user's timezone using Intl.DateTimeFormat
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: timezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      };
-      
-      // en-CA locale gives YYYY-MM-DD format
-      const formatter = new Intl.DateTimeFormat('en-CA', options);
-      const dateString = formatter.format(now); // e.g., "2025-12-15"
-      
-      // Create date at UTC midnight for this calendar date
-      // This preserves the calendar date for database queries and API calls
-      const todayUTC = new Date(`${dateString}T00:00:00.000Z`);
-      
-      this.logger.debug(`User timezone: ${timezone}, local date: ${dateString}, stored as: ${todayUTC.toISOString()}`);
-      
-      return todayUTC;
-    } catch (e) {
-      this.logger.warn(`Invalid timezone ${timezone}, falling back to UTC: ${e}`);
-      const today = new Date();
-      today.setUTCHours(0, 0, 0, 0);
-      return today;
-    }
-  }
-
-  /**
-   * Generate guidance for a specific user and date
-   * 
-   * This method calls external APIs:
-   * - AstrologyAPI for daily transits
-   * - OpenAI GPT for AI-generated guidance
-   * 
-   * For Premium users with personal context, guidance is more personalized.
-   * 
-   * Called ON-DEMAND when user opens the app, NOT at scheduled times
-   */
-  async generateGuidance(user: User, date: Date = new Date()) {
-    // Normalize date to midnight
-    const normalizedDate = new Date(date);
-    normalizedDate.setUTCHours(0, 0, 0, 0);
-
-    // Step 1: Get natal chart (from database, no external API call)
+    // Step 1: Get natal chart
     const natalChart = await this.astrologyService.getNatalChart(user.id);
     if (!natalChart) {
-      throw new NotFoundException('Natal chart not found. Please set your birth data first.');
+      throw new Error('Natal chart not found. Please set your birth data first.');
     }
 
-    // Step 2: Get daily transits (calls AstrologyAPI)
-    this.logger.log(`Fetching transits from AstrologyAPI for user ${user.id}`);
-    const transits = await this.astrologyService.getDailyTransits(user, normalizedDate);
+    // Step 2: Get daily transits
+    this.logger.log(`${logPrefix} Fetching transits from AstrologyAPI`);
+    const transits = await this.astrologyService.getDailyTransits(user, date);
 
-    // Step 3: Get active concern (from database)
+    // Step 3: Get active concern
     const activeConcern = await this.concernsService.findActive(user.id);
 
-    // Step 4: Get previous days' guidance for AI context (from database)
-    const previousDays = await this.getPreviousDaysData(user.id, normalizedDate, 3);
+    // Step 4: Get previous days' guidance
+    const previousDays = await this.getPreviousDaysData(user.id, date, 3);
 
-    // Step 5: Check entitlements and get personal context (Premium only)
+    // Step 5: Check entitlements and get personal context
     let personalContext = null;
     let usedPersonalContext = false;
 
     try {
       const entitlements = await this.entitlementsService.resolveEntitlements(user.id);
-      
       if (entitlements.canUsePersonalContext) {
         const context = await this.contextService.getContextForAI(user.id);
         if (context) {
@@ -158,97 +262,139 @@ export class GuidanceService {
             tags: context.tags,
           };
           usedPersonalContext = true;
-          this.logger.log(`Including personal context for Premium user ${user.id}`);
+          this.logger.log(`${logPrefix} Including personal context (Premium)`);
         }
-      } else {
-        this.logger.debug(`Personal context not included for user ${user.id} (not Premium)`);
       }
     } catch (error) {
-      this.logger.warn(`Failed to get entitlements/context for user ${user.id}: ${error.message}`);
-      // Continue without personal context
+      this.logger.warn(`${logPrefix} Failed to get context: ${error.message}`);
     }
 
-    // Step 6: Generate guidance using AI (calls OpenAI)
-    this.logger.log(`Generating guidance via OpenAI for user ${user.id}${usedPersonalContext ? ' (with personal context)' : ''}`);
+    // Step 6: Generate via AI
+    this.logger.log(`${logPrefix} Generating guidance via OpenAI`);
     const sections = await this.aiService.generateDailyGuidance({
       natalSummary: natalChart.summary,
       transits: transits.transits as any[],
-      activeConcern: activeConcern ? {
-        category: activeConcern.category,
-        text: activeConcern.textOriginal,
-      } : undefined,
+      activeConcern: activeConcern
+        ? { category: activeConcern.category, text: activeConcern.textOriginal }
+        : undefined,
       previousDays,
       language: user.language,
       userName: user.name || undefined,
-      personalContext, // NEW: Include for Premium users
+      personalContext,
     });
 
-    // Step 7: Save guidance to database (upsert for idempotency)
-    const guidance = await this.prisma.dailyGuidance.upsert({
-      where: {
-        userId_date: {
-          userId: user.id,
-          date: normalizedDate,
-        },
-      },
-      update: {
+    // Step 7: Update guidance to READY
+    await this.prisma.dailyGuidance.update({
+      where: { userId_localDateStr: { userId: user.id, localDateStr } },
+      data: {
+        status: 'READY',
         sections: sections as any,
         concernId: activeConcern?.id,
         aiModelVersion: this.aiService.getModelVersion(),
-        usedPersonalContext, // Track if personal context was used
+        usedPersonalContext,
         generatedAt: new Date(),
       },
-      create: {
-        userId: user.id,
-        date: normalizedDate,
-        sections: sections as any,
-        concernId: activeConcern?.id,
-        aiModelVersion: this.aiService.getModelVersion(),
-        usedPersonalContext, // Track if personal context was used
-      },
-      include: {
-        concern: true,
-      },
     });
 
-    this.logger.log(`Generated guidance for user ${user.id} for date ${normalizedDate.toISOString()}`);
+    this.logger.log(`${logPrefix} Guidance generation completed`);
+  }
+
+  /**
+   * Get today's date string "YYYY-MM-DD" in user's timezone
+   */
+  getLocalDateStr(timezone: string): string {
+    try {
+      const now = new Date();
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      };
+      const formatter = new Intl.DateTimeFormat('en-CA', options);
+      return formatter.format(now); // "YYYY-MM-DD"
+    } catch (e) {
+      this.logger.warn(`Invalid timezone ${timezone}, using UTC: ${e}`);
+      return new Date().toISOString().split('T')[0];
+    }
+  }
+
+  /**
+   * Convert localDateStr to Date at UTC midnight
+   */
+  localDateStrToDate(localDateStr: string): Date {
+    return new Date(`${localDateStr}T00:00:00.000Z`);
+  }
+
+  /**
+   * Validate IANA timezone
+   */
+  private isValidTimezone(tz: string): boolean {
+    try {
+      Intl.DateTimeFormat(undefined, { timeZone: tz });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Legacy method for backward compatibility
+   * @deprecated Use getTodayGuidance with lazy compute
+   */
+  private getTodayInTimezone(timezone: string): Date {
+    return this.localDateStrToDate(this.getLocalDateStr(timezone));
+  }
+
+  /**
+   * Generate guidance immediately (old sync method, kept for compatibility)
+   * @deprecated Use queue-based generation
+   */
+  async generateGuidance(user: User, date: Date = new Date()) {
+    const normalizedDate = new Date(date);
+    normalizedDate.setUTCHours(0, 0, 0, 0);
+    const localDateStr = normalizedDate.toISOString().split('T')[0];
+
+    // Call the new method
+    await this.generateGuidanceForDate(user, normalizedDate, localDateStr);
+
+    // Return the generated guidance
+    const guidance = await this.prisma.dailyGuidance.findUnique({
+      where: { userId_localDateStr: { userId: user.id, localDateStr } },
+      include: { concern: true },
+    });
+
     return guidance;
   }
 
   /**
    * Get previous days' guidance data for AI context
-   * This provides continuity and avoids repetition
    */
   private async getPreviousDaysData(userId: string, currentDate: Date, days: number) {
     const previousGuidances = await this.prisma.dailyGuidance.findMany({
       where: {
         userId,
-        date: {
-          lt: currentDate,
-        },
+        date: { lt: currentDate },
+        status: 'READY',
       },
       orderBy: { date: 'desc' },
       take: days,
       include: {
-        concern: {
-          select: {
-            textOriginal: true,
-          },
-        },
+        concern: { select: { textOriginal: true } },
       },
     });
 
-    return previousGuidances.map(g => {
+    return previousGuidances.map((g) => {
       const sections = g.sections as any;
       return {
-        date: g.date.toISOString().split('T')[0],
+        date: g.localDateStr,
         scores: {
-          health: sections.health?.score || 5,
-          job: sections.job?.score || 5,
-          business_money: sections.business_money?.score || 5,
-          love: sections.love?.score || 5,
-          partnerships: sections.partnerships?.score || 5,
-          personal_growth: sections.personal_growth?.score || 5,
+          health: sections?.health?.score || 5,
+          job: sections?.job?.score || 5,
+          business_money: sections?.business_money?.score || 5,
+          love: sections?.love?.score || 5,
+          partnerships: sections?.partnerships?.score || 5,
+          personal_growth: sections?.personal_growth?.score || 5,
         },
         concernText: g.concern?.textOriginal,
       };
@@ -256,27 +402,37 @@ export class GuidanceService {
   }
 
   /**
-   * Get guidance history
+   * Get guidance history with status
    */
-  async getHistory(userId: string, page: number = 1, limit: number = 10) {
-    const skip = (page - 1) * limit;
-    
+  async getHistory(userId: string, days: number = 7) {
+    const limitDays = Math.min(days, 14); // Cap at 14 days
+
+    // Calculate date range
+    const now = new Date();
+    const startDate = new Date(now);
+    startDate.setDate(startDate.getDate() - limitDays);
+    startDate.setUTCHours(0, 0, 0, 0);
+
     const guidances = await this.prisma.dailyGuidance.findMany({
-      where: { userId },
+      where: {
+        userId,
+        date: { gte: startDate },
+      },
       orderBy: { date: 'desc' },
-      skip,
-      take: limit,
       include: {
         concern: {
-          select: {
-            category: true,
-            textOriginal: true,
-          },
+          select: { category: true, textOriginal: true },
         },
       },
     });
 
-    return guidances.map(g => this.formatGuidanceResponse(g));
+    return guidances.map((g) => ({
+      id: g.id,
+      date: g.localDateStr,
+      status: g.status,
+      ...(g.status === 'READY' ? this.formatGuidanceResponse(g) : {}),
+      ...(g.status === 'FAILED' ? { errorMsg: g.errorMsg } : {}),
+    }));
   }
 
   /**
@@ -296,7 +452,6 @@ export class GuidanceService {
       freeText?: string;
     },
   ) {
-    // Verify guidance exists and belongs to user
     const guidance = await this.prisma.dailyGuidance.findFirst({
       where: { id: guidanceId, userId },
     });
@@ -305,62 +460,49 @@ export class GuidanceService {
       throw new NotFoundException('Guidance not found');
     }
 
-    // Upsert feedback
     return this.prisma.guidanceFeedback.upsert({
-      where: {
-        userId_guidanceId: {
-          userId,
-          guidanceId,
-        },
-      },
+      where: { userId_guidanceId: { userId, guidanceId } },
       update: feedback,
-      create: {
-        userId,
-        guidanceId,
-        ...feedback,
-      },
+      create: { userId, guidanceId, ...feedback },
     });
   }
 
   /**
-   * Force regenerate today's guidance (manual refresh)
+   * Force regenerate today's guidance
    */
   async regenerateGuidance(user: User, timezone?: string) {
-    const userTimezone = timezone || user.timezone || 'UTC';
-    const today = this.getTodayInTimezone(userTimezone);
-    
+    const userTimezone = this.resolveUserTimezone(user, timezone);
+    const localDateStr = this.getLocalDateStr(userTimezone);
+
     // Delete existing guidance for today
     await this.prisma.dailyGuidance.deleteMany({
-      where: {
-        userId: user.id,
-        date: today,
-      },
+      where: { userId: user.id, localDateStr },
     });
 
-    // Generate fresh guidance
-    return this.generateGuidance(user, today);
+    // Re-fetch to trigger new generation
+    return this.getTodayGuidance(user, timezone);
   }
 
   /**
    * Format guidance for API response
    */
   formatGuidanceResponse(guidance: any) {
-    const sections = guidance.sections as any;
+    const sections = (guidance.sections || {}) as any;
 
-    // Helper to format section with actions
     const formatSection = (key: string, title: string, isHighlighted: boolean) => {
       const section = sections[key] || {};
       return {
         title: isHighlighted ? `${title} ⭐` : title,
         content: section.content || 'Guidance unavailable.',
         score: section.score || 5,
-        actions: section.actions || [], // NEW: Include micro-actions
+        actions: section.actions || [],
       };
     };
 
     return {
       id: guidance.id,
-      date: guidance.date,
+      date: guidance.localDateStr || guidance.date,
+      status: guidance.status,
       dailySummary: sections.dailySummary || {
         content: 'Welcome to your daily guidance.',
         mood: 'Balanced',
@@ -390,38 +532,31 @@ export class GuidanceService {
           guidance.concern?.category === 'PERSONAL_GROWTH',
         ),
       },
-      activeConcern: guidance.concern ? {
-        category: guidance.concern.category,
-        text: guidance.concern.textOriginal,
-      } : null,
-      usedPersonalContext: guidance.usedPersonalContext || false, // NEW: Indicate if Premium personalization was used
+      activeConcern: guidance.concern
+        ? { category: guidance.concern.category, text: guidance.concern.textOriginal }
+        : null,
+      usedPersonalContext: guidance.usedPersonalContext || false,
       generatedAt: guidance.generatedAt,
     };
   }
 
   /**
-   * Get all users who need guidance generated
-   * (Used only for analytics, NOT for batch generation)
+   * Get all users who need guidance generated (for analytics only)
    */
   async getUsersNeedingGuidance(): Promise<User[]> {
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split('T')[0];
 
-    const users = await this.prisma.user.findMany({
+    return this.prisma.user.findMany({
       where: {
         isActive: true,
         onboardingComplete: true,
-        natalChart: {
-          isNot: null,
-        },
+        natalChart: { isNot: null },
         dailyGuidances: {
-          none: {
-            date: today,
-          },
+          none: { localDateStr: todayStr },
         },
       },
     });
-
-    return users;
   }
 }

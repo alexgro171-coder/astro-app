@@ -15,58 +15,63 @@ datasource db {
 // ============================================
 
 model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  hashedPassword  String?   @map("hashed_password")
-  name            String?
-  
+  id             String  @id @default(cuid())
+  email          String  @unique
+  hashedPassword String? @map("hashed_password")
+  name           String?
+
   // Birth data
-  birthDate       DateTime? @map("birth_date")
-  birthTime       String?   @map("birth_time") // Format: "HH:MM" or "unknown"
-  birthPlace      String?   @map("birth_place")
-  birthLat        Float?    @map("birth_lat")
-  birthLon        Float?    @map("birth_lon")
-  birthTimezone   Float?    @map("birth_timezone")
-  
+  birthDate     DateTime? @map("birth_date")
+  birthTime     String?   @map("birth_time") // Format: "HH:MM" or "unknown"
+  birthPlace    String?   @map("birth_place")
+  birthLat      Float?    @map("birth_lat")
+  birthLon      Float?    @map("birth_lon")
+  birthTimezone Float?    @map("birth_timezone")
+
   // Preferences
-  language        Language  @default(EN)
-  timezone        String    @default("UTC")
-  notifyTime      String?   @map("notify_time") // Preferred notification time "HH:MM"
-  notifyEnabled   Boolean   @default(true) @map("notify_enabled")
-  
+  language      Language @default(EN)
+  timezone      String   @default("UTC")
+  timezoneIana  String?  @map("timezone_iana") // IANA timezone e.g. "Europe/Bucharest"
+  notifyTime    String?  @map("notify_time") // Preferred notification time "HH:MM"
+  notifyEnabled Boolean  @default(true) @map("notify_enabled")
+
   // Social login
-  googleId        String?   @unique @map("google_id")
-  appleId         String?   @unique @map("apple_id")
-  
+  googleId String? @unique @map("google_id")
+  appleId  String? @unique @map("apple_id")
+
   // Status
-  isActive        Boolean   @default(true) @map("is_active")
-  emailVerified   Boolean   @default(false) @map("email_verified")
+  isActive           Boolean @default(true) @map("is_active")
+  emailVerified      Boolean @default(false) @map("email_verified")
   onboardingComplete Boolean @default(false) @map("onboarding_complete")
-  
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-  
+
+  // Activity tracking for re-engagement
+  lastActiveAt           DateTime  @default(now()) @map("last_active_at")
+  lastReengagementPushAt DateTime? @map("last_reengagement_push_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   // Relations
-  natalChart      NatalChart?
-  concerns        Concern[]
-  dailyGuidances  DailyGuidance[]
-  feedbacks       GuidanceFeedback[]
-  devices         UserDevice[]
-  refreshTokens   RefreshToken[]
-  subscription    Subscription?
-  contextProfile  UserContextProfile?
-  
+  natalChart     NatalChart?
+  concerns       Concern[]
+  dailyGuidances DailyGuidance[]
+  feedbacks      GuidanceFeedback[]
+  devices        UserDevice[]
+  refreshTokens  RefreshToken[]
+  subscription   Subscription?
+  contextProfile UserContextProfile?
+
   @@map("users")
 }
 
 model RefreshToken {
-  id          String   @id @default(cuid())
-  token       String   @unique
-  userId      String   @map("user_id")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt   DateTime @map("expires_at")
-  createdAt   DateTime @default(now()) @map("created_at")
-  
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@map("refresh_tokens")
 }
 
@@ -74,13 +79,26 @@ model UserDevice {
   id          String   @id @default(cuid())
   userId      String   @map("user_id")
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  deviceToken String   @map("device_token")
+  deviceId    String   @map("device_id") // Stable device identifier
+  deviceToken String?  @map("device_token") // Legacy, kept for compatibility
   platform    Platform
-  isActive    Boolean  @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  
-  @@unique([userId, deviceToken])
+
+  // Timezone info from device
+  timezoneIana     String? @map("timezone_iana") // IANA timezone e.g. "Europe/Bucharest"
+  utcOffsetMinutes Int?    @map("utc_offset_minutes")
+
+  // Push notifications
+  fcmToken String? @unique @map("fcm_token")
+
+  // Status tracking
+  isActive   Boolean   @default(true) @map("is_active")
+  lastSeenAt DateTime? @map("last_seen_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, deviceId])
+  @@index([userId])
   @@map("user_devices")
 }
 
@@ -89,40 +107,40 @@ model UserDevice {
 // ============================================
 
 model NatalChart {
-  id          String   @id @default(cuid())
-  userId      String   @unique @map("user_id")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   // Raw API response (for debugging/auditing)
-  rawData     Json     @map("raw_data")
-  
+  rawData Json @map("raw_data")
+
   // Parsed summary for AI prompts
-  summary     Json     // Structured data: planets, houses, aspects
-  
+  summary Json // Structured data: planets, houses, aspects
+
   // Key placements (for quick access)
-  sunSign     String?  @map("sun_sign")
-  moonSign    String?  @map("moon_sign")
-  ascendant   String?
-  
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  
+  sunSign   String? @map("sun_sign")
+  moonSign  String? @map("moon_sign")
+  ascendant String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("natal_charts")
 }
 
 model DailyTransit {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
-  date        DateTime @db.Date
-  
+  id     String   @id @default(cuid())
+  userId String   @map("user_id")
+  date   DateTime @db.Date
+
   // Raw API response
-  rawData     Json     @map("raw_data")
-  
+  rawData Json @map("raw_data")
+
   // Parsed transits for AI
-  transits    Json     // Array of relevant transits
-  
-  createdAt   DateTime @default(now()) @map("created_at")
-  
+  transits Json // Array of relevant transits
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@unique([userId, date])
   @@map("daily_transits")
 }
@@ -132,25 +150,25 @@ model DailyTransit {
 // ============================================
 
 model Concern {
-  id              String        @id @default(cuid())
-  userId          String        @map("user_id")
-  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  textOriginal    String        @map("text_original")
-  category        ConcernCategory
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  textOriginal        String            @map("text_original")
+  category            ConcernCategory
   secondaryCategories ConcernCategory[] @map("secondary_categories")
-  modelConfidence Float?        @map("model_confidence")
-  
-  status          ConcernStatus @default(ACTIVE)
-  startDate       DateTime      @default(now()) @map("start_date")
-  endDate         DateTime?     @map("end_date")
-  
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
-  
+  modelConfidence     Float?            @map("model_confidence")
+
+  status    ConcernStatus @default(ACTIVE)
+  startDate DateTime      @default(now()) @map("start_date")
+  endDate   DateTime?     @map("end_date")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   // Relations
-  dailyGuidances  DailyGuidance[]
-  
+  dailyGuidances DailyGuidance[]
+
   @@map("concerns")
 }
 
@@ -159,55 +177,66 @@ model Concern {
 // ============================================
 
 model DailyGuidance {
-  id            String    @id @default(cuid())
-  userId        String    @map("user_id")
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date          DateTime  @db.Date
-  
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date         DateTime @db.Date
+  localDateStr String   @map("local_date_str") // "YYYY-MM-DD" in user's timezone
+
+  // Generation status for lazy compute
+  status   GuidanceStatus @default(PENDING)
+  errorMsg String?        @map("error_msg")
+
   // Active concern at time of generation (optional)
-  concernId     String?   @map("concern_id")
-  concern       Concern?  @relation(fields: [concernId], references: [id])
-  
-  // Guidance content per section
-  sections      Json      // { health: {...}, job: {...}, ... }
-  
+  concernId String?  @map("concern_id")
+  concern   Concern? @relation(fields: [concernId], references: [id])
+
+  // Guidance content per section (null until READY)
+  sections Json? // { health: {...}, job: {...}, ... }
+
   // Premium personalization flags
   usedPersonalContext Boolean @default(false) @map("used_personal_context")
-  
+
   // Metadata
-  aiModelVersion String?  @map("ai_model_version")
-  generatedAt   DateTime  @default(now()) @map("generated_at")
-  
-  createdAt     DateTime  @default(now()) @map("created_at")
-  
+  aiModelVersion String?   @map("ai_model_version")
+  generatedAt    DateTime? @map("generated_at")
+
+  // Job priority tracking
+  priority String? // "high" | "low" - for queue ordering
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   // Relations
-  feedbacks     GuidanceFeedback[]
-  audio         GuidanceAudio?
-  
-  @@unique([userId, date])
+  feedbacks GuidanceFeedback[]
+  audio     GuidanceAudio?
+
+  @@unique([userId, localDateStr]) // IDEMPOTENCY: unique per user+date string
+  @@index([userId])
+  @@index([status])
   @@map("daily_guidances")
 }
 
 model GuidanceFeedback {
-  id              String        @id @default(cuid())
-  userId          String        @map("user_id")
-  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  guidanceId      String        @map("guidance_id")
-  guidance        DailyGuidance @relation(fields: [guidanceId], references: [id], onDelete: Cascade)
-  
+  id         String        @id @default(cuid())
+  userId     String        @map("user_id")
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guidanceId String        @map("guidance_id")
+  guidance   DailyGuidance @relation(fields: [guidanceId], references: [id], onDelete: Cascade)
+
   // Ratings per section (1-5)
-  healthRating    Int?          @map("health_rating")
-  jobRating       Int?          @map("job_rating")
-  businessRating  Int?          @map("business_rating")
-  loveRating      Int?          @map("love_rating")
-  partnershipRating Int?        @map("partnership_rating")
-  growthRating    Int?          @map("growth_rating")
-  
-  overallRating   Int?          @map("overall_rating")
-  freeText        String?       @map("free_text")
-  
-  createdAt       DateTime      @default(now()) @map("created_at")
-  
+  healthRating      Int? @map("health_rating")
+  jobRating         Int? @map("job_rating")
+  businessRating    Int? @map("business_rating")
+  loveRating        Int? @map("love_rating")
+  partnershipRating Int? @map("partnership_rating")
+  growthRating      Int? @map("growth_rating")
+
+  overallRating Int?    @map("overall_rating")
+  freeText      String? @map("free_text")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@unique([userId, guidanceId])
   @@map("guidance_feedbacks")
 }
@@ -217,83 +246,83 @@ model GuidanceFeedback {
 // ============================================
 
 model Subscription {
-  id                      String              @id @default(cuid())
-  userId                  String              @unique @map("user_id")
-  user                    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   // Plan details
-  provider                PaymentProvider
-  tier                    SubscriptionTier
-  period                  BillingPeriod
-  status                  SubscriptionStatus
-  
+  provider PaymentProvider
+  tier     SubscriptionTier
+  period   BillingPeriod
+  status   SubscriptionStatus
+
   // Dates
-  startAt                 DateTime            @map("start_at")
-  trialEndAt              DateTime?           @map("trial_end_at")
-  currentPeriodEndAt      DateTime?           @map("current_period_end_at")
-  canceledAt              DateTime?           @map("canceled_at")
-  
+  startAt            DateTime  @map("start_at")
+  trialEndAt         DateTime? @map("trial_end_at")
+  currentPeriodEndAt DateTime? @map("current_period_end_at")
+  canceledAt         DateTime? @map("canceled_at")
+
   // External IDs (for validation)
-  externalSubscriptionId  String?             @map("external_subscription_id")
-  externalProductId       String?             @map("external_product_id")
-  
+  externalSubscriptionId String? @map("external_subscription_id")
+  externalProductId      String? @map("external_product_id")
+
   // Metadata
-  metadata                Json?
-  
-  createdAt               DateTime            @default(now()) @map("created_at")
-  updatedAt               DateTime            @updatedAt @map("updated_at")
-  
+  metadata Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   // Relations
-  payments                Payment[]
-  refunds                 Refund[]
-  
+  payments Payment[]
+  refunds  Refund[]
+
   @@map("subscriptions")
 }
 
 model Payment {
-  id                  String          @id @default(cuid())
-  userId              String          @map("user_id")
-  subscriptionId      String?         @map("subscription_id")
-  subscription        Subscription?   @relation(fields: [subscriptionId], references: [id])
-  
-  provider            PaymentProvider
-  amount              Int             // Amount in cents
-  currency            String          @default("USD")
-  status              PaymentStatus
-  
-  paidAt              DateTime?       @map("paid_at")
-  externalPaymentId   String?         @map("external_payment_id")
-  
+  id             String        @id @default(cuid())
+  userId         String        @map("user_id")
+  subscriptionId String?       @map("subscription_id")
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  provider PaymentProvider
+  amount   Int // Amount in cents
+  currency String          @default("USD")
+  status   PaymentStatus
+
+  paidAt            DateTime? @map("paid_at")
+  externalPaymentId String?   @map("external_payment_id")
+
   // Store-specific data
-  receiptData         Json?           @map("receipt_data")
-  metadata            Json?
-  
-  createdAt           DateTime        @default(now()) @map("created_at")
-  updatedAt           DateTime        @updatedAt @map("updated_at")
-  
+  receiptData Json? @map("receipt_data")
+  metadata    Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("payments")
 }
 
 model Refund {
-  id                  String          @id @default(cuid())
-  userId              String          @map("user_id")
-  subscriptionId      String?         @map("subscription_id")
-  subscription        Subscription?   @relation(fields: [subscriptionId], references: [id])
-  paymentId           String?         @map("payment_id")
-  
-  provider            PaymentProvider
-  amount              Int?            // Amount in cents (null = full refund)
-  reason              String?
-  status              RefundStatus
-  
-  externalRefundId    String?         @map("external_refund_id")
-  adminNotes          String?         @map("admin_notes")
-  processedAt         DateTime?       @map("processed_at")
-  processedBy         String?         @map("processed_by")
-  
-  createdAt           DateTime        @default(now()) @map("created_at")
-  updatedAt           DateTime        @updatedAt @map("updated_at")
-  
+  id             String        @id @default(cuid())
+  userId         String        @map("user_id")
+  subscriptionId String?       @map("subscription_id")
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  paymentId      String?       @map("payment_id")
+
+  provider PaymentProvider
+  amount   Int? // Amount in cents (null = full refund)
+  reason   String?
+  status   RefundStatus
+
+  externalRefundId String?   @map("external_refund_id")
+  adminNotes       String?   @map("admin_notes")
+  processedAt      DateTime? @map("processed_at")
+  processedBy      String?   @map("processed_by")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("refunds")
 }
 
@@ -302,15 +331,15 @@ model Refund {
 // ============================================
 
 model UserContextProfile {
-  id                  String    @id @default(cuid())
-  userId              String    @unique @map("user_id")
-  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   // Version tracking (increments on each update)
-  version             Int       @default(1)
-  
+  version Int @default(1)
+
   // Structured answers from questionnaire V1
-  answersJson         Json      @map("answers_json")
+  answersJson Json @map("answers_json")
   // {
   //   relationship_status: string,
   //   seeking_relationship: boolean | null,
@@ -328,46 +357,46 @@ model UserContextProfile {
   //   guidance_style: string,
   //   sensitivity_mode: boolean
   // }
-  
+
   // AI-generated summary (max 60 words, in English)
-  summary60w          String    @map("summary_60w") @db.Text
-  
+  summary60w String @map("summary_60w") @db.Text
+
   // Structured tags for quick access in prompts
-  summaryTags         Json      @map("summary_tags")
+  summaryTags Json @map("summary_tags")
   // {
   //   relationship_status, seeking_relationship, has_children, children_count,
   //   work_status, industry, health_score, social_score, romance_score,
   //   finance_score, career_score, growth_score, priorities, tone_preference,
   //   sensitivity_mode
   // }
-  
+
   // Next review date (90 days from creation/update)
-  nextReviewAt        DateTime  @map("next_review_at")
-  
-  completedAt         DateTime  @default(now()) @map("completed_at")
-  createdAt           DateTime  @default(now()) @map("created_at")
-  updatedAt           DateTime  @updatedAt @map("updated_at")
-  
+  nextReviewAt DateTime @map("next_review_at")
+
+  completedAt DateTime @default(now()) @map("completed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
   // Relations
-  history             UserContextProfileHistory[]
-  
+  history UserContextProfileHistory[]
+
   @@map("user_context_profiles")
 }
 
 // History table for tracking profile changes
 model UserContextProfileHistory {
-  id                  String    @id @default(cuid())
-  userId              String    @map("user_id")
-  profileId           String    @map("profile_id")
-  profile             UserContextProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  
-  version             Int
-  answersJson         Json      @map("answers_json")
-  summary60w          String    @map("summary_60w") @db.Text
-  summaryTags         Json      @map("summary_tags")
-  
-  createdAt           DateTime  @default(now()) @map("created_at")
-  
+  id        String             @id @default(cuid())
+  userId    String             @map("user_id")
+  profileId String             @map("profile_id")
+  profile   UserContextProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  version     Int
+  answersJson Json   @map("answers_json")
+  summary60w  String @map("summary_60w") @db.Text
+  summaryTags Json   @map("summary_tags")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@index([userId, version])
   @@map("user_context_profile_history")
 }
@@ -377,102 +406,102 @@ model UserContextProfileHistory {
 // ============================================
 
 model NatalPlacements {
-  id                  String    @id @default(cuid())
-  userId              String    @unique @map("user_id")
-  
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
+
   // Structured placements data
-  placementsJson      Json      @map("placements_json")
+  placementsJson Json @map("placements_json")
   // {
   //   planets: [{planet, sign, house, longitude, isRetrograde}],
   //   houses: [{house, cuspLongitude, sign}] | null,
   //   ascendantLongitude, midheavenLongitude
   // }
-  
-  createdAt           DateTime  @default(now()) @map("created_at")
-  updatedAt           DateTime  @updatedAt @map("updated_at")
-  
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   // Relations
   freeInterpretations NatalInterpretationFree[]
   proInterpretations  NatalInterpretationPro[]
   wheelSvg            NatalChartWheel?
-  
+
   @@map("natal_placements")
 }
 
 model NatalInterpretationFree {
-  id                  String    @id @default(cuid())
-  userId              String    @map("user_id")
-  placementsId        String    @map("placements_id")
-  placements          NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
-  
-  planetKey           String    @map("planet_key") // Sun, Moon, Mercury, etc.
-  sign                String
-  house               Int
-  language            Language  @default(EN) // Language of the interpretation
-  
+  id           String          @id @default(cuid())
+  userId       String          @map("user_id")
+  placementsId String          @map("placements_id")
+  placements   NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
+
+  planetKey String   @map("planet_key") // Sun, Moon, Mercury, etc.
+  sign      String
+  house     Int
+  language  Language @default(EN) // Language of the interpretation
+
   // 60 words interpretation (FREE)
-  text                String    @db.Text
-  
-  createdAt           DateTime  @default(now()) @map("created_at")
-  updatedAt           DateTime  @updatedAt @map("updated_at")
-  
+  text String @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@unique([userId, planetKey, language])
   @@map("natal_interpretations_free")
 }
 
 model NatalInterpretationPro {
-  id                  String    @id @default(cuid())
-  userId              String    @map("user_id")
-  placementsId        String    @map("placements_id")
-  placements          NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
-  
-  planetKey           String    @map("planet_key")
-  sign                String
-  house               Int
-  language            Language  @default(EN) // Language of the interpretation
-  
+  id           String          @id @default(cuid())
+  userId       String          @map("user_id")
+  placementsId String          @map("placements_id")
+  placements   NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
+
+  planetKey String   @map("planet_key")
+  sign      String
+  house     Int
+  language  Language @default(EN) // Language of the interpretation
+
   // 150-200 words interpretation (PRO)
-  text                String    @db.Text
-  
-  createdAt           DateTime  @default(now()) @map("created_at")
-  updatedAt           DateTime  @updatedAt @map("updated_at")
-  
+  text String @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@unique([userId, planetKey, language])
   @@map("natal_interpretations_pro")
 }
 
 model NatalChartWheel {
-  id                  String    @id @default(cuid())
-  userId              String    @unique @map("user_id")
-  placementsId        String    @unique @map("placements_id")
-  placements          NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
-  
+  id           String          @id @default(cuid())
+  userId       String          @unique @map("user_id")
+  placementsId String          @unique @map("placements_id")
+  placements   NatalPlacements @relation(fields: [placementsId], references: [id], onDelete: Cascade)
+
   // SVG content
-  wheelSvg            String    @map("wheel_svg") @db.Text
-  
-  createdAt           DateTime  @default(now()) @map("created_at")
-  updatedAt           DateTime  @updatedAt @map("updated_at")
-  
+  wheelSvg String @map("wheel_svg") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("natal_chart_wheels")
 }
 
 // Pro purchase tracking
 model NatalProPurchase {
-  id                  String    @id @default(cuid())
-  userId              String    @unique @map("user_id")
-  
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
+
   // Purchase details
-  purchaseId          String?   @map("purchase_id")
-  provider            PaymentProvider?
-  amount              Int       @default(999) // $9.99 in cents
-  currency            String    @default("USD")
-  
+  purchaseId String?          @map("purchase_id")
+  provider   PaymentProvider?
+  amount     Int              @default(999) // $9.99 in cents
+  currency   String           @default("USD")
+
   // Status
-  status              PurchaseStatus @default(COMPLETED)
-  
-  purchasedAt         DateTime  @default(now()) @map("purchased_at")
-  createdAt           DateTime  @default(now()) @map("created_at")
-  
+  status PurchaseStatus @default(COMPLETED)
+
+  purchasedAt DateTime @default(now()) @map("purchased_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
   @@map("natal_pro_purchases")
 }
 
@@ -481,26 +510,26 @@ model NatalProPurchase {
 // ============================================
 
 model GuidanceAudio {
-  id                  String    @id @default(cuid())
-  userId              String    @map("user_id")
-  guidanceId          String    @unique @map("guidance_id")
-  guidance            DailyGuidance @relation(fields: [guidanceId], references: [id], onDelete: Cascade)
-  
-  status              AudioStatus @default(PENDING)
-  
+  id         String        @id @default(cuid())
+  userId     String        @map("user_id")
+  guidanceId String        @unique @map("guidance_id")
+  guidance   DailyGuidance @relation(fields: [guidanceId], references: [id], onDelete: Cascade)
+
+  status AudioStatus @default(PENDING)
+
   // Storage
-  fileUrl             String?   @map("file_url")
-  filePath            String?   @map("file_path")
-  fileSize            Int?      @map("file_size") // bytes
-  duration            Int?      // seconds
-  
+  fileUrl  String? @map("file_url")
+  filePath String? @map("file_path")
+  fileSize Int?    @map("file_size") // bytes
+  duration Int? // seconds
+
   // Processing
-  errorMessage        String?   @map("error_message")
-  generatedAt         DateTime? @map("generated_at")
-  expiresAt           DateTime? @map("expires_at")
-  
-  createdAt           DateTime  @default(now()) @map("created_at")
-  
+  errorMessage String?   @map("error_message")
+  generatedAt  DateTime? @map("generated_at")
+  expiresAt    DateTime? @map("expires_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@unique([userId, guidanceId])
   @@map("guidance_audio")
 }
@@ -510,41 +539,41 @@ model GuidanceAudio {
 // ============================================
 
 model AdminUser {
-  id                  String    @id @default(cuid())
-  email               String    @unique
-  hashedPassword      String    @map("hashed_password")
-  name                String
-  role                AdminRole @default(SUPPORT)
-  isActive            Boolean   @default(true) @map("is_active")
-  
-  lastLoginAt         DateTime? @map("last_login_at")
-  createdAt           DateTime  @default(now()) @map("created_at")
-  updatedAt           DateTime  @updatedAt @map("updated_at")
-  
+  id             String    @id @default(cuid())
+  email          String    @unique
+  hashedPassword String    @map("hashed_password")
+  name           String
+  role           AdminRole @default(SUPPORT)
+  isActive       Boolean   @default(true) @map("is_active")
+
+  lastLoginAt DateTime? @map("last_login_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
   @@map("admin_users")
 }
 
 model AuditLog {
-  id                  String    @id @default(cuid())
-  
+  id String @id @default(cuid())
+
   // Who
-  actorType           ActorType
-  actorId             String    @map("actor_id")
-  
+  actorType ActorType
+  actorId   String    @map("actor_id")
+
   // What
-  action              String    // subscription.created, refund.processed, etc.
-  resourceType        String    @map("resource_type")
-  resourceId          String    @map("resource_id")
-  
+  action       String // subscription.created, refund.processed, etc.
+  resourceType String @map("resource_type")
+  resourceId   String @map("resource_id")
+
   // Details
-  changes             Json?     // { before: {...}, after: {...} }
-  metadata            Json?
-  
-  ipAddress           String?   @map("ip_address")
-  userAgent           String?   @map("user_agent")
-  
-  createdAt           DateTime  @default(now()) @map("created_at")
-  
+  changes  Json? // { before: {...}, after: {...} }
+  metadata Json?
+
+  ipAddress String? @map("ip_address")
+  userAgent String? @map("user_agent")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@index([actorType, actorId])
   @@index([resourceType, resourceId])
   @@map("audit_logs")
@@ -555,14 +584,14 @@ model AuditLog {
 // ============================================
 
 enum Language {
-  EN  // English
-  RO  // Romanian
-  FR  // French
-  DE  // German
-  ES  // Spanish
-  IT  // Italian
-  HU  // Hungarian
-  PL  // Polish
+  EN // English
+  RO // Romanian
+  FR // French
+  DE // German
+  ES // Spanish
+  IT // Italian
+  HU // Hungarian
+  PL // Polish
 }
 
 enum Platform {
@@ -637,6 +666,12 @@ enum AudioStatus {
   FAILED
 }
 
+enum GuidanceStatus {
+  PENDING // Job queued, not yet generated
+  READY // Generation complete, sections available
+  FAILED // Generation failed after retries
+}
+
 enum AdminRole {
   SUPER_ADMIN
   ADMIN
@@ -655,4 +690,3 @@ enum PurchaseStatus {
   REFUNDED
   FAILED
 }
-

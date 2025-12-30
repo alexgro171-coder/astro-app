@@ -432,19 +432,46 @@ class ApiClient {
     return _dio.get('/guidance/$guidanceId/audio');
   }
 
-  // ==================== DEVICE REGISTRATION (FCM) ====================
+  // ==================== DEVICE REGISTRATION ====================
 
-  /// Register device for push notifications
-  /// [deviceToken] - FCM token
+  /// Register device with timezone info for push notifications and re-engagement
+  /// 
+  /// [deviceId] - Stable device identifier
   /// [platform] - 'IOS' or 'ANDROID'
+  /// [timezoneIana] - IANA timezone (e.g., "Europe/Bucharest")
+  /// [utcOffsetMinutes] - Offset from UTC in minutes (e.g., 120 for UTC+2)
+  /// [fcmToken] - FCM token for push notifications (optional)
   Future<Response> registerDevice({
-    required String deviceToken,
+    required String deviceId,
     required String platform,
+    String? timezoneIana,
+    int? utcOffsetMinutes,
+    String? fcmToken,
+    String? deviceToken, // Legacy field for backward compatibility
   }) {
-    return _dio.post('/me/device', data: {
-      'deviceToken': deviceToken,
+    final data = <String, dynamic>{
+      'deviceId': deviceId,
       'platform': platform,
-    });
+    };
+    
+    if (timezoneIana != null) data['timezoneIana'] = timezoneIana;
+    if (utcOffsetMinutes != null) data['utcOffsetMinutes'] = utcOffsetMinutes;
+    if (fcmToken != null) data['fcmToken'] = fcmToken;
+    if (deviceToken != null) data['deviceToken'] = deviceToken;
+    
+    return _dio.post('/me/device', data: data);
+  }
+  
+  /// Get device timezone using flutter_timezone
+  /// Returns the IANA timezone identifier (e.g., "Europe/Bucharest")
+  Future<String> getDeviceTimezone() async {
+    await _timezoneInitialized;
+    return _cachedTimezone;
+  }
+  
+  /// Get UTC offset in minutes
+  int getUtcOffsetMinutes() {
+    return DateTime.now().timeZoneOffset.inMinutes;
   }
 
   // ==================== TOKEN MANAGEMENT ====================

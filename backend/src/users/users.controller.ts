@@ -50,16 +50,19 @@ export class UsersController {
   }
 
   @Post('device')
-  @ApiOperation({ summary: 'Register device for push notifications' })
+  @ApiOperation({ summary: 'Register device with timezone and FCM token' })
   async registerDevice(
     @CurrentUser() user: User,
     @Body() registerDeviceDto: RegisterDeviceDto,
   ) {
-    return this.usersService.registerDevice(
-      user.id,
-      registerDeviceDto.deviceToken,
-      registerDeviceDto.platform,
-    );
+    return this.usersService.registerDeviceV2(user.id, {
+      deviceId: registerDeviceDto.deviceId,
+      platform: registerDeviceDto.platform,
+      timezoneIana: registerDeviceDto.timezoneIana,
+      utcOffsetMinutes: registerDeviceDto.utcOffsetMinutes,
+      fcmToken: registerDeviceDto.fcmToken,
+      deviceToken: registerDeviceDto.deviceToken,
+    });
   }
 
   @Delete()

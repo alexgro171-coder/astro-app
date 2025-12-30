@@ -25,22 +25,26 @@ export class GuidanceController {
   /**
    * GET /guidance/today
    * 
-   * Get today's guidance for the authenticated user.
+   * Get today's guidance for the authenticated user (LAZY COMPUTE).
    * 
-   * IMPORTANT: Guidance is generated ON-DEMAND when this endpoint is called.
-   * - If guidance exists for today → returns cached version
-   * - If not → generates new guidance (calls AstrologyAPI + OpenAI)
+   * Flow:
+   * 1. Check if guidance exists for today
+   * 2. If READY -> return immediately (cached)
+   * 3. If PENDING -> wait briefly or return pending status
+   * 4. If not exists -> enqueue generation job, wait briefly
    * 
-   * This approach distributes load evenly instead of spiking at a specific time.
+   * Returns either:
+   * - Full guidance object with status "READY"
+   * - Pending response with status "PENDING" (client should retry)
    */
   @Get('today')
   @ApiOperation({ 
-    summary: "Get today's guidance (on-demand generation)",
-    description: 'Returns cached guidance if available, otherwise generates new guidance by calling AstrologyAPI and OpenAI.'
+    summary: "Get today's guidance (lazy compute)",
+    description: 'Returns cached guidance if available. If not, queues generation and may return PENDING status.'
   })
   @ApiHeader({
     name: 'X-User-Timezone',
-    description: 'User timezone (e.g., Europe/Bucharest). Falls back to user profile timezone or UTC.',
+    description: 'IANA timezone (e.g., Europe/Bucharest). Falls back to user profile or UTC.',
     required: false,
   })
   async getTodayGuidance(
@@ -53,21 +57,26 @@ export class GuidanceController {
   /**
    * GET /guidance/history
    * 
-   * Get paginated guidance history for the user.
+   * Get guidance history for the past N days.
+   * Includes status (READY/PENDING/FAILED) for each day.
    */
   @Get('history')
-  @ApiOperation({ summary: 'Get guidance history' })
-  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page (default: 10, max: 30)' })
+  @ApiOperation({ 
+    summary: 'Get guidance history',
+    description: 'Returns guidance for the past N days, including their generation status.'
+  })
+  @ApiQuery({ 
+    name: 'days', 
+    required: false, 
+    type: Number, 
+    description: 'Number of days to fetch (default: 7, max: 14)' 
+  })
   async getHistory(
     @CurrentUser() user: User,
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query('days') days?: string,
   ) {
-    const pageNum = Math.max(1, parseInt(page || '1', 10));
-    const limitNum = Math.min(30, Math.max(1, parseInt(limit || '10', 10)));
-    
-    return this.guidanceService.getHistory(user.id, pageNum, limitNum);
+    const daysNum = Math.min(14, Math.max(1, parseInt(days || '7', 10)));
+    return this.guidanceService.getHistory(user.id, daysNum);
   }
 
   /**
@@ -89,23 +98,22 @@ export class GuidanceController {
    * POST /guidance/regenerate
    * 
    * Force regenerate today's guidance.
-   * Useful if user wants a fresh perspective or if there was an error.
+   * Deletes existing and triggers new generation.
    */
   @Post('regenerate')
   @ApiOperation({ 
     summary: "Force regenerate today's guidance",
-    description: 'Deletes existing guidance for today and generates new one. Use sparingly as it calls external APIs.'
+    description: 'Deletes existing guidance for today and queues new generation. Use sparingly.'
   })
   @ApiHeader({
     name: 'X-User-Timezone',
-    description: 'User timezone (e.g., Europe/Bucharest)',
+    description: 'IANA timezone (e.g., Europe/Bucharest)',
     required: false,
   })
   async regenerateGuidance(
     @CurrentUser() user: User,
     @Headers('x-user-timezone') timezone?: string,
   ) {
-    const guidance = await this.guidanceService.regenerateGuidance(user, timezone);
-    return this.guidanceService.formatGuidanceResponse(guidance);
+    return this.guidanceService.regenerateGuidance(user, timezone);
   }
 }
