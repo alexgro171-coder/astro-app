@@ -399,8 +399,10 @@ export class GuidanceService {
 
     return previousGuidances.map((g) => {
       const sections = g.sections as any;
+      // Use localDateStr if available, otherwise fall back to date field
+      const dateStr = g.localDateStr || g.date.toISOString().split('T')[0];
       return {
-        date: g.localDateStr,
+        date: dateStr,
         scores: {
           health: sections?.health?.score || 5,
           job: sections?.job?.score || 5,
