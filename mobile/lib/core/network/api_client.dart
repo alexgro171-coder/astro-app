@@ -162,11 +162,13 @@ class ApiClient {
     required String idToken,
     required String provider,
     String? name,
+    String? language,
   }) {
     return _dio.post('/auth/firebase', data: {
       'idToken': idToken,
       'provider': provider,
       if (name != null) 'name': name,
+      if (language != null) 'language': language,
     });
   }
 

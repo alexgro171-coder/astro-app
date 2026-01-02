@@ -1,5 +1,6 @@
 import { IsString, IsEnum, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Language } from '@prisma/client';
 
 export enum FirebaseAuthProvider {
   GOOGLE = 'google',
@@ -30,5 +31,15 @@ export class FirebaseAuthDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @ApiProperty({
+    description: 'Preferred language for AI-generated content',
+    enum: Language,
+    required: false,
+    example: 'EN',
+  })
+  @IsOptional()
+  @IsEnum(Language)
+  language?: Language;
 }
 

@@ -29,6 +29,18 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   String? _errorMessage;
   String _selectedLanguage = 'EN';
 
+  // Supported languages with their display names and flags
+  static const Map<String, Map<String, String>> _languages = {
+    'EN': {'name': 'English', 'flag': '🇬🇧'},
+    'RO': {'name': 'Română', 'flag': '🇷🇴'},
+    'FR': {'name': 'Français', 'flag': '🇫🇷'},
+    'DE': {'name': 'Deutsch', 'flag': '🇩🇪'},
+    'ES': {'name': 'Español', 'flag': '🇪🇸'},
+    'IT': {'name': 'Italiano', 'flag': '🇮🇹'},
+    'HU': {'name': 'Magyar', 'flag': '🇭🇺'},
+    'PL': {'name': 'Polski', 'flag': '🇵🇱'},
+  };
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -107,6 +119,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         idToken: result.idToken,
         provider: result.provider,
         name: result.name,
+        language: _selectedLanguage,
       );
 
       final data = response.data;
@@ -152,6 +165,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         idToken: result.idToken,
         provider: result.provider,
         name: result.name,
+        language: _selectedLanguage,
       );
 
       final data = response.data;
@@ -354,32 +368,16 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       color: AppColors.textSecondary,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _LanguageOption(
-                          label: 'English',
-                          value: 'EN',
-                          groupValue: _selectedLanguage,
-                          onChanged: (value) {
-                            setState(() => _selectedLanguage = value!);
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _LanguageOption(
-                          label: 'Română',
-                          value: 'RO',
-                          groupValue: _selectedLanguage,
-                          onChanged: (value) {
-                            setState(() => _selectedLanguage = value!);
-                          },
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 4),
+                  const Text(
+                    'AI-generated content will be in your selected language',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textMuted,
+                    ),
                   ),
+                  const SizedBox(height: 12),
+                  _buildLanguageDropdown(),
 
                   const SizedBox(height: 32),
 
@@ -517,46 +515,129 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       ),
     );
   }
-}
 
-class _LanguageOption extends StatelessWidget {
-  final String label;
-  final String value;
-  final String groupValue;
-  final ValueChanged<String?> onChanged;
-
-  const _LanguageOption({
-    required this.label,
-    required this.value,
-    required this.groupValue,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isSelected = value == groupValue;
-
+  Widget _buildLanguageDropdown() {
+    final lang = _languages[_selectedLanguage]!;
+    
     return InkWell(
-      onTap: () => onChanged(value),
+      onTap: _showLanguagePicker,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.accent.withOpacity(0.1) : AppColors.surfaceLight,
+          color: AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.accent : Colors.transparent,
-            width: 1.5,
+            color: AppColors.accent.withOpacity(0.3),
+            width: 1,
           ),
         ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? AppColors.accent : AppColors.textSecondary,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+        child: Row(
+          children: [
+            Text(
+              lang['flag']!,
+              style: const TextStyle(fontSize: 24),
             ),
-          ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                lang['name']!,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: AppColors.textMuted,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguagePicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Select Language',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: AppColors.textMuted),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'AI-generated content will be in your selected language.',
+              style: TextStyle(
+                fontSize: 13,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: _languages.length,
+                itemBuilder: (context, index) {
+                  final code = _languages.keys.elementAt(index);
+                  final lang = _languages[code]!;
+                  final isSelected = code == _selectedLanguage;
+                  
+                  return ListTile(
+                    leading: Text(
+                      lang['flag']!,
+                      style: const TextStyle(fontSize: 28),
+                    ),
+                    title: Text(
+                      lang['name']!,
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                    trailing: isSelected
+                        ? const Icon(Icons.check_circle, color: AppColors.accent)
+                        : null,
+                    onTap: () {
+                      setState(() => _selectedLanguage = code);
+                      Navigator.pop(context);
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    tileColor: isSelected
+                        ? AppColors.accent.withOpacity(0.1)
+                        : null,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
         ),
       ),
     );

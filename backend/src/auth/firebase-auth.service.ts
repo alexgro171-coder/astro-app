@@ -2,6 +2,7 @@ import { Injectable, Logger, UnauthorizedException, OnModuleInit } from '@nestjs
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as admin from 'firebase-admin';
+import { Language } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { FirebaseAuthDto, FirebaseAuthProvider } from './dto/firebase-auth.dto';
 
@@ -83,7 +84,7 @@ export class FirebaseAuthService implements OnModuleInit {
           this.logger.log(`Linked ${dto.provider} account to existing user ${user.id}`);
         } else {
           // Create new user
-          user = await this.createUserFromFirebase(uid, email, dto.provider, dto.name || firebaseName);
+          user = await this.createUserFromFirebase(uid, email, dto.provider, dto.name || firebaseName, dto.language);
           this.logger.log(`Created new user ${user.id} via ${dto.provider}`);
         }
       }
@@ -152,11 +153,13 @@ export class FirebaseAuthService implements OnModuleInit {
     email: string,
     provider: FirebaseAuthProvider,
     name?: string,
+    language?: Language,
   ) {
     const data: any = {
       email: email.toLowerCase(),
       emailVerified: true, // Firebase verifies email
       name: name || email.split('@')[0],
+      language: language || 'EN',
     };
 
     if (provider === FirebaseAuthProvider.GOOGLE) {
