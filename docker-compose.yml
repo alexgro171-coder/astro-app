@@ -61,7 +61,7 @@ services:
       context: ./admin-web
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: https://api.innerwisdom.app
+        NEXT_PUBLIC_API_URL: http://64.225.97.205:3000
     container_name: astro-admin-web
     restart: unless-stopped
     ports:
