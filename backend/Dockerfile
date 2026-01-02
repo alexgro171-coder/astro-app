@@ -1,7 +1,7 @@
 FROM node:20-slim
 
-# Install OpenSSL (required by Prisma) and procps (for nest watch mode)
-RUN apt-get update && apt-get install -y openssl procps && rm -rf /var/lib/apt/lists/*
+# Install OpenSSL (required by Prisma)
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -17,8 +17,11 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
+# Build TypeScript
+RUN npm run build
+
 # Expose port
 EXPOSE 3000
 
-# Run in development mode
-CMD ["npm", "run", "start:dev"]
+# Run in production mode
+CMD ["npm", "run", "start:prod"]

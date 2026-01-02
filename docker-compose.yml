@@ -54,9 +54,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
 
   # Admin Web (Next.js)
   admin-web:
