@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as admin from 'firebase-admin';
 import { Language } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { AnalyticsService } from '../analytics/analytics.service';
 import { FirebaseAuthDto, FirebaseAuthProvider } from './dto/firebase-auth.dto';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class FirebaseAuthService implements OnModuleInit {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private analytics: AnalyticsService,
   ) {}
 
   onModuleInit() {
@@ -86,6 +88,12 @@ export class FirebaseAuthService implements OnModuleInit {
           // Create new user
           user = await this.createUserFromFirebase(uid, email, dto.provider, dto.name || firebaseName, dto.language);
           this.logger.log(`Created new user ${user.id} via ${dto.provider}`);
+          
+          // Log analytics event for new user signup
+          await this.analytics.logEvent('USER_SIGNUP', user.id, {
+            provider: dto.provider,
+            language: dto.language || 'EN',
+          });
         }
       }
 

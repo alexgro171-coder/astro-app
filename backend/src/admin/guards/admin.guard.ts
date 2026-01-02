@@ -3,28 +3,16 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
 
-/**
- * Admin Guard
- * 
- * Protects admin endpoints. Supports two authentication methods:
- * 
- * 1. Basic Auth: For simple admin access
- *    Header: Authorization: Basic base64(username:password)
- * 
- * 2. Admin JWT: For admin users stored in DB
- *    Header: Authorization: Bearer <admin_token>
- * 
- * Configure admin credentials via:
- * - ADMIN_USERNAME, ADMIN_PASSWORD env vars (Basic Auth)
- * - Or create admin users in admin_users table
- */
 @Injectable()
 export class AdminGuard implements CanActivate {
   constructor(
+    private jwtService: JwtService,
     private configService: ConfigService,
     private prisma: PrismaService,
   ) {}
@@ -33,57 +21,38 @@ export class AdminGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization;
 
-    if (!authHeader) {
-      throw new UnauthorizedException('Admin authentication required');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new UnauthorizedException('Missing or invalid authorization header');
     }
 
-    // Try Basic Auth first
-    if (authHeader.startsWith('Basic ')) {
-      return this.validateBasicAuth(authHeader);
-    }
+    const token = authHeader.substring(7);
 
-    // Try Bearer token (admin JWT)
-    if (authHeader.startsWith('Bearer ')) {
-      return this.validateAdminToken(authHeader, request);
-    }
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
 
-    throw new UnauthorizedException('Invalid authentication method');
-  }
+      // Check if it's an admin user
+      const adminUser = await this.prisma.adminUser.findUnique({
+        where: { id: payload.sub },
+      });
 
-  private validateBasicAuth(authHeader: string): boolean {
-    const base64Credentials = authHeader.split(' ')[1];
-    const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
-    const [username, password] = credentials.split(':');
+      if (!adminUser) {
+        throw new ForbiddenException('Admin access required');
+      }
 
-    const adminUsername = this.configService.get<string>('ADMIN_USERNAME');
-    const adminPassword = this.configService.get<string>('ADMIN_PASSWORD');
+      if (!adminUser.isActive) {
+        throw new ForbiddenException('Admin account is deactivated');
+      }
 
-    if (!adminUsername || !adminPassword) {
-      throw new UnauthorizedException('Admin credentials not configured');
-    }
-
-    if (username === adminUsername && password === adminPassword) {
+      // Attach admin user to request
+      request.adminUser = adminUser;
       return true;
+    } catch (error) {
+      if (error instanceof ForbiddenException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Invalid or expired token');
     }
-
-    throw new UnauthorizedException('Invalid admin credentials');
-  }
-
-  private async validateAdminToken(authHeader: string, request: any): Promise<boolean> {
-    const token = authHeader.split(' ')[1];
-    
-    // For now, use a simple API key approach
-    // In production, implement proper JWT for admin users
-    const adminApiKey = this.configService.get<string>('ADMIN_API_KEY');
-    
-    if (adminApiKey && token === adminApiKey) {
-      request.adminUser = { role: 'admin' };
-      return true;
-    }
-
-    // Check admin_users table
-    // Note: In production, implement proper JWT verification for admin tokens
-    throw new UnauthorizedException('Invalid admin token');
   }
 }
-

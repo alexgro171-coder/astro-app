@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
+import { AnalyticsService } from '../analytics/analytics.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 
@@ -17,6 +18,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private analytics: AnalyticsService,
   ) {}
 
   async signup(signupDto: SignupDto) {
@@ -42,6 +44,12 @@ export class AuthService {
         name,
         language: language || 'EN',
       },
+    });
+
+    // Log analytics event
+    await this.analytics.logEvent('USER_SIGNUP', user.id, {
+      provider: 'email',
+      language: language || 'EN',
     });
 
     // Generate tokens

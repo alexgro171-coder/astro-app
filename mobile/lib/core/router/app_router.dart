@@ -23,6 +23,9 @@ import '../../features/natal_chart/pro_natal_offer_screen.dart';
 import '../../features/natal_chart/pro_natal_checkout_screen.dart';
 import '../../features/karmic/karmic_offer_screen.dart';
 import '../../features/karmic/karmic_result_screen.dart';
+import '../../features/learn/services/learn_service.dart';
+import '../../features/learn/screens/category_items_screen.dart';
+import '../../features/learn/screens/article_screen.dart';
 import '../widgets/placeholder_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -150,6 +153,42 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/free-learn',
         builder: (context, state) => const FreeLearnScreen(),
+      ),
+      
+      // Learn category items
+      GoRoute(
+        path: '/learn/:category/:locale',
+        builder: (context, state) {
+          final categoryStr = state.pathParameters['category']!;
+          final locale = state.pathParameters['locale']!;
+          final category = LearnCategory.values.firstWhere(
+            (c) => c.name == categoryStr,
+            orElse: () => LearnCategory.signs,
+          );
+          return CategoryItemsScreen(
+            category: category,
+            locale: locale,
+          );
+        },
+      ),
+      
+      // Learn article detail
+      GoRoute(
+        path: '/learn/:category/:locale/:slug',
+        builder: (context, state) {
+          final categoryStr = state.pathParameters['category']!;
+          final locale = state.pathParameters['locale']!;
+          final slug = state.pathParameters['slug']!;
+          final category = LearnCategory.values.firstWhere(
+            (c) => c.name == categoryStr,
+            orElse: () => LearnCategory.signs,
+          );
+          return ArticleScreen(
+            category: category,
+            locale: locale,
+            slug: slug,
+          );
+        },
       ),
       
       // Karmic Astrology

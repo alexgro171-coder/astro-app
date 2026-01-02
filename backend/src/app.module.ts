@@ -20,6 +20,8 @@ import { AdminModule } from './admin/admin.module';
 import { TtsModule } from './tts/tts.module';
 import { NatalChartModule } from './natal-chart/natal-chart.module';
 import { KarmicModule } from './karmic/karmic.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { LearnModule } from './learn/learn.module';
 
 @Module({
   imports: [
@@ -44,6 +46,9 @@ import { KarmicModule } from './karmic/karmic.module';
     PrismaModule,
     HealthModule,
     
+    // Analytics (Global - available everywhere)
+    AnalyticsModule,
+    
     // Feature modules
     AuthModule,
     UsersModule,
@@ -67,6 +72,9 @@ import { KarmicModule } from './karmic/karmic.module';
     
     // For You features (Karmic Astrology, etc.)
     KarmicModule,
+    
+    // Learn CMS
+    LearnModule,
   ],
 })
 export class AppModule {}

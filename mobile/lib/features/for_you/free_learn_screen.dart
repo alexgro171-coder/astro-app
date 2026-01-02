@@ -1,13 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../learn/services/learn_service.dart';
+import '../learn/providers/learn_session_provider.dart';
+import '../profile/providers/user_provider.dart';
 
-class FreeLearnScreen extends StatelessWidget {
+class FreeLearnScreen extends ConsumerStatefulWidget {
   const FreeLearnScreen({super.key});
 
   @override
+  ConsumerState<FreeLearnScreen> createState() => _FreeLearnScreenState();
+}
+
+class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Log that user opened Learn section
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(learnSessionProvider.notifier).logOpenedIfNeeded();
+    });
+  }
+
+  String _getUserLocale() {
+    try {
+      final user = ref.read(userProvider).valueOrNull;
+      return user?.language ?? 'EN';
+    } catch (_) {
+      return 'EN';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final locale = _getUserLocale();
+    
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -78,42 +107,46 @@ class FreeLearnScreen extends StatelessWidget {
                         children: [
                           _buildLearnCard(
                             context,
+                            category: LearnCategory.signs,
                             icon: Icons.brightness_7_rounded,
                             title: 'Signs',
                             subtitle: '12 Zodiac signs and their meanings',
                             color: const Color(0xFFFF9800),
-                            itemCount: 12,
+                            locale: locale,
                           ),
                           _buildLearnCard(
                             context,
+                            category: LearnCategory.planets,
                             icon: Icons.public_rounded,
                             title: 'Planets',
                             subtitle: 'Celestial bodies in astrology',
                             color: const Color(0xFF2196F3),
-                            itemCount: 10,
+                            locale: locale,
                           ),
                           _buildLearnCard(
                             context,
+                            category: LearnCategory.houses,
                             icon: Icons.home_rounded,
                             title: 'Houses',
                             subtitle: '12 life areas in your chart',
                             color: const Color(0xFF9C27B0),
-                            itemCount: 12,
+                            locale: locale,
                           ),
                           _buildLearnCard(
                             context,
+                            category: LearnCategory.transits,
                             icon: Icons.sync_alt_rounded,
                             title: 'Transits',
                             subtitle: 'Planetary movements & effects',
                             color: const Color(0xFF4CAF50),
-                            itemCount: 8,
+                            locale: locale,
                           ),
                         ],
                       ),
                       
                       const SizedBox(height: 32),
                       
-                      // Coming soon notice
+                      // Info box
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -143,7 +176,7 @@ class FreeLearnScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Content Coming Soon',
+                                    'Learn at Your Pace',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -152,7 +185,7 @@ class FreeLearnScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    'We\'re creating comprehensive lessons for each topic',
+                                    'Comprehensive lessons to deepen your astrological knowledge',
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: AppColors.textSecondary,
@@ -177,22 +210,18 @@ class FreeLearnScreen extends StatelessWidget {
 
   Widget _buildLearnCard(
     BuildContext context, {
+    required LearnCategory category,
     required IconData icon,
     required String title,
     required String subtitle,
     required Color color,
-    required int itemCount,
+    required String locale,
   }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$title content coming soon!'),
-              duration: const Duration(seconds: 2),
-            ),
-          );
+          context.push('/learn/${category.name}/$locale');
         },
         borderRadius: BorderRadius.circular(20),
         child: Container(
@@ -243,20 +272,23 @@ class FreeLearnScreen extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '$itemCount lessons',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
+              Row(
+                children: [
+                  Icon(
+                    Icons.arrow_forward_rounded,
                     color: color,
+                    size: 16,
                   ),
-                ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Explore',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: color,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

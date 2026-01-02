@@ -756,3 +756,63 @@ enum KarmicReadingStatus {
   READY   // Content available
   FAILED  // Generation failed
 }
+
+// ============================================
+// LEARN CMS (Educational Content)
+// ============================================
+
+model LearnArticle {
+  id       String          @id @default(cuid())
+  category LearnCategory
+  locale   Language        @default(EN)
+  slug     String          // lowercase, e.g., "sun", "aries", "first-house"
+  title    String
+  content  String          @db.Text
+  status   ArticleStatus   @default(DRAFT)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([category, locale, slug])
+  @@index([category, locale, status])
+  @@map("learn_articles")
+}
+
+enum LearnCategory {
+  SIGNS     // Zodiac signs
+  PLANETS   // Sun, Moon, Mercury, etc.
+  HOUSES    // 1st house, 2nd house, etc.
+  TRANSITS  // Transit interpretations
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+// ============================================
+// ANALYTICS EVENTS
+// ============================================
+
+model AnalyticsEvent {
+  id        String            @id @default(cuid())
+  eventType AnalyticsEventType
+  userId    String?           @map("user_id")
+  meta      Json?             // Additional event data
+  createdAt DateTime          @default(now()) @map("created_at")
+
+  @@index([eventType, createdAt])
+  @@index([userId, createdAt])
+  @@index([createdAt])
+  @@map("analytics_events")
+}
+
+enum AnalyticsEventType {
+  USER_SIGNUP
+  SUBSCRIPTION_ACTIVE
+  SUBSCRIPTION_CANCELLED
+  CHECKOUT_SUCCESS
+  ONE_TIME_PURCHASE
+  LEARN_OPENED
+  LEARN_ARTICLE_OPENED
+}
