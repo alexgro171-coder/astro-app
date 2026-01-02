@@ -5,14 +5,21 @@ import {
   UnauthorizedException,
   Logger,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody, ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString, MinLength } from 'class-validator';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 
 class AdminLoginDto {
+  @ApiProperty({ example: 'admin@example.com' })
+  @IsEmail()
   email: string;
+
+  @ApiProperty({ example: 'password123' })
+  @IsString()
+  @MinLength(1)
   password: string;
 }
 
