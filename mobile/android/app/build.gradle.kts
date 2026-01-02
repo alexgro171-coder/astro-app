@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         applicationId = "com.innerwisdom.astro_app"
-        minSdk = 21  // Required for flutter_local_notifications
+        minSdk = flutter.minSdkVersion  // Required for flutter_local_notifications
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

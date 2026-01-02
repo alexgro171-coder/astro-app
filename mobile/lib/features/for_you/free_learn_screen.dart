@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
 import '../learn/services/learn_service.dart';
 import '../learn/providers/learn_session_provider.dart';
-import '../profile/providers/user_provider.dart';
 
 class FreeLearnScreen extends ConsumerStatefulWidget {
   const FreeLearnScreen({super.key});
@@ -15,27 +16,31 @@ class FreeLearnScreen extends ConsumerStatefulWidget {
 }
 
 class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
+  String _locale = 'en';
+
   @override
   void initState() {
     super.initState();
+    _loadUserLocale();
     // Log that user opened Learn section
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(learnSessionProvider.notifier).logOpenedIfNeeded();
     });
   }
 
-  String _getUserLocale() {
-    try {
-      final user = ref.read(userProvider).valueOrNull;
-      return user?.language ?? 'EN';
-    } catch (_) {
-      return 'EN';
+  Future<void> _loadUserLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    final language = prefs.getString(AppConstants.languageKey) ?? 'EN';
+    if (mounted) {
+      setState(() {
+        _locale = language.toLowerCase();
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final locale = _getUserLocale();
+    final locale = _locale;
     
     return Scaffold(
       body: Container(
