@@ -58,6 +58,22 @@ services:
       - ./backend:/app
       - /app/node_modules
 
+  # Admin Web (Next.js)
+  admin-web:
+    build:
+      context: ./admin-web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://api.innerwisdom.app
+    container_name: astro-admin-web
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
   redis_data:
