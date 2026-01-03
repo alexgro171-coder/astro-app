@@ -15,7 +15,7 @@ class ConcernsScreen extends ConsumerStatefulWidget {
 }
 
 class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late TabController _tabController;
   List<dynamic> _concerns = [];
   bool _isLoading = true;
@@ -25,6 +25,7 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    WidgetsBinding.instance.addObserver(this);
     // Set navigation index
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(currentNavIndexProvider.notifier).state = 2;
@@ -34,8 +35,25 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _tabController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _loadConcerns();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload concerns when screen comes back into view
+    if (!_isLoading) {
+      _loadConcerns();
+    }
   }
 
   List<dynamic> get _activeConcerns => 
@@ -57,14 +75,49 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
       final apiClient = ref.read(apiClientProvider);
       final response = await apiClient.getConcerns();
       
-      // API returns a list of concerns
+      // API returns { active: [...], resolved: [...], archived: [...] }
       final data = response.data;
+      
+      List<dynamic> allConcerns = [];
+      
+      if (data is Map) {
+        // Merge all concerns into one list with their status
+        if (data['active'] is List) {
+          for (final c in data['active']) {
+            if (c is Map) {
+              c['status'] = 'ACTIVE';
+              allConcerns.add(c);
+            }
+          }
+        }
+        if (data['resolved'] is List) {
+          for (final c in data['resolved']) {
+            if (c is Map) {
+              c['status'] = 'RESOLVED';
+              allConcerns.add(c);
+            }
+          }
+        }
+        if (data['archived'] is List) {
+          for (final c in data['archived']) {
+            if (c is Map) {
+              c['status'] = 'ARCHIVED';
+              allConcerns.add(c);
+            }
+          }
+        }
+      } else if (data is List) {
+        allConcerns = data;
+      }
+      
+      debugPrint('Concerns loaded: ${allConcerns.length} total');
+      
       setState(() {
-        _concerns = data is List ? data : [];
+        _concerns = allConcerns;
         _isLoading = false;
       });
     } catch (e) {
-      print('Concerns load error: $e');
+      debugPrint('Concerns load error: $e');
       setState(() {
         _error = 'Failed to load concerns';
         _isLoading = false;

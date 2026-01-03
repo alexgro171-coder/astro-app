@@ -309,9 +309,17 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () => context.go('/home'),
-            child: const Text('Back to Home'),
+            onPressed: () {
+              // Pop back to concerns screen which will refresh the list
+              context.pop();
+            },
+            child: const Text('View My Focus Topics'),
           ),
+        ),
+        const SizedBox(height: 12),
+        TextButton(
+          onPressed: () => context.go('/home'),
+          child: const Text('Back to Home'),
         ),
       ],
     );

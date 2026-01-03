@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   ConflictException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -11,9 +12,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AnalyticsService } from '../analytics/analytics.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
@@ -175,6 +180,131 @@ export class AuthService {
   private sanitizeUser(user: any) {
     const { hashedPassword, ...sanitized } = user;
     return sanitized;
+  }
+
+  /**
+   * Request password reset - sends OTP to email
+   */
+  async forgotPassword(dto: ForgotPasswordDto) {
+    const { email } = dto;
+    this.logger.log(`Password reset requested for: ${email}`);
+
+    // Find user
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+
+    // Always return success to prevent email enumeration
+    if (!user) {
+      this.logger.warn(`Password reset requested for non-existent email: ${email}`);
+      return { message: 'If an account exists, a reset code will be sent' };
+    }
+
+    // Delete any existing tokens for this email
+    await this.prisma.passwordResetToken.deleteMany({
+      where: { email: email.toLowerCase() },
+    });
+
+    // Generate 6-digit OTP
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Token expires in 15 minutes
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 15);
+
+    // Create reset token
+    await this.prisma.passwordResetToken.create({
+      data: {
+        email: email.toLowerCase(),
+        code,
+        expiresAt,
+      },
+    });
+
+    // TODO: Send email with OTP code
+    // For now, log it (in production, use email service)
+    this.logger.log(`Password reset OTP for ${email}: ${code}`);
+
+    // In development, include the code in response
+    const isDev = this.configService.get<string>('NODE_ENV') !== 'production';
+    
+    return {
+      message: 'If an account exists, a reset code will be sent',
+      ...(isDev && { devCode: code }), // Only in dev mode
+    };
+  }
+
+  /**
+   * Reset password with OTP code
+   */
+  async resetPassword(dto: ResetPasswordDto) {
+    const { email, code, newPassword } = dto;
+    this.logger.log(`Password reset attempt for: ${email}`);
+
+    // Find the reset token
+    const resetToken = await this.prisma.passwordResetToken.findFirst({
+      where: {
+        email: email.toLowerCase(),
+        code,
+        usedAt: null,
+      },
+    });
+
+    if (!resetToken) {
+      this.logger.warn(`Invalid reset code for ${email}`);
+      throw new BadRequestException('Invalid or expired reset code');
+    }
+
+    // Check if expired
+    if (resetToken.expiresAt < new Date()) {
+      this.logger.warn(`Expired reset code for ${email}`);
+      throw new BadRequestException('Reset code has expired');
+    }
+
+    // Check max attempts
+    if (resetToken.attempts >= 5) {
+      this.logger.warn(`Max reset attempts reached for ${email}`);
+      throw new BadRequestException('Maximum attempts exceeded. Please request a new code.');
+    }
+
+    // Increment attempts
+    await this.prisma.passwordResetToken.update({
+      where: { id: resetToken.id },
+      data: { attempts: resetToken.attempts + 1 },
+    });
+
+    // Find user
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    // Update user password
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { hashedPassword },
+    });
+
+    // Mark token as used
+    await this.prisma.passwordResetToken.update({
+      where: { id: resetToken.id },
+      data: { usedAt: new Date() },
+    });
+
+    // Invalidate all refresh tokens (force re-login on all devices)
+    await this.prisma.refreshToken.deleteMany({
+      where: { userId: user.id },
+    });
+
+    this.logger.log(`Password reset successful for ${email}`);
+
+    return { message: 'Password reset successful. Please login with your new password.' };
   }
 }
 

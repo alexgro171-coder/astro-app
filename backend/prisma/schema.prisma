@@ -75,6 +75,20 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  code      String   // 6-digit OTP code
+  attempts  Int      @default(0) // Max 5 attempts
+  expiresAt DateTime @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([email])
+  @@index([code])
+  @@map("password_reset_tokens")
+}
+
 model UserDevice {
   id          String   @id @default(cuid())
   userId      String   @map("user_id")

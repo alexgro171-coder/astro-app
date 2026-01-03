@@ -176,6 +176,20 @@ class ApiClient {
     return _dio.post('/auth/logout');
   }
 
+  /// Request password reset OTP
+  Future<Response> forgotPassword(String email) {
+    return _dio.post('/auth/forgot-password', data: {'email': email});
+  }
+
+  /// Reset password with OTP code
+  Future<Response> resetPassword(String email, String code, String newPassword) {
+    return _dio.post('/auth/reset-password', data: {
+      'email': email,
+      'code': code,
+      'newPassword': newPassword,
+    });
+  }
+
   // ==================== USER PROFILE ====================
   
   Future<Response> getProfile() {
@@ -192,6 +206,11 @@ class ApiClient {
 
   Future<Response> setBirthData(Map<String, dynamic> data) {
     return _dio.post('/me/birth-data', data: data);
+  }
+
+  /// Delete user account (GDPR)
+  Future<Response> deleteAccount() {
+    return _dio.delete('/me', data: {'confirmation': 'DELETE'});
   }
 
   // ==================== ASTROLOGY ====================

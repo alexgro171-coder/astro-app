@@ -16,6 +16,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { BirthDataDto } from './dto/birth-data.dto';
 import { RegisterDeviceDto } from './dto/register-device.dto';
+import { DeleteAccountDto } from './dto/delete-account.dto';
 import { User } from '@prisma/client';
 
 @ApiTags('users')
@@ -67,9 +68,15 @@ export class UsersController {
 
   @Delete()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Delete user account (GDPR)' })
-  async deleteAccount(@CurrentUser() user: User) {
-    return this.usersService.deleteAccount(user.id);
+  @ApiOperation({ 
+    summary: 'Delete user account (GDPR)',
+    description: 'Permanently deletes the user account and all associated data. Requires confirmation.',
+  })
+  async deleteAccount(
+    @CurrentUser() user: User,
+    @Body() deleteDto: DeleteAccountDto,
+  ) {
+    return this.usersService.deleteAccount(user.id, user.email);
   }
 }
 

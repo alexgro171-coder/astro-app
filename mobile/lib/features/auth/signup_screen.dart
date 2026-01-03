@@ -108,12 +108,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     });
 
     try {
+      debugPrint('SignupScreen: Starting Google sign-in...');
       final result = await _socialAuthService.signInWithGoogle();
       if (result == null) {
-        // User cancelled
+        debugPrint('SignupScreen: Google sign-in cancelled by user');
         return;
       }
 
+      debugPrint('SignupScreen: Google sign-in successful, authenticating with backend...');
       final apiClient = ref.read(apiClientProvider);
       final response = await apiClient.firebaseAuth(
         idToken: result.idToken,
@@ -124,6 +126,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+      debugPrint('SignupScreen: Backend authentication successful');
 
       // Register FCM token for push notifications
       await _registerFcmToken();
@@ -137,8 +140,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         context.go('/birth-data');
       }
     } catch (e) {
+      debugPrint('SignupScreen: Google sign-in error: $e');
+      String errorMsg = 'Google sign-in failed. Please try again.';
+      if (e.toString().contains('network')) {
+        errorMsg = 'Network error. Please check your connection.';
+      } else if (e.toString().contains('cancel')) {
+        errorMsg = 'Sign-in was cancelled.';
+      }
       setState(() {
-        _errorMessage = 'Google sign-in failed. Please try again.';
+        _errorMessage = errorMsg;
       });
     } finally {
       if (mounted) {
@@ -154,12 +164,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     });
 
     try {
+      debugPrint('SignupScreen: Starting Apple sign-in...');
       final result = await _socialAuthService.signInWithApple();
       if (result == null) {
-        // User cancelled
+        debugPrint('SignupScreen: Apple sign-in cancelled by user');
         return;
       }
 
+      debugPrint('SignupScreen: Apple sign-in successful, authenticating with backend...');
       final apiClient = ref.read(apiClientProvider);
       final response = await apiClient.firebaseAuth(
         idToken: result.idToken,
@@ -170,6 +182,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+      debugPrint('SignupScreen: Backend authentication successful');
 
       // Register FCM token for push notifications
       await _registerFcmToken();
@@ -183,8 +196,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         context.go('/birth-data');
       }
     } catch (e) {
+      debugPrint('SignupScreen: Apple sign-in error: $e');
+      String errorMsg = 'Apple sign-in failed. Please try again.';
+      if (e.toString().contains('AuthorizationErrorCode.canceled')) {
+        errorMsg = 'Sign-in was cancelled.';
+      } else if (e.toString().contains('network')) {
+        errorMsg = 'Network error. Please check your connection.';
+      }
       setState(() {
-        _errorMessage = 'Apple sign-in failed. Please try again.';
+        _errorMessage = errorMsg;
       });
     } finally {
       if (mounted) {
@@ -459,18 +479,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      // Apple Sign-In (iOS only) - Temporarily disabled until Apple Developer Program is activated
+                      // Apple Sign-In (iOS only)
                       if (!kIsWeb && Platform.isIOS)
                         Expanded(
                           child: OutlinedButton.icon(
-                            onPressed: _isLoading || _isSocialLoading ? null : () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Apple Sign-In coming soon! Please use Google or email.'),
-                                  duration: Duration(seconds: 3),
-                                ),
-                              );
-                            },
+                            onPressed: _isLoading || _isSocialLoading ? null : _signInWithApple,
                             icon: _isSocialLoading
                                 ? const SizedBox(
                                     width: 20,

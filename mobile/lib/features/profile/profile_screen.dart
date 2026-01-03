@@ -342,24 +342,29 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         _buildSettingsItem(
           icon: Icons.notifications_rounded,
           title: 'Notifications',
-          subtitle: _user?['notifyEnabled'] == true ? 'Enabled at 08:00' : 'Disabled',
-          onTap: () {},
+          subtitle: _user?['notifyEnabled'] == true ? 'Enabled' : 'Disabled',
+          onTap: () => context.push('/notifications-settings'),
         ),
         _buildSettingsItem(
           icon: Icons.color_lens_rounded,
           title: 'Appearance',
           subtitle: 'Dark theme',
-          onTap: () {},
+          onTap: () => context.push('/appearance'),
         ),
         _buildSettingsItem(
           icon: Icons.help_outline_rounded,
           title: 'Help & Support',
-          onTap: () {},
+          onTap: () => context.push('/help-support'),
         ),
         _buildSettingsItem(
           icon: Icons.privacy_tip_rounded,
           title: 'Privacy Policy',
-          onTap: () {},
+          onTap: () => context.push('/privacy-policy'),
+        ),
+        _buildSettingsItem(
+          icon: Icons.article_outlined,
+          title: 'Terms of Service',
+          onTap: () => context.push('/terms-of-service'),
         ),
         const SizedBox(height: 16),
         _buildSettingsItem(
@@ -367,6 +372,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           title: 'Logout',
           titleColor: AppColors.error,
           onTap: _logout,
+        ),
+        const SizedBox(height: 8),
+        _buildSettingsItem(
+          icon: Icons.delete_forever_rounded,
+          title: 'Delete Account',
+          titleColor: AppColors.error,
+          onTap: () => context.push('/delete-account'),
         ),
       ],
     );

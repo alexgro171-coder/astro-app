@@ -57,22 +57,29 @@ export class FirebaseAuthService implements OnModuleInit {
    * Authenticate user with Firebase ID token
    */
   async authenticateWithFirebase(dto: FirebaseAuthDto) {
+    this.logger.log(`Firebase auth attempt: provider=${dto.provider}, hasToken=${!!dto.idToken}`);
+    
     if (!this.firebaseInitialized) {
+      this.logger.error('Firebase Auth not initialized - check config');
       throw new UnauthorizedException('Firebase Auth not configured');
     }
 
     try {
       // Verify Firebase ID token
+      this.logger.debug('Verifying Firebase ID token...');
       const decodedToken = await admin.auth().verifyIdToken(dto.idToken);
       
       const { uid, email, name: firebaseName, picture } = decodedToken;
+      this.logger.log(`Firebase token verified: uid=${uid}, email=${email}, provider=${dto.provider}`);
 
       if (!email) {
+        this.logger.warn(`Firebase auth failed: no email in token for uid=${uid}`);
         throw new UnauthorizedException('Email is required for authentication');
       }
 
       // Find or create user
       let user = await this.findUserByFirebaseUid(uid, dto.provider);
+      let isNewUser = false;
       
       if (!user) {
         // Try to find by email (link existing account)
@@ -87,6 +94,7 @@ export class FirebaseAuthService implements OnModuleInit {
         } else {
           // Create new user
           user = await this.createUserFromFirebase(uid, email, dto.provider, dto.name || firebaseName, dto.language);
+          isNewUser = true;
           this.logger.log(`Created new user ${user.id} via ${dto.provider}`);
           
           // Log analytics event for new user signup
@@ -95,18 +103,21 @@ export class FirebaseAuthService implements OnModuleInit {
             language: dto.language || 'EN',
           });
         }
+      } else {
+        this.logger.log(`Found existing user ${user.id} for ${dto.provider} uid=${uid}`);
       }
 
       // Generate JWT tokens
       const tokens = await this.generateTokens(user.id);
+      this.logger.log(`Authentication successful for user ${user.id}`);
 
       return {
         user: this.sanitizeUser(user),
         ...tokens,
-        isNewUser: !user.onboardingComplete,
+        isNewUser: isNewUser || !user.onboardingComplete,
       };
     } catch (error) {
-      this.logger.error(`Firebase auth failed: ${error.message}`);
+      this.logger.error(`Firebase auth failed: ${error.message}`, error.stack);
       
       if (error.code === 'auth/id-token-expired') {
         throw new UnauthorizedException('Token expired. Please sign in again.');
@@ -114,8 +125,11 @@ export class FirebaseAuthService implements OnModuleInit {
       if (error.code === 'auth/argument-error') {
         throw new UnauthorizedException('Invalid token format');
       }
+      if (error.code === 'auth/id-token-revoked') {
+        throw new UnauthorizedException('Token has been revoked. Please sign in again.');
+      }
       
-      throw new UnauthorizedException('Authentication failed');
+      throw new UnauthorizedException(error.message || 'Authentication failed');
     }
   }
 

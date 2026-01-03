@@ -120,12 +120,20 @@ export class UsersService {
     };
   }
 
-  async deleteAccount(userId: string) {
+  async deleteAccount(userId: string, email?: string) {
+    this.logger.warn(`Account deletion requested for user ${userId} (${email || 'unknown email'})`);
+    
+    // All related data will be cascade deleted due to Prisma schema relations
+    // This includes: refreshTokens, devices, natalChart, concerns, dailyGuidances, etc.
     await this.prisma.user.delete({
       where: { id: userId },
     });
 
-    return { message: 'Account deleted successfully' };
+    this.logger.warn(`Account successfully deleted: user ${userId} (${email || 'unknown email'})`);
+
+    return { 
+      message: 'Account deleted successfully. All your data has been permanently removed.',
+    };
   }
 
   /**
