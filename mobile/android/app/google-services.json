@@ -12,7 +12,20 @@
           "package_name": "com.innerwisdom.astro_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "356409230876-p78qavhfcg0dkjj7uhlfgduqierdti3j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.innerwisdom.astro_app",
+            "certificate_hash": "dd60dc3b1c8b3e1d85e7262d1d14d2e99cd9ab9a"
+          }
+        },
+        {
+          "client_id": "356409230876-7gt6duerngl8kkdd9e2kjstsjd37iled.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD2wVM2eTaRNEkoTv1Q4UP_n7AUb8OS53c"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "356409230876-7gt6duerngl8kkdd9e2kjstsjd37iled.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "356409230876-d5bgkv0l43gd20sae2ggga9h17ct4t71.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.innerwisdom.astroapp"
+              }
+            }
+          ]
         }
       }
     }
