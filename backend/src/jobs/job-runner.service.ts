@@ -110,7 +110,10 @@ export class JobRunnerService {
     const existingGuidance = await this.prisma.dailyGuidance.findFirst({
       where: {
         userId: user.id,
-        date: new Date(`${localDateStr}T00:00:00.000Z`),
+        OR: [
+          { localDateStr },
+          { date: new Date(`${localDateStr}T00:00:00.000Z`) },
+        ],
         status: 'READY',
       },
     });
@@ -125,13 +128,13 @@ export class JobRunnerService {
     }
 
     // Generate new guidance using existing service
-    // Note: GuidanceService.getOrCreateGuidance handles the full pipeline
-    const guidance = await this.guidanceService.getOrCreateGuidance(user.id);
+    // getTodayGuidance handles the full pipeline
+    const result = await this.guidanceService.getTodayGuidance(user);
 
     return {
       kind: 'daily_guidance',
       localDateStr,
-      id: guidance.id,
+      status: result.status,
     };
   }
 
@@ -201,10 +204,11 @@ export class JobRunnerService {
     this.logger.log(`Generating karmic astrology for user ${user.id}`);
 
     // Check for existing reading with same locale
-    const existingReading = await this.prisma.karmicReading.findFirst({
+    const existingReading = await this.prisma.karmicAstrologyReading.findFirst({
       where: {
         userId: user.id,
         locale: job.locale,
+        status: 'READY',
       },
     });
 
@@ -214,16 +218,18 @@ export class JobRunnerService {
         kind: 'karmic_astrology',
         id: existingReading.id,
         locale: job.locale,
+        status: 'READY',
       };
     }
 
-    // Generate new karmic reading
-    const reading = await this.karmicService.generateReading(user.id, job.locale);
+    // Generate new karmic reading using existing service
+    // generateReading takes User object and handles the full pipeline
+    const result = await this.karmicService.generateReading(user, job.locale);
 
     return {
       kind: 'karmic_astrology',
-      id: reading.id,
       locale: job.locale,
+      status: result.status,
     };
   }
 
