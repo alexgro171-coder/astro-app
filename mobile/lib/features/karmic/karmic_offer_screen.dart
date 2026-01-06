@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/universe_loading_overlay.dart';
+import '../../core/services/jobs_service.dart';
 import 'services/karmic_service.dart';
 
 class KarmicOfferScreen extends ConsumerStatefulWidget {
@@ -14,6 +16,7 @@ class KarmicOfferScreen extends ConsumerStatefulWidget {
 
 class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
   bool _isGenerating = false;
+  String? _progressHint;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
+      appBar: _isGenerating ? null : AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -29,7 +32,9 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
           onPressed: () => context.pop(),
         ),
       ),
-      body: statusAsync.when(
+      body: Stack(
+        children: [
+          statusAsync.when(
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.accent),
         ),
@@ -217,56 +222,56 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
           );
         },
       ),
+          // Universe loading overlay for async generation
+          if (_isGenerating)
+            UniverseLoadingOverlay(
+              progressHint: _progressHint ?? "Exploring your soul's journey…\nYour karmic reading is being prepared.",
+              onCancel: () {
+                // User can leave - job continues in background
+                setState(() => _isGenerating = false);
+              },
+            ),
+        ],
+      ),
     );
   }
 
   Future<void> _handleActivate(KarmicStatus status) async {
     if (status.betaFree || status.isUnlocked) {
-      // Generate directly
-      setState(() => _isGenerating = true);
+      // Use job system for generation
+      setState(() {
+        _isGenerating = true;
+        _progressHint = "Connecting to your karmic path…";
+      });
 
       try {
-        final service = ref.read(karmicServiceProvider);
-        final result = await service.generateReading();
+        final jobsService = ref.read(jobsServiceProvider);
+        
+        // Start the job
+        final startResponse = await jobsService.startJob(
+          jobType: JobType.karmicAstrology,
+        );
 
-        if (!mounted) return;
-
-        if (result.isReady) {
-          // Invalidate and navigate to result
+        // If already ready, navigate directly
+        if (startResponse.isSuccess) {
           ref.invalidate(karmicStatusProvider);
-          context.pushReplacement('/karmic-result');
-        } else if (result.isPending) {
-          // Show pending message
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Your reading is being generated...'),
-              backgroundColor: Colors.orange,
-            ),
-          );
-          // Poll and navigate
-          await Future.delayed(const Duration(seconds: 2));
-          ref.invalidate(karmicStatusProvider);
-          context.pushReplacement('/karmic-result');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${result.errorMsg ?? "Unknown error"}'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          if (mounted) {
+            context.pushReplacement('/karmic-result');
+          }
+          return;
         }
+
+        // Poll for completion
+        await _pollForCompletion(startResponse.jobId);
       } catch (e) {
         if (!mounted) return;
+        setState(() => _isGenerating = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to generate: $e'),
             backgroundColor: Colors.red,
           ),
         );
-      } finally {
-        if (mounted) {
-          setState(() => _isGenerating = false);
-        }
       }
     } else {
       // Navigate to checkout (placeholder for now)
@@ -275,6 +280,59 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
         'subtitle': 'Purchase flow coming soon',
         'icon': Icons.shopping_cart_rounded,
       });
+    }
+  }
+
+  Future<void> _pollForCompletion(String jobId) async {
+    final jobsService = ref.read(jobsServiceProvider);
+    const pollInterval = Duration(milliseconds: 2500);
+    const maxPolls = 36; // ~90 seconds
+
+    for (int i = 0; i < maxPolls && mounted; i++) {
+      await Future.delayed(pollInterval);
+
+      try {
+        final status = await jobsService.getJobStatus(jobId);
+
+        if (mounted) {
+          setState(() {
+            _progressHint = status.progressHint ?? _progressHint;
+          });
+        }
+
+        if (status.isSuccess) {
+          ref.invalidate(karmicStatusProvider);
+          if (mounted) {
+            context.pushReplacement('/karmic-result');
+          }
+          return;
+        } else if (status.isFailed) {
+          if (mounted) {
+            setState(() => _isGenerating = false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Generation failed: ${status.errorMsg ?? "Unknown error"}'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+          return;
+        }
+      } catch (e) {
+        debugPrint('Error polling job status: $e');
+        // Continue polling on network errors
+      }
+    }
+
+    // Timeout
+    if (mounted) {
+      setState(() => _isGenerating = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Taking longer than expected. Please try again.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
     }
   }
 }

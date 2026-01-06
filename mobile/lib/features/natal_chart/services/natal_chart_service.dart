@@ -2,17 +2,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/network/api_client.dart';
+import '../../../core/services/jobs_service.dart';
 import '../models/natal_placement.dart';
 
 /// Provider for NatalChartService
 final natalChartServiceProvider = Provider<NatalChartService>((ref) {
-  return NatalChartService(ref.watch(apiClientProvider));
+  return NatalChartService(
+    ref.watch(apiClientProvider),
+    ref.watch(jobsServiceProvider),
+  );
 });
 
-/// Provider for natal chart data
+/// Provider for natal chart data with job-based generation
 final natalChartDataProvider = FutureProvider<NatalChartData?>((ref) async {
   final service = ref.watch(natalChartServiceProvider);
-  return service.getNatalChartData();
+  return service.getNatalChartDataWithJob();
 });
 
 /// Provider for natal chart wheel SVG
@@ -43,8 +47,57 @@ final interpretationProvider = FutureProvider.family<NatalInterpretation?, Strin
 
 class NatalChartService {
   final ApiClient _apiClient;
+  final JobsService _jobsService;
 
-  NatalChartService(this._apiClient);
+  NatalChartService(this._apiClient, this._jobsService);
+
+  /// Get natal chart data with job-based generation if needed.
+  Future<NatalChartData?> getNatalChartDataWithJob() async {
+    // First try direct fetch - fast path
+    try {
+      final response = await _apiClient.get('/natal-chart');
+      if (response.statusCode == 200 && response.data != null) {
+        return NatalChartData.fromJson(response.data);
+      }
+    } catch (e) {
+      debugPrint('Direct natal chart fetch failed: $e');
+    }
+
+    // If direct fetch fails, try job-based generation
+    try {
+      final startResponse = await _jobsService.startJob(
+        jobType: JobType.natalChartShort,
+      );
+
+      // If already ready, fetch data
+      if (startResponse.isSuccess) {
+        return getNatalChartData();
+      }
+
+      // Poll for completion (max 60 seconds)
+      const pollInterval = Duration(milliseconds: 2500);
+      const maxPolls = 24;
+      
+      for (int i = 0; i < maxPolls; i++) {
+        await Future.delayed(pollInterval);
+        
+        final status = await _jobsService.getJobStatus(startResponse.jobId);
+        
+        if (status.isSuccess) {
+          return getNatalChartData();
+        } else if (status.isFailed) {
+          debugPrint('Natal chart job failed: ${status.errorMsg}');
+          return null;
+        }
+      }
+      
+      debugPrint('Natal chart job timed out');
+      return null;
+    } catch (e) {
+      debugPrint('Error with natal chart job: $e');
+      return null;
+    }
+  }
 
   /// Get full natal chart data including placements and interpretations
   Future<NatalChartData?> getNatalChartData() async {

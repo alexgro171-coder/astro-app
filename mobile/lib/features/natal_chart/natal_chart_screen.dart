@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/universe_loading_overlay.dart';
 import 'models/natal_placement.dart';
 import 'services/natal_chart_service.dart';
 import 'widgets/placements_table.dart';
@@ -170,21 +171,9 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
   }
 
   Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(color: AppColors.accent),
-          const SizedBox(height: 16),
-          Text(
-            'Loading your natal chart...',
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
+    return const UniverseLoadingOverlay(
+      progressHint: "Mapping your celestial blueprint…\nYour natal chart is being prepared.",
+      showCancelAfter: false,
     );
   }
 

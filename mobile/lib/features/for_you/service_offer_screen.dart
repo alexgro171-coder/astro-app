@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
+import '../../core/widgets/universe_loading_overlay.dart';
+import '../../core/services/jobs_service.dart';
 
 class ServiceOfferScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> serviceData;
@@ -16,6 +18,8 @@ class ServiceOfferScreen extends ConsumerStatefulWidget {
 
 class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
   bool _isLoading = false;
+  bool _isGenerating = false;
+  String? _progressHint;
   String? _error;
 
   String get serviceType => widget.serviceData['serviceType'] as String;
@@ -31,14 +35,16 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
     final priceDisplay = '\$${(priceUsd / 100).toStringAsFixed(2)}';
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: _isGenerating ? null : AppBar(
         title: Text(title),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
       ),
-      body: Container(
+      body: Stack(
+        children: [
+          Container(
         decoration: const BoxDecoration(
           gradient: AppColors.cosmicGradient,
         ),
@@ -268,6 +274,17 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
           ),
         ),
       ),
+          // Universe loading overlay for async generation
+          if (_isGenerating)
+            UniverseLoadingOverlay(
+              progressHint: _progressHint ?? "Consulting the cosmos for your insights…\nYour personalized report is being prepared.",
+              onCancel: () {
+                // User can leave - job continues in background
+                setState(() => _isGenerating = false);
+              },
+            ),
+        ],
+      ),
     );
   }
 
@@ -291,26 +308,95 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
 
   Future<void> _generateReport({Map<String, dynamic>? partnerData}) async {
     setState(() {
-      _isLoading = true;
+      _isLoading = false;
+      _isGenerating = true;
       _error = null;
+      _progressHint = "Preparing your personalized report…";
     });
 
     try {
-      final apiClient = ref.read(apiClientProvider);
+      final jobsService = ref.read(jobsServiceProvider);
       
-      final response = await apiClient.post(
-        '/for-you/reports/$serviceType/generate',
-        data: {
+      // Start the job with payload
+      final startResponse = await jobsService.startJob(
+        jobType: JobType.oneTimeReport,
+        payload: {
+          'serviceType': serviceType,
           if (partnerData != null) 'partnerProfile': partnerData,
         },
       );
+
+      // If already ready, fetch and show
+      if (startResponse.isSuccess) {
+        await _fetchAndShowReport();
+        return;
+      }
+
+      // Poll for completion
+      await _pollForCompletion(startResponse.jobId, partnerData);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isGenerating = false;
+        _error = e.toString();
+      });
+    }
+  }
+
+  Future<void> _pollForCompletion(String jobId, Map<String, dynamic>? partnerData) async {
+    final jobsService = ref.read(jobsServiceProvider);
+    const pollInterval = Duration(milliseconds: 2500);
+    const maxPolls = 36; // ~90 seconds
+
+    for (int i = 0; i < maxPolls && mounted; i++) {
+      await Future.delayed(pollInterval);
+
+      try {
+        final status = await jobsService.getJobStatus(jobId);
+
+        if (mounted) {
+          setState(() {
+            _progressHint = status.progressHint ?? _progressHint;
+          });
+        }
+
+        if (status.isSuccess) {
+          await _fetchAndShowReport();
+          return;
+        } else if (status.isFailed) {
+          if (mounted) {
+            setState(() {
+              _isGenerating = false;
+              _error = status.errorMsg ?? 'Generation failed';
+            });
+          }
+          return;
+        }
+      } catch (e) {
+        debugPrint('Error polling job status: $e');
+        // Continue polling on network errors
+      }
+    }
+
+    // Timeout
+    if (mounted) {
+      setState(() {
+        _isGenerating = false;
+        _error = 'Taking longer than expected. Please try again.';
+      });
+    }
+  }
+
+  Future<void> _fetchAndShowReport() async {
+    try {
+      final apiClient = ref.read(apiClientProvider);
+      final response = await apiClient.get('/for-you/reports/$serviceType');
 
       if (!mounted) return;
 
       final status = response.data['status'];
       
       if (status == 'READY') {
-        // Navigate to result screen
         context.pushReplacement(
           '/service-result',
           extra: {
@@ -319,26 +405,18 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
             'serviceType': serviceType,
           },
         );
-      } else if (status == 'FAILED') {
+      } else {
         setState(() {
-          _error = response.data['errorMsg'] ?? 'Generation failed';
-        });
-      } else if (status == 'PENDING') {
-        setState(() {
-          _error = 'Report is being generated. Please try again in a moment.';
+          _isGenerating = false;
+          _error = 'Report not ready yet. Please try again.';
         });
       }
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _isGenerating = false;
+        _error = 'Failed to fetch report: $e';
       });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
     }
   }
 }
