@@ -22,6 +22,7 @@ import { NatalChartModule } from './natal-chart/natal-chart.module';
 import { KarmicModule } from './karmic/karmic.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { LearnModule } from './learn/learn.module';
+import { ForYouModule } from './for-you/for-you.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { LearnModule } from './learn/learn.module';
     
     // For You features (Karmic Astrology, etc.)
     KarmicModule,
+    ForYouModule,
     
     // Learn CMS
     LearnModule,

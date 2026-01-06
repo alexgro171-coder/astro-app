@@ -52,7 +52,8 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
             
             const SizedBox(height: 32),
 
-            // Menu items
+            // Menu items (New Order)
+            // 1. My Natal Chart
             _buildMenuItem(
               icon: Icons.stars_rounded,
               title: 'My Natal Chart',
@@ -61,43 +62,16 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
               onTap: () => context.push('/natal-chart'),
             ),
             
+            // 2. Compatibilities Hub (replaces Romantic + Partnership)
             _buildMenuItem(
               icon: Icons.favorite_rounded,
-              title: 'Romantic Compatibilities',
-              subtitle: 'Love & relationship synastry',
+              title: 'Compatibilities',
+              subtitle: 'Love, friendship & partnership reports',
               color: const Color(0xFFE91E63),
-              onTap: () => context.push('/placeholder', extra: {
-                'title': 'Romantic Compatibilities',
-                'subtitle': 'Coming soon - Discover your love compatibility',
-                'icon': Icons.favorite_rounded,
-              }),
+              onTap: () => context.push('/compatibilities'),
             ),
             
-            _buildMenuItem(
-              icon: Icons.handshake_rounded,
-              title: 'Partnership Compatibilities',
-              subtitle: 'Business & friendship synastry',
-              color: const Color(0xFFFF9800),
-              onTap: () => context.push('/placeholder', extra: {
-                'title': 'Partnership Compatibilities',
-                'subtitle': 'Coming soon - Find your ideal partners',
-                'icon': Icons.handshake_rounded,
-              }),
-            ),
-            
-            _buildMenuItem(
-              icon: Icons.calendar_month_rounded,
-              title: '12 Months Ahead',
-              subtitle: 'Your yearly forecast',
-              color: const Color(0xFF2196F3),
-              onTap: () => context.push('/placeholder', extra: {
-                'title': '12 Months Ahead',
-                'subtitle': 'Coming soon - Annual cosmic forecast',
-                'icon': Icons.calendar_month_rounded,
-              }),
-            ),
-            
-            // Karmic Astrology - NEW
+            // 3. Karmic Astrology
             _buildMenuItem(
               icon: Icons.auto_awesome_rounded,
               title: 'Karmic Astrology',
@@ -106,6 +80,16 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
               onTap: () => context.push('/karmic-astrology'),
             ),
             
+            // 4. Moon Phase Report (NEW)
+            _buildMenuItem(
+              icon: Icons.nightlight_round,
+              title: 'Moon Phase Report',
+              subtitle: 'Current lunar energy guidance',
+              color: const Color(0xFF3F51B5),
+              onTap: () => context.push('/moon-phase'),
+            ),
+            
+            // 5. Learn Astrology
             _buildMenuItem(
               icon: Icons.school_rounded,
               title: 'Learn Astrology',
@@ -232,4 +216,3 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
     );
   }
 }
-

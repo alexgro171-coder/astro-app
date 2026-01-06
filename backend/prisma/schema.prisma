@@ -52,14 +52,15 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  natalChart     NatalChart?
-  concerns       Concern[]
-  dailyGuidances DailyGuidance[]
-  feedbacks      GuidanceFeedback[]
-  devices        UserDevice[]
-  refreshTokens  RefreshToken[]
-  subscription   Subscription?
-  contextProfile UserContextProfile?
+  natalChart      NatalChart?
+  concerns        Concern[]
+  dailyGuidances  DailyGuidance[]
+  feedbacks       GuidanceFeedback[]
+  devices         UserDevice[]
+  refreshTokens   RefreshToken[]
+  subscription    Subscription?
+  contextProfile  UserContextProfile?
+  oneTimeReadings OneTimeReading[]
 
   @@map("users")
 }
@@ -829,4 +830,52 @@ enum AnalyticsEventType {
   ONE_TIME_PURCHASE
   LEARN_OPENED
   LEARN_ARTICLE_OPENED
+  ONE_TIME_SERVICE_OPENED
+  ONE_TIME_SERVICE_GENERATED
+  ONE_TIME_SERVICE_VIEWED
+}
+
+// ============================================
+// ONE-TIME READINGS (Compatibility Reports, Moon Phase, etc.)
+// ============================================
+
+model OneTimeReading {
+  id          String              @id @default(uuid())
+  userId      String              @map("user_id")
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceType OneTimeServiceType  @map("service_type")
+  locale      String              // Language code: en, ro, fr, etc.
+  inputHash   String              @map("input_hash") // SHA256 of normalized input
+  
+  status      ReadingStatus       @default(PENDING)
+  content     String?             @db.Text
+  
+  // Snapshot of input data used for generation
+  inputSnapshot Json?             @map("input_snapshot")
+  
+  // Error message if generation failed
+  errorMsg    String?             @map("error_msg")
+  
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+
+  @@unique([userId, serviceType, locale, inputHash])
+  @@index([userId])
+  @@index([serviceType, locale, status])
+  @@map("one_time_readings")
+}
+
+enum OneTimeServiceType {
+  PERSONALITY_REPORT
+  ROMANTIC_PERSONALITY_REPORT
+  FRIENDSHIP_REPORT
+  LOVE_COMPATIBILITY_REPORT
+  ROMANTIC_FORECAST_COUPLE_REPORT
+  MOON_PHASE_REPORT
+}
+
+enum ReadingStatus {
+  PENDING
+  READY
+  FAILED
 }

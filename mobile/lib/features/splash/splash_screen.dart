@@ -8,6 +8,15 @@ import '../../core/network/api_client.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/services/notification_service.dart';
 
+// Inner Wisdom Astro brand colors (from logo)
+class _SplashColors {
+  static const Color purple = Color(0xFF6B4B8A);
+  static const Color purpleDark = Color(0xFF5A3D7A);
+  static const Color purpleLight = Color(0xFF7D5C9C);
+  static const Color gold = Color(0xFFC9A86C);
+  static const Color goldLight = Color(0xFFD4BC8A);
+}
+
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -119,7 +128,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: AppColors.cosmicGradient,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              _SplashColors.purpleLight,
+              _SplashColors.purple,
+              _SplashColors.purpleDark,
+            ],
+          ),
         ),
         child: Center(
           child: AnimatedBuilder(
@@ -132,35 +149,53 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo/Icon
+                      // Logo
                       Container(
-                        width: 120,
-                        height: 120,
+                        width: 160,
+                        height: 160,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: AppColors.accentGradient,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.accent.withOpacity(0.4),
-                              blurRadius: 30,
-                              spreadRadius: 5,
+                              color: _SplashColors.gold.withOpacity(0.4),
+                              blurRadius: 40,
+                              spreadRadius: 10,
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.auto_awesome,
-                          size: 60,
-                          color: AppColors.primary,
+                        child: ClipOval(
+                          child: Image.asset(
+                            'assets/images/logo.png',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              // Fallback to icon if image not found
+                              return Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _SplashColors.purpleDark,
+                                  border: Border.all(
+                                    color: _SplashColors.gold,
+                                    width: 3,
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.auto_awesome,
+                                  size: 80,
+                                  color: _SplashColors.gold,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
                       // App Name
                       const Text(
-                        'Inner Wisdom',
+                        'Inner Wisdom Astro',
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: Colors.white,
                           letterSpacing: 1.2,
                         ),
                       ),
@@ -170,7 +205,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         'Your Personal Astrologer',
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.textSecondary.withOpacity(0.8),
+                          color: _SplashColors.goldLight.withOpacity(0.9),
                           letterSpacing: 0.5,
                         ),
                       ),

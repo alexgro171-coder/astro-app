@@ -34,6 +34,11 @@ import '../../features/karmic/karmic_result_screen.dart';
 import '../../features/learn/services/learn_service.dart';
 import '../../features/learn/screens/category_items_screen.dart';
 import '../../features/learn/screens/article_screen.dart';
+import '../../features/for_you/compatibilities_hub_screen.dart';
+import '../../features/for_you/service_offer_screen.dart';
+import '../../features/for_you/partner_input_screen.dart';
+import '../../features/for_you/service_result_screen.dart';
+import '../../features/for_you/moon_phase_screen.dart';
 import '../widgets/placeholder_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -242,6 +247,49 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/karmic-result',
         builder: (context, state) => const KarmicResultScreen(),
+      ),
+      
+      // Compatibilities Hub
+      GoRoute(
+        path: '/compatibilities',
+        builder: (context, state) => const CompatibilitiesHubScreen(),
+      ),
+      
+      // Service Offer (generic for all one-time services)
+      GoRoute(
+        path: '/service-offer',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return ServiceOfferScreen(serviceData: extra);
+        },
+      ),
+      
+      // Partner Input (for couple reports)
+      GoRoute(
+        path: '/partner-input',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return PartnerInputScreen(title: extra?['title'] ?? 'Report');
+        },
+      ),
+      
+      // Service Result
+      GoRoute(
+        path: '/service-result',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return ServiceResultScreen(
+            title: extra['title'] as String,
+            content: extra['content'] as String,
+            serviceType: extra['serviceType'] as String,
+          );
+        },
+      ),
+      
+      // Moon Phase Report
+      GoRoute(
+        path: '/moon-phase',
+        builder: (context, state) => const MoonPhaseScreen(),
       ),
       
       // Generic placeholder for coming soon features

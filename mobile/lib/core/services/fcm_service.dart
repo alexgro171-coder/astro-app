@@ -11,7 +11,10 @@ import 'device_service.dart';
 
 /// Provider for FCMService
 final fcmServiceProvider = Provider<FCMService>((ref) {
-  return FCMService(ref);
+  final service = FCMService(ref);
+  // Check for pending token registration when provider is accessed
+  service._checkPendingTokenRegistration();
+  return service;
 });
 
 /// Background message handler (must be top-level function)
@@ -201,9 +204,28 @@ class FCMService {
     }
   }
 
+  /// Check for pending token registration (called when _ref becomes available)
+  Future<void> _checkPendingTokenRegistration() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(_fcmTokenKey);
+      final isRegistered = prefs.getBool(_tokenRegisteredKey) ?? false;
+      
+      if (token != null && !isRegistered && _ref != null) {
+        debugPrint('FCMService: Found pending token registration, registering now...');
+        await _registerToken(token);
+      }
+    } catch (e) {
+      debugPrint('FCMService: Error checking pending token registration: $e');
+    }
+  }
+
   /// Internal method to register token with backend
   Future<bool> _registerToken(String token) async {
-    if (_ref == null) return false;
+    if (_ref == null) {
+      debugPrint('FCMService: Cannot register token - _ref is null (provider not yet accessed)');
+      return false;
+    }
     
     try {
       final platform = Platform.isIOS ? 'IOS' : 'ANDROID';
@@ -230,16 +252,20 @@ class FCMService {
   }
 
   /// Handle token refresh
-  void _onTokenRefresh(String token) async {
-    debugPrint('FCMService: Token refreshed: $token');
-    
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_fcmTokenKey, token);
-    // Reset registration flag to force re-registration
-    await prefs.setBool(_tokenRegisteredKey, false);
-    
-    // Register new token with backend
-    await registerTokenWithBackend();
+  Future<void> _onTokenRefresh(String token) async {
+    try {
+      debugPrint('FCMService: Token refreshed: $token');
+      
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_fcmTokenKey, token);
+      // Reset registration flag to force re-registration
+      await prefs.setBool(_tokenRegisteredKey, false);
+      
+      // Register new token with backend
+      await registerTokenWithBackend();
+    } catch (e) {
+      debugPrint('FCMService: Error handling token refresh: $e');
+    }
   }
 
   /// Handle foreground messages

@@ -1,5 +1,5 @@
 name: astro_app
-description: "Inner Wisdom - Personal Astrologer App"
+description: "Inner Wisdom Astro - Personal Astrologer App"
 publish_to: 'none'
 version: 1.0.1+2
 
@@ -83,8 +83,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   
-  # Assets will be added later
-  # assets:
-  #   - assets/images/
-  #   - assets/icons/
-  #   - assets/animations/
+  assets:
+    - assets/images/
