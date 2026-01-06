@@ -96,6 +96,13 @@ export class JobRunnerService {
 
   /**
    * Execute Daily Guidance generation.
+   * 
+   * IMPORTANT: This method uses generateGuidanceForDate() directly instead of
+   * getTodayGuidance() because:
+   * - getTodayGuidance() is designed for lazy compute with client retry
+   * - It may return PENDING status and enqueue to Bull queue
+   * - That would cause this job to complete with READY while guidance is still PENDING
+   * - generateGuidanceForDate() performs synchronous generation and waits for completion
    */
   private async executeDailyGuidance(
     job: GenerationJob,
@@ -103,6 +110,7 @@ export class JobRunnerService {
   ): Promise<Record<string, any>> {
     const payload = job.payload as Record<string, any> | null;
     const localDateStr = payload?.localDateStr || new Date().toISOString().split('T')[0];
+    const targetDate = new Date(`${localDateStr}T00:00:00.000Z`);
 
     this.logger.log(`Generating daily guidance for ${localDateStr}`);
 
@@ -112,7 +120,7 @@ export class JobRunnerService {
         userId: user.id,
         OR: [
           { localDateStr },
-          { date: new Date(`${localDateStr}T00:00:00.000Z`) },
+          { date: targetDate },
         ],
         status: 'READY',
       },
@@ -124,17 +132,32 @@ export class JobRunnerService {
         kind: 'daily_guidance',
         localDateStr,
         id: existingGuidance.id,
+        status: 'READY',
       };
     }
 
-    // Generate new guidance using existing service
-    // getTodayGuidance handles the full pipeline
-    const result = await this.guidanceService.getTodayGuidance(user);
+    // Generate guidance synchronously using generateGuidanceForDate
+    // This ensures the job only completes when guidance is actually ready
+    await this.guidanceService.generateGuidanceForDate(user, targetDate, localDateStr);
+
+    // Fetch the generated guidance to return its ID
+    const newGuidance = await this.prisma.dailyGuidance.findFirst({
+      where: {
+        userId: user.id,
+        localDateStr,
+        status: 'READY',
+      },
+    });
+
+    if (!newGuidance) {
+      throw new Error(`Guidance generation completed but record not found for ${localDateStr}`);
+    }
 
     return {
       kind: 'daily_guidance',
       localDateStr,
-      status: result.status,
+      id: newGuidance.id,
+      status: 'READY',
     };
   }
 
