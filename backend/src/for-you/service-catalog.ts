@@ -85,12 +85,12 @@ export const SERVICE_CATALOG: Record<OneTimeServiceType, ServiceCatalogEntry> = 
   ROMANTIC_FORECAST_COUPLE_REPORT: {
     serviceType: 'ROMANTIC_FORECAST_COUPLE_REPORT',
     title: 'Romantic Couple Forecast',
-    description: 'Get insights into the future of your relationship. Discover upcoming opportunities and challenges for your partnership.',
+    description: 'Get personalized romantic forecasts for both you and your partner. Discover upcoming opportunities for love and connection.',
     priceUsd: getPriceFromEnv('ROMANTIC_FORECAST_COUPLE_REPORT'),
     requiresPartner: true,
     requiresDate: false,
     productKey: 'one_time_romantic_forecast_couple_report',
-    astrologyApiEndpoint: 'match_making_detailed_report', // Uses m_/f_ field format - detailed version
+    astrologyApiEndpoint: 'romantic_forecast_report/tropical', // Western tropical - generates for both partners
   },
   MOON_PHASE_REPORT: {
     serviceType: 'MOON_PHASE_REPORT',

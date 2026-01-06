@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import { OneTimeServiceType } from '@prisma/client';
 import { PartnerProfileDto } from './dto/partner-profile.dto';
+import { SERVICE_CATALOG } from './service-catalog';
 
 interface NatalData {
   birthDate: Date;
@@ -51,6 +52,12 @@ export class AstrologyApiService {
   ): Promise<AstrologyApiResponse> {
     const endpoint = this.getEndpointForService(serviceType);
 
+    // Special handling for ROMANTIC_FORECAST_COUPLE_REPORT
+    // This endpoint is single-person, so we call it twice and combine results
+    if (serviceType === 'ROMANTIC_FORECAST_COUPLE_REPORT' && partner) {
+      return this.generateCoupleRomanticForecast(userNatal, partner);
+    }
+
     // Build request body based on service type
     const body = this.buildRequestBody(serviceType, userNatal, partner, date);
 
@@ -78,19 +85,152 @@ export class AstrologyApiService {
     }
   }
 
+  /**
+   * Generate romantic forecast for both partners and combine.
+   */
+  private async generateCoupleRomanticForecast(
+    userNatal: NatalData,
+    partner: PartnerProfileDto,
+  ): Promise<AstrologyApiResponse> {
+    const endpoint = 'romantic_forecast_report/tropical';
+    
+    this.logger.log('Generating couple romantic forecast for both partners...');
+
+    // Build body for user
+    const userBody = this.buildSinglePersonBody(userNatal);
+    
+    // Build body for partner
+    const partnerBody = this.buildPartnerBody(partner);
+
+    try {
+      // Call API for both in parallel
+      const [userResponse, partnerResponse] = await Promise.all([
+        this.client.post(`/${endpoint}`, userBody),
+        this.client.post(`/${endpoint}`, partnerBody),
+      ]);
+
+      // Combine both forecasts
+      const combinedReport = this.combineRomanticForecasts(
+        userResponse.data,
+        partnerResponse.data,
+      );
+
+      this.logger.log('Couple romantic forecast generated successfully');
+
+      return {
+        reportText: combinedReport,
+        rawData: { user: userResponse.data, partner: partnerResponse.data },
+      };
+    } catch (error) {
+      this.logger.error(
+        `AstrologyAPI error for couple romantic forecast: ${error.message}`,
+        error.stack,
+      );
+      throw new Error(`Failed to generate couple romantic forecast: ${error.message}`);
+    }
+  }
+
+  /**
+   * Build request body for single person (user).
+   */
+  private buildSinglePersonBody(natal: NatalData): any {
+    const natalDate = new Date(natal.birthDate);
+    const [hour, minute] = this.parseTime(natal.birthTime);
+    const tzone = this.parseTimezone(natal.birthTimezone);
+
+    return {
+      day: natalDate.getUTCDate(),
+      month: natalDate.getUTCMonth() + 1,
+      year: natalDate.getUTCFullYear(),
+      hour,
+      min: minute,
+      lat: natal.birthLat || 0,
+      lon: natal.birthLon || 0,
+      tzone,
+    };
+  }
+
+  /**
+   * Build request body for partner.
+   */
+  private buildPartnerBody(partner: PartnerProfileDto): any {
+    const partnerDate = new Date(partner.birthDate);
+    const [hour, minute] = this.parseTime(partner.birthTime);
+    const partnerLat = partner.birthLat ?? partner.lat ?? 0;
+    const partnerLon = partner.birthLon ?? partner.lon ?? 0;
+    const tzone = partner.timezone ?? this.parseTimezone(partner.birthTimezone) ?? 0;
+
+    return {
+      day: partnerDate.getUTCDate(),
+      month: partnerDate.getUTCMonth() + 1,
+      year: partnerDate.getUTCFullYear(),
+      hour,
+      min: minute,
+      lat: partnerLat,
+      lon: partnerLon,
+      tzone,
+    };
+  }
+
+  /**
+   * Combine two romantic forecasts into one comprehensive report.
+   */
+  private combineRomanticForecasts(userData: any, partnerData: any): string {
+    const sections: string[] = [];
+    
+    sections.push('# Romantic Couple Forecast\n');
+    sections.push('*A personalized romantic outlook for both partners*\n');
+
+    // User's forecast
+    sections.push('## Your Romantic Forecast\n');
+    if (userData.romantic_forecast && Array.isArray(userData.romantic_forecast)) {
+      for (const item of userData.romantic_forecast.slice(0, 5)) {
+        sections.push(`### ${item.planet_position}`);
+        sections.push(`*${item.date}*`);
+        sections.push(item.forecast);
+        sections.push('');
+      }
+    }
+
+    // Partner's forecast
+    sections.push('\n## Your Partner\'s Romantic Forecast\n');
+    if (partnerData.romantic_forecast && Array.isArray(partnerData.romantic_forecast)) {
+      for (const item of partnerData.romantic_forecast.slice(0, 5)) {
+        sections.push(`### ${item.planet_position}`);
+        sections.push(`*${item.date}*`);
+        sections.push(item.forecast);
+        sections.push('');
+      }
+    }
+
+    // Combined insights
+    sections.push('\n## Relationship Insights\n');
+    sections.push('The planetary transits affecting both of you create unique opportunities for your relationship. ');
+    sections.push('When both partners are experiencing harmonious transits, it\'s an excellent time for deepening your connection. ');
+    sections.push('During challenging periods for either partner, mutual support and understanding become especially important.\n');
+    
+    sections.push('\n**Tip:** Compare your forecasts above to find periods when you\'re both energetically aligned for romance and connection.');
+
+    return sections.join('\n');
+  }
+
   private getEndpointForService(serviceType: OneTimeServiceType): string {
-    // Correct AstrologyAPI endpoints
-    const endpoints: Record<OneTimeServiceType, string> = {
+    // Use SERVICE_CATALOG for endpoint mapping
+    const catalogEntry = SERVICE_CATALOG[serviceType];
+    if (catalogEntry) {
+      return catalogEntry.astrologyApiEndpoint;
+    }
+    
+    // Fallback defaults
+    const fallbackEndpoints: Record<OneTimeServiceType, string> = {
       PERSONALITY_REPORT: 'personality_report/tropical',
       ROMANTIC_PERSONALITY_REPORT: 'romantic_personality_report/tropical',
-      // Compatibility reports use match_making_report with m_/f_ field format
-      FRIENDSHIP_REPORT: 'match_making_report',
-      LOVE_COMPATIBILITY_REPORT: 'match_making_report',
-      ROMANTIC_FORECAST_COUPLE_REPORT: 'match_making_report',
-      // Moon phase uses advanced_panchang
+      FRIENDSHIP_REPORT: 'match_making_detailed_report',
+      LOVE_COMPATIBILITY_REPORT: 'match_making_detailed_report',
+      ROMANTIC_FORECAST_COUPLE_REPORT: 'romantic_forecast_report/tropical',
       MOON_PHASE_REPORT: 'advanced_panchang',
     };
-    return endpoints[serviceType];
+    return fallbackEndpoints[serviceType];
   }
 
   private buildRequestBody(
