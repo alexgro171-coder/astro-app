@@ -184,26 +184,34 @@ ${toneInstructions}
 
 ${languageInstructions}
 
+TRANSIT INTERPRETATION:
+- Carefully analyze and interpret today's planetary transits provided below
+- Explain HOW each significant transit affects the user's natal chart
+- Connect transit energies to practical daily experiences
+- Mention specific planetary aspects (conjunctions, trines, squares, oppositions) and their meaning
+- Describe the emotional and practical implications of each transit for each life area
+
 RULES:
 - No medical, financial, or legal advice - encourage professional consultation for serious issues
 - Be constructive and empowering, never fatalistic or fear-inducing
 - Include 2-3 practical micro-actions per section
-- Keep each section guidance to 90-120 words
+- Keep each section guidance to 100-130 words
+- Reference specific transits when explaining the energy of each area
 ${sensitivityMode ? '- SENSITIVITY MODE: Avoid deterministic language, anxiety-inducing phrases, or worst-case scenarios' : ''}
 
 Your response must be valid JSON with this structure:
 {
   "dailySummary": {
-    "content": "90-120 words overview of today's energy",
+    "content": "100-130 words overview of today's energy with key transit interpretations",
     "mood": "One word (Transformative/Reflective/Dynamic/Harmonious/Challenging/Energetic/Peaceful)",
-    "focusArea": "Most important area today"
+    "focusArea": "Most important area today based on transits"
   },
-  "health": { "content": "90-120 words", "score": 1-10, "actions": ["action1", "action2"] },
-  "job": { "content": "...", "score": 1-10, "actions": [...] },
-  "business_money": { "content": "...", "score": 1-10, "actions": [...] },
-  "love": { "content": "...", "score": 1-10, "actions": [...] },
-  "partnerships": { "content": "...", "score": 1-10, "actions": [...] },
-  "personal_growth": { "content": "...", "score": 1-10, "actions": [...] }
+  "health": { "content": "100-130 words including transit influence on vitality", "score": 1-10, "actions": ["action1", "action2"] },
+  "job": { "content": "100-130 words including transit influence on career", "score": 1-10, "actions": [...] },
+  "business_money": { "content": "100-130 words including transit influence on finances", "score": 1-10, "actions": [...] },
+  "love": { "content": "100-130 words including transit influence on romance", "score": 1-10, "actions": [...] },
+  "partnerships": { "content": "100-130 words including transit influence on relationships", "score": 1-10, "actions": [...] },
+  "personal_growth": { "content": "100-130 words including transit influence on growth", "score": 1-10, "actions": [...] }
 }
 
 ${context.activeConcern ? `
@@ -216,12 +224,15 @@ Weave this into the daily summary and give extra attention in the relevant secti
 NATAL CHART (compact):
 ${this.compactNatalSummary(context.natalSummary)}
 
-TODAY'S TRANSITS:
+TODAY'S PLANETARY TRANSITS (interpret these carefully):
 ${this.compactTransits(context.transits)}
+
+IMPORTANT: Analyze each transit above and explain its specific influence on the user's day. 
+Connect the planetary energies to practical advice for each life area.
 ${personalContextSection}${previousDaysContext}
 ${context.activeConcern ? `ACTIVE CONCERN: "${context.activeConcern.text}"` : ''}
 
-Generate warm, personalized guidance with actionable micro-recommendations.`;
+Generate warm, personalized guidance with detailed transit interpretations and actionable micro-recommendations for each section.`;
 
     try {
       const response = await this.openai.chat.completions.create({
@@ -232,7 +243,7 @@ Generate warm, personalized guidance with actionable micro-recommendations.`;
         ],
         response_format: { type: 'json_object' },
         temperature: 0.7,
-        max_tokens: 4000,
+        max_tokens: 4500, // Increased for longer transit interpretations (100-130 words per section)
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
