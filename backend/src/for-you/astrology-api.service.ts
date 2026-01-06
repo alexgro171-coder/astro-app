@@ -184,6 +184,19 @@ export class AstrologyApiService {
       return data;
     }
 
+    // Handle match_making_report specifically for compatibility reports
+    if (this.isCompatibilityReport(serviceType) && data.conclusion) {
+      return this.formatCompatibilityReport(data, serviceType);
+    }
+
+    // Handle personality reports (array of paragraphs)
+    if (data.report && Array.isArray(data.report)) {
+      const reportText = data.report.join('\n\n');
+      const spiritualLesson = data.spiritual_lesson ? `\n\n**Spiritual Lesson:** ${data.spiritual_lesson}` : '';
+      const keyQuality = data.key_quality ? `\n\n**Key Quality:** ${data.key_quality}` : '';
+      return reportText + spiritualLesson + keyQuality;
+    }
+
     // Try common patterns
     if (data.report) {
       return this.flattenReport(data.report);
@@ -206,6 +219,127 @@ export class AstrologyApiService {
       `Unknown response structure for ${serviceType}, returning JSON`,
     );
     return JSON.stringify(data, null, 2);
+  }
+
+  private isCompatibilityReport(serviceType: OneTimeServiceType): boolean {
+    return [
+      'LOVE_COMPATIBILITY_REPORT',
+      'ROMANTIC_FORECAST_COUPLE_REPORT',
+      'FRIENDSHIP_REPORT',
+    ].includes(serviceType);
+  }
+
+  private formatCompatibilityReport(data: any, serviceType: OneTimeServiceType): string {
+    const sections: string[] = [];
+    
+    // Title based on service type
+    const titles: Record<string, string> = {
+      'LOVE_COMPATIBILITY_REPORT': 'Love Compatibility Analysis',
+      'ROMANTIC_FORECAST_COUPLE_REPORT': 'Romantic Forecast for Your Relationship',
+      'FRIENDSHIP_REPORT': 'Friendship Compatibility Analysis',
+    };
+    
+    sections.push(`# ${titles[serviceType] || 'Compatibility Report'}\n`);
+
+    // Overall compatibility score (Ashtakoota)
+    if (data.ashtakoota) {
+      const points = data.ashtakoota.received_points || 0;
+      const maxPoints = 36; // Traditional max for Ashtakoota
+      const percentage = Math.round((points / maxPoints) * 100);
+      sections.push(`## Overall Compatibility Score\n`);
+      sections.push(`**${points} out of ${maxPoints} points (${percentage}%)**\n`);
+      sections.push(this.getCompatibilityLevel(percentage));
+    }
+
+    // Manglik analysis
+    if (data.manglik) {
+      sections.push(`\n## Energy Balance\n`);
+      const maleEnergy = data.manglik.male_percentage || 0;
+      const femaleEnergy = data.manglik.female_percentage || 0;
+      sections.push(`- Partner 1 energy influence: ${maleEnergy.toFixed(1)}%`);
+      sections.push(`- Partner 2 energy influence: ${femaleEnergy.toFixed(1)}%`);
+      
+      const diff = Math.abs(maleEnergy - femaleEnergy);
+      if (diff < 10) {
+        sections.push(`\nYour energies are well-balanced, suggesting natural harmony in your relationship.`);
+      } else if (diff < 20) {
+        sections.push(`\nThere's a moderate difference in your energy levels, which can create dynamic tension and growth opportunities.`);
+      } else {
+        sections.push(`\nThe difference in your energy levels suggests that you'll need to be mindful of balancing your different approaches to life.`);
+      }
+    }
+
+    // Potential challenges
+    sections.push(`\n## Relationship Dynamics\n`);
+    
+    if (data.rajju_dosha) {
+      if (data.rajju_dosha.status) {
+        sections.push(`⚠️ **Health & Longevity:** There may be some challenges related to physical well-being that require attention and care in the relationship.`);
+      } else {
+        sections.push(`✓ **Health & Longevity:** Your charts indicate a supportive influence on each other's health and well-being.`);
+      }
+    }
+
+    if (data.vedha_dosha) {
+      if (data.vedha_dosha.status) {
+        sections.push(`\n⚠️ **Emotional Harmony:** Some emotional friction points may arise that will require patience and understanding.`);
+      } else {
+        sections.push(`\n✓ **Emotional Harmony:** Your emotional wavelengths are compatible, supporting smooth communication and understanding.`);
+      }
+    }
+
+    // Main conclusion
+    if (data.conclusion && data.conclusion.match_report) {
+      sections.push(`\n## Conclusion\n`);
+      sections.push(data.conclusion.match_report);
+    }
+
+    // Add service-specific advice
+    sections.push(this.getServiceSpecificAdvice(serviceType, data));
+
+    return sections.join('\n');
+  }
+
+  private getCompatibilityLevel(percentage: number): string {
+    if (percentage >= 80) {
+      return `This is an **excellent** compatibility score! You share a deep natural connection that supports long-term harmony.`;
+    } else if (percentage >= 65) {
+      return `This is a **very good** compatibility score. Your connection has a strong foundation with great potential for growth.`;
+    } else if (percentage >= 50) {
+      return `This is a **good** compatibility score. While there are differences, these can complement each other with understanding.`;
+    } else if (percentage >= 35) {
+      return `This is a **moderate** compatibility score. Success in this relationship will require extra effort and communication.`;
+    } else {
+      return `This compatibility score suggests **significant differences**. Building a strong relationship will require dedication and mutual understanding.`;
+    }
+  }
+
+  private getServiceSpecificAdvice(serviceType: OneTimeServiceType, data: any): string {
+    const points = data.ashtakoota?.received_points || 0;
+    const percentage = Math.round((points / 36) * 100);
+
+    switch (serviceType) {
+      case 'LOVE_COMPATIBILITY_REPORT':
+        return `\n## Advice for Your Love Connection\n\n` +
+          `${percentage >= 65 ? 
+            'Your romantic connection shows strong potential. Focus on nurturing emotional intimacy and maintaining open communication to let your natural compatibility flourish.' :
+            'Building a strong romantic bond will benefit from patience and intentional effort. Focus on understanding each other\'s emotional needs and creating shared experiences.'}`;
+      
+      case 'ROMANTIC_FORECAST_COUPLE_REPORT':
+        return `\n## Looking Ahead\n\n` +
+          `${percentage >= 65 ?
+            'The stars favor your union. This is a good time to make plans together and deepen your commitment. Trust in your connection as you navigate life\'s journey together.' :
+            'The coming period invites you to work together on strengthening your bond. Use any challenges as opportunities to grow closer and understand each other more deeply.'}`;
+      
+      case 'FRIENDSHIP_REPORT':
+        return `\n## Friendship Insights\n\n` +
+          `${percentage >= 65 ?
+            'You have the makings of a wonderful, lasting friendship! Your natural compatibility supports easy communication and mutual understanding.' :
+            'Your friendship can grow strong with nurturing. Embrace your differences as opportunities to learn from each other and expand your perspectives.'}`;
+      
+      default:
+        return '';
+    }
   }
 
   private flattenReport(obj: any, prefix = ''): string {
