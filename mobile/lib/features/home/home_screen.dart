@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/utils/zodiac_utils.dart';
+import '../../core/widgets/universe_loading_overlay.dart';
+import '../../core/services/jobs_service.dart';
+import '../../core/providers/job_polling_provider.dart';
 import '../shell/main_shell.dart';
 import '../context/services/context_service.dart';
 import '../context/widgets/context_review_modal.dart';
@@ -20,6 +23,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Map<String, dynamic>? _guidance;
   Map<String, dynamic>? _user;
   bool _isLoading = true;
+  bool _isGenerating = false; // For async job generation
+  String? _progressHint;
   String? _error;
   bool _isDailySummaryExpanded = false;
 
@@ -70,20 +75,134 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     try {
       final apiClient = ref.read(apiClientProvider);
       
+      // Load user profile first
       final profileResponse = await apiClient.getProfile();
-      final guidanceResponse = await apiClient.getTodayGuidance();
-
       setState(() {
         _user = profileResponse.data;
-        _guidance = guidanceResponse.data;
-        _isLoading = false;
       });
+
+      // Try to get existing guidance first (fast path)
+      final guidanceResponse = await apiClient.getTodayGuidance();
+      final guidanceData = guidanceResponse.data;
+      
+      // Check if guidance is still generating
+      if (guidanceData['status'] == 'PENDING') {
+        // Start async job and show loading overlay
+        await _startGuidanceJob();
+      } else {
+        setState(() {
+          _guidance = guidanceData;
+          _isLoading = false;
+          _isGenerating = false;
+        });
+      }
     } catch (e) {
-      print('HomeScreen error: $e');
+      debugPrint('HomeScreen error: $e');
+      // On error, try starting a job
+      await _startGuidanceJob();
+    }
+  }
+
+  /// Start async job for guidance generation with polling.
+  Future<void> _startGuidanceJob() async {
+    setState(() {
+      _isLoading = false;
+      _isGenerating = true;
+      _progressHint = "Reading the stars and asking the Universe about you…";
+    });
+
+    try {
+      final jobsService = ref.read(jobsServiceProvider);
+      
+      // Start the job
+      final startResponse = await jobsService.startJob(jobType: JobType.dailyGuidance);
+      
+      // If already ready, fetch guidance directly
+      if (startResponse.isSuccess) {
+        await _fetchGuidance();
+        return;
+      }
+      
+      // Poll for completion
+      await _pollForCompletion(startResponse.jobId);
+    } catch (e) {
+      debugPrint('Error starting guidance job: $e');
       setState(() {
-        _error = 'Failed to load data';
-        _isLoading = false;
+        _isGenerating = false;
+        _error = 'Failed to generate guidance. Please try again.';
       });
+    }
+  }
+
+  /// Poll job status until complete.
+  Future<void> _pollForCompletion(String jobId) async {
+    final jobsService = ref.read(jobsServiceProvider);
+    const pollInterval = Duration(milliseconds: 2500);
+    const maxPolls = 36; // ~90 seconds
+    int pollCount = 0;
+
+    while (pollCount < maxPolls && mounted) {
+      await Future.delayed(pollInterval);
+      pollCount++;
+
+      try {
+        final status = await jobsService.getJobStatus(jobId);
+        
+        if (mounted) {
+          setState(() {
+            _progressHint = status.progressHint ?? _progressHint;
+          });
+        }
+
+        if (status.isSuccess) {
+          await _fetchGuidance();
+          return;
+        } else if (status.isFailed) {
+          if (mounted) {
+            setState(() {
+              _isGenerating = false;
+              _error = status.errorMsg ?? 'Generation failed. Please try again.';
+            });
+          }
+          return;
+        }
+      } catch (e) {
+        debugPrint('Error polling job status: $e');
+        // Continue polling on network errors
+      }
+    }
+
+    // Timeout - but job may still complete
+    if (mounted) {
+      setState(() {
+        _isGenerating = false;
+        _error = 'Taking longer than expected. Pull to refresh.';
+      });
+    }
+  }
+
+  /// Fetch the guidance data after job completes.
+  Future<void> _fetchGuidance() async {
+    try {
+      final apiClient = ref.read(apiClientProvider);
+      final guidanceResponse = await apiClient.getTodayGuidance();
+
+      if (mounted) {
+        setState(() {
+          _guidance = guidanceResponse.data;
+          _isGenerating = false;
+          _isLoading = false;
+          _error = null;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching guidance: $e');
+      if (mounted) {
+        setState(() {
+          _isGenerating = false;
+          _error = 'Failed to load guidance';
+        });
+      }
     }
   }
 
@@ -92,11 +211,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // SafeArea only on top (status bar/notch), bottom is handled by MainShell's bottomNavigationBar
     return SafeArea(
       bottom: false, // Don't apply SafeArea to bottom - Scaffold handles it
-      child: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.accent))
-          : _error != null
-              ? _buildErrorState()
-              : _buildContent(),
+      child: Stack(
+        children: [
+          // Main content
+          if (_isLoading)
+            const Center(child: CircularProgressIndicator(color: AppColors.accent))
+          else if (_error != null && _guidance == null)
+            _buildErrorState()
+          else
+            _buildContent(),
+          
+          // Universe loading overlay for async generation
+          if (_isGenerating)
+            UniverseLoadingOverlay(
+              progressHint: _progressHint,
+              onCancel: () {
+                // User can leave and come back - job continues in background
+                setState(() {
+                  _isGenerating = false;
+                });
+              },
+            ),
+        ],
+      ),
     );
   }
 
