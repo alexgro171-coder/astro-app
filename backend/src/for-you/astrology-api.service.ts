@@ -79,13 +79,16 @@ export class AstrologyApiService {
   }
 
   private getEndpointForService(serviceType: OneTimeServiceType): string {
+    // Correct AstrologyAPI endpoints
     const endpoints: Record<OneTimeServiceType, string> = {
       PERSONALITY_REPORT: 'personality_report/tropical',
       ROMANTIC_PERSONALITY_REPORT: 'romantic_personality_report/tropical',
-      FRIENDSHIP_REPORT: 'friendship_report/tropical',
-      LOVE_COMPATIBILITY_REPORT: 'love_compatibility_report/tropical',
-      ROMANTIC_FORECAST_COUPLE_REPORT: 'romantic_forecast_couple/tropical',
-      MOON_PHASE_REPORT: 'moon_phase',
+      // Compatibility reports use match_making_report with m_/f_ field format
+      FRIENDSHIP_REPORT: 'match_making_report',
+      LOVE_COMPATIBILITY_REPORT: 'match_making_report',
+      ROMANTIC_FORECAST_COUPLE_REPORT: 'match_making_report',
+      // Moon phase uses advanced_panchang
+      MOON_PHASE_REPORT: 'advanced_panchang',
     };
     return endpoints[serviceType];
   }
