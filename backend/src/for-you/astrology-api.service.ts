@@ -241,56 +241,89 @@ export class AstrologyApiService {
     
     sections.push(`# ${titles[serviceType] || 'Compatibility Report'}\n`);
 
-    // Overall compatibility score (Ashtakoota)
+    // Check if we have detailed ashtakoota data (from match_making_detailed_report)
     if (data.ashtakoota) {
-      const points = data.ashtakoota.received_points || 0;
-      const maxPoints = 36; // Traditional max for Ashtakoota
-      const percentage = Math.round((points / maxPoints) * 100);
+      // Overall compatibility score
+      const total = data.ashtakoota.total || data.ashtakoota;
+      const receivedPoints = total.received_points || data.ashtakoota.received_points || 0;
+      const totalPoints = total.total_points || 36;
+      const percentage = Math.round((receivedPoints / totalPoints) * 100);
+      
       sections.push(`## Overall Compatibility Score\n`);
-      sections.push(`**${points} out of ${maxPoints} points (${percentage}%)**\n`);
+      sections.push(`**${receivedPoints} out of ${totalPoints} points (${percentage}%)**\n`);
       sections.push(this.getCompatibilityLevel(percentage));
+      
+      // Add ashtakoota conclusion if available
+      if (data.ashtakoota.conclusion?.report) {
+        sections.push(`\n${data.ashtakoota.conclusion.report}`);
+      }
+
+      // Detailed breakdown of each attribute
+      sections.push(`\n## Detailed Compatibility Analysis\n`);
+      
+      const attributes = ['varna', 'vashya', 'tara', 'yoni', 'maitri', 'gan', 'bhakut', 'nadi'];
+      for (const attr of attributes) {
+        if (data.ashtakoota[attr]) {
+          const item = data.ashtakoota[attr];
+          const attrTitle = this.getAttributeTitle(attr);
+          const desc = item.description || '';
+          const received = item.received_points || 0;
+          const total = item.total_points || 0;
+          const status = received >= (total * 0.5) ? '✓' : '△';
+          
+          sections.push(`### ${status} ${attrTitle}`);
+          if (desc) sections.push(`*${desc}*`);
+          sections.push(`Score: **${received}/${total}** points`);
+          
+          if (item.male_koot_attribute && item.female_koot_attribute) {
+            sections.push(`- Partner 1: ${item.male_koot_attribute}`);
+            sections.push(`- Partner 2: ${item.female_koot_attribute}`);
+          }
+          sections.push('');
+        }
+      }
     }
 
     // Manglik analysis
     if (data.manglik) {
-      sections.push(`\n## Energy Balance\n`);
+      sections.push(`## Mars Energy (Manglik)\n`);
       const maleEnergy = data.manglik.male_percentage || 0;
       const femaleEnergy = data.manglik.female_percentage || 0;
-      sections.push(`- Partner 1 energy influence: ${maleEnergy.toFixed(1)}%`);
-      sections.push(`- Partner 2 energy influence: ${femaleEnergy.toFixed(1)}%`);
+      sections.push(`- Partner 1 Mars influence: ${maleEnergy.toFixed(1)}%`);
+      sections.push(`- Partner 2 Mars influence: ${femaleEnergy.toFixed(1)}%`);
       
       const diff = Math.abs(maleEnergy - femaleEnergy);
       if (diff < 10) {
-        sections.push(`\nYour energies are well-balanced, suggesting natural harmony in your relationship.`);
+        sections.push(`\nYour Mars energies are well-balanced, suggesting natural harmony and similar drive levels in your relationship.`);
       } else if (diff < 20) {
-        sections.push(`\nThere's a moderate difference in your energy levels, which can create dynamic tension and growth opportunities.`);
+        sections.push(`\nThere's a moderate difference in your Mars energy, which can create dynamic tension and passion while also requiring understanding of different activity levels.`);
       } else {
-        sections.push(`\nThe difference in your energy levels suggests that you'll need to be mindful of balancing your different approaches to life.`);
+        sections.push(`\nThe significant difference in Mars energy suggests one partner may be more driven or assertive than the other. Understanding and respecting these differences will strengthen your bond.`);
       }
     }
 
-    // Potential challenges
-    sections.push(`\n## Relationship Dynamics\n`);
+    // Potential challenges (Doshas)
+    sections.push(`\n## Relationship Harmony Indicators\n`);
     
     if (data.rajju_dosha) {
       if (data.rajju_dosha.status) {
-        sections.push(`⚠️ **Health & Longevity:** There may be some challenges related to physical well-being that require attention and care in the relationship.`);
+        sections.push(`⚠️ **Rajju Dosha (Life Path):** Some challenges may arise related to life direction and long-term goals. Communication about your individual paths will help navigate these differences.`);
       } else {
-        sections.push(`✓ **Health & Longevity:** Your charts indicate a supportive influence on each other's health and well-being.`);
+        sections.push(`✓ **Rajju Dosha (Life Path):** Your life paths are harmoniously aligned, supporting mutual growth and shared goals.`);
       }
     }
 
     if (data.vedha_dosha) {
       if (data.vedha_dosha.status) {
-        sections.push(`\n⚠️ **Emotional Harmony:** Some emotional friction points may arise that will require patience and understanding.`);
+        sections.push(`\n⚠️ **Vedha Dosha (Obstacles):** Some recurring friction points may appear in daily interactions. Patience and conscious effort will help smooth these rough edges.`);
       } else {
-        sections.push(`\n✓ **Emotional Harmony:** Your emotional wavelengths are compatible, supporting smooth communication and understanding.`);
+        sections.push(`\n✓ **Vedha Dosha (Obstacles):** No significant obstacles are indicated. Your daily interactions should flow relatively smoothly.`);
       }
     }
 
     // Main conclusion
-    if (data.conclusion && data.conclusion.match_report) {
-      sections.push(`\n## Conclusion\n`);
+    if (data.conclusion?.match_report) {
+      sections.push(`\n## Overall Conclusion\n`);
       sections.push(data.conclusion.match_report);
     }
 
@@ -298,6 +331,20 @@ export class AstrologyApiService {
     sections.push(this.getServiceSpecificAdvice(serviceType, data));
 
     return sections.join('\n');
+  }
+  
+  private getAttributeTitle(attr: string): string {
+    const titles: Record<string, string> = {
+      'varna': 'Varna (Natural Compatibility & Work)',
+      'vashya': 'Vashya (Mutual Attraction & Devotion)',
+      'tara': 'Tara (Prosperity & Health)',
+      'yoni': 'Yoni (Intimate & Physical Compatibility)',
+      'maitri': 'Maitri (Friendship & Mental Harmony)',
+      'gan': 'Gana (Temperament & Nature)',
+      'bhakut': 'Bhakut (Love & Family Life)',
+      'nadi': 'Nadi (Health & Progeny)',
+    };
+    return titles[attr] || attr.charAt(0).toUpperCase() + attr.slice(1);
   }
 
   private getCompatibilityLevel(percentage: number): string {
@@ -315,27 +362,91 @@ export class AstrologyApiService {
   }
 
   private getServiceSpecificAdvice(serviceType: OneTimeServiceType, data: any): string {
-    const points = data.ashtakoota?.received_points || 0;
+    const total = data.ashtakoota?.total || data.ashtakoota || {};
+    const points = total.received_points || data.ashtakoota?.received_points || 0;
     const percentage = Math.round((points / 36) * 100);
+    
+    // Extract specific scores for nuanced advice
+    const maitri = data.ashtakoota?.maitri?.received_points || 0;
+    const yoni = data.ashtakoota?.yoni?.received_points || 0;
+    const bhakut = data.ashtakoota?.bhakut?.received_points || 0;
+    const gan = data.ashtakoota?.gan?.received_points || 0;
+    const nadi = data.ashtakoota?.nadi?.received_points || 0;
 
     switch (serviceType) {
       case 'LOVE_COMPATIBILITY_REPORT':
-        return `\n## Advice for Your Love Connection\n\n` +
-          `${percentage >= 65 ? 
-            'Your romantic connection shows strong potential. Focus on nurturing emotional intimacy and maintaining open communication to let your natural compatibility flourish.' :
-            'Building a strong romantic bond will benefit from patience and intentional effort. Focus on understanding each other\'s emotional needs and creating shared experiences.'}`;
+        let loveAdvice = `\n## Romantic Insights & Advice\n\n`;
+        
+        // Physical/intimate compatibility (yoni)
+        if (yoni >= 3) {
+          loveAdvice += `**Physical Connection:** Your physical and intimate compatibility is strong. There's a natural attraction and understanding of each other's needs in this area.\n\n`;
+        } else {
+          loveAdvice += `**Physical Connection:** Building physical intimacy may require more conscious attention and communication about needs and preferences.\n\n`;
+        }
+        
+        // Emotional bond (bhakut)
+        if (bhakut >= 5) {
+          loveAdvice += `**Emotional Bond:** You share a deep emotional connection that supports long-term commitment and family harmony.\n\n`;
+        } else {
+          loveAdvice += `**Emotional Bond:** Emotional connection will benefit from dedicated quality time and expressing appreciation for each other.\n\n`;
+        }
+        
+        // Overall advice
+        loveAdvice += percentage >= 65 ? 
+          `**Overall:** Your romantic connection shows strong potential. Focus on nurturing emotional intimacy and maintaining open communication to let your natural compatibility flourish.` :
+          `**Overall:** Building a strong romantic bond will benefit from patience and intentional effort. Focus on understanding each other's emotional needs and creating meaningful shared experiences.`;
+        
+        return loveAdvice;
       
       case 'ROMANTIC_FORECAST_COUPLE_REPORT':
-        return `\n## Looking Ahead\n\n` +
-          `${percentage >= 65 ?
-            'The stars favor your union. This is a good time to make plans together and deepen your commitment. Trust in your connection as you navigate life\'s journey together.' :
-            'The coming period invites you to work together on strengthening your bond. Use any challenges as opportunities to grow closer and understand each other more deeply.'}`;
+        let forecastAdvice = `\n## Your Relationship Forecast\n\n`;
+        
+        // Future outlook based on different factors
+        if (nadi >= 6) {
+          forecastAdvice += `**Long-term Potential:** The stars indicate excellent potential for growth, family expansion, and lasting commitment.\n\n`;
+        } else if (nadi >= 4) {
+          forecastAdvice += `**Long-term Potential:** Your relationship has good foundations for the future. Focus on health and wellness as a couple.\n\n`;
+        } else {
+          forecastAdvice += `**Long-term Potential:** Your path together will benefit from attention to health, lifestyle choices, and building shared wellness practices.\n\n`;
+        }
+        
+        // Temperament alignment
+        if (gan >= 4) {
+          forecastAdvice += `**Daily Harmony:** Your temperaments align well, making everyday life together smooth and enjoyable.\n\n`;
+        } else {
+          forecastAdvice += `**Daily Harmony:** Different temperaments mean exciting variety but may require patience in daily routines.\n\n`;
+        }
+        
+        forecastAdvice += percentage >= 65 ?
+          `**Looking Ahead:** The stars favor your union. This is a wonderful time to make plans together and deepen your commitment. Trust in your connection as you navigate life's journey together.` :
+          `**Looking Ahead:** The coming period invites you to work together on strengthening your bond. Use any challenges as opportunities to grow closer and understand each other more deeply.`;
+        
+        return forecastAdvice;
       
       case 'FRIENDSHIP_REPORT':
-        return `\n## Friendship Insights\n\n` +
-          `${percentage >= 65 ?
-            'You have the makings of a wonderful, lasting friendship! Your natural compatibility supports easy communication and mutual understanding.' :
-            'Your friendship can grow strong with nurturing. Embrace your differences as opportunities to learn from each other and expand your perspectives.'}`;
+        let friendAdvice = `\n## Friendship Dynamics & Insights\n\n`;
+        
+        // Mental compatibility (maitri)
+        if (maitri >= 4) {
+          friendAdvice += `**Mental Connection:** You share excellent mental rapport! Conversations flow easily and you understand each other's thought patterns naturally.\n\n`;
+        } else if (maitri >= 2) {
+          friendAdvice += `**Mental Connection:** You bring different perspectives which can enrich conversations and expand each other's thinking.\n\n`;
+        } else {
+          friendAdvice += `**Mental Connection:** Your different mental approaches mean you can learn a lot from each other, though patience in communication is valuable.\n\n`;
+        }
+        
+        // Temperament for friendship
+        if (gan >= 4) {
+          friendAdvice += `**Spending Time Together:** Your similar temperaments make you naturally comfortable together. Social activities and shared hobbies will strengthen your bond.\n\n`;
+        } else {
+          friendAdvice += `**Spending Time Together:** Your different temperaments mean some compromise in activities, but this diversity keeps the friendship interesting!\n\n`;
+        }
+        
+        friendAdvice += percentage >= 65 ?
+          `**Friendship Potential:** You have the makings of a wonderful, lasting friendship! Your natural compatibility supports easy communication and mutual understanding. Invest in this connection—it can be deeply rewarding.` :
+          `**Friendship Potential:** Your friendship can grow strong with nurturing. Embrace your differences as opportunities to learn from each other and expand your perspectives. Some of the best friendships are built across differences!`;
+        
+        return friendAdvice;
       
       default:
         return '';

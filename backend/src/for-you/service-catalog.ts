@@ -70,7 +70,7 @@ export const SERVICE_CATALOG: Record<OneTimeServiceType, ServiceCatalogEntry> = 
     requiresPartner: true,
     requiresDate: false,
     productKey: 'one_time_friendship_report',
-    astrologyApiEndpoint: 'match_making_report', // Uses m_/f_ field format
+    astrologyApiEndpoint: 'match_making_detailed_report', // Uses m_/f_ field format - detailed version
   },
   LOVE_COMPATIBILITY_REPORT: {
     serviceType: 'LOVE_COMPATIBILITY_REPORT',
@@ -80,7 +80,7 @@ export const SERVICE_CATALOG: Record<OneTimeServiceType, ServiceCatalogEntry> = 
     requiresPartner: true,
     requiresDate: false,
     productKey: 'one_time_love_compatibility_report',
-    astrologyApiEndpoint: 'match_making_report', // Uses m_/f_ field format
+    astrologyApiEndpoint: 'match_making_detailed_report', // Uses m_/f_ field format - detailed version
   },
   ROMANTIC_FORECAST_COUPLE_REPORT: {
     serviceType: 'ROMANTIC_FORECAST_COUPLE_REPORT',
@@ -90,7 +90,7 @@ export const SERVICE_CATALOG: Record<OneTimeServiceType, ServiceCatalogEntry> = 
     requiresPartner: true,
     requiresDate: false,
     productKey: 'one_time_romantic_forecast_couple_report',
-    astrologyApiEndpoint: 'match_making_report', // Uses m_/f_ field format
+    astrologyApiEndpoint: 'match_making_detailed_report', // Uses m_/f_ field format - detailed version
   },
   MOON_PHASE_REPORT: {
     serviceType: 'MOON_PHASE_REPORT',
