@@ -298,7 +298,7 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
     try {
       final apiClient = ref.read(apiClientProvider);
       
-      final response = await apiClient.dio.post(
+      final response = await apiClient.post(
         '/for-you/reports/$serviceType/generate',
         data: {
           if (partnerData != null) 'partnerProfile': partnerData,

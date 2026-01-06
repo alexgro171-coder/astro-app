@@ -36,7 +36,7 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
       final apiClient = ref.read(apiClientProvider);
       final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
       
-      final response = await apiClient.dio.get(
+      final response = await apiClient.get(
         '/for-you/reports/MOON_PHASE_REPORT',
         queryParameters: {'date': dateStr},
       );
@@ -51,7 +51,7 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
       }
 
       // Check catalog for beta status
-      final catalogResponse = await apiClient.dio.get('/for-you/catalog');
+      final catalogResponse = await apiClient.get('/for-you/catalog');
       if (mounted) {
         setState(() {
           _betaFree = catalogResponse.data['betaFree'] ?? false;
@@ -426,7 +426,7 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
       final apiClient = ref.read(apiClientProvider);
       final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
 
-      final response = await apiClient.dio.post(
+      final response = await apiClient.post(
         '/for-you/reports/MOON_PHASE_REPORT/generate',
         data: {'date': dateStr},
       );

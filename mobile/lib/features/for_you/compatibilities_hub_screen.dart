@@ -94,7 +94,7 @@ const List<ServiceEntry> compatibilityServices = [
 // Provider for catalog data from backend
 final compatibilityCatalogProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final apiClient = ref.read(apiClientProvider);
-  final response = await apiClient.dio.get('/for-you/catalog');
+  final response = await apiClient.get('/for-you/catalog');
   return response.data;
 });
 
