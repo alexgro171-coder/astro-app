@@ -879,3 +879,43 @@ enum ReadingStatus {
   READY
   FAILED
 }
+
+// ============================================
+// GENERATION JOBS (Async compute-heavy operations)
+// ============================================
+
+model GenerationJob {
+  id          String              @id @default(uuid())
+  userId      String              @map("user_id")
+  jobType     GenerationJobType   @map("job_type")
+  locale      String              // Language code: en, ro, fr, etc.
+  inputHash   String              @map("input_hash") // SHA256 of normalized input
+  
+  status      GenerationJobStatus @default(PENDING)
+  payload     Json?               // Input data for generation
+  resultRef   Json?               @map("result_ref") // { kind: "daily_guidance", id: "..."} etc.
+  errorMsg    String?             @map("error_msg")
+  
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+
+  @@unique([userId, jobType, locale, inputHash])
+  @@index([userId])
+  @@index([jobType, status, updatedAt])
+  @@map("generation_jobs")
+}
+
+enum GenerationJobType {
+  DAILY_GUIDANCE
+  NATAL_CHART_SHORT
+  NATAL_CHART_PRO
+  KARMIC_ASTROLOGY
+  ONE_TIME_REPORT
+}
+
+enum GenerationJobStatus {
+  PENDING
+  RUNNING
+  READY
+  FAILED
+}

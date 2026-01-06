@@ -23,6 +23,7 @@ import { KarmicModule } from './karmic/karmic.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { LearnModule } from './learn/learn.module';
 import { ForYouModule } from './for-you/for-you.module';
+import { JobsModule } from './jobs/jobs.module';
 
 @Module({
   imports: [
@@ -77,6 +78,9 @@ import { ForYouModule } from './for-you/for-you.module';
     
     // Learn CMS
     LearnModule,
+    
+    // Async Job Queue (compute-heavy operations)
+    JobsModule,
   ],
 })
 export class AppModule {}
