@@ -27,29 +27,84 @@ export class PartnerProfileDto {
   })
   birthTime?: string;
 
-  @ApiPropertyOptional({ example: 'New York' })
+  // Location fields - supporting both old and new naming conventions
+  @ApiPropertyOptional({ example: 'New York', description: 'Birth city name' })
+  @IsOptional()
+  @IsString()
+  birthCity?: string;
+
+  @ApiPropertyOptional({ example: 'United States', description: 'Birth country name' })
+  @IsOptional()
+  @IsString()
+  birthCountry?: string;
+
+  @ApiPropertyOptional({ example: 'US', description: 'Birth country ISO code' })
+  @IsOptional()
+  @IsString()
+  birthCountryCode?: string;
+
+  @ApiPropertyOptional({ example: 40.7128, description: 'Birth place latitude' })
+  @IsOptional()
+  @IsNumber()
+  birthLat?: number;
+
+  @ApiPropertyOptional({ example: -74.006, description: 'Birth place longitude' })
+  @IsOptional()
+  @IsNumber()
+  birthLon?: number;
+
+  @ApiPropertyOptional({ example: 'America/New_York', description: 'Birth timezone IANA identifier' })
+  @IsOptional()
+  @IsString()
+  birthTimezone?: string;
+
+  // Legacy fields for backwards compatibility
+  @ApiPropertyOptional({ example: 'New York', deprecated: true })
   @IsOptional()
   @IsString()
   city?: string;
 
-  @ApiPropertyOptional({ example: 'USA' })
+  @ApiPropertyOptional({ example: 'USA', deprecated: true })
   @IsOptional()
   @IsString()
   country?: string;
 
-  @ApiPropertyOptional({ example: 40.7128, description: 'Latitude' })
+  @ApiPropertyOptional({ example: 40.7128, deprecated: true })
   @IsOptional()
   @IsNumber()
   lat?: number;
 
-  @ApiPropertyOptional({ example: -74.006, description: 'Longitude' })
+  @ApiPropertyOptional({ example: -74.006, deprecated: true })
   @IsOptional()
   @IsNumber()
   lon?: number;
 
-  @ApiPropertyOptional({ example: -5, description: 'Timezone offset in hours from UTC' })
+  @ApiPropertyOptional({ example: -5, description: 'Timezone offset in hours (deprecated, use birthTimezone)' })
   @IsOptional()
   @IsNumber()
   timezone?: number;
-}
 
+  /**
+   * Get normalized birth location data.
+   * Prefers new field names over legacy ones.
+   */
+  getNormalizedLocation(): {
+    city?: string;
+    country?: string;
+    countryCode?: string;
+    lat?: number;
+    lon?: number;
+    timezone?: string;
+    timezoneOffset?: number;
+  } {
+    return {
+      city: this.birthCity || this.city,
+      country: this.birthCountry || this.country,
+      countryCode: this.birthCountryCode,
+      lat: this.birthLat ?? this.lat,
+      lon: this.birthLon ?? this.lon,
+      timezone: this.birthTimezone,
+      timezoneOffset: this.timezone,
+    };
+  }
+}

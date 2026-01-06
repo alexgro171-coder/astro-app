@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/location_autocomplete.dart';
 
 class PartnerInputScreen extends ConsumerStatefulWidget {
   final String title;
@@ -17,15 +18,16 @@ class PartnerInputScreen extends ConsumerStatefulWidget {
 class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _birthTimeController = TextEditingController();
 
   DateTime? _birthDate;
-  double _timezone = 0;
+  TimeOfDay? _birthTime;
+  bool _unknownTime = false;
+  LocationResult? _selectedLocation;
+  String? _errorMessage;
 
   @override
   void dispose() {
     _nameController.dispose();
-    _birthTimeController.dispose();
     super.dispose();
   }
 
@@ -51,9 +53,9 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Enter partner\'s birth data',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
@@ -81,95 +83,184 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                   const SizedBox(height: 20),
 
                   // Birth Date (required)
-                  GestureDetector(
+                  const Text(
+                    'Birth Date *',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  InkWell(
                     onTap: _selectBirthDate,
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Birth Date *',
-                          hintText: 'Select birth date',
-                          prefixIcon: const Icon(Icons.calendar_today),
-                          suffixIcon: const Icon(Icons.arrow_drop_down),
-                        ),
-                        controller: TextEditingController(
-                          text: _birthDate != null
-                              ? DateFormat('MMMM d, yyyy').format(_birthDate!)
-                              : '',
-                        ),
-                        validator: (value) {
-                          if (_birthDate == null) {
-                            return 'Birth date is required';
-                          }
-                          return null;
-                        },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceLight,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_today, color: AppColors.textMuted),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              _birthDate != null
+                                  ? DateFormat('MMMM d, yyyy').format(_birthDate!)
+                                  : 'Select birth date',
+                              style: TextStyle(
+                                color: _birthDate != null
+                                    ? AppColors.textPrimary
+                                    : AppColors.textMuted,
+                              ),
+                            ),
+                          ),
+                          const Icon(Icons.arrow_drop_down, color: AppColors.textMuted),
+                        ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
 
                   // Birth Time (optional)
-                  GestureDetector(
-                    onTap: _selectBirthTime,
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        controller: _birthTimeController,
-                        decoration: const InputDecoration(
-                          labelText: 'Birth Time (optional)',
-                          hintText: 'Select birth time',
-                          prefixIcon: Icon(Icons.access_time),
-                          suffixIcon: Icon(Icons.arrow_drop_down),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Timezone
                   const Text(
-                    'Timezone (UTC offset)',
+                    'Birth Time (optional)',
                     style: TextStyle(
                       fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceLight,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.public, color: AppColors.textMuted),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<double>(
-                              value: _timezone,
-                              isExpanded: true,
-                              dropdownColor: AppColors.surface,
-                              items: _buildTimezoneItems(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _timezone = value ?? 0;
-                                });
-                              },
+                  InkWell(
+                    onTap: _unknownTime ? null : _selectBirthTime,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: _unknownTime 
+                            ? AppColors.surfaceLight.withOpacity(0.5)
+                            : AppColors.surfaceLight,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.access_time,
+                            color: _unknownTime ? AppColors.textMuted.withOpacity(0.5) : AppColors.textMuted,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              _unknownTime
+                                  ? 'Unknown'
+                                  : _birthTime != null
+                                      ? '${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}'
+                                      : 'Select birth time',
+                              style: TextStyle(
+                                color: _unknownTime
+                                    ? AppColors.textMuted.withOpacity(0.5)
+                                    : _birthTime != null
+                                        ? AppColors.textPrimary
+                                        : AppColors.textMuted,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Icon(
+                            Icons.arrow_drop_down,
+                            color: _unknownTime ? AppColors.textMuted.withOpacity(0.5) : AppColors.textMuted,
+                          ),
+                        ],
+                      ),
                     ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _unknownTime,
+                        onChanged: (value) {
+                          setState(() {
+                            _unknownTime = value ?? false;
+                            if (_unknownTime) _birthTime = null;
+                          });
+                        },
+                        activeColor: AppColors.accent,
+                      ),
+                      const Text(
+                        "I don't know the exact birth time",
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Birth Place with Autocomplete
+                  const Text(
+                    'Birth Place *',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  LocationAutocomplete(
+                    hintText: 'Start typing a city name...',
+                    initialValue: _selectedLocation,
+                    onSelected: (location) {
+                      setState(() {
+                        _selectedLocation = location;
+                        _errorMessage = null;
+                      });
+                    },
+                    validator: (value) {
+                      if (_selectedLocation == null) {
+                        return 'Please select a location from the suggestions';
+                      }
+                      return null;
+                    },
                   ),
 
                   const SizedBox(height: 16),
-                  Text(
-                    '* Required field',
+                  const Text(
+                    '* Required fields',
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColors.textMuted,
                     ),
                   ),
+
+                  // Error message
+                  if (_errorMessage != null) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.error_outline, color: AppColors.error, size: 20),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _errorMessage!,
+                              style: const TextStyle(color: AppColors.error, fontSize: 13),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
 
                   const SizedBox(height: 40),
 
@@ -190,6 +281,8 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -197,27 +290,6 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
         ),
       ),
     );
-  }
-
-  List<DropdownMenuItem<double>> _buildTimezoneItems() {
-    final timezones = <double>[];
-    for (double i = -12; i <= 14; i += 0.5) {
-      timezones.add(i);
-    }
-
-    return timezones.map((tz) {
-      final sign = tz >= 0 ? '+' : '';
-      final hours = tz.truncate();
-      final minutes = ((tz - hours).abs() * 60).toInt();
-      final label = minutes > 0
-          ? 'UTC $sign$hours:${minutes.toString().padLeft(2, '0')}'
-          : 'UTC $sign$hours';
-
-      return DropdownMenuItem(
-        value: tz,
-        child: Text(label),
-      );
-    }).toList();
   }
 
   Future<void> _selectBirthDate() async {
@@ -242,6 +314,7 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
     if (date != null) {
       setState(() {
         _birthDate = date;
+        _errorMessage = null;
       });
     }
   }
@@ -249,7 +322,7 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
   Future<void> _selectBirthTime() async {
     final time = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: _birthTime ?? TimeOfDay.now(),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -264,33 +337,48 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
     );
 
     if (time != null) {
-      final formatted =
-          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
       setState(() {
-        _birthTimeController.text = formatted;
+        _birthTime = time;
+        _unknownTime = false;
       });
     }
   }
 
   void _submit() {
+    // Manual validation
+    if (_birthDate == null) {
+      setState(() => _errorMessage = 'Please select the birth date');
+      return;
+    }
+    if (_selectedLocation == null) {
+      setState(() => _errorMessage = 'Please select a birth place from the suggestions');
+      return;
+    }
+
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
+    // Build partner data with all location details
     final partnerData = <String, dynamic>{
       'birthDate': DateFormat('yyyy-MM-dd').format(_birthDate!),
-      'timezone': _timezone,
+      // Location data from autocomplete
+      'birthCity': _selectedLocation!.placeName,
+      'birthCountry': _selectedLocation!.countryName,
+      'birthCountryCode': _selectedLocation!.countryCode,
+      'birthLat': _selectedLocation!.latitude,
+      'birthLon': _selectedLocation!.longitude,
+      'birthTimezone': _selectedLocation!.timezoneId,
     };
 
     if (_nameController.text.isNotEmpty) {
       partnerData['name'] = _nameController.text;
     }
 
-    if (_birthTimeController.text.isNotEmpty) {
-      partnerData['birthTime'] = _birthTimeController.text;
+    if (_birthTime != null && !_unknownTime) {
+      partnerData['birthTime'] = '${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}';
     }
 
     context.pop(partnerData);
   }
 }
-

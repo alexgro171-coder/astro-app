@@ -9,7 +9,7 @@ interface NatalData {
   birthTime?: string;
   birthLat?: number;
   birthLon?: number;
-  birthTimezone?: number;
+  birthTimezone?: number | string; // Can be numeric offset or IANA timezone ID
 }
 
 interface AstrologyApiResponse {
@@ -100,6 +100,9 @@ export class AstrologyApiService {
     const userDate = new Date(userNatal.birthDate);
     const [userHour, userMinute] = this.parseTime(userNatal.birthTime);
 
+    // Parse user timezone (can be IANA ID or numeric offset)
+    const userTzone = this.parseTimezone(userNatal.birthTimezone);
+
     const baseUserData = {
       day: userDate.getUTCDate(),
       month: userDate.getUTCMonth() + 1,
@@ -108,7 +111,7 @@ export class AstrologyApiService {
       min: userMinute,
       lat: userNatal.birthLat || 0,
       lon: userNatal.birthLon || 0,
-      tzone: userNatal.birthTimezone || 0,
+      tzone: userTzone,
     };
 
     // For Moon Phase report
@@ -120,7 +123,7 @@ export class AstrologyApiService {
         year: targetDate.getUTCFullYear(),
         lat: userNatal.birthLat || 0,
         lon: userNatal.birthLon || 0,
-        tzone: userNatal.birthTimezone || 0,
+        tzone: userTzone,
       };
     }
 
@@ -132,6 +135,12 @@ export class AstrologyApiService {
     // For compatibility/couple reports
     const partnerDate = new Date(partner.birthDate);
     const [partnerHour, partnerMinute] = this.parseTime(partner.birthTime);
+    
+    // Get normalized partner location (supports both old and new field names)
+    const partnerLat = partner.birthLat ?? partner.lat ?? 0;
+    const partnerLon = partner.birthLon ?? partner.lon ?? 0;
+    // For timezone, prefer IANA timezone ID but fall back to numeric offset
+    const partnerTzone = partner.timezone ?? this.parseTimezone(partner.birthTimezone) ?? 0;
 
     return {
       // Primary person (user)
@@ -149,9 +158,9 @@ export class AstrologyApiService {
       p2_year: partnerDate.getUTCFullYear(),
       p2_hour: partnerHour,
       p2_min: partnerMinute,
-      p2_lat: partner.lat || 0,
-      p2_lon: partner.lon || 0,
-      p2_tzone: partner.timezone || 0,
+      p2_lat: partnerLat,
+      p2_lon: partnerLon,
+      p2_tzone: partnerTzone,
     };
   }
 
@@ -240,6 +249,56 @@ export class AstrologyApiService {
       .replace(/([A-Z])/g, ' $1')
       .replace(/^\w/, (c) => c.toUpperCase())
       .trim();
+  }
+
+  /**
+   * Parse timezone value - can be numeric offset or IANA timezone ID.
+   * Returns numeric offset in hours.
+   */
+  private parseTimezone(tz?: string | number): number {
+    if (tz === undefined || tz === null) return 0;
+    
+    // If already a number, use it directly
+    if (typeof tz === 'number') return tz;
+    
+    // Try to parse as number first
+    const numTz = parseFloat(tz);
+    if (!isNaN(numTz)) return numTz;
+    
+    // IANA timezone ID - try to get offset
+    // This is a simplified mapping; for production you might want to use a proper library
+    const tzOffsets: Record<string, number> = {
+      'UTC': 0,
+      'GMT': 0,
+      'America/New_York': -5,
+      'America/Chicago': -6,
+      'America/Denver': -7,
+      'America/Los_Angeles': -8,
+      'Europe/London': 0,
+      'Europe/Paris': 1,
+      'Europe/Berlin': 1,
+      'Europe/Rome': 1,
+      'Europe/Madrid': 1,
+      'Europe/Bucharest': 2,
+      'Europe/Moscow': 3,
+      'Asia/Dubai': 4,
+      'Asia/Kolkata': 5.5,
+      'Asia/Singapore': 8,
+      'Asia/Tokyo': 9,
+      'Australia/Sydney': 10,
+      'Pacific/Auckland': 12,
+    };
+    
+    // Try exact match
+    if (tzOffsets[tz]) return tzOffsets[tz];
+    
+    // Try partial match (continent/city format)
+    for (const [key, value] of Object.entries(tzOffsets)) {
+      if (tz.includes(key.split('/')[1] || '')) return value;
+    }
+    
+    this.logger.warn(`Unknown timezone: ${tz}, defaulting to 0`);
+    return 0;
   }
 }
 
