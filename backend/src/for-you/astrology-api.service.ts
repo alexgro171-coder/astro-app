@@ -132,7 +132,7 @@ export class AstrologyApiService {
       return baseUserData;
     }
 
-    // For compatibility/couple reports
+    // For compatibility/couple reports - uses m_/f_ field format for AstrologyAPI
     const partnerDate = new Date(partner.birthDate);
     const [partnerHour, partnerMinute] = this.parseTime(partner.birthTime);
     
@@ -142,25 +142,27 @@ export class AstrologyApiService {
     // For timezone, prefer IANA timezone ID but fall back to numeric offset
     const partnerTzone = partner.timezone ?? this.parseTimezone(partner.birthTimezone) ?? 0;
 
+    // AstrologyAPI match_making endpoints use m_ (male) and f_ (female) prefixes
+    // We'll use user as "m" and partner as "f" (arbitrary, just for API format)
     return {
-      // Primary person (user)
-      p1_day: baseUserData.day,
-      p1_month: baseUserData.month,
-      p1_year: baseUserData.year,
-      p1_hour: baseUserData.hour,
-      p1_min: baseUserData.min,
-      p1_lat: baseUserData.lat,
-      p1_lon: baseUserData.lon,
-      p1_tzone: baseUserData.tzone,
-      // Secondary person (partner)
-      p2_day: partnerDate.getUTCDate(),
-      p2_month: partnerDate.getUTCMonth() + 1,
-      p2_year: partnerDate.getUTCFullYear(),
-      p2_hour: partnerHour,
-      p2_min: partnerMinute,
-      p2_lat: partnerLat,
-      p2_lon: partnerLon,
-      p2_tzone: partnerTzone,
+      // User data (as "male" in API terms)
+      m_day: baseUserData.day,
+      m_month: baseUserData.month,
+      m_year: baseUserData.year,
+      m_hour: baseUserData.hour,
+      m_min: baseUserData.min,
+      m_lat: baseUserData.lat,
+      m_lon: baseUserData.lon,
+      m_tzone: baseUserData.tzone,
+      // Partner data (as "female" in API terms)
+      f_day: partnerDate.getUTCDate(),
+      f_month: partnerDate.getUTCMonth() + 1,
+      f_year: partnerDate.getUTCFullYear(),
+      f_hour: partnerHour,
+      f_min: partnerMinute,
+      f_lat: partnerLat,
+      f_lon: partnerLon,
+      f_tzone: partnerTzone,
     };
   }
 

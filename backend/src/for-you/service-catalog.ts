@@ -70,7 +70,7 @@ export const SERVICE_CATALOG: Record<OneTimeServiceType, ServiceCatalogEntry> = 
     requiresPartner: true,
     requiresDate: false,
     productKey: 'one_time_friendship_report',
-    astrologyApiEndpoint: 'friendship_report/tropical',
+    astrologyApiEndpoint: 'match_making_report', // Uses m_/f_ field format
   },
   LOVE_COMPATIBILITY_REPORT: {
     serviceType: 'LOVE_COMPATIBILITY_REPORT',
@@ -80,7 +80,7 @@ export const SERVICE_CATALOG: Record<OneTimeServiceType, ServiceCatalogEntry> = 
     requiresPartner: true,
     requiresDate: false,
     productKey: 'one_time_love_compatibility_report',
-    astrologyApiEndpoint: 'love_compatibility_report/tropical',
+    astrologyApiEndpoint: 'match_making_report', // Uses m_/f_ field format
   },
   ROMANTIC_FORECAST_COUPLE_REPORT: {
     serviceType: 'ROMANTIC_FORECAST_COUPLE_REPORT',
@@ -90,7 +90,7 @@ export const SERVICE_CATALOG: Record<OneTimeServiceType, ServiceCatalogEntry> = 
     requiresPartner: true,
     requiresDate: false,
     productKey: 'one_time_romantic_forecast_couple_report',
-    astrologyApiEndpoint: 'romantic_forecast_couple/tropical',
+    astrologyApiEndpoint: 'match_making_report', // Uses m_/f_ field format
   },
   MOON_PHASE_REPORT: {
     serviceType: 'MOON_PHASE_REPORT',
@@ -100,7 +100,7 @@ export const SERVICE_CATALOG: Record<OneTimeServiceType, ServiceCatalogEntry> = 
     requiresPartner: false,
     requiresDate: true,
     productKey: 'one_time_moon_phase_report',
-    astrologyApiEndpoint: 'moon_phase_report',
+    astrologyApiEndpoint: 'advanced_panchang', // Moon phase info
   },
 };
 
