@@ -8,8 +8,7 @@ services:
       POSTGRES_USER: astro_user
       POSTGRES_PASSWORD: astro_password
       POSTGRES_DB: astro_db
-    ports:
-      - "5432:5432"
+    # ports removed - only accessible internally via Docker network (security fix)
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -23,8 +22,7 @@ services:
     image: redis:7-alpine
     container_name: astro-redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
+    # ports removed - only accessible internally via Docker network (security fix)
     volumes:
       - redis_data:/data
     healthcheck:
