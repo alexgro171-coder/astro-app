@@ -80,16 +80,16 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
               onTap: () => context.push('/karmic-astrology'),
             ),
             
-            // 4. Moon Phase Report (NEW)
-            _buildMenuItem(
-              icon: Icons.nightlight_round,
-              title: 'Moon Phase Report',
-              subtitle: 'Current lunar energy guidance',
-              color: const Color(0xFF3F51B5),
-              onTap: () => context.push('/moon-phase'),
-            ),
+            // Moon Phase Report - HIDDEN (kept in backend, not shown in UI)
+            // _buildMenuItem(
+            //   icon: Icons.nightlight_round,
+            //   title: 'Moon Phase Report',
+            //   subtitle: 'Current lunar energy guidance',
+            //   color: const Color(0xFF3F51B5),
+            //   onTap: () => context.push('/moon-phase'),
+            // ),
             
-            // 5. Learn Astrology
+            // 4. Learn Astrology
             _buildMenuItem(
               icon: Icons.school_rounded,
               title: 'Learn Astrology',

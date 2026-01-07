@@ -24,6 +24,8 @@ class ServiceEntry {
   final Color color;
   final bool requiresPartner;
   final int priceUsdCents;
+  final bool comingSoon; // NEW: Mark services as coming soon
+  final bool hidden; // NEW: Hide services from UI but keep in backend
 
   const ServiceEntry({
     required this.type,
@@ -34,11 +36,14 @@ class ServiceEntry {
     required this.color,
     required this.requiresPartner,
     required this.priceUsdCents,
+    this.comingSoon = false,
+    this.hidden = false,
   });
 }
 
-// Local service catalog for UI
+// Local service catalog for UI - ordered as specified
 const List<ServiceEntry> compatibilityServices = [
+  // 1. Personality Report - active
   ServiceEntry(
     type: OneTimeServiceType.personalityReport,
     apiType: 'PERSONALITY_REPORT',
@@ -49,26 +54,7 @@ const List<ServiceEntry> compatibilityServices = [
     requiresPartner: false,
     priceUsdCents: 499,
   ),
-  ServiceEntry(
-    type: OneTimeServiceType.loveCompatibilityReport,
-    apiType: 'LOVE_COMPATIBILITY_REPORT',
-    title: 'Love Compatibility Report',
-    description: 'Detailed romantic compatibility analysis with your partner',
-    icon: Icons.favorite_rounded,
-    color: Color(0xFFE91E63),
-    requiresPartner: true,
-    priceUsdCents: 699,
-  ),
-  ServiceEntry(
-    type: OneTimeServiceType.romanticForecastCoupleReport,
-    apiType: 'ROMANTIC_FORECAST_COUPLE_REPORT',
-    title: 'Romantic Couple Forecast',
-    description: 'Insights into the future of your relationship',
-    icon: Icons.calendar_month_rounded,
-    color: Color(0xFF2196F3),
-    requiresPartner: true,
-    priceUsdCents: 899,
-  ),
+  // 2. Romantic Personality Report - active
   ServiceEntry(
     type: OneTimeServiceType.romanticPersonalityReport,
     apiType: 'ROMANTIC_PERSONALITY_REPORT',
@@ -79,6 +65,31 @@ const List<ServiceEntry> compatibilityServices = [
     requiresPartner: false,
     priceUsdCents: 499,
   ),
+  // 3. Love Compatibility Report - Coming Soon
+  ServiceEntry(
+    type: OneTimeServiceType.loveCompatibilityReport,
+    apiType: 'LOVE_COMPATIBILITY_REPORT',
+    title: 'Love Compatibility',
+    description: 'Detailed romantic compatibility analysis with your partner',
+    icon: Icons.favorite_rounded,
+    color: Color(0xFFE91E63),
+    requiresPartner: true,
+    priceUsdCents: 699,
+    comingSoon: true, // Show "Coming Soon" instead of price
+  ),
+  // 4. Romantic Couple Forecast - HIDDEN (exists in backend, not shown in UI)
+  ServiceEntry(
+    type: OneTimeServiceType.romanticForecastCoupleReport,
+    apiType: 'ROMANTIC_FORECAST_COUPLE_REPORT',
+    title: 'Romantic Couple Forecast',
+    description: 'Insights into the future of your relationship',
+    icon: Icons.calendar_month_rounded,
+    color: Color(0xFF2196F3),
+    requiresPartner: true,
+    priceUsdCents: 899,
+    hidden: true, // Not displayed in UI
+  ),
+  // 5. Friendship Report - HIDDEN (exists in backend, not shown in UI)
   ServiceEntry(
     type: OneTimeServiceType.friendshipReport,
     apiType: 'FRIENDSHIP_REPORT',
@@ -88,6 +99,7 @@ const List<ServiceEntry> compatibilityServices = [
     color: Color(0xFF4CAF50),
     requiresPartner: true,
     priceUsdCents: 699,
+    hidden: true, // Not displayed in UI
   ),
 ];
 
@@ -179,6 +191,9 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
       backendMap[svc['serviceType']] = svc;
     }
 
+    // Filter out hidden services
+    final visibleServices = compatibilityServices.where((s) => !s.hidden).toList();
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -229,8 +244,8 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-          // Service cards
-          ...compatibilityServices.map((service) {
+          // Service cards (only visible services)
+          ...visibleServices.map((service) {
             final backendSvc = backendMap[service.apiType];
             final isUnlocked = betaFree || (backendSvc?['isUnlocked'] ?? false);
             final priceUsd = backendSvc?['priceUsd'] ?? service.priceUsdCents;
@@ -258,165 +273,195 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
     required bool betaFree,
   }) {
     final priceDisplay = '\$${(priceUsd / 100).toStringAsFixed(2)}';
+    final isComingSoon = service.comingSoon;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            context.push(
-              '/service-offer',
-              extra: {
-                'serviceType': service.apiType,
-                'title': service.title,
-                'description': service.description,
-                'priceUsd': priceUsd,
-                'requiresPartner': service.requiresPartner,
-                'isUnlocked': isUnlocked,
-                'betaFree': betaFree,
-              },
-            );
-          },
+          onTap: isComingSoon
+              ? null // Disable tap for coming soon services
+              : () {
+                  context.push(
+                    '/service-offer',
+                    extra: {
+                      'serviceType': service.apiType,
+                      'title': service.title,
+                      'description': service.description,
+                      'priceUsd': priceUsd,
+                      'requiresPartner': service.requiresPartner,
+                      'isUnlocked': isUnlocked,
+                      'betaFree': betaFree,
+                    },
+                  );
+                },
           borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: service.color.withOpacity(0.2),
-                width: 1,
+          child: Opacity(
+            opacity: isComingSoon ? 0.7 : 1.0,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: service.color.withOpacity(0.2),
+                  width: 1,
+                ),
               ),
-            ),
-            child: Row(
-              children: [
-                // Icon
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        service.color.withOpacity(0.3),
-                        service.color.withOpacity(0.1),
+              child: Row(
+                children: [
+                  // Icon
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          service.color.withOpacity(0.3),
+                          service.color.withOpacity(0.1),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(service.icon, color: service.color, size: 28),
+                  ),
+                  const SizedBox(width: 16),
+                  // Content
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                service.title,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textPrimary,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (service.requiresPartner && !isComingSoon) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Text(
+                                  '+Partner',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          service.description,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textSecondary,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        // Price or Coming Soon
+                        Row(
+                          children: [
+                            if (isComingSoon) ...[
+                              // Coming Soon badge
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.orange.withOpacity(0.3),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Coming Soon',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ),
+                            ] else if (betaFree) ...[
+                              Text(
+                                priceDisplay,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textMuted,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Text(
+                                  'FREE',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                            ] else ...[
+                              Text(
+                                isUnlocked ? 'Unlocked' : priceDisplay,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: isUnlocked
+                                      ? Colors.green
+                                      : AppColors.accent,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ],
                     ),
-                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(service.icon, color: service.color, size: 28),
-                ),
-                const SizedBox(width: 16),
-                // Content
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              service.title,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          if (service.requiresPartner) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Text(
-                                '+Partner',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        service.description,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: AppColors.textSecondary,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-                      // Price
-                      Row(
-                        children: [
-                          if (betaFree) ...[
-                            Text(
-                              priceDisplay,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.textMuted,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.green.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Text(
-                                'FREE',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                          ] else ...[
-                            Text(
-                              isUnlocked ? 'Unlocked' : priceDisplay,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: isUnlocked
-                                    ? Colors.green
-                                    : AppColors.accent,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                // Arrow
-                Icon(
-                  Icons.chevron_right_rounded,
-                  color: AppColors.textMuted,
-                  size: 24,
-                ),
-              ],
+                  // Arrow (not shown for coming soon)
+                  if (!isComingSoon)
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: AppColors.textMuted,
+                      size: 24,
+                    ),
+                ],
+              ),
             ),
           ),
         ),
