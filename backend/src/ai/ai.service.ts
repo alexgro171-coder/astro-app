@@ -243,7 +243,7 @@ Generate warm, personalized guidance with detailed transit interpretations and a
         ],
         response_format: { type: 'json_object' },
         temperature: 0.7,
-        max_tokens: 4500, // Increased for longer transit interpretations (100-130 words per section)
+        max_tokens: 4000, // Max ~4096 for gpt-4-turbo, using 4000 to be safe
       });
 
       const result = JSON.parse(response.choices[0].message.content || '{}');
