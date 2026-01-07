@@ -253,7 +253,9 @@ export class GuidanceService {
 
     // Step 2: Get daily transits
     this.logger.log(`${logPrefix} Fetching transits from AstrologyAPI`);
+    const transitStart = Date.now();
     const transits = await this.astrologyService.getDailyTransits(user, date);
+    this.logger.log(`${logPrefix} AstrologyAPI transits took ${Date.now() - transitStart}ms`);
 
     // Step 3: Get active concern
     const activeConcern = await this.concernsService.findActive(user.id);
@@ -284,6 +286,7 @@ export class GuidanceService {
 
     // Step 6: Generate via AI
     this.logger.log(`${logPrefix} Generating guidance via OpenAI`);
+    const openaiStart = Date.now();
     const sections = await this.aiService.generateDailyGuidance({
       natalSummary: natalChart.summary,
       transits: transits.transits as any[],
@@ -295,6 +298,7 @@ export class GuidanceService {
       userName: user.name || undefined,
       personalContext,
     });
+    this.logger.log(`${logPrefix} OpenAI generation took ${Date.now() - openaiStart}ms`);
 
     // Step 7: Update guidance to READY
     await this.prisma.dailyGuidance.update({
