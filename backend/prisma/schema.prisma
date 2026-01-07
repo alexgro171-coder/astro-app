@@ -52,15 +52,19 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  natalChart      NatalChart?
-  concerns        Concern[]
-  dailyGuidances  DailyGuidance[]
-  feedbacks       GuidanceFeedback[]
-  devices         UserDevice[]
-  refreshTokens   RefreshToken[]
-  subscription    Subscription?
-  contextProfile  UserContextProfile?
-  oneTimeReadings OneTimeReading[]
+  natalChart       NatalChart?
+  concerns         Concern[]
+  dailyGuidances   DailyGuidance[]
+  dailyTransits    DailyTransit[]
+  feedbacks        GuidanceFeedback[]
+  devices          UserDevice[]
+  refreshTokens    RefreshToken[]
+  subscription     Subscription?
+  contextProfile   UserContextProfile?
+  oneTimeReadings  OneTimeReading[]
+  natalPlacements  NatalPlacements?
+  karmicReadings   KarmicAstrologyReading[]
+  analyticsEvents  AnalyticsEvent[]
 
   @@map("users")
 }
@@ -146,6 +150,7 @@ model NatalChart {
 model DailyTransit {
   id     String   @id @default(cuid())
   userId String   @map("user_id")
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   date   DateTime @db.Date
 
   // Raw API response
@@ -424,6 +429,7 @@ model UserContextProfileHistory {
 model NatalPlacements {
   id     String @id @default(cuid())
   userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Structured placements data
   placementsJson Json @map("placements_json")
@@ -557,6 +563,7 @@ model UserPurchase {
 model KarmicAstrologyReading {
   id     String @id @default(cuid())
   userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   locale String // Language of the reading (e.g., "en", "ro")
 
   // Generation status
@@ -810,11 +817,12 @@ enum ArticleStatus {
 // ============================================
 
 model AnalyticsEvent {
-  id        String            @id @default(cuid())
+  id        String             @id @default(cuid())
   eventType AnalyticsEventType
-  userId    String?           @map("user_id")
-  meta      Json?             // Additional event data
-  createdAt DateTime          @default(now()) @map("created_at")
+  userId    String?            @map("user_id")
+  user      User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  meta      Json?              // Additional event data
+  createdAt DateTime           @default(now()) @map("created_at")
 
   @@index([eventType, createdAt])
   @@index([userId, createdAt])
