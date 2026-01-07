@@ -16,12 +16,20 @@ export class EmailService {
   private readonly fromEmail: string;
   private readonly fromName: string;
   private readonly isEnabled: boolean;
+  private readonly baseUrl: string;
+  private readonly logoUrl: string;
+  private readonly logoIconUrl: string;
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get<string>('RESEND_API_KEY');
     this.fromEmail = this.configService.get<string>('EMAIL_FROM', 'support@innerwisdomapp.com');
     this.fromName = this.configService.get<string>('EMAIL_FROM_NAME', 'Inner Wisdom');
+    this.baseUrl = this.configService.get<string>('BASE_URL', 'https://api.innerwisdomapp.com');
     this.isEnabled = !!apiKey;
+
+    // Logo URLs - hosted on our server
+    this.logoUrl = `${this.baseUrl}/static/images/logo-with-text.png`; // Logo with "Inner Wisdom Hub" text
+    this.logoIconUrl = `${this.baseUrl}/static/images/logo-icon.png`; // Icon only (transparent)
 
     if (apiKey) {
       this.resend = new Resend(apiKey);
@@ -87,7 +95,7 @@ export class EmailService {
     <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; padding: 40px; border: 1px solid #2d2d5a;">
       <!-- Logo/Header -->
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #a78bfa; margin: 0; font-size: 28px;">✨ Inner Wisdom</h1>
+        <img src="${this.logoUrl}" alt="Inner Wisdom Hub" style="width: 150px; height: auto;" />
       </div>
       
       <!-- Content -->
@@ -112,8 +120,9 @@ export class EmailService {
       
       <!-- Footer -->
       <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #2d2d5a; text-align: center;">
+        <img src="${this.logoIconUrl}" alt="Inner Wisdom" style="width: 40px; height: 40px; margin-bottom: 10px;" />
         <p style="color: #64748b; font-size: 12px; margin: 0;">
-          © ${new Date().getFullYear()} Inner Wisdom. All rights reserved.<br>
+          © ${new Date().getFullYear()} Inner Wisdom Hub. All rights reserved.<br>
           Your personal astrology guide.
         </p>
       </div>
@@ -122,7 +131,7 @@ export class EmailService {
 </body>
 </html>
       `,
-      text: `Hi ${name},\n\nYou requested a password reset. Your code is: ${code}\n\nThis code expires in 15 minutes.\n\nIf you didn't request this, please ignore this email.\n\n- Inner Wisdom Team`,
+      text: `Hi ${name},\n\nYou requested a password reset. Your code is: ${code}\n\nThis code expires in 15 minutes.\n\nIf you didn't request this, please ignore this email.\n\n- Inner Wisdom Hub Team`,
     });
   }
 
@@ -134,7 +143,7 @@ export class EmailService {
     
     return this.send({
       to: email,
-      subject: 'Welcome to Inner Wisdom ✨',
+      subject: 'Welcome to Inner Wisdom Hub ✨',
       html: `
 <!DOCTYPE html>
 <html>
@@ -147,7 +156,8 @@ export class EmailService {
     <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; padding: 40px; border: 1px solid #2d2d5a;">
       <!-- Logo/Header -->
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #a78bfa; margin: 0; font-size: 32px;">✨ Welcome to Inner Wisdom</h1>
+        <img src="${this.logoUrl}" alt="Inner Wisdom Hub" style="width: 180px; height: auto;" />
+        <p style="color: #a78bfa; font-size: 24px; margin: 20px 0 0 0; font-weight: 500;">Welcome!</p>
       </div>
       
       <!-- Content -->
@@ -155,7 +165,7 @@ export class EmailService {
         <p style="font-size: 20px; margin-bottom: 20px;">Hi ${name}! 🌟</p>
         
         <p style="font-size: 16px; line-height: 1.8; margin-bottom: 20px;">
-          We're thrilled to have you join our cosmic community! Inner Wisdom is your personal astrology guide, designed to help you navigate life's journey with the wisdom of the stars.
+          We're thrilled to have you join our cosmic community! Inner Wisdom Hub is your personal astrology guide, designed to help you navigate life's journey with the wisdom of the stars.
         </p>
         
         <!-- Features -->
@@ -180,8 +190,9 @@ export class EmailService {
       
       <!-- Footer -->
       <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #2d2d5a; text-align: center;">
+        <img src="${this.logoIconUrl}" alt="Inner Wisdom" style="width: 40px; height: 40px; margin-bottom: 10px;" />
         <p style="color: #64748b; font-size: 12px; margin: 0;">
-          © ${new Date().getFullYear()} Inner Wisdom. All rights reserved.<br>
+          © ${new Date().getFullYear()} Inner Wisdom Hub. All rights reserved.<br>
           Your personal astrology guide.
         </p>
       </div>
@@ -190,7 +201,7 @@ export class EmailService {
 </body>
 </html>
       `,
-      text: `Hi ${name}!\n\nWelcome to Inner Wisdom! 🌟\n\nWe're thrilled to have you join our cosmic community. Inner Wisdom is your personal astrology guide, designed to help you navigate life's journey with the wisdom of the stars.\n\nWhat awaits you:\n- Daily Guidance - Personalized insights based on your natal chart\n- Transit Analysis - Understand planetary influences on your day\n- Life Areas - Guidance for love, career, health & more\n- Your Natal Chart - Deep dive into your cosmic blueprint\n\nOpen the app to receive your first daily guidance!\n\n- The Inner Wisdom Team`,
+      text: `Hi ${name}!\n\nWelcome to Inner Wisdom Hub! 🌟\n\nWe're thrilled to have you join our cosmic community. Inner Wisdom Hub is your personal astrology guide, designed to help you navigate life's journey with the wisdom of the stars.\n\nWhat awaits you:\n- Daily Guidance - Personalized insights based on your natal chart\n- Transit Analysis - Understand planetary influences on your day\n- Life Areas - Guidance for love, career, health & more\n- Your Natal Chart - Deep dive into your cosmic blueprint\n\nOpen the app to receive your first daily guidance!\n\n- The Inner Wisdom Hub Team`,
     });
   }
 
@@ -202,7 +213,7 @@ export class EmailService {
     
     return this.send({
       to: email,
-      subject: 'Your Inner Wisdom Account Has Been Deleted',
+      subject: 'Your Inner Wisdom Hub Account Has Been Deleted',
       html: `
 <!DOCTYPE html>
 <html>
@@ -215,7 +226,7 @@ export class EmailService {
     <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; padding: 40px; border: 1px solid #2d2d5a;">
       <!-- Logo/Header -->
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #a78bfa; margin: 0; font-size: 28px;">✨ Inner Wisdom</h1>
+        <img src="${this.logoUrl}" alt="Inner Wisdom Hub" style="width: 150px; height: auto;" />
       </div>
       
       <!-- Content -->
@@ -223,7 +234,7 @@ export class EmailService {
         <p style="font-size: 18px; margin-bottom: 20px;">Hi ${name},</p>
         
         <p style="font-size: 16px; line-height: 1.8; margin-bottom: 20px;">
-          This email confirms that your Inner Wisdom account and all associated data have been permanently deleted, as requested.
+          This email confirms that your Inner Wisdom Hub account and all associated data have been permanently deleted, as requested.
         </p>
         
         <!-- Info Box -->
@@ -252,8 +263,9 @@ export class EmailService {
       
       <!-- Footer -->
       <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #2d2d5a; text-align: center;">
+        <img src="${this.logoIconUrl}" alt="Inner Wisdom" style="width: 40px; height: 40px; margin-bottom: 10px;" />
         <p style="color: #64748b; font-size: 12px; margin: 0;">
-          © ${new Date().getFullYear()} Inner Wisdom. All rights reserved.
+          © ${new Date().getFullYear()} Inner Wisdom Hub. All rights reserved.
         </p>
       </div>
     </div>
@@ -261,7 +273,7 @@ export class EmailService {
 </body>
 </html>
       `,
-      text: `Hi ${name},\n\nThis email confirms that your Inner Wisdom account and all associated data have been permanently deleted, as requested.\n\nWhat was deleted:\n- Your profile and birth data\n- All daily guidance history\n- Natal chart interpretations\n- Subscription information\n\nWe're sorry to see you go. If you ever want to return, you're always welcome to create a new account.\n\nIf you didn't request this deletion, please contact us immediately at support@innerwisdomapp.com.\n\nWishing you well on your journey.\n\n- The Inner Wisdom Team`,
+      text: `Hi ${name},\n\nThis email confirms that your Inner Wisdom Hub account and all associated data have been permanently deleted, as requested.\n\nWhat was deleted:\n- Your profile and birth data\n- All daily guidance history\n- Natal chart interpretations\n- Subscription information\n\nWe're sorry to see you go. If you ever want to return, you're always welcome to create a new account.\n\nIf you didn't request this deletion, please contact us immediately at support@innerwisdomapp.com.\n\nWishing you well on your journey.\n\n- The Inner Wisdom Hub Team`,
     });
   }
 
@@ -296,8 +308,8 @@ export class EmailService {
     <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; padding: 40px; border: 1px solid #2d2d5a;">
       <!-- Logo/Header -->
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #a78bfa; margin: 0; font-size: 28px;">✨ Inner Wisdom</h1>
-        <p style="color: #10b981; font-size: 16px; margin-top: 10px;">Subscription Confirmed!</p>
+        <img src="${this.logoUrl}" alt="Inner Wisdom Hub" style="width: 150px; height: auto;" />
+        <p style="color: #10b981; font-size: 16px; margin-top: 15px; font-weight: 500;">Subscription Confirmed!</p>
       </div>
       
       <!-- Content -->
@@ -323,8 +335,9 @@ export class EmailService {
       
       <!-- Footer -->
       <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #2d2d5a; text-align: center;">
+        <img src="${this.logoIconUrl}" alt="Inner Wisdom" style="width: 40px; height: 40px; margin-bottom: 10px;" />
         <p style="color: #64748b; font-size: 12px; margin: 0;">
-          © ${new Date().getFullYear()} Inner Wisdom. All rights reserved.<br>
+          © ${new Date().getFullYear()} Inner Wisdom Hub. All rights reserved.<br>
           Your personal astrology guide.
         </p>
       </div>
@@ -333,7 +346,7 @@ export class EmailService {
 </body>
 </html>
       `,
-      text: `Hi ${name}!\n\nThank you for subscribing to ${planName}! Your premium features are now active.\n\nPlan: ${planName}\nValid until: ${expiryDate}\n\nEnjoy your enhanced cosmic journey!\n\n- The Inner Wisdom Team`,
+      text: `Hi ${name}!\n\nThank you for subscribing to ${planName}! Your premium features are now active.\n\nPlan: ${planName}\nValid until: ${expiryDate}\n\nEnjoy your enhanced cosmic journey!\n\n- The Inner Wisdom Hub Team`,
     });
   }
 }
