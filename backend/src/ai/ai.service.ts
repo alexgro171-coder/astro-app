@@ -352,26 +352,67 @@ Generate warm, personalized guidance with detailed transit interpretations and a
   }
 
   /**
-   * Compact transits to ~200 words max
+   * Format transits for AI interpretation
+   * 
+   * Prioritizes the most impactful transits and formats them clearly:
+   * - Personal planets (Sun, Moon, Mercury, Venus, Mars) aspects are most relevant for daily guidance
+   * - Includes house placement for context
+   * - Shows timing context (is the aspect exact today, building, or fading?)
    */
   private compactTransits(transits: any[]): string {
     if (!transits || transits.length === 0) {
       return 'No significant transits today.';
     }
 
-    // Take most significant transits (first 5-7)
-    const significantTransits = transits.slice(0, 7);
+    // Prioritize transits by significance
+    // Personal planet transits are more impactful for daily guidance
+    const personalPlanets = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars'];
+    const prioritized = [...transits].sort((a, b) => {
+      const aScore = personalPlanets.includes(a.transitPlanet) ? 2 : 0;
+      const bScore = personalPlanets.includes(b.transitPlanet) ? 2 : 0;
+      return bScore - aScore;
+    });
+
+    // Take top 10 transits (more context = better interpretation)
+    const significantTransits = prioritized.slice(0, 10);
 
     return significantTransits
       .map((t) => {
         if (typeof t === 'string') return t;
+        
+        // New format from parseTransits
+        if (t.transitPlanet && t.aspectType && t.natalPlanet) {
+          let desc = `${t.transitPlanet} ${t.aspectType} natal ${t.natalPlanet}`;
+          
+          // Add sign and house context
+          if (t.transitSign) desc += ` (transit in ${t.transitSign}`;
+          if (t.natalHouse) desc += `, natal House ${t.natalHouse}`;
+          if (t.transitSign || t.natalHouse) desc += ')';
+          
+          // Add retrograde indicator
+          if (t.isRetrograde) desc += ' [Rx]';
+          
+          // Add timing context
+          if (t.exactTime && t.exactTime !== '-') {
+            const exactDate = new Date(t.exactTime);
+            const today = new Date();
+            const diffDays = Math.round((exactDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+            if (diffDays === 0) desc += ' - EXACT TODAY';
+            else if (diffDays > 0 && diffDays <= 2) desc += ' - building';
+            else if (diffDays < 0 && diffDays >= -2) desc += ' - fading';
+          }
+          
+          return desc;
+        }
+        
+        // Legacy formats
         if (t.aspect && t.planet1 && t.planet2) {
           return `${t.planet1} ${t.aspect} ${t.planet2}${t.orb ? ` (${t.orb}°)` : ''}`;
         }
         if (t.description) return t.description.substring(0, 100);
         return JSON.stringify(t).substring(0, 80);
       })
-      .join('; ');
+      .join('\n');  // Use newlines for better readability
   }
 
   /**

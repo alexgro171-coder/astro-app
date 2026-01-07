@@ -511,20 +511,52 @@ export class AstrologyService {
 
   /**
    * Parse transit data for AI consumption
+   * 
+   * AstrologyAPI returns an object with structure:
+   * {
+   *   ascendant: "Scorpio",
+   *   transit_date: "1-7-2026",
+   *   transit_relation: [{ transit_planet, natal_planet, aspect_type, ... }, ...]
+   * }
+   * 
+   * We extract transit_relation and format each transit for AI interpretation.
    */
   private parseTransits(transitData: any): any[] {
-    if (!Array.isArray(transitData)) {
+    // Handle the API response structure - transits are in transit_relation array
+    let transits: any[] = [];
+    
+    if (transitData?.transit_relation && Array.isArray(transitData.transit_relation)) {
+      transits = transitData.transit_relation;
+    } else if (Array.isArray(transitData)) {
+      // Fallback: if somehow passed an array directly
+      transits = transitData;
+    } else {
+      this.logger.warn('parseTransits received unexpected data format:', typeof transitData);
       return [];
     }
 
-    return transitData.map((transit: any) => ({
+    // Format each transit with rich details for AI interpretation
+    return transits.map((transit: any) => ({
+      // Transit planet info
       transitPlanet: transit.transit_planet,
-      natalPlanet: transit.natal_planet,
-      aspect: transit.aspect,
-      orb: transit.orb,
       transitSign: transit.transit_sign,
-      natalSign: transit.natal_sign,
-      description: transit.description,
+      isRetrograde: transit.is_retrograde || false,
+      
+      // Aspect info
+      aspectType: transit.aspect_type, // Conjunction, Trine, Square, Opposition, Sextile
+      
+      // Natal planet info
+      natalPlanet: transit.natal_planet,
+      natalHouse: transit.natal_house,
+      houseOfNatalPlanet: transit.house_of_natal_planet,
+      
+      // Timing (for context on whether aspect is building or fading)
+      startTime: transit.start_time,
+      exactTime: transit.exact_time,
+      endTime: transit.end_time,
+      
+      // Additional context
+      planetInSigns: transit.planet_in_signs,
     }));
   }
 
