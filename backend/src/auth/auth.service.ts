@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { AnalyticsService } from '../analytics/analytics.service';
+import { EmailService } from '../email/email.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -24,6 +25,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private analytics: AnalyticsService,
+    private emailService: EmailService,
   ) {}
 
   async signup(signupDto: SignupDto) {
@@ -55,6 +57,11 @@ export class AuthService {
     await this.analytics.logEvent('USER_SIGNUP', user.id, {
       provider: 'email',
       language: language || 'EN',
+    });
+
+    // Send welcome email (don't block on failure)
+    this.emailService.sendWelcomeEmail(email, name).catch((err) => {
+      this.logger.warn(`Failed to send welcome email to ${email}: ${err.message}`);
     });
 
     // Generate tokens
@@ -221,11 +228,18 @@ export class AuthService {
       },
     });
 
-    // TODO: Send email with OTP code
-    // For now, log it (in production, use email service)
-    this.logger.log(`Password reset OTP for ${email}: ${code}`);
+    // Send email with OTP code
+    const emailSent = await this.emailService.sendPasswordResetOTP(
+      email,
+      code,
+      user.name || undefined,
+    );
 
-    // In development, include the code in response
+    if (!emailSent) {
+      this.logger.warn(`Failed to send password reset email to ${email}`);
+    }
+
+    // In development, include the code in response for testing
     const isDev = this.configService.get<string>('NODE_ENV') !== 'production';
     
     return {

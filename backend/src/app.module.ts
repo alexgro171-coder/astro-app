@@ -5,6 +5,7 @@ import { BullModule } from '@nestjs/bull';
 
 // Core modules
 import { PrismaModule } from './prisma/prisma.module';
+import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AstrologyModule } from './astrology/astrology.module';
@@ -46,6 +47,7 @@ import { JobsModule } from './jobs/jobs.module';
 
     // Core modules
     PrismaModule,
+    EmailModule, // Global email service (Resend)
     HealthModule,
     
     // Analytics (Global - available everywhere)

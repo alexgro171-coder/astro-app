@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AstrologyService } from '../astrology/astrology.service';
+import { EmailService } from '../email/email.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { BirthDataDto } from './dto/birth-data.dto';
 import { User } from '@prisma/client';
@@ -12,6 +13,7 @@ export class UsersService {
   constructor(
     private prisma: PrismaService,
     private astrologyService: AstrologyService,
+    private emailService: EmailService,
   ) {}
 
   async getProfile(userId: string) {
@@ -120,16 +122,32 @@ export class UsersService {
     };
   }
 
-  async deleteAccount(userId: string, email?: string) {
+  async deleteAccount(userId: string, email?: string, userName?: string) {
     this.logger.warn(`Account deletion requested for user ${userId} (${email || 'unknown email'})`);
     
+    // Fetch user info before deletion for email
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, name: true },
+    });
+
+    const userEmail = email || user?.email;
+    const name = userName || user?.name;
+
     // All related data will be cascade deleted due to Prisma schema relations
     // This includes: refreshTokens, devices, natalChart, concerns, dailyGuidances, etc.
     await this.prisma.user.delete({
       where: { id: userId },
     });
 
-    this.logger.warn(`Account successfully deleted: user ${userId} (${email || 'unknown email'})`);
+    this.logger.warn(`Account successfully deleted: user ${userId} (${userEmail || 'unknown email'})`);
+
+    // Send confirmation email after successful deletion (don't block on failure)
+    if (userEmail) {
+      this.emailService.sendAccountDeletedEmail(userEmail, name || undefined).catch((err) => {
+        this.logger.warn(`Failed to send account deletion email to ${userEmail}: ${err.message}`);
+      });
+    }
 
     return { 
       message: 'Account deleted successfully. All your data has been permanently removed.',
