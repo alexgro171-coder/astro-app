@@ -261,14 +261,14 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
               ),
             ),
 
-          // Generate button
+          // Generate button - simplified, no duplicate price
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _isLoading ? null : _generateReport,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: _betaFree ? Colors.green : AppColors.accent,
+                backgroundColor: AppColors.accent,
               ),
               child: _isLoading
                   ? const SizedBox(
@@ -279,11 +279,9 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
                         color: Colors.white,
                       ),
                     )
-                  : Text(
-                      _betaFree
-                          ? '\$2.99 – Beta Testers FREE'
-                          : 'Generate Report',
-                      style: const TextStyle(
+                  : const Text(
+                      'Generate Report',
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),

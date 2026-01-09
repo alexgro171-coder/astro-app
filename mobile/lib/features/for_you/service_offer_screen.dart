@@ -21,6 +21,7 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
   bool _isGenerating = false;
   String? _progressHint;
   String? _error;
+  String? _usedLocale; // Track the locale used for generation
 
   String get serviceType => widget.serviceData['serviceType'] as String;
   String get title => widget.serviceData['title'] as String;
@@ -234,7 +235,7 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
                   ),
                 ],
 
-                // CTA Button
+                // CTA Button - simplified, no duplicate price
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -242,7 +243,7 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: betaFree || isUnlocked
-                          ? Colors.green
+                          ? AppColors.accent
                           : AppColors.accent,
                     ),
                     child: _isLoading
@@ -255,11 +256,9 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
                             ),
                           )
                         : Text(
-                            betaFree
-                                ? '$priceDisplay – Beta Testers FREE'
-                                : isUnlocked
-                                    ? 'Generate Report'
-                                    : 'Unlock for $priceDisplay',
+                            betaFree || isUnlocked
+                                ? 'Generate Report'
+                                : 'Unlock for $priceDisplay',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -316,10 +315,23 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
 
     try {
       final jobsService = ref.read(jobsServiceProvider);
+      final apiClient = ref.read(apiClientProvider);
       
-      // Start the job with payload
+      // Get user's language for locale-consistent requests
+      String userLocale = 'en';
+      try {
+        final meResponse = await apiClient.get('/me');
+        userLocale = (meResponse.data['language'] as String?)?.toLowerCase() ?? 'en';
+      } catch (_) {
+        // Fallback to device locale
+        userLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+      }
+      _usedLocale = userLocale;
+      
+      // Start the job with payload and explicit locale
       final startResponse = await jobsService.startJob(
         jobType: JobType.oneTimeReport,
+        locale: userLocale,
         payload: {
           'serviceType': serviceType,
           if (partnerData != null) 'partnerProfile': partnerData,
@@ -390,7 +402,10 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
   Future<void> _fetchAndShowReport() async {
     try {
       final apiClient = ref.read(apiClientProvider);
-      final response = await apiClient.get('/for-you/reports/$serviceType');
+      
+      // Use the same locale that was used for generation
+      final locale = _usedLocale ?? 'en';
+      final response = await apiClient.get('/for-you/reports/$serviceType?locale=$locale');
 
       if (!mounted) return;
 
