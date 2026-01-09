@@ -7,7 +7,6 @@ import '../../core/network/api_client.dart';
 import '../../core/utils/zodiac_utils.dart';
 import '../../core/widgets/universe_loading_overlay.dart';
 import '../../core/services/jobs_service.dart';
-import '../../core/providers/job_polling_provider.dart';
 import '../shell/main_shell.dart';
 import '../context/services/context_service.dart';
 import '../context/widgets/context_review_modal.dart';
