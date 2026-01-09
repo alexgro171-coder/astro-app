@@ -51,29 +51,39 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
   @override
   Widget build(BuildContext context) {
     final chartDataAsync = ref.watch(natalChartDataProvider);
+    final isGeneratingPro = ref.watch(proGeneratingProvider);
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.cosmicGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(context),
-              _buildTabBar(),
-              Expanded(
-                child: chartDataAsync.when(
-                  data: (data) => data != null
-                      ? _buildContent(data)
-                      : _buildEmptyState(),
-                  loading: () => _buildLoadingState(),
-                  error: (error, stack) => _buildErrorState(error.toString()),
-                ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: AppColors.cosmicGradient,
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _buildAppBar(context),
+                  _buildTabBar(),
+                  Expanded(
+                    child: chartDataAsync.when(
+                      data: (data) => data != null
+                          ? _buildContent(data)
+                          : _buildEmptyState(),
+                      loading: () => _buildLoadingState(),
+                      error: (error, stack) => _buildErrorState(error.toString()),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          // Show loading overlay when generating Pro interpretations
+          if (isGeneratingPro)
+            const UniverseLoadingOverlay(
+              showCancelAfter: false,
+            ),
+        ],
       ),
     );
   }

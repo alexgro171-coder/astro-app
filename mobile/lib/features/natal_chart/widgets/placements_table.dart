@@ -612,7 +612,7 @@ class PlacementsTableView extends ConsumerWidget {
   }
 
   Future<void> _generateProInterpretations(BuildContext context, WidgetRef ref) async {
-    // Set loading state
+    // Set loading state - this will show UniverseLoadingOverlay in parent screen
     ref.read(proGeneratingProvider.notifier).state = true;
     
     try {
@@ -639,24 +639,13 @@ class PlacementsTableView extends ConsumerWidget {
           );
         }
       } else {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to generate interpretations. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+        // Generation returned empty - refresh anyway in case it was a partial success
+        ref.invalidate(natalChartDataProvider);
       }
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      // Log error but don't show error message - just refresh data
+      debugPrint('Pro interpretations generation error: $e');
+      ref.invalidate(natalChartDataProvider);
     } finally {
       // Reset loading state
       ref.read(proGeneratingProvider.notifier).state = false;

@@ -204,23 +204,45 @@ class NatalChartService {
     }
   }
 
-  /// Generate pro interpretations (requires purchase)
+  /// Generate pro interpretations using job system for long-running generation
   Future<List<NatalInterpretation>?> generateProInterpretations() async {
     try {
-      final response = await _apiClient.post('/natal-chart/pro/generate');
-      debugPrint('Pro generate response: ${response.statusCode} - ${response.data}');
+      // Use job system to handle long-running Pro generation (30-40+ seconds)
+      final startResponse = await _jobsService.startJob(
+        jobType: JobType.natalChartPro,
+      );
+
+      debugPrint('Pro job started: ${startResponse.jobId}, status: ${startResponse.status}');
+
+      // If already ready (previously generated), fetch the data
+      if (startResponse.isSuccess) {
+        debugPrint('Pro job already complete, fetching interpretations');
+        return getProInterpretations();
+      }
+
+      // Poll for completion (max 120 seconds = 48 polls * 2.5s)
+      const pollInterval = Duration(milliseconds: 2500);
+      const maxPolls = 48;
       
-      // Accept both 200 and 201 status codes
-      if ((response.statusCode == 200 || response.statusCode == 201) && response.data != null) {
-        final interpretations = response.data['interpretations'] as List?;
-        if (interpretations != null) {
-          return interpretations
-              .map((i) => NatalInterpretation.fromJson(i))
-              .toList();
+      for (int i = 0; i < maxPolls; i++) {
+        await Future.delayed(pollInterval);
+        
+        final status = await _jobsService.getJobStatus(startResponse.jobId);
+        debugPrint('Pro job poll $i: ${status.status}');
+        
+        if (status.isSuccess) {
+          debugPrint('Pro job completed successfully');
+          return getProInterpretations();
+        } else if (status.isFailed) {
+          debugPrint('Pro job failed: ${status.errorMsg}');
+          return null;
         }
       }
-      debugPrint('Pro generate failed: statusCode=${response.statusCode}');
-      return null;
+      
+      debugPrint('Pro job timed out after ${maxPolls * 2.5} seconds');
+      // Don't return null on timeout - the job continues in background
+      // Return empty list to indicate "in progress"
+      return [];
     } catch (e, stackTrace) {
       debugPrint('Error generating pro interpretations: $e');
       debugPrint('Stack trace: $stackTrace');

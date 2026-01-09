@@ -5,6 +5,7 @@ import { GuidanceService } from '../guidance/guidance.service';
 import { ForYouService } from '../for-you/for-you.service';
 import { KarmicService } from '../karmic/karmic.service';
 import { AstrologyService } from '../astrology/astrology.service';
+import { NatalChartService } from '../natal-chart/natal-chart.service';
 
 /**
  * Executes generation pipelines for different job types.
@@ -19,6 +20,7 @@ export class JobRunnerService {
     private readonly forYouService: ForYouService,
     private readonly karmicService: KarmicService,
     private readonly astrologyService: AstrologyService,
+    private readonly natalChartService: NatalChartService,
   ) {}
 
   /**
@@ -192,6 +194,7 @@ export class JobRunnerService {
 
   /**
    * Execute Natal Chart Pro interpretation.
+   * This generates detailed 150-200 word interpretations for each planet.
    */
   private async executeNatalChartPro(
     job: GenerationJob,
@@ -209,11 +212,36 @@ export class JobRunnerService {
       natalChart = await this.astrologyService.generateNatalChart(user);
     }
 
-    // Pro includes full interpretation data
+    // Check if Pro interpretations already exist
+    const existingPro = await this.prisma.natalInterpretation.findFirst({
+      where: { userId: user.id, isPro: true },
+    });
+
+    if (existingPro) {
+      this.logger.log(`Pro interpretations already exist for user ${user.id}`);
+      return {
+        kind: 'natal_chart_pro',
+        natalChartId: natalChart.id,
+        hasFullData: true,
+        status: 'READY',
+      };
+    }
+
+    // Generate Pro interpretations (this is the long-running operation)
+    this.logger.log(`Generating Pro interpretations for user ${user.id}...`);
+    const interpretations = await this.natalChartService.generateProInterpretations(
+      user.id,
+      user.language || 'EN',
+    );
+
+    this.logger.log(`Generated ${interpretations.length} Pro interpretations for user ${user.id}`);
+
     return {
       kind: 'natal_chart_pro',
       natalChartId: natalChart.id,
       hasFullData: true,
+      interpretationsCount: interpretations.length,
+      status: 'READY',
     };
   }
 

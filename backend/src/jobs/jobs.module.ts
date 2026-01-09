@@ -8,6 +8,7 @@ import { GuidanceModule } from '../guidance/guidance.module';
 import { ForYouModule } from '../for-you/for-you.module';
 import { KarmicModule } from '../karmic/karmic.module';
 import { AstrologyModule } from '../astrology/astrology.module';
+import { NatalChartModule } from '../natal-chart/natal-chart.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AstrologyModule } from '../astrology/astrology.module';
     forwardRef(() => ForYouModule),
     forwardRef(() => KarmicModule),
     forwardRef(() => AstrologyModule),
+    forwardRef(() => NatalChartModule),
   ],
   controllers: [JobsController],
   providers: [JobsService, JobQueueService, JobRunnerService],
