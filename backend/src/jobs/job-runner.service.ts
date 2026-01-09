@@ -213,8 +213,8 @@ export class JobRunnerService {
     }
 
     // Check if Pro interpretations already exist
-    const existingPro = await this.prisma.natalInterpretation.findFirst({
-      where: { userId: user.id, isPro: true },
+    const existingPro = await this.prisma.natalInterpretationPro.findFirst({
+      where: { userId: user.id },
     });
 
     if (existingPro) {
