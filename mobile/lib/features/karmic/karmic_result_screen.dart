@@ -189,7 +189,39 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
     );
   }
 
+  /// Process karmic reading content for display
+  /// - Replace "Introducere in Astrologia Karmica" with "Introducere in Astrologia ta Karmica"
+  /// - Replace "#" markers with bullet points "•"
+  String _processKarmicContent(String? content) {
+    if (content == null || content.isEmpty) {
+      return 'No content available.';
+    }
+    
+    String processed = content;
+    
+    // Replace title
+    processed = processed.replaceAll(
+      'Introducere in Astrologia Karmica',
+      'Introducere in Astrologia ta Karmica',
+    );
+    processed = processed.replaceAll(
+      'Introducere în Astrologia Karmică',
+      'Introducere în Astrologia ta Karmică',
+    );
+    
+    // Replace # markers with bullets (handles ##, ###, etc.)
+    // Replace "## " or "### " etc. at start of lines with "• "
+    processed = processed.replaceAllMapped(
+      RegExp(r'^#+\s*', multiLine: true),
+      (match) => '• ',
+    );
+    
+    return processed;
+  }
+
   Widget _buildReadyState(KarmicStatus status) {
+    final processedContent = _processKarmicContent(status.content);
+    
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -265,7 +297,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
               ),
             ),
             child: SelectableText(
-              status.content ?? 'No content available.',
+              processedContent,
               style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.textPrimary,
