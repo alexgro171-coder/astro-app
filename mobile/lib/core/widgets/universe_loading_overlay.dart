@@ -52,8 +52,8 @@ class _UniverseLoadingOverlayState extends State<UniverseLoadingOverlay>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    // Rotate messages every 8 seconds
-    _messageTimer = Timer.periodic(const Duration(seconds: 8), (_) {
+    // Rotate messages every 20 seconds - keep each message visible longer
+    _messageTimer = Timer.periodic(const Duration(seconds: 20), (_) {
       _animationController.forward().then((_) {
         setState(() {
           _currentMessageIndex =
