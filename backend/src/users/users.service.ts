@@ -53,7 +53,7 @@ export class UsersService {
   }
 
   async setBirthData(userId: string, birthDataDto: BirthDataDto) {
-    const { birthDate, birthTime, placeName, location } = birthDataDto;
+    const { birthDate, birthTime, placeName, location, gender } = birthDataDto;
 
     let birthPlace: string;
     let birthLat: number;
@@ -102,6 +102,7 @@ export class UsersService {
         birthLat,
         birthLon,
         birthTimezone,
+        ...(gender && { gender }),
       },
     });
 

@@ -14,6 +14,33 @@ class BirthDataScreen extends ConsumerStatefulWidget {
   ConsumerState<BirthDataScreen> createState() => _BirthDataScreenState();
 }
 
+// Gender options
+enum Gender { male, female, preferNotToSay }
+
+extension GenderExtension on Gender {
+  String get displayName {
+    switch (this) {
+      case Gender.male:
+        return 'Male';
+      case Gender.female:
+        return 'Female';
+      case Gender.preferNotToSay:
+        return 'Prefer not to say';
+    }
+  }
+
+  String get apiValue {
+    switch (this) {
+      case Gender.male:
+        return 'MALE';
+      case Gender.female:
+        return 'FEMALE';
+      case Gender.preferNotToSay:
+        return 'PREFER_NOT_TO_SAY';
+    }
+  }
+}
+
 class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
   final _formKey = GlobalKey<FormState>();
   
@@ -23,6 +50,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
   bool _isLoading = false;
   String? _errorMessage;
   LocationResult? _selectedLocation;
+  Gender? _selectedGender;
 
   @override
   void dispose() {
@@ -109,6 +137,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
         'birthDate': DateFormat('yyyy-MM-dd').format(_selectedDate!),
         'birthTime': birthTime,
         'location': _selectedLocation!.toJson(),
+        if (_selectedGender != null) 'gender': _selectedGender!.apiValue,
       });
 
       if (!mounted) return;
@@ -371,6 +400,58 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                       ),
                     ),
                   ],
+
+                  const SizedBox(height: 20),
+
+                  // Gender
+                  const Text(
+                    'Gender',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceLight,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: Gender.values.map((gender) {
+                        final isSelected = _selectedGender == gender;
+                        return InkWell(
+                          onTap: () => setState(() => _selectedGender = gender),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.accent.withOpacity(0.15) : null,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                                  color: isSelected ? AppColors.accent : AppColors.textMuted,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  gender.displayName,
+                                  style: TextStyle(
+                                    color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                                    fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
 
                   const SizedBox(height: 40),
 

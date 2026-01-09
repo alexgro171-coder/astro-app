@@ -21,6 +21,7 @@ export interface ContextSummaryResult {
  * Structured tags for quick access in prompts
  */
 export interface ContextTags {
+  gender: string | null; // User's gender for personalized guidance
   relationship_status: string;
   seeking_relationship: boolean | null;
   has_children: boolean;
@@ -61,9 +62,14 @@ export class ContextSummarizerService {
    * Generate context summary and tags from answers
    *
    * @param answers - Structured questionnaire answers
+   * @param userGender - Optional user gender from User model (MALE, FEMALE, etc.)
    * @returns Summary (max 60 words) and structured tags
    */
-  async generateSummary(answers: ContextAnswersDto): Promise<ContextSummaryResult> {
+  async generateSummary(answers: ContextAnswersDto, userGender?: string | null): Promise<ContextSummaryResult> {
+    // Map gender enum to readable string for AI
+    const genderStr = this.mapGenderToString(userGender);
+    const genderContext = genderStr ? `The user is ${genderStr}. ` : '';
+    
     const systemPrompt = `You are a concise profile summarizer for an astrology guidance app.
 Your task is to transform structured questionnaire answers into:
 1. A neutral, factual summary of max 60 words (summary_60w)
@@ -75,13 +81,15 @@ Rules:
 - Be neutral, factual, non-judgmental
 - Do not include names or personal identifiers
 - Use third person ("The user is..." or just describe facts)
+- IMPORTANT: Start the summary with gender if known: "${genderContext}..."
 - Output must be valid JSON only
 - If fields are missing, set to null/unknown
 
 Output Format (strict JSON):
 {
-  "summary_60w": "...max 60 words in English...",
+  "summary_60w": "...max 60 words in English, MUST start with 'The user is a [male/female/person]...'...",
   "tags": {
+    "gender": "male|female|other|null",
     "relationship_status": "...",
     "seeking_relationship": true/false/null,
     "has_children": true/false,
@@ -124,7 +132,7 @@ Generate the JSON output now.`;
 
       // Validate and enforce constraints
       const summary60w = this.enforceSummaryLimit(result.summary_60w || '', 60);
-      const tags = this.validateTags(result.tags || {}, answers);
+      const tags = this.validateTags(result.tags || {}, answers, genderStr);
 
       this.logger.log(
         `Generated context summary (${summary60w.split(' ').length} words)`,
@@ -138,7 +146,7 @@ Generate the JSON output now.`;
       this.logger.error('Failed to generate context summary:', error.message);
 
       // Fallback: generate basic summary without AI
-      return this.generateFallbackSummary(answers);
+      return this.generateFallbackSummary(answers, genderStr);
     }
   }
 
@@ -161,8 +169,10 @@ Generate the JSON output now.`;
   private validateTags(
     tags: Partial<ContextTags>,
     answers: ContextAnswersDto,
+    userGender?: string | null,
   ): ContextTags {
     return {
+      gender: tags.gender || userGender || null,
       relationship_status: tags.relationship_status || answers.relationshipStatus,
       seeking_relationship:
         tags.seeking_relationship !== undefined
@@ -207,12 +217,37 @@ Generate the JSON output now.`;
   }
 
   /**
+   * Map gender enum to human-readable string
+   */
+  private mapGenderToString(gender?: string | null): string | null {
+    if (!gender) return null;
+    switch (gender.toUpperCase()) {
+      case 'MALE':
+        return 'male';
+      case 'FEMALE':
+        return 'female';
+      case 'OTHER':
+        return 'non-binary';
+      case 'PREFER_NOT_TO_SAY':
+        return null;
+      default:
+        return null;
+    }
+  }
+
+  /**
    * Generate fallback summary without AI
    */
   private generateFallbackSummary(
     answers: ContextAnswersDto,
+    userGender?: string | null,
   ): ContextSummaryResult {
     const parts: string[] = [];
+
+    // Gender - start with it
+    if (userGender) {
+      parts.push(`The user is ${userGender}`);
+    }
 
     // Relationship
     const relMap: Record<RelationshipStatus, string> = {
@@ -276,7 +311,7 @@ Generate the JSON output now.`;
 
     return {
       summary60w: parts.join('. ') + '.',
-      tags: this.validateTags({}, answers),
+      tags: this.validateTags({}, answers, userGender),
     };
   }
 

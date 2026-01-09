@@ -27,6 +27,7 @@ model User {
   birthLat      Float?    @map("birth_lat")
   birthLon      Float?    @map("birth_lon")
   birthTimezone Float?    @map("birth_timezone")
+  gender        Gender?   // User's gender for personalized guidance
 
   // Preferences
   language      Language @default(EN)
@@ -680,6 +681,13 @@ enum Language {
 enum Platform {
   IOS
   ANDROID
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
 }
 
 enum ConcernCategory {

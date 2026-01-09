@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, Matches, IsDateString, IsNumber, ValidateNested } from 'class-validator';
+import { IsString, IsOptional, Matches, IsDateString, IsNumber, ValidateNested, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
+
+// Gender values matching Prisma enum
+const GENDER_VALUES = ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'] as const;
+type GenderType = typeof GENDER_VALUES[number];
 
 /**
  * Location data selected from autocomplete
@@ -72,5 +76,14 @@ export class BirthDataDto {
   @Type(() => SelectedLocationDto)
   @IsOptional()
   location?: SelectedLocationDto;
+
+  @ApiProperty({
+    enum: GENDER_VALUES,
+    description: 'User gender for personalized guidance',
+    required: false,
+  })
+  @IsIn(GENDER_VALUES)
+  @IsOptional()
+  gender?: GenderType;
 }
 

@@ -38,6 +38,7 @@ interface PreviousDayData {
 interface PersonalContext {
   summary60w: string;
   tags: {
+    gender: string | null; // User's gender for personalized guidance
     relationship_status: string;
     seeking_relationship: boolean | null;
     has_children: boolean;
@@ -170,9 +171,10 @@ ${context.previousDays.map(day =>
     let personalContextSection = '';
     if (context.personalContext) {
       const { summary60w, tags } = context.personalContext;
+      const genderInfo = tags.gender ? `The user is ${tags.gender}. ` : '';
       personalContextSection = `
 PERSONAL CONTEXT (tailored guidance):
-${summary60w}
+${genderInfo}${summary60w}
 Key priorities: ${tags.priorities?.join(', ') || 'general well-being'}
 Life scores: Health ${tags.health_score}/5, Social ${tags.social_score}/5, Romance ${tags.romance_score}/5, Finance ${tags.finance_score}/5, Career ${tags.career_score}/5, Growth ${tags.growth_score}/5
 `;

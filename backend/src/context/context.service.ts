@@ -93,9 +93,15 @@ export class ContextService {
       );
     }
 
-    // Generate AI summary and tags
+    // Fetch user's gender for personalized summary
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { gender: true },
+    });
+
+    // Generate AI summary and tags (including gender)
     this.logger.log(`Generating context summary for user ${userId}`);
-    const { summary60w, tags } = await this.summarizerService.generateSummary(answers);
+    const { summary60w, tags } = await this.summarizerService.generateSummary(answers, user?.gender);
 
     // Calculate next review date (90 days from now)
     const nextReviewAt = new Date();
@@ -156,8 +162,14 @@ export class ContextService {
 
     this.logger.log(`Archived context profile v${existing.version} for user ${userId}`);
 
-    // Generate new AI summary
-    const { summary60w, tags } = await this.summarizerService.generateSummary(answers);
+    // Fetch user's gender for personalized summary
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { gender: true },
+    });
+
+    // Generate new AI summary (including gender)
+    const { summary60w, tags } = await this.summarizerService.generateSummary(answers, user?.gender);
 
     // Calculate next review date
     const nextReviewAt = new Date();
