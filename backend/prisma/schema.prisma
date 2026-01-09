@@ -65,6 +65,7 @@ model User {
   natalPlacements  NatalPlacements?
   karmicReadings   KarmicAstrologyReading[]
   analyticsEvents  AnalyticsEvent[]
+  generationJobs   GenerationJob[]
 
   @@map("users")
 }
@@ -895,6 +896,7 @@ enum ReadingStatus {
 model GenerationJob {
   id          String              @id @default(uuid())
   userId      String              @map("user_id")
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   jobType     GenerationJobType   @map("job_type")
   locale      String              // Language code: en, ro, fr, etc.
   inputHash   String              @map("input_hash") // SHA256 of normalized input
