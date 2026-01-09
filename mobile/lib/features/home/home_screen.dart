@@ -172,11 +172,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     }
 
-    // Timeout - but job may still complete
+    // Timeout - but job may still complete in background
     if (mounted) {
       setState(() {
         _isGenerating = false;
-        _error = 'Taking longer than expected. Pull to refresh.';
+        _error = 'Taking longer than expected. Tap Retry or check back in a moment.';
       });
     }
   }
