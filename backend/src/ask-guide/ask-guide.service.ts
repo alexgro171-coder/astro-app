@@ -309,7 +309,7 @@ THEIR NATAL CHART:
 ${this.compactNatalSummary(natalChart.summary)}
 
 TODAY'S PLANETARY TRANSITS:
-${this.formatTransits(transits.transits || [])}
+${this.formatTransits(Array.isArray(transits.transits) ? transits.transits : [])}
 ${personalContextSection}
 Please provide thoughtful, personalized guidance that addresses their question while incorporating relevant astrological insights.`;
 

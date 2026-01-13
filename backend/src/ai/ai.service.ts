@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
-import { Language } from '@prisma/client';
+import { Language, ConcernCategory } from '@prisma/client';
 
 interface ClassificationResult {
   category: ConcernCategory;
