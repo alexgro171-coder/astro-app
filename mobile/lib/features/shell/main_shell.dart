@@ -70,11 +70,11 @@ class _MainShellState extends ConsumerState<MainShell> {
                 onTap: () => _onNavTap(context, 1),
               ),
               _NavItem(
-                icon: Icons.psychology_rounded,
-                label: 'Focus',
+                icon: Icons.auto_awesome_rounded,
+                label: 'Guide',
                 isSelected: currentIndex == 2,
                 onTap: () => _onNavTap(context, 2),
-                badge: null, // Can show badge for active concerns
+                badge: null,
               ),
               _NavItem(
                 icon: Icons.person_rounded,
@@ -106,7 +106,7 @@ class _MainShellState extends ConsumerState<MainShell> {
         context.go('/history');
         break;
       case 2:
-        context.go('/concerns');
+        context.go('/ask-guide');
         break;
       case 3:
         context.go('/profile');

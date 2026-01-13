@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
-import { ConcernCategory, Language } from '@prisma/client';
+import { Language } from '@prisma/client';
 
 interface ClassificationResult {
   category: ConcernCategory;
@@ -29,7 +29,6 @@ interface PreviousDayData {
     partnerships: number;
     personal_growth: number;
   };
-  concernText?: string;
 }
 
 /**
@@ -60,14 +59,10 @@ interface PersonalContext {
 interface GuidanceContext {
   natalSummary: any;
   transits: any[];
-  activeConcern?: {
-    category: ConcernCategory;
-    text: string;
-  };
   previousDays?: PreviousDayData[];
   language: Language;
   userName?: string;
-  // NEW: Personal context for Premium users
+  // Personal context for Premium users
   personalContext?: PersonalContext | null;
 }
 
@@ -162,7 +157,7 @@ Respond ONLY with valid JSON, no other text.`;
       previousDaysContext = `
 PREVIOUS DAYS (for continuity):
 ${context.previousDays.map(day => 
-  `- ${day.date}: H:${day.scores.health} C:${day.scores.job} M:${day.scores.business_money} L:${day.scores.love} P:${day.scores.partnerships} G:${day.scores.personal_growth}${day.concernText ? ` Focus: "${day.concernText.substring(0, 40)}..."` : ''}`
+  `- ${day.date}: H:${day.scores.health} C:${day.scores.job} M:${day.scores.business_money} L:${day.scores.love} P:${day.scores.partnerships} G:${day.scores.personal_growth}`
 ).join('\n')}
 `;
     }
@@ -216,9 +211,7 @@ Your response must be valid JSON with this structure:
   "personal_growth": { "content": "100-130 words including transit influence on growth", "score": 1-10, "actions": [...] }
 }
 
-${context.activeConcern ? `
-IMPORTANT FOCUS: The user's current concern is "${context.activeConcern.text}" (${context.activeConcern.category}). 
-Weave this into the daily summary and give extra attention in the relevant section.` : ''}`;
+`;
 
     // Build compact user prompt (target: 600-800 words total input)
     const userPrompt = `Generate today's guidance for ${context.userName || 'the user'}.
@@ -232,8 +225,6 @@ ${this.compactTransits(context.transits)}
 IMPORTANT: Analyze each transit above and explain its specific influence on the user's day. 
 Connect the planetary energies to practical advice for each life area.
 ${personalContextSection}${previousDaysContext}
-${context.activeConcern ? `ACTIVE CONCERN: "${context.activeConcern.text}"` : ''}
-
 Generate warm, personalized guidance with detailed transit interpretations and actionable micro-recommendations for each section.`;
 
     try {

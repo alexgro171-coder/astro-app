@@ -2,11 +2,11 @@ import { Injectable, Logger, NotFoundException, Inject, forwardRef } from '@nest
 import { PrismaService } from '../prisma/prisma.service';
 import { AstrologyService } from '../astrology/astrology.service';
 import { AiService } from '../ai/ai.service';
-import { ConcernsService } from '../concerns/concerns.service';
 import { ContextService } from '../context/context.service';
 import { EntitlementsService } from '../billing/entitlements/entitlements.service';
 import { User, GuidanceStatus, DailyGuidance } from '@prisma/client';
 import { GuidanceQueueService } from './guidance-queue.service';
+// Note: ConcernsService removed - "Your Focus" feature replaced by "Ask Your Guide"
 
 // Maximum time to wait for generation before returning PENDING
 const MAX_WAIT_MS = 10000;
@@ -22,7 +22,6 @@ export class GuidanceService {
     private prisma: PrismaService,
     private astrologyService: AstrologyService,
     private aiService: AiService,
-    private concernsService: ConcernsService,
     private contextService: ContextService,
     @Inject(forwardRef(() => EntitlementsService))
     private entitlementsService: EntitlementsService,
@@ -257,11 +256,10 @@ export class GuidanceService {
     const transits = await this.astrologyService.getDailyTransits(user, date);
     this.logger.log(`${logPrefix} AstrologyAPI transits took ${Date.now() - transitStart}ms`);
 
-    // Step 3: Get active concern
-    const activeConcern = await this.concernsService.findActive(user.id);
-
-    // Step 4: Get previous days' guidance
+    // Step 3: Get previous days' guidance (activeConcern removed - "Your Focus" deprecated)
     const previousDays = await this.getPreviousDaysData(user.id, date, 3);
+
+    // Note: activeConcern feature has been removed and replaced by "Ask Your Guide"
 
     // Step 5: Check entitlements and get personal context
     let personalContext = null;
@@ -272,12 +270,18 @@ export class GuidanceService {
       if (entitlements.canUsePersonalContext) {
         const context = await this.contextService.getContextForAI(user.id);
         if (context) {
+          // Ensure gender is included - use from User model if not in context tags
+          const contextTags = context.tags || {};
+          if (!contextTags.gender && user.gender) {
+            contextTags.gender = this.mapGenderToString(user.gender);
+          }
+          
           personalContext = {
             summary60w: context.summary60w,
-            tags: context.tags,
+            tags: contextTags,
           };
           usedPersonalContext = true;
-          this.logger.log(`${logPrefix} Including personal context (Premium)`);
+          this.logger.log(`${logPrefix} Including personal context (Premium), gender: ${contextTags.gender || 'not set'}`);
         }
       }
     } catch (error) {
@@ -290,9 +294,6 @@ export class GuidanceService {
     const sections = await this.aiService.generateDailyGuidance({
       natalSummary: natalChart.summary,
       transits: transits.transits as any[],
-      activeConcern: activeConcern
-        ? { category: activeConcern.category, text: activeConcern.textOriginal }
-        : undefined,
       previousDays,
       language: user.language,
       userName: user.name || undefined,
@@ -306,7 +307,6 @@ export class GuidanceService {
       data: {
         status: 'READY',
         sections: sections as any,
-        concernId: activeConcern?.id,
         aiModelVersion: this.aiService.getModelVersion(),
         usedPersonalContext,
         generatedAt: new Date(),
@@ -386,6 +386,7 @@ export class GuidanceService {
 
   /**
    * Get previous days' guidance data for AI context
+   * Note: concernText removed as "Your Focus" feature is deprecated
    */
   private async getPreviousDaysData(userId: string, currentDate: Date, days: number) {
     const previousGuidances = await this.prisma.dailyGuidance.findMany({
@@ -396,9 +397,6 @@ export class GuidanceService {
       },
       orderBy: { date: 'desc' },
       take: days,
-      include: {
-        concern: { select: { textOriginal: true } },
-      },
     });
 
     return previousGuidances.map((g) => {
@@ -415,7 +413,6 @@ export class GuidanceService {
           partnerships: sections?.partnerships?.score || 5,
           personal_growth: sections?.personal_growth?.score || 5,
         },
-        concernText: g.concern?.textOriginal,
       };
     });
   }
@@ -504,14 +501,15 @@ export class GuidanceService {
 
   /**
    * Format guidance for API response
+   * Note: activeConcern/"Your Focus" feature has been removed and replaced by "Ask Your Guide"
    */
   formatGuidanceResponse(guidance: any) {
     const sections = (guidance.sections || {}) as any;
 
-    const formatSection = (key: string, title: string, isHighlighted: boolean) => {
+    const formatSection = (key: string, title: string) => {
       const section = sections[key] || {};
       return {
-        title: isHighlighted ? `${title} ⭐` : title,
+        title,
         content: section.content || 'Guidance unavailable.',
         score: section.score || 5,
         actions: section.actions || [],
@@ -528,32 +526,13 @@ export class GuidanceService {
         focusArea: 'Personal Growth',
       },
       sections: {
-        health: formatSection('health', 'Health & Energy', guidance.concern?.category === 'HEALTH'),
-        job: formatSection('job', 'Career & Job', guidance.concern?.category === 'JOB'),
-        business_money: formatSection(
-          'business_money',
-          'Business & Money',
-          ['BUSINESS_DECISION', 'MONEY'].includes(guidance.concern?.category),
-        ),
-        love: formatSection(
-          'love',
-          'Love & Romance',
-          ['COUPLE', 'FAMILY'].includes(guidance.concern?.category),
-        ),
-        partnerships: formatSection(
-          'partnerships',
-          'Partnerships',
-          guidance.concern?.category === 'PARTNERSHIP',
-        ),
-        personal_growth: formatSection(
-          'personal_growth',
-          'Personal Growth',
-          guidance.concern?.category === 'PERSONAL_GROWTH',
-        ),
+        health: formatSection('health', 'Health & Energy'),
+        job: formatSection('job', 'Career & Job'),
+        business_money: formatSection('business_money', 'Business & Money'),
+        love: formatSection('love', 'Love & Romance'),
+        partnerships: formatSection('partnerships', 'Partnerships'),
+        personal_growth: formatSection('personal_growth', 'Personal Growth'),
       },
-      activeConcern: guidance.concern
-        ? { category: guidance.concern.category, text: guidance.concern.textOriginal }
-        : null,
       usedPersonalContext: guidance.usedPersonalContext || false,
       generatedAt: guidance.generatedAt,
     };
@@ -577,5 +556,24 @@ export class GuidanceService {
         },
       },
     });
+  }
+
+  /**
+   * Map gender enum to readable string for AI prompts
+   */
+  private mapGenderToString(gender?: string | null): string | null {
+    if (!gender) return null;
+    switch (gender.toUpperCase()) {
+      case 'MALE':
+        return 'male';
+      case 'FEMALE':
+        return 'female';
+      case 'OTHER':
+        return 'non-binary';
+      case 'PREFER_NOT_TO_SAY':
+        return null;
+      default:
+        return null;
+    }
   }
 }

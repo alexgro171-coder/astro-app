@@ -20,19 +20,27 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ForYouService } from './for-you.service';
+import { LoveCompatibilityService } from './love-compatibility.service';
 import { GenerateReportDto } from './dto/generate-report.dto';
+import {
+  GenerateLoveCompatibilityDto,
+  LoveCompatibilityResponseDto,
+} from './dto/love-compatibility.dto';
 import {
   CatalogResponseDto,
   ReportResponseDto,
 } from './dto/catalog-response.dto';
-import { OneTimeServiceType } from '@prisma/client';
+import { OneTimeServiceType, User } from '@prisma/client';
 
 @ApiTags('For You')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('for-you')
 export class ForYouController {
-  constructor(private readonly forYouService: ForYouService) {}
+  constructor(
+    private readonly forYouService: ForYouService,
+    private readonly loveCompatibilityService: LoveCompatibilityService,
+  ) {}
 
   @Get('catalog')
   @ApiOperation({ summary: 'Get available one-time services catalog' })
@@ -120,6 +128,42 @@ export class ForYouController {
     return this.forYouService.generateReport(
       userId,
       serviceType,
+      dto,
+      acceptLanguage,
+    );
+  }
+
+  /**
+   * Generate Love Compatibility Analysis with OpenAI
+   * 
+   * This endpoint:
+   * 1. Gets partner's natal chart from AstrologyAPI (not saved)
+   * 2. Combines with user's natal chart
+   * 3. Sends to OpenAI for comprehensive analysis
+   * 
+   * Partner data is NEVER stored permanently.
+   */
+  @Post('love-compatibility')
+  @ApiOperation({ summary: 'Generate AI-powered love compatibility analysis' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns comprehensive compatibility analysis',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Missing birth data or partner data',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Active subscription required',
+  })
+  async generateLoveCompatibility(
+    @CurrentUser() user: User,
+    @Body() dto: GenerateLoveCompatibilityDto,
+    @Headers('accept-language') acceptLanguage?: string,
+  ): Promise<LoveCompatibilityResponseDto> {
+    return this.loveCompatibilityService.generateCompatibility(
+      user,
       dto,
       acceptLanguage,
     );

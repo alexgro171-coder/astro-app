@@ -13,6 +13,7 @@ import '../../features/home/home_screen.dart';
 import '../../features/guidance/guidance_detail_screen.dart';
 import '../../features/concerns/add_concern_screen.dart';
 import '../../features/concerns/concerns_screen.dart';
+import '../../features/ask_guide/ask_guide_screen.dart';
 import '../../features/history/history_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/profile/delete_account_screen.dart';
@@ -119,6 +120,16 @@ final routerProvider = Provider<GoRouter>((ref) {
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
               child: const ConcernsScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+          GoRoute(
+            path: '/ask-guide',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const AskGuideScreen(),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },

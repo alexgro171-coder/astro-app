@@ -25,6 +25,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { LearnModule } from './learn/learn.module';
 import { ForYouModule } from './for-you/for-you.module';
 import { JobsModule } from './jobs/jobs.module';
+import { AskGuideModule } from './ask-guide/ask-guide.module';
 
 @Module({
   imports: [
@@ -77,6 +78,9 @@ import { JobsModule } from './jobs/jobs.module';
     // For You features (Karmic Astrology, etc.)
     KarmicModule,
     ForYouModule,
+    
+    // Ask Your Guide (Personal AI Guidance)
+    AskGuideModule,
     
     // Learn CMS
     LearnModule,

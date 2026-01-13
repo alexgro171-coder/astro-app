@@ -315,8 +315,42 @@ Output only the interpretation text, nothing else.`;
 
   /**
    * Check if user has PRO access
+   * 
+   * Updated: Full/Premium Natal Chart is now included in Standard subscription.
+   * Users get PRO access if they have ANY active subscription (Standard or Premium).
    */
   async hasProAccess(userId: string): Promise<boolean> {
+    // Check if user has any active subscription (Standard or Premium both get full access)
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { userId },
+    });
+
+    if (subscription) {
+      const now = new Date();
+      const isActive = ['ACTIVE', 'TRIAL', 'CANCELED'].includes(subscription.status) &&
+        subscription.currentPeriodEndAt &&
+        new Date(subscription.currentPeriodEndAt) > now;
+      
+      if (isActive) {
+        return true;
+      }
+    }
+
+    // Check for trial period (users in trial get full access)
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { createdAt: true },
+    });
+
+    if (user) {
+      const trialEndDate = new Date(user.createdAt);
+      trialEndDate.setDate(trialEndDate.getDate() + 3); // 3-day trial
+      if (trialEndDate > new Date()) {
+        return true;
+      }
+    }
+
+    // Legacy: Check for one-time purchase (for users who bought before subscription change)
     const purchase = await this.prisma.natalProPurchase.findUnique({
       where: { userId },
     });

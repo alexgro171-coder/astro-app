@@ -67,6 +67,9 @@ model User {
   karmicReadings   KarmicAstrologyReading[]
   analyticsEvents  AnalyticsEvent[]
   generationJobs   GenerationJob[]
+  askGuideRequests AskGuideRequest[]
+  askGuideUsage    AskGuideUsage[]
+  askGuideAddons   AskGuideAddon[]
 
   @@map("users")
 }
@@ -934,6 +937,74 @@ enum GenerationJobType {
 enum GenerationJobStatus {
   PENDING
   RUNNING
+  READY
+  FAILED
+}
+
+// ============================================
+// ASK YOUR GUIDE (Personal AI Guidance)
+// ============================================
+
+model AskGuideRequest {
+  id        String         @id @default(cuid())
+  userId    String         @map("user_id")
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question  String         @db.Text
+  answer    String?        @db.Text
+  status    AskGuideStatus @default(PENDING)
+  errorMsg  String?        @map("error_msg")
+  locale    String         @default("en")
+  
+  // Snapshot of input data used for generation
+  inputSnapshot Json? @map("input_snapshot")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("ask_guide_requests")
+}
+
+model AskGuideUsage {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  billingMonthStart DateTime @map("billing_month_start") @db.Date
+  billingMonthEnd   DateTime @map("billing_month_end") @db.Date
+  requestCount      Int      @default(0) @map("request_count")
+  limitCount        Int      @default(40) @map("limit_count")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, billingMonthStart])
+  @@index([userId])
+  @@map("ask_guide_usage")
+}
+
+model AskGuideAddon {
+  id                String           @id @default(cuid())
+  userId            String           @map("user_id")
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  billingMonthStart DateTime         @map("billing_month_start") @db.Date
+  billingMonthEnd   DateTime         @map("billing_month_end") @db.Date
+  purchaseId        String?          @map("purchase_id")
+  provider          PaymentProvider?
+  amount            Int              @default(199) // $1.99 in cents
+  currency          String           @default("USD")
+  status            PurchaseStatus   @default(COMPLETED)
+  
+  purchasedAt DateTime @default(now()) @map("purchased_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, billingMonthStart])
+  @@index([userId])
+  @@map("ask_guide_addons")
+}
+
+enum AskGuideStatus {
+  PENDING
   READY
   FAILED
 }
