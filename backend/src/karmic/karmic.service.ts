@@ -270,8 +270,21 @@ export class KarmicService {
 
   /**
    * Load natal placements and extract karmic markers
+   * Uses NatalChart.rawData which is populated by AstrologyService.generateNatalChart()
    */
   private async loadKarmicInputs(userId: string): Promise<KarmicInputSnapshot> {
+    // First try NatalChart (primary source, populated by generateNatalChart)
+    const natalChart = await this.prisma.natalChart.findUnique({
+      where: { userId },
+    });
+
+    if (natalChart?.rawData) {
+      const rawData = natalChart.rawData as any;
+      const planets = rawData.planets || [];
+      return this.extractKarmicMarkers(planets, userId);
+    }
+
+    // Fallback to NatalPlacements (legacy, for older users)
     const placements = await this.prisma.natalPlacements.findUnique({
       where: { userId },
     });
@@ -282,7 +295,13 @@ export class KarmicService {
 
     const data = placements.placementsJson as any;
     const planets = data.planets || [];
+    return this.extractKarmicMarkers(planets, userId);
+  }
 
+  /**
+   * Extract karmic markers (North Node and retrograde planets) from planets array
+   */
+  private extractKarmicMarkers(planets: any[], userId: string): KarmicInputSnapshot {
     // Find North Node
     let node: NodePlacement | null = null;
     for (const p of planets) {
@@ -297,13 +316,17 @@ export class KarmicService {
     }
 
     // Find retrograde planets (excluding nodes and chiron)
+    // Note: Western API uses is_retro as string "true"/"false", Vedic uses isRetro boolean
     const retrogrades: RetrogradePlanet[] = [];
-    const excludedFromRetrograde = ['north node', 'south node', 'rahu', 'ketu', 'chiron', 'true node', 'mean node'];
+    const excludedFromRetrograde = ['north node', 'south node', 'rahu', 'ketu', 'chiron', 'true node', 'mean node', 'node'];
     
     for (const p of planets) {
       const planetName = (p.planet || p.name || '').toLowerCase();
+      // Handle both Western API format (is_retro: "true") and boolean format
+      const isRetro = p.isRetrograde === true || p.is_retro === 'true' || p.is_retro === true;
+      
       if (
-        p.isRetrograde === true &&
+        isRetro &&
         !excludedFromRetrograde.some((ex) => planetName.includes(ex))
       ) {
         retrogrades.push({

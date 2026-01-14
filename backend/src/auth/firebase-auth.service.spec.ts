@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Language } from '@prisma/client';
 import { FirebaseAuthService } from './firebase-auth.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { AnalyticsService } from '../analytics/analytics.service';
 import { FirebaseAuthProvider } from './dto/firebase-auth.dto';
 import * as admin from 'firebase-admin';
 
@@ -52,6 +53,10 @@ describe('FirebaseAuthService', () => {
     }),
   };
 
+  const mockAnalyticsService = {
+    logEvent: jest.fn().mockResolvedValue(undefined),
+  };
+
   beforeEach(async () => {
     // Reset firebase apps
     (admin as any).apps = [];
@@ -62,6 +67,7 @@ describe('FirebaseAuthService', () => {
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: JwtService, useValue: mockJwtService },
         { provide: ConfigService, useValue: mockConfigService },
+        { provide: AnalyticsService, useValue: mockAnalyticsService },
       ],
     }).compile();
 

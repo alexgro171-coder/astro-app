@@ -5,6 +5,8 @@ import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { Language } from '@prisma/client';
 import { AuthService } from './auth.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { AnalyticsService } from '../analytics/analytics.service';
+import { EmailService } from '../email/email.service';
 import * as bcrypt from 'bcrypt';
 
 // Mock bcrypt
@@ -49,6 +51,16 @@ describe('AuthService', () => {
     }),
   };
 
+  const mockAnalyticsService = {
+    logEvent: jest.fn().mockResolvedValue(undefined),
+  };
+
+  const mockEmailService = {
+    sendWelcomeEmail: jest.fn().mockResolvedValue(true),
+    sendPasswordResetOTP: jest.fn().mockResolvedValue(true),
+    sendAccountDeletedEmail: jest.fn().mockResolvedValue(true),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -56,6 +68,8 @@ describe('AuthService', () => {
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: JwtService, useValue: mockJwtService },
         { provide: ConfigService, useValue: mockConfigService },
+        { provide: AnalyticsService, useValue: mockAnalyticsService },
+        { provide: EmailService, useValue: mockEmailService },
       ],
     }).compile();
 

@@ -4,6 +4,7 @@ import { Language } from '@prisma/client';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AstrologyService } from '../astrology/astrology.service';
+import { EmailService } from '../email/email.service';
 
 describe('UsersService - Language Update', () => {
   let service: UsersService;
@@ -26,12 +27,18 @@ describe('UsersService - Language Update', () => {
     generateNatalChart: jest.fn(),
   };
 
+  const mockEmailService = {
+    sendWelcomeEmail: jest.fn().mockResolvedValue(true),
+    sendAccountDeletedEmail: jest.fn().mockResolvedValue(true),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: AstrologyService, useValue: mockAstrologyService },
+        { provide: EmailService, useValue: mockEmailService },
       ],
     }).compile();
 

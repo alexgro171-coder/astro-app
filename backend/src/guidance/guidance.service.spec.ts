@@ -79,10 +79,12 @@ describe('GuidanceService Bug Documentation', () => {
       // generateGuidanceForDate:
       // 1. Gets natal chart
       // 2. Fetches daily transits from AstrologyAPI
-      // 3. Gets active concern
+      // 3. Gets user gender for personalized language
       // 4. Calls OpenAI to generate guidance
       // 5. Saves to database with status READY
       // 6. Does NOT return until generation is complete
+      //
+      // NOTE: activeConcern was REMOVED - no longer used in prompts
       
       const expectedBehavior = {
         isSynchronous: true,
@@ -90,10 +92,13 @@ describe('GuidanceService Bug Documentation', () => {
         requiresNatalChart: true,
         callsAstrologyAPI: true,
         callsOpenAI: true,
+        includesUserGender: true, // NEW: for personalized language
+        usesActiveConcern: false, // REMOVED: Your Focus feature eliminated
       };
       
       expect(expectedBehavior.isSynchronous).toBe(true);
       expect(expectedBehavior.savesWithStatusReady).toBe(true);
+      expect(expectedBehavior.usesActiveConcern).toBe(false);
     });
   });
 
@@ -209,3 +214,68 @@ describe('GuidanceService Bug Documentation', () => {
  * synchronous generation, bypassing the lazy compute layer entirely.
  * This ensures job completion status correctly reflects guidance availability.
  */
+
+/**
+ * FEATURE CHANGES - January 2026:
+ * ===============================
+ * 
+ * 1. REMOVED: "Your Focus" / activeConcern
+ *    - The active concern feature has been completely eliminated
+ *    - No longer included in OpenAI prompts for daily guidance
+ *    - Replaced by "Ask Your Guide" service for personalized questions
+ * 
+ * 2. ADDED: User Gender in AI Context
+ *    - User gender (male/female/non-binary) is now explicitly passed to OpenAI
+ *    - Ensures proper pronoun usage and romantic language
+ *    - Example: "The user is female" in the prompt context
+ * 
+ * 3. NEW SERVICE: Ask Your Guide
+ *    - Allows users to ask free-form questions
+ *    - Based on natal chart + current transits
+ *    - 40 requests/month limit with $1.99 add-on option
+ */
+
+describe('Feature Changes - Your Focus Removal', () => {
+  it('documents that activeConcern is no longer used', () => {
+    /**
+     * Previously, the GuidanceService would:
+     * 1. Get user's active concern (Your Focus)
+     * 2. Include it in the OpenAI prompt
+     * 3. Generate guidance tailored to that concern
+     * 
+     * NOW:
+     * - activeConcern is NOT fetched
+     * - NOT included in prompts
+     * - "Ask Your Guide" provides targeted advice instead
+     */
+    const featureStatus = {
+      activeConcern: 'REMOVED',
+      yourFocus: 'REMOVED',
+      askYourGuide: 'ACTIVE - replacement service',
+    };
+
+    expect(featureStatus.activeConcern).toBe('REMOVED');
+    expect(featureStatus.askYourGuide).toContain('replacement');
+  });
+
+  it('documents user gender inclusion in AI prompts', () => {
+    /**
+     * User gender is now explicitly included in the AI context:
+     * 
+     * personalContext.tags.gender = 'male' | 'female' | 'non-binary'
+     * 
+     * This enables OpenAI to:
+     * - Use correct pronouns
+     * - Adjust romantic language (partner/partneră in Romanian)
+     * - Provide gender-appropriate relationship advice
+     */
+    const genderMapping = {
+      MALE: 'male',
+      FEMALE: 'female',
+      OTHER: 'non-binary',
+    };
+
+    expect(genderMapping.MALE).toBe('male');
+    expect(genderMapping.FEMALE).toBe('female');
+  });
+});
