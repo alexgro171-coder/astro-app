@@ -3,7 +3,10 @@ import 'dart:async';
 
 import '../theme/app_theme.dart';
 
-/// Loading messages for rotation.
+/// Loading messages for sequential display (not rotating loop).
+/// Message 1: 0-10 seconds
+/// Message 2: 10-20 seconds
+/// Message 3: 20+ seconds (stays until complete)
 const List<String> _loadingMessages = [
   "We're reading the stars and asking the Universe about you…\nPlease hold on a moment while we receive the answer.",
   "The cosmos is aligning your insights…\nJust a moment while we interpret the celestial patterns.",
@@ -11,16 +14,15 @@ const List<String> _loadingMessages = [
 ];
 
 /// Universe Loading Overlay Widget.
-/// Displays a full-screen loading overlay with animated stars and rotating messages.
+/// Displays a full-screen loading overlay with animated stars and sequential messages.
+/// Messages change every 10 seconds, stopping at the final message.
 class UniverseLoadingOverlay extends StatefulWidget {
-  final String? progressHint;
   final VoidCallback? onCancel;
   final bool showCancelAfter; // Show cancel button after timeout
   final Duration cancelAfterDuration;
 
   const UniverseLoadingOverlay({
     super.key,
-    this.progressHint,
     this.onCancel,
     this.showCancelAfter = true,
     this.cancelAfterDuration = const Duration(seconds: 90),
@@ -52,16 +54,8 @@ class _UniverseLoadingOverlayState extends State<UniverseLoadingOverlay>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    // Rotate messages every 20 seconds - keep each message visible longer
-    _messageTimer = Timer.periodic(const Duration(seconds: 20), (_) {
-      _animationController.forward().then((_) {
-        setState(() {
-          _currentMessageIndex =
-              (_currentMessageIndex + 1) % _loadingMessages.length;
-        });
-        _animationController.reverse();
-      });
-    });
+    // Schedule message transitions - 10 seconds each, stop at last message
+    _scheduleNextMessage();
 
     // Show cancel button after timeout
     if (widget.showCancelAfter) {
@@ -75,6 +69,25 @@ class _UniverseLoadingOverlayState extends State<UniverseLoadingOverlay>
     }
   }
 
+  void _scheduleNextMessage() {
+    // Only schedule if not at the last message
+    if (_currentMessageIndex < _loadingMessages.length - 1) {
+      _messageTimer = Timer(const Duration(seconds: 10), () {
+        if (mounted) {
+          _animationController.forward().then((_) {
+            setState(() {
+              _currentMessageIndex++;
+            });
+            _animationController.reverse();
+            // Schedule next transition if not at last message
+            _scheduleNextMessage();
+          });
+        }
+      });
+    }
+    // If at last message, don't schedule - it stays indefinitely
+  }
+
   @override
   void dispose() {
     _messageTimer?.cancel();
@@ -85,7 +98,7 @@ class _UniverseLoadingOverlayState extends State<UniverseLoadingOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final message = widget.progressHint ?? _loadingMessages[_currentMessageIndex];
+    final message = _loadingMessages[_currentMessageIndex];
 
     return Container(
       color: AppColors.background.withOpacity(0.95),
@@ -195,14 +208,12 @@ class _UniverseLoadingOverlayState extends State<UniverseLoadingOverlay>
 class UniverseLoadingStack extends StatelessWidget {
   final Widget child;
   final bool isLoading;
-  final String? progressHint;
   final VoidCallback? onCancel;
 
   const UniverseLoadingStack({
     super.key,
     required this.child,
     required this.isLoading,
-    this.progressHint,
     this.onCancel,
   });
 
@@ -214,7 +225,6 @@ class UniverseLoadingStack extends StatelessWidget {
         if (isLoading)
           Positioned.fill(
             child: UniverseLoadingOverlay(
-              progressHint: progressHint,
               onCancel: onCancel,
             ),
           ),

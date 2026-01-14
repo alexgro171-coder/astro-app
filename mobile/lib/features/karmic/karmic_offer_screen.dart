@@ -225,7 +225,6 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
           // Universe loading overlay for async generation
           if (_isGenerating)
             UniverseLoadingOverlay(
-              progressHint: _progressHint ?? "Exploring your soul's journey…\nYour karmic reading is being prepared.",
               onCancel: () {
                 // User can leave - job continues in background
                 setState(() => _isGenerating = false);

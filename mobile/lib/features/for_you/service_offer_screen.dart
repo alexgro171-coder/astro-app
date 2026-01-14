@@ -276,7 +276,6 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
           // Universe loading overlay for async generation
           if (_isGenerating)
             UniverseLoadingOverlay(
-              progressHint: _progressHint ?? "Consulting the cosmos for your insights…\nYour personalized report is being prepared.",
               onCancel: () {
                 // User can leave - job continues in background
                 setState(() => _isGenerating = false);

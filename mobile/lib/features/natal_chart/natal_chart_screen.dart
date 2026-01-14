@@ -182,7 +182,6 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
 
   Widget _buildLoadingState() {
     return const UniverseLoadingOverlay(
-      progressHint: "Mapping your celestial blueprint…\nYour natal chart is being prepared.",
       showCancelAfter: false,
     );
   }

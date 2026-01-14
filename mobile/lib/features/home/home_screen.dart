@@ -223,7 +223,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           // Universe loading overlay for async generation
           if (_isGenerating)
             UniverseLoadingOverlay(
-              progressHint: _progressHint,
               onCancel: () {
                 // User can leave and come back - job continues in background
                 setState(() {
