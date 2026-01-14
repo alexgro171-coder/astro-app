@@ -10,6 +10,15 @@ import '../widgets/step_professional.dart';
 import '../widgets/step_self_assessment.dart';
 import '../widgets/step_priorities.dart';
 
+// Context wizard colors (matching onboarding)
+class ContextColors {
+  static const Color purple = Color(0xFF6B4B8A);
+  static const Color purpleDark = Color(0xFF5A3D7A);
+  static const Color purpleLight = Color(0xFF7D5C9C);
+  static const Color gold = Color(0xFFC9A86C);
+  static const Color goldLight = Color(0xFFD4BC8A);
+}
+
 /// Context Wizard Screen
 /// 
 /// A 4-step wizard for collecting personal context (V1 Questionnaire):
@@ -48,10 +57,17 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
   late ContextAnswers _answers;
 
   final List<String> _stepTitles = [
-    'Relationships & Family',
+    'People around you',
     'Professional Life',
-    'Self-Assessment',
-    'Priorities & Tone',
+    'How life feels right now',
+    'What matters most to you',
+  ];
+
+  final List<String> _stepSubtitles = [
+    'Your relationship and family context helps us understand your emotional landscape.',
+    'Your work and daily rhythm shape how you experience pressure, growth, and purpose.',
+    'There are no right or wrong answers, just your current reality',
+    'So your guidance aligns with what you truly care about',
   ];
 
   @override
@@ -161,116 +177,150 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: _currentStep > 0 || !widget.isOnboarding
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-                onPressed: _currentStep > 0 ? _previousStep : () => context.pop(),
-              )
-            : null,
-        title: Text(
-          'Personal Context',
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              ContextColors.purpleLight,
+              ContextColors.purple,
+              ContextColors.purpleDark,
+            ],
           ),
         ),
-        actions: [
-          if (!widget.isOnboarding)
-            TextButton(
-              onPressed: () => context.pop(),
-              child: const Text('Cancel'),
-            ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Progress indicator
-            _buildProgressIndicator(),
-
-            // Step title
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Step ${_currentStep + 1} of 4',
-                    style: TextStyle(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _stepTitles[_currentStep],
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Error message
-            if (_error != null)
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.error.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.error.withOpacity(0.3)),
-                ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // App bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Row(
                   children: [
-                    const Icon(Icons.error_outline, color: AppColors.error, size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
+                    if (_currentStep > 0 || !widget.isOnboarding)
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        onPressed: _currentStep > 0 ? _previousStep : () => context.pop(),
+                      )
+                    else
+                      const SizedBox(width: 48),
+                    const Expanded(
                       child: Text(
-                        _error!,
-                        style: const TextStyle(color: AppColors.error),
+                        'Personal Context',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    if (!widget.isOnboarding)
+                      TextButton(
+                        onPressed: () => context.pop(),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: ContextColors.goldLight),
+                        ),
+                      )
+                    else
+                      const SizedBox(width: 48),
+                  ],
+                ),
+              ),
+
+              // Progress indicator
+              _buildProgressIndicator(),
+
+              // Step title and subtitle
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Step ${_currentStep + 1} of 4',
+                      style: TextStyle(
+                        color: ContextColors.gold,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _stepTitles[_currentStep],
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _stepSubtitles[_currentStep],
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white.withOpacity(0.85),
+                        height: 1.4,
                       ),
                     ),
                   ],
                 ),
               ),
 
-            // Pages
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  StepRelationships(
-                    answers: _answers,
-                    onUpdate: _updateAnswers,
+              // Error message
+              if (_error != null)
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red.withOpacity(0.5)),
                   ),
-                  StepProfessional(
-                    answers: _answers,
-                    onUpdate: _updateAnswers,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.white, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _error!,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
-                  StepSelfAssessment(
-                    answers: _answers,
-                    onUpdate: _updateAnswers,
-                  ),
-                  StepPriorities(
-                    answers: _answers,
-                    onUpdate: _updateAnswers,
-                  ),
-                ],
-              ),
-            ),
+                ),
 
-            // Navigation buttons
-            _buildBottomNavigation(),
-          ],
+              // Pages
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    StepRelationships(
+                      answers: _answers,
+                      onUpdate: _updateAnswers,
+                    ),
+                    StepProfessional(
+                      answers: _answers,
+                      onUpdate: _updateAnswers,
+                    ),
+                    StepSelfAssessment(
+                      answers: _answers,
+                      onUpdate: _updateAnswers,
+                    ),
+                    StepPriorities(
+                      answers: _answers,
+                      onUpdate: _updateAnswers,
+                    ),
+                  ],
+                ),
+              ),
+
+              // Navigation buttons
+              _buildBottomNavigation(),
+            ],
+          ),
         ),
       ),
     );
@@ -282,24 +332,15 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
       child: Row(
         children: List.generate(4, (index) {
           final isActive = index <= _currentStep;
-          final isCompleted = index < _currentStep;
           
           return Expanded(
             child: Container(
               margin: EdgeInsets.only(right: index < 3 ? 8 : 0),
               height: 4,
               decoration: BoxDecoration(
-                color: isActive ? AppColors.accent : AppColors.surfaceLight,
+                color: isActive ? ContextColors.gold : Colors.white.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
-              child: isCompleted
-                  ? Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.accent,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    )
-                  : null,
             ),
           );
         }),
@@ -311,9 +352,9 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: ContextColors.purpleDark.withOpacity(0.9),
         border: Border(
-          top: BorderSide(color: AppColors.surfaceLight),
+          top: BorderSide(color: Colors.white.withOpacity(0.1)),
         ),
       ),
       child: Row(
@@ -323,7 +364,8 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
               child: OutlinedButton(
                 onPressed: _previousStep,
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppColors.accent),
+                  side: BorderSide(color: ContextColors.gold),
+                  foregroundColor: ContextColors.gold,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -340,8 +382,9 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                   ? null
                   : (_currentStep < 3 ? (_canProceed() ? _nextStep : null) : _submit),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accent,
-                disabledBackgroundColor: AppColors.surfaceLight,
+                backgroundColor: ContextColors.gold,
+                disabledBackgroundColor: Colors.white.withOpacity(0.2),
+                foregroundColor: ContextColors.purpleDark,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -361,7 +404,6 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
                       ),
                     ),
             ),

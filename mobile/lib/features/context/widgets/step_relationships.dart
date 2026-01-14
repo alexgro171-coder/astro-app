@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
+import '../screens/context_wizard_screen.dart';
 
 /// Step 1: Relationships & Family
 class StepRelationships extends StatelessWidget {
@@ -71,7 +72,7 @@ class StepRelationships extends StatelessWidget {
       style: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        color: AppColors.textPrimary,
+        color: Colors.white,
       ),
     );
   }
@@ -82,30 +83,40 @@ class StepRelationships extends StatelessWidget {
       runSpacing: 8,
       children: RelationshipStatus.values.map((status) {
         final isSelected = answers.relationshipStatus == status;
-        return ChoiceChip(
-          label: Text(status.label),
-          selected: isSelected,
-          onSelected: (selected) {
-            if (selected) {
-              onUpdate(answers.copyWith(
-                relationshipStatus: status,
-                // Clear seeking relationship if not applicable
-                seekingRelationship: answers.shouldShowSeekingRelationship
-                    ? answers.seekingRelationship
-                    : null,
-              ));
-            }
+        return GestureDetector(
+          onTap: () {
+            onUpdate(answers.copyWith(
+              relationshipStatus: status,
+              // Clear seeking relationship if not applicable
+              seekingRelationship: answers.shouldShowSeekingRelationship
+                  ? answers.seekingRelationship
+                  : null,
+            ));
           },
-          selectedColor: AppColors.accent.withOpacity(0.2),
-          backgroundColor: AppColors.surface,
-          labelStyle: TextStyle(
-            color: isSelected ? AppColors.accent : AppColors.textSecondary,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: BorderSide(
-              color: isSelected ? AppColors.accent : AppColors.surfaceLight,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: isSelected ? ContextColors.gold : AppColors.surface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isSelected ? ContextColors.gold : AppColors.surfaceLight,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isSelected) ...[
+                  const Icon(Icons.check, size: 18, color: Colors.white),
+                  const SizedBox(width: 6),
+                ],
+                Text(
+                  status.label,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : AppColors.textSecondary,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
           ),
         );
@@ -149,10 +160,10 @@ class StepRelationships extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.accent.withOpacity(0.15) : AppColors.surface,
+          color: isSelected ? ContextColors.gold : AppColors.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.accent : AppColors.surfaceLight,
+            color: isSelected ? ContextColors.gold : AppColors.surfaceLight,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -162,7 +173,7 @@ class StepRelationships extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? AppColors.accent : AppColors.textSecondary,
+              color: isSelected ? Colors.white : AppColors.textSecondary,
             ),
           ),
         ),
@@ -174,11 +185,11 @@ class StepRelationships extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Children details (optional)',
           style: TextStyle(
             fontSize: 14,
-            color: AppColors.textSecondary,
+            color: Colors.white.withOpacity(0.7),
           ),
         ),
         const SizedBox(height: 12),
@@ -198,8 +209,8 @@ class StepRelationships extends StatelessWidget {
                 ..add(ChildInfo(age: 0, gender: ChildGender.preferNotToSay));
               onUpdate(answers.copyWith(children: newChildren));
             },
-            icon: const Icon(Icons.add_circle_outline, color: AppColors.accent),
-            label: const Text('Add child'),
+            icon: Icon(Icons.add_circle_outline, color: ContextColors.gold),
+            label: Text('Add child', style: TextStyle(color: ContextColors.gold)),
           ),
       ],
     );
@@ -233,7 +244,7 @@ class StepRelationships extends StatelessWidget {
                   value: child.age,
                   isExpanded: true,
                   underline: const SizedBox(),
-                  items: List.generate(31, (i) => i)
+                  items: List.generate(51, (i) => i)
                       .map((age) => DropdownMenuItem(
                             value: age,
                             child: Text('$age ${age == 1 ? 'year' : 'years'}'),

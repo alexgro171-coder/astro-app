@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
+import '../screens/context_wizard_screen.dart';
 
 /// Step 4: Priorities & Tone
 class StepPriorities extends StatelessWidget {
@@ -27,7 +28,7 @@ class StepPriorities extends StatelessWidget {
             'Select up to 2 areas you want to focus on',
             style: TextStyle(
               fontSize: 12,
-              color: AppColors.textMuted,
+              color: Colors.white.withOpacity(0.6),
             ),
           ),
           const SizedBox(height: 16),
@@ -57,7 +58,7 @@ class StepPriorities extends StatelessWidget {
       style: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        color: AppColors.textPrimary,
+        color: Colors.white,
       ),
     );
   }
@@ -104,13 +105,13 @@ class StepPriorities extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.accent.withOpacity(0.15)
+              ? ContextColors.gold
               : enabled
                   ? AppColors.surface
                   : AppColors.surface.withOpacity(0.5),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.accent : AppColors.surfaceLight,
+            color: isSelected ? ContextColors.gold : AppColors.surfaceLight,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -131,7 +132,7 @@ class StepPriorities extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 color: isSelected
-                    ? AppColors.accent
+                    ? Colors.white
                     : enabled
                         ? AppColors.textPrimary
                         : AppColors.textMuted,
@@ -139,10 +140,10 @@ class StepPriorities extends StatelessWidget {
             ),
             if (isSelected) ...[
               const SizedBox(width: 8),
-              Icon(
+              const Icon(
                 Icons.check_circle,
                 size: 18,
-                color: AppColors.accent,
+                color: Colors.white,
               ),
             ],
           ],
@@ -164,11 +165,11 @@ class StepPriorities extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isSelected
-                  ? AppColors.accent.withOpacity(0.1)
+                  ? ContextColors.gold
                   : AppColors.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isSelected ? AppColors.accent : AppColors.surfaceLight,
+                color: isSelected ? ContextColors.gold : AppColors.surfaceLight,
                 width: isSelected ? 2 : 1,
               ),
             ),
@@ -181,7 +182,7 @@ class StepPriorities extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isSelected ? AppColors.accent : AppColors.textMuted,
+                      color: isSelected ? Colors.white : AppColors.textMuted,
                       width: 2,
                     ),
                   ),
@@ -190,9 +191,9 @@ class StepPriorities extends StatelessWidget {
                           child: Container(
                             width: 12,
                             height: 12,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppColors.accent,
+                              color: Colors.white,
                             ),
                           ),
                         )
@@ -210,7 +211,7 @@ class StepPriorities extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                          color: isSelected ? AppColors.accent : AppColors.textPrimary,
+                          color: isSelected ? Colors.white : AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -218,7 +219,7 @@ class StepPriorities extends StatelessWidget {
                         style.description,
                         style: TextStyle(
                           fontSize: 13,
-                          color: AppColors.textMuted,
+                          color: isSelected ? Colors.white.withOpacity(0.8) : AppColors.textMuted,
                         ),
                       ),
                     ],
@@ -250,7 +251,7 @@ class StepPriorities extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.shield_outlined,
-                      color: AppColors.accent,
+                      color: ContextColors.gold,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
@@ -281,7 +282,7 @@ class StepPriorities extends StatelessWidget {
             onChanged: (value) {
               onUpdate(answers.copyWith(sensitivityMode: value));
             },
-            activeColor: AppColors.accent,
+            activeColor: ContextColors.gold,
           ),
         ],
       ),

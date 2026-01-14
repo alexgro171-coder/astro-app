@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
+import '../screens/context_wizard_screen.dart';
 
 /// Step 2: Professional Life
 class StepProfessional extends StatelessWidget {
@@ -46,7 +47,7 @@ class StepProfessional extends StatelessWidget {
             'Optional',
             style: TextStyle(
               fontSize: 12,
-              color: AppColors.textMuted,
+              color: Colors.white.withOpacity(0.6),
             ),
           ),
           const SizedBox(height: 12),
@@ -64,7 +65,7 @@ class StepProfessional extends StatelessWidget {
       style: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        color: AppColors.textPrimary,
+        color: Colors.white,
       ),
     );
   }
@@ -151,25 +152,26 @@ class StepProfessional extends StatelessWidget {
   Widget _buildIndustryChip(Industry? industry, String label) {
     final isSelected = answers.industry == industry;
     
-    return ChoiceChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (selected) {
-        if (selected) {
-          onUpdate(answers.copyWith(industry: industry));
-        }
+    return GestureDetector(
+      onTap: () {
+        onUpdate(answers.copyWith(industry: industry));
       },
-      selectedColor: AppColors.accent.withOpacity(0.2),
-      backgroundColor: AppColors.surface,
-      labelStyle: TextStyle(
-        color: isSelected ? AppColors.accent : AppColors.textSecondary,
-        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-        fontSize: 14,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: isSelected ? AppColors.accent : AppColors.surfaceLight,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? ContextColors.gold : AppColors.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? ContextColors.gold : AppColors.surfaceLight,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : AppColors.textSecondary,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontSize: 14,
+          ),
         ),
       ),
     );

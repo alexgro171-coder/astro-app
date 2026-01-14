@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
+import '../screens/context_wizard_screen.dart';
 
 /// Step 3: Self-Assessment (Likert 1-5 scales)
 class StepSelfAssessment extends StatelessWidget {
@@ -24,7 +25,7 @@ class StepSelfAssessment extends StatelessWidget {
             'Rate your current situation in each area (1 = struggling, 5 = thriving)',
             style: TextStyle(
               fontSize: 14,
-              color: AppColors.textSecondary,
+              color: Colors.white.withOpacity(0.85),
             ),
           ),
           const SizedBox(height: 24),
@@ -158,7 +159,7 @@ class StepSelfAssessment extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: ContextColors.gold.withOpacity(0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -167,7 +168,7 @@ class StepSelfAssessment extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: color,
+                      color: ContextColors.gold,
                     ),
                   ),
                 ),
@@ -190,10 +191,10 @@ class StepSelfAssessment extends StatelessWidget {
                     margin: EdgeInsets.only(right: index < 4 ? 8 : 0),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
-                      color: isSelected ? color.withOpacity(0.2) : AppColors.surfaceLight,
+                      color: isSelected ? ContextColors.gold : AppColors.surfaceLight,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: isSelected ? color : Colors.transparent,
+                        color: isSelected ? ContextColors.gold : Colors.transparent,
                         width: 2,
                       ),
                     ),
@@ -203,7 +204,7 @@ class StepSelfAssessment extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          color: isSelected ? color : AppColors.textSecondary,
+                          color: isSelected ? Colors.white : AppColors.textSecondary,
                         ),
                       ),
                     ),
