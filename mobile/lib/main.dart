@@ -38,11 +38,30 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Initialize notification service (skip on web)
+  // Initialize notification services with timeout (skip on web)
+  // Non-blocking: app starts even if notification init fails
   if (!kIsWeb) {
-    await NotificationService().initialize();
-    // Initialize FCM service for push notifications
-    await FCMService().initialize();
+    try {
+      await NotificationService().initialize().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          debugPrint('main.dart: NotificationService init timeout - continuing');
+        },
+      );
+    } catch (e) {
+      debugPrint('main.dart: NotificationService init error: $e');
+    }
+    
+    try {
+      await FCMService().initialize().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          debugPrint('main.dart: FCMService init timeout - continuing');
+        },
+      );
+    } catch (e) {
+      debugPrint('main.dart: FCMService init error: $e');
+    }
   }
 
   runApp(const ProviderScope(child: AstroApp()));

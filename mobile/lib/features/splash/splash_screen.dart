@@ -86,19 +86,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     }
   }
 
-  /// Initialize notifications and request permissions
+  /// Initialize notifications and request permissions (with timeout)
   Future<void> _initializeNotifications() async {
     if (kIsWeb) return;
     
     try {
       final notificationService = NotificationService();
       
-      // Check if already have permission
-      final hasPermission = await notificationService.areNotificationsEnabled();
+      // Check if already have permission (with timeout to prevent blocking)
+      final hasPermission = await notificationService.areNotificationsEnabled()
+          .timeout(const Duration(seconds: 3), onTimeout: () => true);
       
       if (!hasPermission) {
-        // Request permission (will be shown to user)
-        await notificationService.requestPermissions();
+        // Request permission with timeout
+        await notificationService.requestPermissions()
+            .timeout(const Duration(seconds: 5), onTimeout: () => false);
       }
     } catch (e) {
       print('SplashScreen: Error initializing notifications: $e');
@@ -111,7 +113,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     
     try {
       final notificationService = NotificationService();
-      await notificationService.scheduleDailyGuidanceNotification();
+      await notificationService.scheduleDailyGuidanceNotification()
+          .timeout(const Duration(seconds: 3), onTimeout: () {
+        print('SplashScreen: Scheduling notification timeout - continuing');
+      });
     } catch (e) {
       print('SplashScreen: Error scheduling notification: $e');
     }
