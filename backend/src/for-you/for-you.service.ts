@@ -461,8 +461,8 @@ export class ForYouService {
    */
   private mapGenderToString(gender?: Gender | string | null): string | null {
     if (!gender) return null;
-    const genderStr = typeof gender === 'string' ? gender : gender.toString();
-    switch (genderStr.toUpperCase()) {
+    const genderStr = String(gender).toUpperCase();
+    switch (genderStr) {
       case 'MALE':
         return 'male';
       case 'FEMALE':
