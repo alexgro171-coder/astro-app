@@ -34,10 +34,10 @@ export enum ChildGender {
 }
 
 export class ChildInfoDto {
-  @ApiProperty({ description: 'Child age (0-30)', minimum: 0, maximum: 30 })
+  @ApiProperty({ description: 'Child age (0-50)', minimum: 0, maximum: 50 })
   @IsNumber()
   @Min(0)
-  @Max(30)
+  @Max(50)
   age: number;
 
   @ApiProperty({ enum: ChildGender, description: 'Child gender' })
