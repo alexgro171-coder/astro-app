@@ -151,9 +151,11 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
           context.pop(true);
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('Context save error: $e');
+      debugPrint('Stack trace: $stackTrace');
       setState(() {
-        _error = 'Failed to save profile. Please try again.';
+        _error = 'Failed to save profile: $e';
         _isSubmitting = false;
       });
     }
