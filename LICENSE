@@ -1,0 +1,155 @@
+PROPRIETARY SOFTWARE LICENSE AGREEMENT
+=====================================
+
+Copyright (c) 2024-2026 Inner Wisdom Hub FZO UAE. All Rights Reserved.
+
+IMPORTANT - READ CAREFULLY: This Proprietary Software License Agreement ("Agreement") is a legal agreement between you (either an individual or a single entity, "Licensee") and Inner Wisdom Hub FZO UAE ("Owner", "Company", "We", "Us", or "Our"), governing the use of the Astro App software application, including all associated source code, object code, documentation, libraries, APIs, databases, designs, algorithms, and any related materials (collectively, the "Software").
+
+BY ACCESSING, VIEWING, DOWNLOADING, COPYING, INSTALLING, OR USING THE SOFTWARE IN ANY MANNER, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THE TERMS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO THESE TERMS, YOU MUST NOT ACCESS, VIEW, DOWNLOAD, COPY, INSTALL, OR USE THE SOFTWARE IN ANY MANNER.
+
+1. OWNERSHIP AND INTELLECTUAL PROPERTY RIGHTS
+---------------------------------------------
+
+1.1 The Software, including but not limited to all source code, object code, algorithms, data structures, user interfaces, designs, documentation, and any derivative works, is the sole and exclusive property of Inner Wisdom Hub FZO UAE.
+
+1.2 The Software is protected by copyright laws, international copyright treaties, trade secret laws, and other intellectual property laws and treaties.
+
+1.3 All rights, title, and interest in and to the Software, including all intellectual property rights therein, are and shall remain the exclusive property of Inner Wisdom Hub FZO UAE.
+
+1.4 This Agreement does not grant you any rights to patents, copyrights, trade secrets, trade names, trademarks, or any other rights, franchises, or licenses with respect to the Software, except as expressly stated herein.
+
+2. RESTRICTIONS ON USE
+----------------------
+
+2.1 PROHIBITION OF REPRODUCTION: You may NOT reproduce, copy, duplicate, or replicate the Software, in whole or in part, in any form or by any means, whether electronic, mechanical, photographic, magnetic, or otherwise, without the prior express written consent of Inner Wisdom Hub FZO UAE.
+
+2.2 PROHIBITION OF DISTRIBUTION: You may NOT distribute, publish, transmit, transfer, sell, lease, rent, lend, sublicense, or otherwise make available the Software, or any portion thereof, to any third party without the prior express written consent of Inner Wisdom Hub FZO UAE.
+
+2.3 PROHIBITION OF MODIFICATION: You may NOT modify, adapt, translate, reverse engineer, decompile, disassemble, or create derivative works based on the Software, or any portion thereof, without the prior express written consent of Inner Wisdom Hub FZO UAE.
+
+2.4 PROHIBITION OF COMMERCIAL USE: You may NOT use the Software, or any portion thereof, for any commercial purpose, including but not limited to selling, licensing, or providing services based on the Software, without the prior express written consent of Inner Wisdom Hub FZO UAE.
+
+2.5 PROHIBITION OF PUBLIC DISPLAY: You may NOT publicly display, perform, or demonstrate the Software, or any portion thereof, without the prior express written consent of Inner Wisdom Hub FZO UAE.
+
+2.6 PROHIBITION OF CODE EXTRACTION: You may NOT extract, isolate, or separate any source code, algorithms, data structures, or other components from the Software for any purpose whatsoever without the prior express written consent of Inner Wisdom Hub FZO UAE.
+
+2.7 PROHIBITION OF COMPETITIVE USE: You may NOT use the Software, or any portion thereof, to develop, enhance, or support any software, product, or service that competes with the Software or any product or service offered by Inner Wisdom Hub FZO UAE.
+
+3. BACKEND AND FRONTEND RESTRICTIONS
+------------------------------------
+
+3.1 The restrictions set forth in this Agreement apply equally and without limitation to all components of the Software, including but not limited to:
+
+   (a) Backend Components: All server-side code, APIs, databases, data models, business logic, algorithms, services, and infrastructure configurations.
+   
+   (b) Frontend Components: All client-side code, user interfaces, mobile applications, web applications, design elements, graphics, animations, and user experience implementations.
+   
+   (c) Mobile Applications: All iOS and Android application code, Flutter/Dart implementations, native integrations, and platform-specific configurations.
+   
+   (d) Administrative Interfaces: All administrative dashboards, management tools, and related components.
+
+3.2 Any attempt to access, use, copy, or derive any component of the backend or frontend systems without authorization constitutes a material breach of this Agreement.
+
+4. CONFIDENTIALITY
+------------------
+
+4.1 The Software contains proprietary and confidential information belonging to Inner Wisdom Hub FZO UAE, including but not limited to trade secrets, business methods, algorithms, and technical know-how.
+
+4.2 You agree to maintain the confidentiality of the Software and not to disclose any information regarding the Software to any third party without the prior express written consent of Inner Wisdom Hub FZO UAE.
+
+4.3 You agree to take all reasonable measures to protect the confidentiality of the Software, using at least the same degree of care you use to protect your own confidential information.
+
+5. NO LICENSE GRANTED
+---------------------
+
+5.1 Except as explicitly stated in a separate written agreement signed by an authorized representative of Inner Wisdom Hub FZO UAE, no license, express or implied, is granted under this Agreement.
+
+5.2 Any unauthorized access to, viewing of, reproduction of, or use of the Software constitutes a violation of this Agreement and may constitute infringement of the Owner's intellectual property rights.
+
+5.3 The mere possession of a copy of this Software does not grant any rights to use, reproduce, distribute, or otherwise exploit the Software.
+
+6. ENFORCEMENT AND REMEDIES
+---------------------------
+
+6.1 Any violation of this Agreement may result in immediate legal action, including but not limited to:
+
+   (a) Injunctive relief to prevent further violations;
+   (b) Recovery of actual damages;
+   (c) Recovery of statutory damages;
+   (d) Recovery of attorney's fees and costs;
+   (e) Criminal prosecution where applicable.
+
+6.2 Inner Wisdom Hub FZO UAE reserves the right to pursue all available legal remedies for any breach of this Agreement.
+
+6.3 The remedies provided herein are cumulative and not exclusive of any other remedies provided by law or equity.
+
+7. DISCLAIMER OF WARRANTIES
+---------------------------
+
+7.1 THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+
+7.2 INNER WISDOM HUB FZO UAE DOES NOT WARRANT THAT THE SOFTWARE WILL MEET YOUR REQUIREMENTS OR THAT THE OPERATION OF THE SOFTWARE WILL BE UNINTERRUPTED OR ERROR-FREE.
+
+8. LIMITATION OF LIABILITY
+--------------------------
+
+8.1 IN NO EVENT SHALL INNER WISDOM HUB FZO UAE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, USE, OR OTHER INTANGIBLE LOSSES, RESULTING FROM YOUR ACCESS TO OR USE OF THE SOFTWARE.
+
+8.2 THE TOTAL LIABILITY OF INNER WISDOM HUB FZO UAE FOR ANY CLAIMS ARISING UNDER THIS AGREEMENT SHALL NOT EXCEED THE AMOUNT, IF ANY, PAID BY YOU TO INNER WISDOM HUB FZO UAE FOR THE SOFTWARE.
+
+9. INDEMNIFICATION
+------------------
+
+9.1 You agree to indemnify, defend, and hold harmless Inner Wisdom Hub FZO UAE, its officers, directors, employees, agents, and affiliates from and against any and all claims, damages, obligations, losses, liabilities, costs, and expenses (including attorney's fees) arising from:
+
+   (a) Your access to or use of the Software;
+   (b) Your violation of this Agreement;
+   (c) Your violation of any third-party right, including any intellectual property or privacy right.
+
+10. GOVERNING LAW AND JURISDICTION
+----------------------------------
+
+10.1 This Agreement shall be governed by and construed in accordance with the laws of the United Arab Emirates.
+
+10.2 Any dispute arising out of or relating to this Agreement shall be subject to the exclusive jurisdiction of the courts of the United Arab Emirates.
+
+10.3 You consent to personal jurisdiction in the United Arab Emirates and waive any objection to venue in the United Arab Emirates.
+
+11. SEVERABILITY
+----------------
+
+11.1 If any provision of this Agreement is held to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect.
+
+11.2 The invalid, illegal, or unenforceable provision shall be modified to the minimum extent necessary to make it valid, legal, and enforceable while preserving the intent of the original provision.
+
+12. ENTIRE AGREEMENT
+--------------------
+
+12.1 This Agreement constitutes the entire agreement between you and Inner Wisdom Hub FZO UAE with respect to the Software and supersedes all prior or contemporaneous understandings, agreements, negotiations, representations, and warranties, both written and oral.
+
+12.2 No amendment or modification of this Agreement shall be valid unless made in writing and signed by an authorized representative of Inner Wisdom Hub FZO UAE.
+
+13. WAIVER
+----------
+
+13.1 The failure of Inner Wisdom Hub FZO UAE to enforce any right or provision of this Agreement shall not constitute a waiver of such right or provision.
+
+13.2 Any waiver of any provision of this Agreement shall be effective only if in writing and signed by an authorized representative of Inner Wisdom Hub FZO UAE.
+
+14. CONTACT INFORMATION
+-----------------------
+
+For inquiries regarding licensing, permissions, or any other matters related to this Agreement, please contact:
+
+Inner Wisdom Hub FZO UAE
+United Arab Emirates
+
+All requests for written consent or permission must be submitted in writing and addressed to the legal department of Inner Wisdom Hub FZO UAE.
+
+=====================================
+
+BY ACCESSING, VIEWING, OR USING THE SOFTWARE IN ANY MANNER, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS AGREEMENT, UNDERSTAND IT, AND AGREE TO BE BOUND BY ITS TERMS AND CONDITIONS.
+
+ALL RIGHTS RESERVED.
+
+© 2024-2026 Inner Wisdom Hub FZO UAE

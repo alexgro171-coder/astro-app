@@ -79,10 +79,10 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.auto_awesome,
-                    color: AppColors.accent,
-                    size: 48,
+                  child: Image.asset(
+                    'assets/images/InnerLogo_transp.png',
+                    width: 64,
+                    height: 64,
                   ),
                 ),
 
@@ -372,6 +372,23 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
         }
 
         if (status.isSuccess) {
+          // For Love Compatibility, content is in resultRef (not stored in DB)
+          if (serviceType == 'LOVE_COMPATIBILITY_REPORT' && 
+              status.resultRef != null && 
+              status.resultRef!['content'] != null) {
+            if (mounted) {
+              setState(() => _isGenerating = false);
+              context.pushReplacement(
+                '/service-result',
+                extra: {
+                  'title': title,
+                  'content': status.resultRef!['content'],
+                  'serviceType': serviceType,
+                },
+              );
+            }
+            return;
+          }
           await _fetchAndShowReport();
           return;
         } else if (status.isFailed) {

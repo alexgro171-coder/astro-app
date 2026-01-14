@@ -65,7 +65,7 @@ const List<ServiceEntry> compatibilityServices = [
     requiresPartner: false,
     priceUsdCents: 499,
   ),
-  // 3. Love Compatibility Report - Coming Soon
+  // 3. Love Compatibility Report - NOW ACTIVE
   ServiceEntry(
     type: OneTimeServiceType.loveCompatibilityReport,
     apiType: 'LOVE_COMPATIBILITY_REPORT',
@@ -75,7 +75,7 @@ const List<ServiceEntry> compatibilityServices = [
     color: Color(0xFFE91E63),
     requiresPartner: true,
     priceUsdCents: 699,
-    comingSoon: true, // Show "Coming Soon" instead of price
+    // Active - free in beta mode
   ),
   // 4. Romantic Couple Forecast - HIDDEN (exists in backend, not shown in UI)
   ServiceEntry(

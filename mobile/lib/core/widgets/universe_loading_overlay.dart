@@ -192,10 +192,13 @@ class _UniverseLoadingOverlayState extends State<UniverseLoadingOverlay>
             ),
           ),
           child: Center(
-            child: Icon(
-              Icons.auto_awesome,
-              size: 64,
-              color: AppColors.accent.withOpacity(0.5 + (0.5 * value)),
+            child: Opacity(
+              opacity: 0.5 + (0.5 * value),
+              child: Image.asset(
+                'assets/images/InnerLogo_transp.png',
+                width: 80,
+                height: 80,
+              ),
             ),
           ),
         );

@@ -229,10 +229,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             shape: BoxShape.circle,
                             gradient: AppColors.accentGradient,
                           ),
-                          child: const Icon(
-                            Icons.auto_awesome,
-                            size: 40,
-                            color: AppColors.primary,
+                          child: ClipOval(
+                            child: Image.asset(
+                              'assets/images/InnerLogo_transp.png',
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 24),

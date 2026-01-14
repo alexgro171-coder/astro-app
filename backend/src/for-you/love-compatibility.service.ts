@@ -11,6 +11,7 @@ import {
   LoveCompatibilityResponseDto,
   PartnerBirthDataDto,
 } from './dto/love-compatibility.dto';
+import { isBetaFree } from './service-catalog';
 
 /**
  * LoveCompatibilityService
@@ -50,13 +51,17 @@ export class LoveCompatibilityService {
     dto: GenerateLoveCompatibilityDto,
     acceptLanguage?: string,
   ): Promise<LoveCompatibilityResponseDto> {
-    // Check subscription access
-    const hasAccess = await this.entitlementsService.hasAccess(user.id);
-    if (!hasAccess) {
-      throw new ForbiddenException({
-        message: 'Active subscription required for Love Compatibility.',
-        code: 'NO_SUBSCRIPTION',
-      });
+    // Check subscription access (skip in beta free mode)
+    if (!isBetaFree()) {
+      const hasAccess = await this.entitlementsService.hasAccess(user.id);
+      if (!hasAccess) {
+        throw new ForbiddenException({
+          message: 'Active subscription required for Love Compatibility.',
+          code: 'NO_SUBSCRIPTION',
+        });
+      }
+    } else {
+      this.logger.log('Beta free mode: granting access to Love Compatibility');
     }
 
     // Get user's natal chart

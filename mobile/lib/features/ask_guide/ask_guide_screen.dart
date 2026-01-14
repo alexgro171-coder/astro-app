@@ -331,41 +331,40 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
           ),
           const SizedBox(height: 8),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Based on your birth chart & today\'s cosmic energies',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: AppColors.textMuted,
-                ),
-              ),
-              ElevatedButton(
-                onPressed: _isAsking ? null : _askQuestion,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              Expanded(
+                child: Text(
+                  'Based on your birth chart & today\'s cosmic energies',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textMuted,
                   ),
                 ),
-                child: _isAsking
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.send_rounded, size: 18),
-                          SizedBox(width: 6),
-                          Text('Ask'),
-                        ],
-                      ),
+              ),
+              const SizedBox(width: 12),
+              SizedBox(
+                width: 48,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: _isAsking ? null : _askQuestion,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: _isAsking
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Icon(Icons.send_rounded, size: 22),
+                ),
               ),
             ],
           ),
@@ -566,46 +565,49 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.auto_awesome_rounded,
-              size: 64,
-              color: AppColors.accent.withOpacity(0.5),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 20),
+          Opacity(
+            opacity: 0.7,
+            child: Image.asset(
+              'assets/images/InnerLogo_transp.png',
+              width: 80,
+              height: 80,
             ),
-            const SizedBox(height: 16),
-            const Text(
-              'Ask Your First Question',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Ask Your First Question',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Get instant, deeply personal guidance based on your birth chart and today\'s cosmic energies.',
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 14,
-              ),
-              textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Get instant, deeply personal guidance based on your birth chart and today\'s cosmic energies.',
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 14,
             ),
-            const SizedBox(height: 24),
-            const Text(
-              'Ask anything — love, career, decisions, emotions.',
-              style: TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 13,
-              ),
-              textAlign: TextAlign.center,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Ask anything — love, career, decisions, emotions.',
+            style: TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 13,
             ),
-          ],
-        ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

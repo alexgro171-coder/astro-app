@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { GenerationJob, GenerationJobType, User } from '@prisma/client';
 import { GuidanceService } from '../guidance/guidance.service';
 import { ForYouService } from '../for-you/for-you.service';
+import { LoveCompatibilityService } from '../for-you/love-compatibility.service';
 import { KarmicService } from '../karmic/karmic.service';
 import { AstrologyService } from '../astrology/astrology.service';
 import { NatalChartService } from '../natal-chart/natal-chart.service';
@@ -18,6 +19,7 @@ export class JobRunnerService {
     private readonly prisma: PrismaService,
     private readonly guidanceService: GuidanceService,
     private readonly forYouService: ForYouService,
+    private readonly loveCompatibilityService: LoveCompatibilityService,
     private readonly karmicService: KarmicService,
     private readonly astrologyService: AstrologyService,
     private readonly natalChartService: NatalChartService,
@@ -299,7 +301,31 @@ export class JobRunnerService {
 
     this.logger.log(`Generating one-time report: ${payload.serviceType}`);
 
-    // Use ForYouService to generate the report
+    // Special handling for Love Compatibility (uses OpenAI directly, not AstrologyAPI)
+    if (payload.serviceType === 'LOVE_COMPATIBILITY_REPORT') {
+      if (!payload.partnerProfile) {
+        throw new Error('Partner profile required for Love Compatibility');
+      }
+
+      const result = await this.loveCompatibilityService.generateCompatibility(
+        user,
+        {
+          partner: payload.partnerProfile,
+          locale: job.locale,
+        },
+        undefined, // Accept-Language header not needed here
+      );
+
+      return {
+        kind: 'one_time_report',
+        serviceType: payload.serviceType,
+        status: result.status,
+        locale: job.locale,
+        content: result.content, // Include content for Love Compatibility
+      };
+    }
+
+    // Use ForYouService for other reports (via AstrologyAPI)
     const result = await this.forYouService.generateReport(
       user.id,
       payload.serviceType,

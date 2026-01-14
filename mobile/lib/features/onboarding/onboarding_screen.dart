@@ -196,10 +196,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           width: 3,
                         ),
                       ),
-                      child: const Icon(
-                        Icons.auto_awesome,
-                        size: 80,
-                        color: OnboardingColors.gold,
+                      child: Image.asset(
+                        'assets/images/InnerLogo_transp.png',
+                        width: 80,
+                        height: 80,
                       ),
                     );
                   },

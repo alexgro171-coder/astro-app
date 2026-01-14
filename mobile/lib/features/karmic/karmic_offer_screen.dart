@@ -91,10 +91,10 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
                     ),
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: const Icon(
-                    Icons.auto_awesome_rounded,
-                    size: 48,
-                    color: Color(0xFF7C4DFF),
+                  child: Image.asset(
+                    'assets/images/InnerLogo_transp.png',
+                    width: 64,
+                    height: 64,
                   ),
                 ),
                 const SizedBox(height: 32),

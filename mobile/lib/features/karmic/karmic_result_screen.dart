@@ -107,10 +107,10 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
                 ),
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: const Icon(
-                Icons.auto_awesome_rounded,
-                size: 40,
-                color: Color(0xFF7C4DFF),
+              child: Image.asset(
+                'assets/images/InnerLogo_transp.png',
+                width: 56,
+                height: 56,
               ),
             ),
             const SizedBox(height: 32),
@@ -250,10 +250,10 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
                     color: const Color(0xFF7C4DFF).withOpacity(0.3),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Icon(
-                    Icons.auto_awesome_rounded,
-                    color: Color(0xFF7C4DFF),
-                    size: 28,
+                  child: Image.asset(
+                    'assets/images/InnerLogo_transp.png',
+                    width: 40,
+                    height: 40,
                   ),
                 ),
                 const SizedBox(width: 16),
