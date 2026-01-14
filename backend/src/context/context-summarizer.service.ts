@@ -55,7 +55,7 @@ export class ContextSummarizerService {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
     });
-    this.model = this.configService.get<string>('OPENAI_MODEL', 'gpt-5-mini');
+    this.model = this.configService.get<string>('OPENAI_MODEL', 'gpt-4o-mini');
   }
 
   /**

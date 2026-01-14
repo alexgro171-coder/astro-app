@@ -489,7 +489,7 @@ export class ForYouService {
       const pronouns = gender === 'male' ? 'he/him/his' : gender === 'female' ? 'she/her/hers' : 'they/them/their';
       
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-5-mini',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
