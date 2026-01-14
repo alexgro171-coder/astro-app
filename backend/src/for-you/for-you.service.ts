@@ -5,12 +5,14 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   OneTimeServiceType,
   ReadingStatus,
   User,
   PurchaseStatus,
+  Gender,
 } from '@prisma/client';
 import { AstrologyApiService } from './astrology-api.service';
 import { TranslationService } from './translation.service';
@@ -26,19 +28,26 @@ import {
   isBetaFree,
 } from './service-catalog';
 import { computeInputHash, InputHashData } from './utils/input-hash.util';
-import { resolveLocale } from './utils/locale.util';
+import { resolveLocale, getLanguageName } from './utils/locale.util';
 import { AnalyticsService } from '../analytics/analytics.service';
+import OpenAI from 'openai';
 
 @Injectable()
 export class ForYouService {
   private readonly logger = new Logger(ForYouService.name);
+  private readonly openai: OpenAI;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly astrologyApi: AstrologyApiService,
     private readonly translationService: TranslationService,
     private readonly analyticsService: AnalyticsService,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.openai = new OpenAI({
+      apiKey: this.configService.get<string>('OPENAI_API_KEY'),
+    });
+  }
 
   /**
    * Get the service catalog with unlock status for the user.
@@ -278,10 +287,22 @@ export class ForYouService {
         dto.date,
       );
 
+      // Personalize with gender context if available (for personality reports)
+      let personalizedContent = apiResponse.reportText;
+      const genderStr = this.mapGenderToString(user.gender);
+      if (genderStr && this.isPersonalityReport(serviceType)) {
+        this.logger.log(`Personalizing ${serviceType} for ${genderStr}...`);
+        personalizedContent = await this.personalizeWithGender(
+          apiResponse.reportText,
+          genderStr,
+          locale,
+        );
+      }
+
       // Translate if needed
       this.logger.log(`Translating to ${locale}...`);
       const translatedContent = await this.translationService.translate(
-        apiResponse.reportText,
+        personalizedContent,
         locale,
       );
 
@@ -423,6 +444,88 @@ export class ForYouService {
       partner: partner || undefined,
       date: date || undefined,
     };
+  }
+
+  /**
+   * Check if service type is a personality report (benefits from gender personalization)
+   */
+  private isPersonalityReport(serviceType: OneTimeServiceType): boolean {
+    return [
+      'PERSONALITY_REPORT',
+      'ROMANTIC_PERSONALITY_REPORT',
+    ].includes(serviceType);
+  }
+
+  /**
+   * Map gender enum to readable string for AI prompts
+   */
+  private mapGenderToString(gender?: Gender | string | null): string | null {
+    if (!gender) return null;
+    const genderStr = typeof gender === 'string' ? gender : gender.toString();
+    switch (genderStr.toUpperCase()) {
+      case 'MALE':
+        return 'male';
+      case 'FEMALE':
+        return 'female';
+      case 'OTHER':
+        return 'non-binary';
+      case 'PREFER_NOT_TO_SAY':
+        return null;
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * Personalize report content with gender-appropriate language
+   * Uses AI to adapt pronouns and gender-specific references
+   */
+  private async personalizeWithGender(
+    content: string,
+    gender: string,
+    locale: string,
+  ): Promise<string> {
+    try {
+      const pronouns = gender === 'male' ? 'he/him/his' : gender === 'female' ? 'she/her/hers' : 'they/them/their';
+      
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You are a content adapter. Your task is to adapt astrological text to use gender-appropriate language for a ${gender} reader. 
+            
+Rules:
+- Replace generic "you" with ${gender}-appropriate references where natural
+- Use pronouns ${pronouns} where appropriate when referring to the reader in third person
+- Keep the same structure, meaning, and all astrological interpretations intact
+- Do NOT change the astrological content itself
+- Do NOT add new information
+- Be subtle - don't overuse gender references
+- Keep markdown formatting intact
+- Output only the adapted text, nothing else`,
+          },
+          {
+            role: 'user',
+            content: `Adapt this astrological report for a ${gender} reader:\n\n${content}`,
+          },
+        ],
+        temperature: 0.2,
+        max_tokens: 8000,
+      });
+
+      const adaptedContent = response.choices[0]?.message?.content?.trim();
+      if (!adaptedContent) {
+        this.logger.warn('Empty response from gender personalization, using original');
+        return content;
+      }
+
+      return adaptedContent;
+    } catch (error) {
+      this.logger.error(`Gender personalization failed: ${error.message}`);
+      // Return original content if personalization fails
+      return content;
+    }
   }
 }
 

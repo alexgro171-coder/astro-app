@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException, BadRequestException } from '@nes
 import { PrismaService } from '../prisma/prisma.service';
 import { AiService } from '../ai/ai.service';
 import { NatalPlacementsDto, NatalInterpretationDto, NatalChartDataDto } from './dto/natal-placement.dto';
-import { Language } from '@prisma/client';
+import { Language, Gender } from '@prisma/client';
 
 @Injectable()
 export class NatalChartService {
@@ -235,7 +235,7 @@ export class NatalChartService {
    * Get a single FREE interpretation (lazy load)
    * Respects user's language preference - generates in that language
    */
-  async getInterpretation(userId: string, planetKey: string, language: Language = 'EN'): Promise<NatalInterpretationDto | null> {
+  async getInterpretation(userId: string, planetKey: string, language: Language = 'EN', userGender?: Gender | null): Promise<NatalInterpretationDto | null> {
     // Check if interpretation exists in user's language
     let interpretation = await this.prisma.natalInterpretationFree.findUnique({
       where: {
@@ -261,9 +261,12 @@ export class NatalChartService {
       return null;
     }
 
+    // Get gender string for AI context
+    const genderStr = this.mapGenderToString(userGender);
+
     // Generate interpretation via AI in user's language
-    this.logger.log(`Generating FREE interpretation for ${planet.planet} in language ${language}`);
-    const text = await this.generateFreeInterpretation(planet.planet, planet.sign, planet.house, language);
+    this.logger.log(`Generating FREE interpretation for ${planet.planet} in language ${language}, gender ${genderStr || 'not set'}`);
+    const text = await this.generateFreeInterpretation(planet.planet, planet.sign, planet.house, language, genderStr);
 
     // Save to database with language
     interpretation = await this.prisma.natalInterpretationFree.create({
@@ -283,10 +286,11 @@ export class NatalChartService {
 
   /**
    * Generate FREE interpretation via AI (~60 words)
-   * Generates in the specified language
+   * Generates in the specified language with gender context
    */
-  private async generateFreeInterpretation(planet: string, sign: string, house: number, language: Language = 'EN'): Promise<string> {
+  private async generateFreeInterpretation(planet: string, sign: string, house: number, language: Language = 'EN', userGender?: string | null): Promise<string> {
     const languageInstruction = this.getLanguageInstruction(language);
+    const genderInstruction = userGender ? `- The reader is ${userGender}. Use appropriate pronouns and gender-aware language.` : '';
     
     const prompt = `You are an astrology expert. Generate a concise natal chart interpretation for:
 Planet: ${planet}
@@ -299,6 +303,7 @@ Requirements:
 - Focus on personality traits and tendencies
 - Do not use deterministic language
 - Be encouraging and constructive
+${genderInstruction}
 ${languageInstruction}
 
 Output only the interpretation text, nothing else.`;
@@ -370,7 +375,7 @@ Output only the interpretation text, nothing else.`;
    * Generate all PRO interpretations for a user (after purchase)
    * Generates in the specified language - processes in parallel batches for speed
    */
-  async generateProInterpretations(userId: string, language: Language = 'EN'): Promise<NatalInterpretationDto[]> {
+  async generateProInterpretations(userId: string, language: Language = 'EN', userGender?: Gender | null): Promise<NatalInterpretationDto[]> {
     // Verify purchase
     const purchase = await this.prisma.natalProPurchase.findUnique({
       where: { userId },
@@ -395,8 +400,11 @@ Output only the interpretation text, nothing else.`;
 
     const placementsData = placements.placementsJson as NatalPlacementsDto;
     const interpretations: NatalInterpretationDto[] = [];
+    
+    // Get gender string for AI context
+    const genderStr = this.mapGenderToString(userGender);
 
-    this.logger.log(`Generating PRO interpretations for user ${userId} in language ${language} (${placementsData.planets.length} planets)`);
+    this.logger.log(`Generating PRO interpretations for user ${userId} in language ${language}, gender ${genderStr || 'not set'} (${placementsData.planets.length} planets)`);
 
     // Process planets in parallel batches of 3 for better performance
     const batchSize = 3;
@@ -416,7 +424,7 @@ Output only the interpretation text, nothing else.`;
 
             if (!existing) {
               this.logger.log(`Generating PRO interpretation for ${planet.planet}...`);
-              const text = await this.generateProInterpretation(planet.planet, planet.sign, planet.house, language);
+              const text = await this.generateProInterpretation(planet.planet, planet.sign, planet.house, language, genderStr);
               
               existing = await this.prisma.natalInterpretationPro.create({
                 data: {
@@ -458,10 +466,11 @@ Output only the interpretation text, nothing else.`;
 
   /**
    * Generate PRO interpretation via AI (~150-200 words)
-   * Generates in the specified language
+   * Generates in the specified language with gender context
    */
-  private async generateProInterpretation(planet: string, sign: string, house: number, language: Language = 'EN'): Promise<string> {
+  private async generateProInterpretation(planet: string, sign: string, house: number, language: Language = 'EN', userGender?: string | null): Promise<string> {
     const languageInstruction = this.getLanguageInstruction(language);
+    const genderInstruction = userGender ? `- The reader is ${userGender}. Use appropriate pronouns (he/him or she/her) and gender-aware language throughout.` : '';
     
     const prompt = `You are an expert astrologer providing a detailed natal chart reading. Generate a comprehensive interpretation for:
 
@@ -478,6 +487,7 @@ Requirements:
 - Be encouraging while remaining realistic
 - Use accessible language (avoid jargon)
 - Do not use deterministic language like "you will" or "this will happen"
+${genderInstruction}
 ${languageInstruction}
 
 Output only the interpretation text, nothing else.`;
@@ -677,6 +687,26 @@ Output only the interpretation text, nothing else.`;
       'Pluto': 'transformation and power',
     };
     return themes[planet] || 'personal expression';
+  }
+
+  /**
+   * Map gender enum to readable string for AI prompts
+   */
+  private mapGenderToString(gender?: Gender | string | null): string | null {
+    if (!gender) return null;
+    const genderStr = typeof gender === 'string' ? gender : gender.toString();
+    switch (genderStr.toUpperCase()) {
+      case 'MALE':
+        return 'male';
+      case 'FEMALE':
+        return 'female';
+      case 'OTHER':
+        return 'non-binary';
+      case 'PREFER_NOT_TO_SAY':
+        return null;
+      default:
+        return null;
+    }
   }
 }
 

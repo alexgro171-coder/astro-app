@@ -64,15 +64,15 @@ export class NatalChartController {
 
   /**
    * GET /natal-chart/interpretation/:planetKey - Get single interpretation (lazy load)
-   * Returns interpretation in user's preferred language
+   * Returns interpretation in user's preferred language with gender-aware language
    */
   @Get('interpretation/:planetKey')
   async getInterpretation(
     @CurrentUser() user: User,
     @Param('planetKey') planetKey: string,
   ) {
-    this.logger.log(`Getting interpretation for ${planetKey} for user ${user.id} (lang: ${user.language})`);
-    const interpretation = await this.natalChartService.getInterpretation(user.id, planetKey, user.language);
+    this.logger.log(`Getting interpretation for ${planetKey} for user ${user.id} (lang: ${user.language}, gender: ${user.gender || 'not set'})`);
+    const interpretation = await this.natalChartService.getInterpretation(user.id, planetKey, user.language, user.gender);
     
     if (!interpretation) {
       return {
@@ -122,13 +122,13 @@ export class NatalChartController {
 
   /**
    * POST /natal-chart/pro/generate - Generate PRO interpretations (after purchase)
-   * Generates in user's preferred language
+   * Generates in user's preferred language with gender-aware language
    */
   @Post('pro/generate')
   async generateProInterpretations(@CurrentUser() user: User) {
-    this.logger.log(`Generating pro interpretations for user ${user.id} (lang: ${user.language})`);
+    this.logger.log(`Generating pro interpretations for user ${user.id} (lang: ${user.language}, gender: ${user.gender || 'not set'})`);
     
-    const interpretations = await this.natalChartService.generateProInterpretations(user.id, user.language);
+    const interpretations = await this.natalChartService.generateProInterpretations(user.id, user.language, user.gender);
     
     return {
       message: 'Pro interpretations generated successfully',

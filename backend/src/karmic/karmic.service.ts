@@ -201,8 +201,11 @@ export class KarmicService {
     // Determine prompt variant
     const promptVariant = inputSnapshot.retrogrades.length <= 1 ? 'extended' : 'standard';
     
+    // Get user gender for personalized language
+    const genderStr = this.mapGenderToString(user.gender);
+    
     this.logger.log(
-      `Generating karmic reading for user ${user.id}, locale ${locale}, variant ${promptVariant}`,
+      `Generating karmic reading for user ${user.id}, locale ${locale}, variant ${promptVariant}, gender ${genderStr || 'not set'}`,
     );
 
     // Upsert PENDING record
@@ -226,8 +229,8 @@ export class KarmicService {
     });
 
     try {
-      // Generate content via AI
-      const content = await this.generateKarmicContent(inputSnapshot, locale, promptVariant);
+      // Generate content via AI (with gender context)
+      const content = await this.generateKarmicContent(inputSnapshot, locale, promptVariant, genderStr);
 
       // Save READY
       await this.prisma.karmicAstrologyReading.update({
@@ -349,6 +352,7 @@ export class KarmicService {
     input: KarmicInputSnapshot,
     locale: string,
     variant: 'standard' | 'extended',
+    userGender?: string | null,
   ): Promise<string> {
     const languageName = this.getLanguageName(locale);
     
@@ -357,14 +361,17 @@ export class KarmicService {
       .map((r) => `- ${r.planet} retrograde in ${r.sign} in House ${r.house}`)
       .join('\n');
 
-    const systemPrompt = `You are a karmic astrology interpreter. Your style is creative, reflective, and insightful without being fatalistic or alarming. You help people understand soul lessons and growth opportunities. Never make medical, legal, or financial claims. Focus on self-reflection and personal growth.`;
+    // Build gender context for personalized language
+    const genderContext = userGender ? `The person receiving this reading is ${userGender}. Use appropriate pronouns and gender-specific language where relevant.` : '';
+
+    const systemPrompt = `You are a karmic astrology interpreter. Your style is creative, reflective, and insightful without being fatalistic or alarming. You help people understand soul lessons and growth opportunities. Never make medical, legal, or financial claims. Focus on self-reflection and personal growth.${genderContext ? `\n\n${genderContext}` : ''}`;
 
     let userPrompt: string;
 
     if (variant === 'extended') {
       // Extended prompt for node + max 1 retrograde
       userPrompt = `Write the response entirely in ${languageName}.
-
+${userGender ? `\nIMPORTANT: The reader is ${userGender}. Use appropriate pronouns (he/him or she/her) and gender-aware language throughout.\n` : ''}
 Natal Karmic Markers:
 - North Node: ${input.node?.sign} in House ${input.node?.house}
 ${input.retrogrades.length > 0 ? `Retrograde planets:\n${retrogradeList}` : '(No retrograde planets)'}
@@ -385,7 +392,7 @@ Target length: 700-1100 words. Be thorough but avoid repetition.`;
     } else {
       // Standard prompt for multiple retrogrades
       userPrompt = `Write the response entirely in ${languageName}.
-
+${userGender ? `\nIMPORTANT: The reader is ${userGender}. Use appropriate pronouns (he/him or she/her) and gender-aware language throughout.\n` : ''}
 Natal Karmic Markers:
 - North Node: ${input.node?.sign} in House ${input.node?.house}
 Retrograde planets:
@@ -424,6 +431,25 @@ Target length: 700-1100 words. Keep it readable and insightful.`;
       pl: 'Polish',
     };
     return names[locale] || 'English';
+  }
+
+  /**
+   * Map gender enum to readable string for AI prompts
+   */
+  private mapGenderToString(gender?: string | null): string | null {
+    if (!gender) return null;
+    switch (gender.toUpperCase()) {
+      case 'MALE':
+        return 'male';
+      case 'FEMALE':
+        return 'female';
+      case 'OTHER':
+        return 'non-binary';
+      case 'PREFER_NOT_TO_SAY':
+        return null;
+      default:
+        return null;
+    }
   }
 }
 
