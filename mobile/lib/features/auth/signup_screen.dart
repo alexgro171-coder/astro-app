@@ -22,10 +22,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _socialAuthService = SocialAuthService();
   bool _isLoading = false;
   bool _isSocialLoading = false;
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   String? _errorMessage;
   String _selectedLanguage = 'EN';
 
@@ -46,6 +48,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -352,7 +355,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       hintText: 'Create a password (min. 8 characters)',
                       prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted),
@@ -372,6 +375,46 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       }
                       if (value.length < 8) {
                         return 'Password must be at least 8 characters';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Confirm Password field
+                  const Text(
+                    'Confirm Password',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    obscureText: _obscureConfirmPassword,
+                    textInputAction: TextInputAction.done,
+                    decoration: InputDecoration(
+                      hintText: 'Confirm your password',
+                      prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                          color: AppColors.textMuted,
+                        ),
+                        onPressed: () {
+                          setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                        },
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please confirm your password';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
                       }
                       return null;
                     },
