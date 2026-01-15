@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,12 +20,7 @@ final pendingNavigationProvider = StateProvider<String?>((ref) => null);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
+
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -33,19 +30,39 @@ void main() async {
   ));
 
   // Lock orientation to portrait
-  SystemChrome.setPreferredOrientations([
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // Initialize notification service (skip on web)
+  runApp(const ProviderScope(child: AstroApp()));
+
+  // Initialize services in background to avoid blocking splash on some devices.
   if (!kIsWeb) {
-    await NotificationService().initialize();
-    // Initialize FCM service for push notifications
-    await FCMService().initialize();
+    unawaited(_initializeServices());
+  }
+}
+
+Future<void> _initializeServices() async {
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    ).timeout(const Duration(seconds: 10));
+  } catch (e) {
+    debugPrint('main.dart: Firebase init failed or timed out: $e');
   }
 
-  runApp(const ProviderScope(child: AstroApp()));
+  try {
+    await NotificationService().initialize().timeout(const Duration(seconds: 8));
+  } catch (e) {
+    debugPrint('main.dart: Notification init failed or timed out: $e');
+  }
+
+  try {
+    await FCMService().initialize().timeout(const Duration(seconds: 10));
+  } catch (e) {
+    debugPrint('main.dart: FCM init failed or timed out: $e');
+  }
 }
 
 class AstroApp extends ConsumerStatefulWidget {

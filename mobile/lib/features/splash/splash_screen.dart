@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,25 +54,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _initializeAndNavigate() async {
     // Initialize notifications (request permissions if first time)
-    await _initializeNotifications();
-    
+    unawaited(_initializeNotifications());
+
     await Future.delayed(AppConstants.splashDuration);
 
     if (!mounted) return;
 
     final apiClient = ref.read(apiClientProvider);
-    final isLoggedIn = await apiClient.isLoggedIn();
+    final isLoggedIn = await apiClient
+        .isLoggedIn()
+        .timeout(const Duration(seconds: 8), onTimeout: () => false);
 
     if (!mounted) return;
 
     if (isLoggedIn) {
       // Check if user has completed onboarding
       try {
-        final response = await apiClient.getProfile();
+        final response = await apiClient
+            .getProfile()
+            .timeout(const Duration(seconds: 10));
         final user = response.data;
         
         // Schedule daily notification for logged-in users
-        await _scheduleDailyNotification();
+        unawaited(_scheduleDailyNotification());
         
         if (user['onboardingComplete'] == true) {
           context.go('/home');
@@ -78,7 +84,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           context.go('/birth-data');
         }
       } catch (e) {
-        print('SplashScreen: Error getting profile: $e');
+        debugPrint('SplashScreen: Error getting profile: $e');
         context.go('/login');
       }
     } else {
