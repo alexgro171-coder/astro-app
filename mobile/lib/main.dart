@@ -18,6 +18,8 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 /// Provider for pending navigation (set when notification is tapped)
 final pendingNavigationProvider = StateProvider<String?>((ref) => null);
 
+Future<void> _appInitFuture = Future.value();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -72,7 +74,7 @@ void main() async {
 
   // Initialize services in background to avoid blocking splash on some devices.
   if (!kIsWeb) {
-    unawaited(_initializeServices());
+    _appInitFuture = _initializeServices();
   }
 }
 
@@ -111,8 +113,14 @@ class _AstroAppState extends ConsumerState<AstroApp> with WidgetsBindingObserver
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     
-    // Setup notification tap handler
-    _setupNotificationHandler();
+    // Setup notification tap handler after Firebase is ready
+    _appInitFuture.then((_) {
+      if (mounted) {
+        _setupNotificationHandler();
+      }
+    }).catchError((e) {
+      debugPrint('main.dart: App init failed: $e');
+    });
     
     // Check timezone changes on startup
     _checkTimezoneAndReschedule();
