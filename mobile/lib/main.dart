@@ -21,6 +21,16 @@ final pendingNavigationProvider = StateProvider<String?>((ref) => null);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Ensure any startup errors are visible in logcat on release builds.
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    debugPrint('FlutterError: ${details.exception}');
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    debugPrint('PlatformDispatcher error: $error');
+    return true;
+  };
+
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -30,7 +40,7 @@ void main() async {
   ));
 
   // Lock orientation to portrait
-  await SystemChrome.setPreferredOrientations([
+  SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
