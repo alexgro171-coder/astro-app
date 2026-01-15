@@ -45,6 +45,11 @@ export class AskGuideService {
     this.model = this.configService.get<string>('OPENAI_MODEL', 'gpt-4o-mini');
   }
 
+  private isBetaFree(): boolean {
+    const betaFree = this.configService.get<string>('ASK_GUIDE_BETA_FREE', 'true');
+    return betaFree === 'true' || betaFree === '1';
+  }
+
   /**
    * Get user's current usage for the billing month.
    */
@@ -111,13 +116,15 @@ export class AskGuideService {
       });
     }
 
-    // Verify user has subscription access
-    const hasAccess = await this.entitlementsService.hasAccess(user.id);
-    if (!hasAccess) {
-      throw new ForbiddenException({
-        message: 'Active subscription required to use Ask Your Guide.',
-        code: 'NO_SUBSCRIPTION',
-      });
+    // Verify user has subscription access (skip in beta free mode)
+    if (!this.isBetaFree()) {
+      const hasAccess = await this.entitlementsService.hasAccess(user.id);
+      if (!hasAccess) {
+        throw new ForbiddenException({
+          message: 'Active subscription required to use Ask Your Guide.',
+          code: 'NO_SUBSCRIPTION',
+        });
+      }
     }
 
     // Check for natal chart
