@@ -44,7 +44,7 @@ class ApiClient {
         await _timezoneInitialized;
         
         // Add auth token if available
-        final token = await _storage.read(key: AppConstants.accessTokenKey);
+        final token = await _safeRead(AppConstants.accessTokenKey);
         if (kDebugMode) {
           print('API Request: ${options.method} ${options.path}');
           print('Token available: ${token != null ? "YES" : "NO"}');
@@ -91,7 +91,7 @@ class ApiClient {
           if (refreshed) {
             if (kDebugMode) print('Token refreshed successfully, retrying request');
             // Retry the request
-            final token = await _storage.read(key: AppConstants.accessTokenKey);
+            final token = await _safeRead(AppConstants.accessTokenKey);
             error.requestOptions.headers['Authorization'] = 'Bearer $token';
             final response = await _dio.fetch(error.requestOptions);
             return handler.resolve(response);
@@ -123,7 +123,7 @@ class ApiClient {
 
   Future<bool> _refreshToken() async {
     try {
-      final refreshToken = await _storage.read(key: AppConstants.refreshTokenKey);
+      final refreshToken = await _safeRead(AppConstants.refreshTokenKey);
       if (refreshToken == null) return false;
 
       final response = await _dio.post('/auth/refresh', data: {
@@ -144,6 +144,17 @@ class ApiClient {
       return false;
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<String?> _safeRead(String key) async {
+    try {
+      return await _storage.read(key: key);
+    } catch (e) {
+      // Recover from corrupted secure storage (BadPaddingException, etc.)
+      debugPrint('ApiClient: Secure storage read failed: $e');
+      await _storage.deleteAll();
+      return null;
     }
   }
 
@@ -511,7 +522,7 @@ class ApiClient {
 
   /// Check if user is logged in (has valid token)
   Future<bool> isLoggedIn() async {
-    final token = await _storage.read(key: AppConstants.accessTokenKey);
+    final token = await _safeRead(AppConstants.accessTokenKey);
     return token != null;
   }
 

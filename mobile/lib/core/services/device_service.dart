@@ -34,7 +34,7 @@ class DeviceService {
   /// This ID persists across app reinstalls (stored in secure storage)
   Future<String> getOrCreateDeviceId() async {
     try {
-      String? deviceId = await _storage.read(key: _deviceIdKey);
+      String? deviceId = await _safeRead(_deviceIdKey);
       
       if (deviceId == null) {
         // Generate a new UUID-like device ID
@@ -48,6 +48,17 @@ class DeviceService {
       debugPrint('DeviceService: Error getting device ID: $e');
       // Fallback to a generated ID (won't persist on error)
       return _generateUuid();
+    }
+  }
+
+  Future<String?> _safeRead(String key) async {
+    try {
+      return await _storage.read(key: key);
+    } catch (e) {
+      // Recover from corrupted secure storage (BadPaddingException, etc.)
+      debugPrint('DeviceService: Secure storage read failed: $e');
+      await _storage.deleteAll();
+      return null;
     }
   }
   
