@@ -30,6 +30,25 @@ void main() async {
     debugPrint('PlatformDispatcher error: $error');
     return true;
   };
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Text(
+                'A apărut o eroare la pornire.\n'
+                'Te rog închide aplicația complet și încearcă din nou.',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  };
 
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -45,7 +64,11 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(const ProviderScope(child: AstroApp()));
+  runZonedGuarded(() {
+    runApp(const ProviderScope(child: AstroApp()));
+  }, (error, stack) {
+    debugPrint('Zoned error: $error');
+  });
 
   // Initialize services in background to avoid blocking splash on some devices.
   if (!kIsWeb) {
