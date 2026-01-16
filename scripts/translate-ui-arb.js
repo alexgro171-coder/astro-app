@@ -15,6 +15,7 @@ if (!OPENAI_API_KEY) {
 const ARB_DIR = path.join(__dirname, '..', 'mobile', 'lib', 'l10n');
 const SOURCE_FILE = path.join(ARB_DIR, 'app_en.arb');
 const TARGET_LOCALES = ['fr', 'es', 'de', 'it', 'pl', 'hu', 'ro'];
+const CHUNK_SIZE = parseInt(process.env.TRANSLATE_CHUNK_SIZE || '100', 10);
 
 function readJson(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -151,19 +152,25 @@ async function run() {
       continue;
     }
 
-    const entriesToTranslate = {};
-    for (const key of missingKeys) {
-      entriesToTranslate[key] = source[key];
-    }
-
     console.log(`[${locale}] Translating ${missingKeys.length} keys...`);
-    const translated = await translateKeys(locale, entriesToTranslate);
+    for (let i = 0; i < missingKeys.length; i += CHUNK_SIZE) {
+      const batchKeys = missingKeys.slice(i, i + CHUNK_SIZE);
+      const entriesToTranslate = {};
+      for (const key of batchKeys) {
+        entriesToTranslate[key] = source[key];
+      }
 
-    for (const key of Object.keys(translated)) {
-      target[key] = translated[key];
-      const metaKey = `@${key}`;
-      if (source[metaKey]) {
-        target[metaKey] = source[metaKey];
+      console.log(
+        `[${locale}] Batch ${Math.floor(i / CHUNK_SIZE) + 1} (${batchKeys.length} keys)...`
+      );
+      const translated = await translateKeys(locale, entriesToTranslate);
+
+      for (const key of Object.keys(translated)) {
+        target[key] = translated[key];
+        const metaKey = `@${key}`;
+        if (source[metaKey]) {
+          target[metaKey] = source[metaKey];
+        }
       }
     }
 
