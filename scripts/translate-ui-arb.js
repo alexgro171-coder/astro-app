@@ -33,6 +33,46 @@ function isMetadataKey(key) {
   return key.startsWith('@');
 }
 
+function normalizeJson(input) {
+  const withoutTrailingCommas = input.replace(/,(\s*[}\]])/g, '$1');
+  let out = '';
+  let inString = false;
+  let escaped = false;
+
+  for (let i = 0; i < withoutTrailingCommas.length; i++) {
+    const ch = withoutTrailingCommas[i];
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+        out += ch;
+        continue;
+      }
+      if (ch === '\\') {
+        escaped = true;
+        out += ch;
+        continue;
+      }
+      if (ch === '"') {
+        inString = false;
+        out += ch;
+        continue;
+      }
+      if (ch === '\n') {
+        out += '\\n';
+        continue;
+      }
+      if (ch === '\r') {
+        continue;
+      }
+    } else if (ch === '"') {
+      inString = true;
+    }
+    out += ch;
+  }
+
+  return out.trim();
+}
+
 async function translateKeys(targetLocale, entries) {
   const systemPrompt =
     'You are a professional app UI translator. Return ONLY valid JSON. ' +
@@ -88,9 +128,12 @@ ${JSON.stringify(entries, null, 2)}
     const start = cleaned.indexOf('{');
     const end = cleaned.lastIndexOf('}');
     if (start >= 0 && end > start) {
-      return JSON.parse(cleaned.slice(start, end + 1));
+      const sliced = cleaned.slice(start, end + 1);
+      const normalized = normalizeJson(sliced);
+      return JSON.parse(normalized);
     }
-    throw err;
+    const normalized = normalizeJson(cleaned);
+    return JSON.parse(normalized);
   }
 }
 
