@@ -1,7 +1,7 @@
 import { Injectable, Logger, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
-import { AstrologyApiService } from './astrology-api.service';
+import { AstrologyService } from '../astrology/astrology.service';
 import { EntitlementsService } from '../billing/entitlements/entitlements.service';
 import { ContextService } from '../context/context.service';
 import { User } from '@prisma/client';
@@ -31,7 +31,7 @@ export class LoveCompatibilityService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly astrologyApi: AstrologyApiService,
+    private readonly astrologyService: AstrologyService,
     private readonly entitlementsService: EntitlementsService,
     private readonly contextService: ContextService,
     private readonly configService: ConfigService,
@@ -81,9 +81,9 @@ export class LoveCompatibilityService {
     const locale = dto.locale || acceptLanguage?.split(',')[0]?.split('-')[0] || user.language?.toLowerCase() || 'en';
 
     try {
-      // Step 1: Get partner's natal chart from AstrologyAPI (NOT saved)
+      // Step 1: Get partner's natal chart summary from AstrologyAPI (NOT saved)
       this.logger.log('Generating partner natal chart via AstrologyAPI...');
-      const partnerChartData = await this.getPartnerNatalChart(dto.partner);
+      const partnerNatalSummary = await this.getPartnerNatalChartSummary(dto.partner);
 
       // Step 2: Get user's personal context for personalization
       let personalContext = null;
@@ -104,11 +104,12 @@ export class LoveCompatibilityService {
 
       // Step 3: Generate comprehensive analysis with OpenAI
       this.logger.log('Generating compatibility analysis via OpenAI...');
-      const analysis = await this.generateAnalysis(
+    const analysis = await this.generateAnalysis(
         user,
         userNatalChart.summary as any,
-        partnerChartData,
+        partnerNatalSummary,
         dto.partner.name,
+      dto.partner.gender,
         personalContext,
         locale,
       );
@@ -139,30 +140,17 @@ export class LoveCompatibilityService {
    * Get partner's natal chart from AstrologyAPI.
    * This data is NEVER saved to the database.
    */
-  private async getPartnerNatalChart(partner: PartnerBirthDataDto): Promise<any> {
-    const birthDate = new Date(partner.birthDate);
-    const [hour, minute] = this.parseTime(partner.birthTime);
-    const tzone = this.parseTimezone(partner.timezone);
-
-    // Call AstrologyAPI for partner's natal positions
+  private async getPartnerNatalChartSummary(partner: PartnerBirthDataDto): Promise<any> {
     try {
-      // We'll generate a basic natal summary for the partner
-      // In a real implementation, you'd call the actual API
-      const partnerData = {
-        birthDate: birthDate.toISOString(),
-        birthTime: partner.birthTime || 'unknown',
-        birthPlace: partner.birthPlace,
-        birthLat: partner.birthLat || 0,
-        birthLon: partner.birthLon || 0,
-        timezone: tzone,
-        // Basic calculated positions (placeholder - real implementation would use API)
-        sunSign: this.calculateZodiacSign(birthDate),
-        // Add more calculated fields as needed
-      };
-
-      return partnerData;
+      return await this.astrologyService.generateNatalChartSummaryFromBirthData({
+        birthDate: partner.birthDate,
+        birthTime: partner.birthTime,
+        birthLat: partner.birthLat,
+        birthLon: partner.birthLon,
+        birthTimezone: partner.timezone,
+      });
     } catch (error) {
-      this.logger.error(`Failed to calculate partner chart: ${error.message}`);
+      this.logger.error(`Failed to generate partner natal chart: ${error.message}`);
       throw new Error('Failed to generate partner\'s natal chart.');
     }
   }
@@ -173,13 +161,17 @@ export class LoveCompatibilityService {
   private async generateAnalysis(
     user: User,
     userNatalSummary: any,
-    partnerChartData: any,
+    partnerNatalSummary: any,
     partnerName: string | undefined,
+    partnerGender: string | undefined,
     personalContext: any,
     locale: string,
   ): Promise<string> {
     const genderStr = this.mapGenderToString(user.gender);
     const genderInfo = genderStr ? `The user is ${genderStr}. ` : '';
+    const partnerGenderStr = this.mapGenderToString(partnerGender);
+    const userName = user.name || 'the user';
+    const partnerLabel = partnerName ? partnerName : 'your partner';
 
     const languageInstructions = this.getLanguageInstructions(locale);
 
@@ -195,8 +187,6 @@ Current relationship priorities: ${personalContext.tags?.priorities?.join(', ') 
     } else if (genderInfo) {
       personalContextSection = `\nPERSONAL CONTEXT:\n${genderInfo}\n`;
     }
-
-    const partnerLabel = partnerName ? partnerName : 'your partner';
 
     const systemPrompt = `You are an expert relationship astrologer specializing in romantic compatibility analysis. You provide deep, insightful, and actionable compatibility readings based on natal chart comparisons.
 
@@ -223,18 +213,24 @@ RULES:
 - Balance honesty with encouragement
 - Provide practical relationship advice
 - Keep the analysis between 600-900 words
-- Use "you" for the user and "${partnerLabel}" for their partner`;
+- Use "you" for the user and "${partnerLabel}" for their partner
+- Use the provided names and genders to avoid ambiguity; if missing, use neutral terms`;
 
-    const userPrompt = `Generate a comprehensive love compatibility analysis for ${user.name || 'the user'} and ${partnerLabel}.
+    const userPrompt = `Generate a comprehensive love compatibility analysis for ${userName} and ${partnerLabel}.
+
+USER PROFILE:
+- Name: ${userName}
+- Gender: ${genderStr || 'not specified'}
+
+PARTNER PROFILE:
+- Name: ${partnerName || 'not specified'}
+- Gender: ${partnerGenderStr || 'not specified'}
 
 USER'S NATAL CHART:
 ${this.formatNatalSummary(userNatalSummary)}
 
-PARTNER'S BIRTH DATA:
-- Birth Date: ${partnerChartData.birthDate}
-- Birth Time: ${partnerChartData.birthTime}
-- Birth Place: ${partnerChartData.birthPlace || 'Unknown'}
-- Sun Sign: ${partnerChartData.sunSign || 'Unknown'}
+PARTNER'S NATAL CHART:
+${this.formatNatalSummary(partnerNatalSummary)}
 ${personalContextSection}
 Please provide a detailed, personalized compatibility analysis.`;
 
@@ -257,40 +253,6 @@ Please provide a detailed, personalized compatibility analysis.`;
   }
 
   /**
-   * Calculate zodiac sign from birth date.
-   */
-  private calculateZodiacSign(birthDate: Date): string {
-    const month = birthDate.getMonth() + 1;
-    const day = birthDate.getDate();
-
-    const signs = [
-      { sign: 'Capricorn', start: [12, 22], end: [1, 19] },
-      { sign: 'Aquarius', start: [1, 20], end: [2, 18] },
-      { sign: 'Pisces', start: [2, 19], end: [3, 20] },
-      { sign: 'Aries', start: [3, 21], end: [4, 19] },
-      { sign: 'Taurus', start: [4, 20], end: [5, 20] },
-      { sign: 'Gemini', start: [5, 21], end: [6, 20] },
-      { sign: 'Cancer', start: [6, 21], end: [7, 22] },
-      { sign: 'Leo', start: [7, 23], end: [8, 22] },
-      { sign: 'Virgo', start: [8, 23], end: [9, 22] },
-      { sign: 'Libra', start: [9, 23], end: [10, 22] },
-      { sign: 'Scorpio', start: [10, 23], end: [11, 21] },
-      { sign: 'Sagittarius', start: [11, 22], end: [12, 21] },
-    ];
-
-    for (const { sign, start, end } of signs) {
-      if (
-        (month === start[0] && day >= start[1]) ||
-        (month === end[0] && day <= end[1])
-      ) {
-        return sign;
-      }
-    }
-
-    return 'Capricorn'; // Default for edge cases
-  }
-
-  /**
    * Format natal summary for prompt.
    */
   private formatNatalSummary(summary: any): string {
@@ -308,19 +270,6 @@ Please provide a detailed, personalized compatibility analysis.`;
     }
 
     return parts.length > 0 ? parts.join('\n') : JSON.stringify(summary).substring(0, 500);
-  }
-
-  private parseTime(timeStr?: string): [number, number] {
-    if (!timeStr) return [12, 0];
-    const [hour, minute] = timeStr.split(':').map(n => parseInt(n, 10));
-    return [hour || 12, minute || 0];
-  }
-
-  private parseTimezone(tz?: number | string): number {
-    if (tz === undefined || tz === null) return 0;
-    if (typeof tz === 'number') return tz;
-    const parsed = parseFloat(tz);
-    return isNaN(parsed) ? 0 : parsed;
   }
 
   private mapGenderToString(gender?: string | null): string | null {

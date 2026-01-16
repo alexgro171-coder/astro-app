@@ -1,10 +1,17 @@
-import { IsNotEmpty, IsString, IsOptional, ValidateNested, IsDateString, IsNumber, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, ValidateNested, IsDateString, IsNumber, Matches, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
+
+const GENDER_VALUES = ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'] as const;
+type GenderType = typeof GENDER_VALUES[number];
 
 export class PartnerBirthDataDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @IsOptional()
+  @IsIn(GENDER_VALUES)
+  gender?: GenderType;
 
   @IsNotEmpty()
   @IsDateString()

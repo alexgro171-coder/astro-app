@@ -32,6 +32,14 @@ interface NatalChartData {
   interpretations?: any;
 }
 
+interface BirthDataInput {
+  birthDate: string | Date;
+  birthTime?: string;
+  birthLat?: number;
+  birthLon?: number;
+  birthTimezone?: number | string;
+}
+
 @Injectable()
 export class AstrologyService {
   private readonly logger = new Logger(AstrologyService.name);
@@ -567,6 +575,38 @@ export class AstrologyService {
     return this.prisma.natalChart.findUnique({
       where: { userId },
     });
+  }
+
+  /**
+   * Generate a natal chart summary from birth data without saving to DB.
+   */
+  async generateNatalChartSummaryFromBirthData(input: BirthDataInput): Promise<any> {
+    const birthDate = new Date(input.birthDate);
+    const [hour, minute] = (input.birthTime || '12:00').split(':').map(Number);
+    const tzone = typeof input.birthTimezone === 'number'
+      ? input.birthTimezone
+      : parseFloat(String(input.birthTimezone ?? 0)) || 0;
+
+    const birthData = {
+      day: birthDate.getUTCDate(),
+      month: birthDate.getUTCMonth() + 1,
+      year: birthDate.getUTCFullYear(),
+      hour: hour || 12,
+      min: minute || 0,
+      lat: input.birthLat || 0,
+      lon: input.birthLon || 0,
+      tzone,
+    };
+
+    this.logger.log(`Generating natal chart summary (no-save): ${JSON.stringify(birthData)}`);
+
+    try {
+      const response = await this.apiClient.post('/western_horoscope', birthData);
+      return this.parseWesternNatalChartSummary(response.data);
+    } catch (error) {
+      this.logger.error('Failed to generate natal chart summary:', error.message);
+      throw new BadRequestException('Failed to generate natal chart summary');
+    }
   }
 }
 

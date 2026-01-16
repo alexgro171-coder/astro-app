@@ -9,12 +9,14 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 import { BillingModule } from '../billing/billing.module';
 import { ContextModule } from '../context/context.module';
+import { AstrologyModule } from '../astrology/astrology.module';
 
 @Module({
   imports: [
     ConfigModule,
     PrismaModule,
     AnalyticsModule,
+    AstrologyModule,
     forwardRef(() => BillingModule),
     forwardRef(() => ContextModule),
   ],
