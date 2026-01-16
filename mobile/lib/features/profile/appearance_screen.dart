@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 
@@ -55,6 +56,7 @@ class AppearanceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final currentMode = ref.watch(themeModeProvider);
 
     return Scaffold(
@@ -74,10 +76,10 @@ class AppearanceScreen extends ConsumerWidget {
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Appearance',
-                        style: TextStyle(
+                        l10n.appearanceTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -97,9 +99,9 @@ class AppearanceScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Theme',
-                        style: TextStyle(
+                      Text(
+                        l10n.appearanceTheme,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textSecondary,
@@ -111,8 +113,8 @@ class AppearanceScreen extends ConsumerWidget {
                         context,
                         ref,
                         icon: Icons.dark_mode_rounded,
-                        title: 'Dark',
-                        subtitle: 'Easy on the eyes in low light',
+                        title: l10n.appearanceDarkTitle,
+                        subtitle: l10n.appearanceDarkSubtitle,
                         mode: ThemeMode.dark,
                         isSelected: currentMode == ThemeMode.dark,
                       ),
@@ -121,8 +123,8 @@ class AppearanceScreen extends ConsumerWidget {
                         context,
                         ref,
                         icon: Icons.light_mode_rounded,
-                        title: 'Light',
-                        subtitle: 'Classic bright appearance',
+                        title: l10n.appearanceLightTitle,
+                        subtitle: l10n.appearanceLightSubtitle,
                         mode: ThemeMode.light,
                         isSelected: currentMode == ThemeMode.light,
                       ),
@@ -131,8 +133,8 @@ class AppearanceScreen extends ConsumerWidget {
                         context,
                         ref,
                         icon: Icons.settings_brightness_rounded,
-                        title: 'System',
-                        subtitle: 'Match your device settings',
+                        title: l10n.appearanceSystemTitle,
+                        subtitle: l10n.appearanceSystemSubtitle,
                         mode: ThemeMode.system,
                         isSelected: currentMode == ThemeMode.system,
                       ),
@@ -160,9 +162,9 @@ class AppearanceScreen extends ConsumerWidget {
                                   size: 20,
                                 ),
                                 const SizedBox(width: 12),
-                                const Text(
-                                  'Preview',
-                                  style: TextStyle(
+                                Text(
+                                  l10n.appearancePreviewTitle,
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.textPrimary,
@@ -171,9 +173,9 @@ class AppearanceScreen extends ConsumerWidget {
                               ],
                             ),
                             const SizedBox(height: 12),
-                            const Text(
-                              'The cosmic theme is designed to create an immersive astrology experience. The dark theme is recommended for the best visual experience.',
-                              style: TextStyle(
+                            Text(
+                              l10n.appearancePreviewBody,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 color: AppColors.textSecondary,
                               ),
@@ -201,12 +203,14 @@ class AppearanceScreen extends ConsumerWidget {
     required ThemeMode mode,
     required bool isSelected,
   }) {
+    final l10n = AppLocalizations.of(context)!;
+
     return InkWell(
       onTap: () {
         ref.read(themeModeProvider.notifier).setThemeMode(mode);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Theme changed to $title'),
+            content: Text(l10n.appearanceThemeChanged(title)),
             backgroundColor: AppColors.success,
             duration: const Duration(seconds: 1),
           ),

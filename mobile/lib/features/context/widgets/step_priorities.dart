@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
 import '../screens/context_wizard_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Step 4: Priorities & Tone
 class StepPriorities extends StatelessWidget {
@@ -16,16 +17,17 @@ class StepPriorities extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // D1: Priorities (max 2)
-          _buildSectionTitle('What are your top priorities right now?'),
+          _buildSectionTitle(l10n.contextPrioritiesTitle),
           const SizedBox(height: 4),
           Text(
-            'Select up to 2 areas you want to focus on',
+            l10n.contextPrioritiesSubtitle,
             style: TextStyle(
               fontSize: 12,
               color: Colors.white.withOpacity(0.6),
@@ -37,14 +39,14 @@ class StepPriorities extends StatelessWidget {
           const SizedBox(height: 32),
 
           // D2: Guidance Style
-          _buildSectionTitle('Preferred guidance style'),
+          _buildSectionTitle(l10n.contextGuidanceStyleTitle),
           const SizedBox(height: 12),
-          _buildStyleOptions(),
+          _buildStyleOptions(l10n),
 
           const SizedBox(height: 32),
 
           // D3: Sensitivity Mode
-          _buildSensitivityToggle(),
+          _buildSensitivityToggle(l10n),
 
           const SizedBox(height: 40),
         ],
@@ -127,7 +129,7 @@ class StepPriorities extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              priority.label,
+              _priorityLabel(priority, AppLocalizations.of(context)!),
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -152,7 +154,7 @@ class StepPriorities extends StatelessWidget {
     );
   }
 
-  Widget _buildStyleOptions() {
+  Widget _buildStyleOptions(AppLocalizations l10n) {
     return Column(
       children: GuidanceStyle.values.map((style) {
         final isSelected = answers.guidanceStyle == style;
@@ -207,7 +209,7 @@ class StepPriorities extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        style.label,
+                        _guidanceStyleLabel(style, l10n),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -216,7 +218,7 @@ class StepPriorities extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        style.description,
+                        _guidanceStyleDescription(style, l10n),
                         style: TextStyle(
                           fontSize: 13,
                           color: isSelected ? Colors.white.withOpacity(0.8) : AppColors.textMuted,
@@ -233,7 +235,7 @@ class StepPriorities extends StatelessWidget {
     );
   }
 
-  Widget _buildSensitivityToggle() {
+  Widget _buildSensitivityToggle(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -255,9 +257,9 @@ class StepPriorities extends StatelessWidget {
                       size: 20,
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Sensitivity Mode',
-                      style: TextStyle(
+                    Text(
+                      l10n.contextSensitivityTitle,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
@@ -267,7 +269,7 @@ class StepPriorities extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Avoid anxiety-inducing or deterministic phrasing in guidance',
+                  l10n.contextSensitivitySubtitle,
                   style: TextStyle(
                     fontSize: 13,
                     color: AppColors.textMuted,
@@ -287,6 +289,49 @@ class StepPriorities extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _priorityLabel(Priority priority, AppLocalizations l10n) {
+    switch (priority) {
+      case Priority.healthHabits:
+        return l10n.contextPriorityHealth;
+      case Priority.careerGrowth:
+        return l10n.contextPriorityCareer;
+      case Priority.businessDecisions:
+        return l10n.contextPriorityBusiness;
+      case Priority.moneyStability:
+        return l10n.contextPriorityMoney;
+      case Priority.loveRelationship:
+        return l10n.contextPriorityLove;
+      case Priority.familyParenting:
+        return l10n.contextPriorityFamily;
+      case Priority.socialLife:
+        return l10n.contextPrioritySocial;
+      case Priority.personalGrowth:
+        return l10n.contextPriorityGrowth;
+    }
+  }
+
+  String _guidanceStyleLabel(GuidanceStyle style, AppLocalizations l10n) {
+    switch (style) {
+      case GuidanceStyle.direct:
+        return l10n.contextGuidanceStyleDirect;
+      case GuidanceStyle.empathetic:
+        return l10n.contextGuidanceStyleEmpathetic;
+      case GuidanceStyle.balanced:
+        return l10n.contextGuidanceStyleBalanced;
+    }
+  }
+
+  String _guidanceStyleDescription(GuidanceStyle style, AppLocalizations l10n) {
+    switch (style) {
+      case GuidanceStyle.direct:
+        return l10n.contextGuidanceStyleDirectDesc;
+      case GuidanceStyle.empathetic:
+        return l10n.contextGuidanceStyleEmpatheticDesc;
+      case GuidanceStyle.balanced:
+        return l10n.contextGuidanceStyleBalancedDesc;
+    }
   }
 }
 

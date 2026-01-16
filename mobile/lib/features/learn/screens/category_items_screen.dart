@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../services/learn_service.dart';
 import '../providers/learn_session_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CategoryItemsScreen extends ConsumerStatefulWidget {
   final LearnCategory category;
@@ -62,13 +63,13 @@ class _CategoryItemsScreenState extends ConsumerState<CategoryItemsScreen> {
               Icon(Icons.error_outline, color: AppColors.error, size: 48),
               const SizedBox(height: 16),
               Text(
-                'Failed to load articles',
+                AppLocalizations.of(context)!.learnArticlesLoadFailed,
                 style: TextStyle(color: AppColors.textMuted),
               ),
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => ref.refresh(learnItemsProvider((widget.category, widget.locale))),
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.commonRetry),
               ),
             ],
           ),
@@ -82,7 +83,7 @@ class _CategoryItemsScreenState extends ConsumerState<CategoryItemsScreen> {
                   Icon(Icons.article_outlined, color: AppColors.textMuted, size: 64),
                   const SizedBox(height: 16),
                   Text(
-                    'No articles available yet',
+                    AppLocalizations.of(context)!.learnArticlesEmpty,
                     style: TextStyle(color: AppColors.textMuted, fontSize: 16),
                   ),
                 ],
@@ -104,7 +105,7 @@ class _CategoryItemsScreenState extends ConsumerState<CategoryItemsScreen> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Showing content in English (not available in your language)',
+                          AppLocalizations.of(context)!.learnContentFallback,
                           style: TextStyle(color: AppColors.warning, fontSize: 13),
                         ),
                       ),

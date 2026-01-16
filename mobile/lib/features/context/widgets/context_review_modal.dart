@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../services/context_service.dart';
@@ -50,7 +51,9 @@ class _ContextReviewModalState extends ConsumerState<ContextReviewModal> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to update. Please try again.')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.contextReviewFailed),
+          ),
         );
         setState(() {
           _isLoading = false;
@@ -61,6 +64,7 @@ class _ContextReviewModalState extends ConsumerState<ContextReviewModal> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -100,9 +104,9 @@ class _ContextReviewModalState extends ConsumerState<ContextReviewModal> {
               const SizedBox(height: 20),
 
               // Title
-              const Text(
-                'Time for a Quick Check-in',
-                style: TextStyle(
+              Text(
+                l10n.contextReviewTitle,
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
@@ -113,9 +117,8 @@ class _ContextReviewModalState extends ConsumerState<ContextReviewModal> {
 
               // Description
               Text(
-                "It's been 3 months since we last updated your personal context. "
-                "Has anything important changed in your life that we should know about?",
-                style: TextStyle(
+                l10n.contextReviewBody,
+                style: const TextStyle(
                   fontSize: 15,
                   color: AppColors.textSecondary,
                   height: 1.5,
@@ -125,8 +128,8 @@ class _ContextReviewModalState extends ConsumerState<ContextReviewModal> {
               const SizedBox(height: 8),
               
               Text(
-                'This helps us give you more personalized guidance.',
-                style: TextStyle(
+                l10n.contextReviewHint,
+                style: const TextStyle(
                   fontSize: 13,
                   color: AppColors.textMuted,
                   fontStyle: FontStyle.italic,
@@ -155,9 +158,9 @@ class _ContextReviewModalState extends ConsumerState<ContextReviewModal> {
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text(
-                              'No changes',
-                              style: TextStyle(color: AppColors.textSecondary),
+                          : Text(
+                              l10n.contextReviewNoChanges,
+                              style: const TextStyle(color: AppColors.textSecondary),
                             ),
                     ),
                   ),
@@ -174,9 +177,9 @@ class _ContextReviewModalState extends ConsumerState<ContextReviewModal> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'Yes, update',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.contextReviewYesUpdate,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),

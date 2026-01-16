@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../models/context_profile.dart';
@@ -49,13 +50,13 @@ class ContextSettingsCard extends ConsumerWidget {
         children: [
           const Icon(Icons.error_outline, color: AppColors.error, size: 32),
           const SizedBox(height: 8),
-          const Text(
-            'Failed to load profile',
-            style: TextStyle(color: AppColors.error),
+          Text(
+            AppLocalizations.of(context)!.contextProfileLoadFailed,
+            style: const TextStyle(color: AppColors.error),
           ),
           TextButton(
             onPressed: () => ref.refresh(contextProfileProvider),
-            child: const Text('Retry'),
+            child: Text(AppLocalizations.of(context)!.commonRetry),
           ),
         ],
       ),
@@ -63,6 +64,7 @@ class ContextSettingsCard extends ConsumerWidget {
   }
 
   Widget _buildNoProfileCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -85,9 +87,9 @@ class ContextSettingsCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Personal Context',
-            style: TextStyle(
+          Text(
+            l10n.contextCardTitle,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
@@ -95,7 +97,7 @@ class ContextSettingsCard extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Set up your personal context to receive more tailored guidance.',
+            l10n.contextCardSubtitle,
             style: TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
@@ -112,9 +114,9 @@ class ContextSettingsCard extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text(
-              'Set Up Now',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            child: Text(
+              l10n.contextCardSetupNow,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -123,6 +125,7 @@ class ContextSettingsCard extends ConsumerWidget {
   }
 
   Widget _buildProfileCard(BuildContext context, WidgetRef ref, ContextProfile profile) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -153,16 +156,19 @@ class ContextSettingsCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Personal Context',
-                      style: TextStyle(
+                    Text(
+                      l10n.contextCardTitle,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary,
                       ),
                     ),
                     Text(
-                      'Version ${profile.version} • Last updated ${_formatDate(profile.completedAt)}',
+                      l10n.contextCardVersionUpdated(
+                        profile.version,
+                        _formatDate(context, profile.completedAt),
+                      ),
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.textMuted,
@@ -194,7 +200,7 @@ class ContextSettingsCard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'AI Summary',
+                      l10n.contextCardAiSummary,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -224,9 +230,11 @@ class ContextSettingsCard extends ConsumerWidget {
             children: [
               if (profile.summaryTags.priorities.isNotEmpty)
                 ...profile.summaryTags.priorities.take(2).map((p) => _buildTag(p)),
-              _buildTag('${profile.summaryTags.tonePreference} tone'),
+              _buildTag(
+                l10n.contextCardToneTag(profile.summaryTags.tonePreference),
+              ),
               if (profile.summaryTags.sensitivityMode)
-                _buildTag('sensitivity on'),
+                _buildTag(l10n.contextCardSensitivityTag),
             ],
           ),
           const SizedBox(height: 16),
@@ -251,8 +259,8 @@ class ContextSettingsCard extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     profile.needsReview
-                        ? 'Review due - update your context'
-                        : 'Next review in ${profile.daysUntilReview} days',
+                        ? l10n.contextCardReviewDue
+                        : l10n.contextCardNextReview(profile.daysUntilReview),
                     style: TextStyle(
                       fontSize: 13,
                       color: profile.needsReview
@@ -279,7 +287,7 @@ class ContextSettingsCard extends ConsumerWidget {
                     });
                   },
                   icon: const Icon(Icons.edit_outlined, size: 18),
-                  label: const Text('Edit'),
+                  label: Text(l10n.commonEdit),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: AppColors.surfaceLight),
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -294,7 +302,10 @@ class ContextSettingsCard extends ConsumerWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => _showDeleteConfirmation(context, ref),
                   icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.error),
-                  label: const Text('Delete', style: TextStyle(color: AppColors.error)),
+                  label: Text(
+                    l10n.commonDelete,
+                    style: const TextStyle(color: AppColors.error),
+                  ),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: AppColors.error.withOpacity(0.3)),
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -329,15 +340,16 @@ class ContextSettingsCard extends ConsumerWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(BuildContext context, DateTime date) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final diff = now.difference(date);
 
-    if (diff.inDays == 0) return 'today';
-    if (diff.inDays == 1) return 'yesterday';
-    if (diff.inDays < 7) return '${diff.inDays} days ago';
-    if (diff.inDays < 30) return '${(diff.inDays / 7).floor()} weeks ago';
-    return '${(diff.inDays / 30).floor()} months ago';
+    if (diff.inDays == 0) return l10n.commonToday;
+    if (diff.inDays == 1) return l10n.commonYesterday;
+    if (diff.inDays < 7) return l10n.commonDaysAgo(diff.inDays);
+    if (diff.inDays < 30) return l10n.commonWeeksAgo((diff.inDays / 7).floor());
+    return l10n.commonMonthsAgo((diff.inDays / 30).floor());
   }
 
   void _showDeleteConfirmation(BuildContext context, WidgetRef ref) {
@@ -345,15 +357,12 @@ class ContextSettingsCard extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Delete Personal Context?'),
-        content: const Text(
-          'This will delete your personal context profile. '
-          'Your guidance will become less personalized.',
-        ),
+        title: Text(AppLocalizations.of(context)!.contextDeleteTitle),
+        content: Text(AppLocalizations.of(context)!.contextDeleteBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.commonCancel),
           ),
           TextButton(
             onPressed: () async {
@@ -364,12 +373,19 @@ class ContextSettingsCard extends ConsumerWidget {
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Failed to delete profile')),
+                    SnackBar(
+                      content: Text(
+                        AppLocalizations.of(context)!.contextDeleteFailed,
+                      ),
+                    ),
                   );
                 }
               }
             },
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: Text(
+              AppLocalizations.of(context)!.commonDelete,
+              style: const TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),

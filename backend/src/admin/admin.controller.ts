@@ -75,6 +75,17 @@ export class AdminController {
     return this.adminService.getUserDetails(userId);
   }
 
+  // ==================== UI TRANSLATIONS ====================
+
+  /**
+   * Run UI ARB translation script
+   */
+  @Post('translations/run')
+  @ApiOperation({ summary: 'Run UI ARB translation script' })
+  async runUiTranslations() {
+    return this.adminService.runUiTranslations();
+  }
+
   // ==================== PAYMENTS ====================
 
   /**

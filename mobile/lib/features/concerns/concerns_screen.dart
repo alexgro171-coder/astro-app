@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -127,6 +128,7 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,9 +142,9 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Your Focus',
-                      style: TextStyle(
+                    Text(
+                      l10n.concernsTitle,
+                      style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary,
@@ -150,7 +152,7 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Topics shaping your guidance',
+                      l10n.concernsSubtitle,
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.textSecondary,
@@ -196,9 +198,9 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
                 fontSize: 13,
               ),
               tabs: [
-                Tab(text: 'Active (${_activeConcerns.length})'),
-                Tab(text: 'Resolved (${_resolvedConcerns.length})'),
-                Tab(text: 'Archived (${_archivedConcerns.length})'),
+                Tab(text: l10n.concernsTabActive(_activeConcerns.length)),
+                Tab(text: l10n.concernsTabResolved(_resolvedConcerns.length)),
+                Tab(text: l10n.concernsTabArchived(_archivedConcerns.length)),
               ],
             ),
           ),
@@ -228,6 +230,7 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
   }
 
   Widget _buildErrorState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -238,7 +241,7 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadConcerns,
-            child: const Text('Retry'),
+            child: Text(l10n.commonRetry),
           ),
         ],
       ),
@@ -246,6 +249,7 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
   }
 
   Widget _buildConcernsList(List<dynamic> concerns) {
+    final l10n = AppLocalizations.of(context)!;
     if (concerns.isEmpty) {
       return Center(
         child: Column(
@@ -257,18 +261,18 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
               color: AppColors.textMuted.withOpacity(0.5),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'No concerns here',
-              style: TextStyle(
+            Text(
+              l10n.concernsEmptyTitle,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Add a focus topic to get personalized guidance',
-              style: TextStyle(color: AppColors.textMuted),
+            Text(
+              l10n.concernsEmptySubtitle,
+              style: const TextStyle(color: AppColors.textMuted),
               textAlign: TextAlign.center,
             ),
           ],
@@ -296,7 +300,11 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
     final status = concern['status'] as String;
     final createdAt = DateTime.parse(concern['createdAt']);
 
-    final categoryConfig = _getCategoryConfig(category);
+    final categoryConfig = _getCategoryConfig(
+      category,
+      AppLocalizations.of(context)!,
+    );
+    final locale = Localizations.localeOf(context).languageCode;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -340,7 +348,7 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      DateFormat('MMM d, yyyy').format(createdAt),
+                      DateFormat('MMM d, yyyy', locale).format(createdAt),
                       style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textMuted,
@@ -359,7 +367,7 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
                     color: AppColors.success.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -367,10 +375,10 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
                         size: 12,
                         color: AppColors.success,
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Text(
-                        'Active',
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.commonActive,
+                        style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: AppColors.success,
@@ -397,54 +405,54 @@ class _ConcernsScreenState extends ConsumerState<ConcernsScreen>
     );
   }
 
-  _CategoryConfig _getCategoryConfig(String category) {
+  _CategoryConfig _getCategoryConfig(String category, AppLocalizations l10n) {
     switch (category) {
       case 'JOB':
         return _CategoryConfig(
           icon: Icons.work_rounded,
-          label: 'Career & Job',
+          label: l10n.concernsCategoryCareer,
           color: Colors.blue,
         );
       case 'HEALTH':
         return _CategoryConfig(
           icon: Icons.favorite_rounded,
-          label: 'Health',
+          label: l10n.concernsCategoryHealth,
           color: Colors.red,
         );
       case 'COUPLE':
         return _CategoryConfig(
           icon: Icons.favorite_border_rounded,
-          label: 'Relationship',
+          label: l10n.concernsCategoryRelationship,
           color: Colors.pink,
         );
       case 'FAMILY':
         return _CategoryConfig(
           icon: Icons.family_restroom_rounded,
-          label: 'Family',
+          label: l10n.concernsCategoryFamily,
           color: Colors.orange,
         );
       case 'MONEY':
         return _CategoryConfig(
           icon: Icons.attach_money_rounded,
-          label: 'Money',
+          label: l10n.concernsCategoryMoney,
           color: Colors.green,
         );
       case 'BUSINESS_DECISION':
         return _CategoryConfig(
           icon: Icons.business_center_rounded,
-          label: 'Business',
+          label: l10n.concernsCategoryBusiness,
           color: Colors.teal,
         );
       case 'PARTNERSHIP':
         return _CategoryConfig(
           icon: Icons.handshake_rounded,
-          label: 'Partnership',
+          label: l10n.concernsCategoryPartnership,
           color: Colors.amber,
         );
       case 'PERSONAL_GROWTH':
         return _CategoryConfig(
           icon: Icons.self_improvement_rounded,
-          label: 'Personal Growth',
+          label: l10n.concernsCategoryGrowth,
           color: Colors.purple,
         );
       default:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -18,17 +19,6 @@ class BirthDataScreen extends ConsumerStatefulWidget {
 enum Gender { male, female, preferNotToSay }
 
 extension GenderExtension on Gender {
-  String get displayName {
-    switch (this) {
-      case Gender.male:
-        return 'Male';
-      case Gender.female:
-        return 'Female';
-      case Gender.preferNotToSay:
-        return 'Prefer not to say';
-    }
-  }
-
   String get apiValue {
     switch (this) {
       case Gender.male:
@@ -106,14 +96,26 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
     }
   }
 
+  String _genderLabel(Gender gender, AppLocalizations l10n) {
+    switch (gender) {
+      case Gender.male:
+        return l10n.genderMale;
+      case Gender.female:
+        return l10n.genderFemale;
+      case Gender.preferNotToSay:
+        return l10n.genderPreferNotToSay;
+    }
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedDate == null) {
-      setState(() => _errorMessage = 'Please select your birth date');
+      setState(() => _errorMessage = l10n.birthDateMissing);
       return;
     }
     if (_selectedLocation == null) {
-      setState(() => _errorMessage = 'Please select a birth place from the suggestions');
+      setState(() => _errorMessage = l10n.birthPlaceMissing);
       return;
     }
 
@@ -146,7 +148,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
       context.go('/context-wizard', extra: {'isOnboarding': true});
     } catch (e) {
       setState(() {
-        _errorMessage = 'Could not save birth data. Please try again.';
+        _errorMessage = l10n.birthDataSaveError;
       });
     } finally {
       if (mounted) {
@@ -157,6 +159,8 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -190,18 +194,18 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
-                          'Your Birth Chart',
-                          style: TextStyle(
+                        Text(
+                          l10n.birthDataTitle,
+                          style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'We need your birth details to create\nyour personalized astrological profile',
-                          style: TextStyle(
+                        Text(
+                          l10n.birthDataSubtitle,
+                          style: const TextStyle(
                             fontSize: 14,
                             color: AppColors.textSecondary,
                           ),
@@ -238,9 +242,9 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                     ),
 
                   // Birth Date
-                  const Text(
-                    'Birth Date',
-                    style: TextStyle(
+                  Text(
+                    l10n.birthDateLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -263,7 +267,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                           Text(
                             _selectedDate != null
                                 ? DateFormat('MMMM d, yyyy').format(_selectedDate!)
-                                : 'Select your birth date',
+                                : l10n.birthDateSelectHint,
                             style: TextStyle(
                               color: _selectedDate != null
                                   ? AppColors.textPrimary
@@ -278,9 +282,9 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                   const SizedBox(height: 20),
 
                   // Birth Time
-                  const Text(
-                    'Birth Time',
-                    style: TextStyle(
+                  Text(
+                    l10n.birthTimeLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -307,10 +311,10 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                           const SizedBox(width: 12),
                           Text(
                             _unknownTime
-                                ? 'Unknown'
+                                ? l10n.birthTimeUnknown
                                 : _selectedTime != null
                                     ? _selectedTime!.format(context)
-                                    : 'Select your birth time',
+                                    : l10n.birthTimeSelectHint,
                             style: TextStyle(
                               color: _unknownTime
                                   ? AppColors.textMuted.withOpacity(0.5)
@@ -336,9 +340,9 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                         },
                         activeColor: AppColors.accent,
                       ),
-                      const Text(
-                        "I don't know my exact birth time",
-                        style: TextStyle(
+                      Text(
+                        l10n.birthTimeUnknownCheckbox,
+                        style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 13,
                         ),
@@ -349,9 +353,9 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                   const SizedBox(height: 20),
 
                   // Birth Place with Autocomplete
-                  const Text(
-                    'Birth Place',
-                    style: TextStyle(
+                  Text(
+                    l10n.birthPlaceLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -359,7 +363,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                   ),
                   const SizedBox(height: 8),
                   LocationAutocomplete(
-                    hintText: 'Start typing a city name...',
+                    hintText: l10n.birthPlaceHint,
                     initialValue: _selectedLocation,
                     onSelected: (location) {
                       setState(() {
@@ -369,7 +373,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                     },
                     validator: (value) {
                       if (_selectedLocation == null) {
-                        return 'Please select a location from the suggestions';
+                        return l10n.birthPlaceValidation;
                       }
                       return null;
                     },
@@ -389,7 +393,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              'Selected: ${_selectedLocation!.displayName}',
+                              l10n.birthPlaceSelected(_selectedLocation!.displayName),
                               style: const TextStyle(
                                 color: Colors.green,
                                 fontSize: 12,
@@ -404,9 +408,9 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                   const SizedBox(height: 20),
 
                   // Gender
-                  const Text(
-                    'Gender',
-                    style: TextStyle(
+                  Text(
+                    l10n.genderLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -439,7 +443,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
-                                  gender.displayName,
+                                  _genderLabel(gender, l10n),
                                   style: TextStyle(
                                     color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
                                     fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
@@ -469,17 +473,17 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                                 color: AppColors.primary,
                               ),
                             )
-                          : const Text('Generate My Birth Chart'),
+                          : Text(l10n.birthDataSubmit),
                     ),
                   ),
 
                   const SizedBox(height: 16),
 
                   // Info text
-                  const Center(
+                  Center(
                     child: Text(
-                      'Your birth data is used only to calculate your\nastrological chart and is stored securely.',
-                      style: TextStyle(
+                      l10n.birthDataPrivacyNote,
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.textMuted,
                       ),

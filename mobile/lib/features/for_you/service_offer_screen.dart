@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -33,6 +34,7 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final priceDisplay = '\$${(priceUsd / 100).toStringAsFixed(2)}';
 
     return Scaffold(
@@ -121,14 +123,14 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.blue.withOpacity(0.3)),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.info_outline, color: Colors.blue, size: 20),
-                        SizedBox(width: 8),
+                        const Icon(Icons.info_outline, color: Colors.blue, size: 20),
+                        const SizedBox(width: 8),
                         Text(
-                          'Requires partner birth data',
-                          style: TextStyle(
+                          l10n.serviceOfferRequiresPartner,
+                          style: const TextStyle(
                             color: Colors.blue,
                             fontSize: 14,
                           ),
@@ -175,9 +177,9 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
                                 color: Colors.green.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Text(
-                                'FREE',
-                                style: TextStyle(
+                              child: Text(
+                                l10n.commonFree,
+                                style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green,
@@ -187,16 +189,16 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Beta testers get free access!',
-                          style: TextStyle(
+                        Text(
+                          l10n.serviceOfferBetaFree,
+                          style: const TextStyle(
                             fontSize: 14,
                             color: Colors.green,
                           ),
                         ),
                       ] else ...[
                         Text(
-                          isUnlocked ? 'Unlocked' : priceDisplay,
+                          isUnlocked ? l10n.serviceOfferUnlocked : priceDisplay,
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -257,8 +259,8 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
                           )
                         : Text(
                             betaFree || isUnlocked
-                                ? 'Generate Report'
-                                : 'Unlock for $priceDisplay',
+                                ? l10n.serviceOfferGenerate
+                                : l10n.serviceOfferUnlockFor(priceDisplay),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -309,7 +311,7 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
       _isLoading = false;
       _isGenerating = true;
       _error = null;
-      _progressHint = "Preparing your personalized report…";
+      _progressHint = l10n.serviceOfferPreparing;
     });
 
     try {
@@ -410,7 +412,7 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
     if (mounted) {
       setState(() {
         _isGenerating = false;
-        _error = 'Taking longer than expected. Please try again.';
+        _error = l10n.serviceOfferTimeout;
       });
     }
   }
@@ -439,14 +441,14 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
       } else {
         setState(() {
           _isGenerating = false;
-          _error = 'Report not ready yet. Please try again.';
+          _error = l10n.serviceOfferNotReady;
         });
       }
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _isGenerating = false;
-        _error = 'Failed to fetch report: $e';
+        _error = l10n.serviceOfferFetchFailed(e.toString());
       });
     }
   }

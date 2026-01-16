@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../services/learn_service.dart';
 import '../providers/learn_session_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ArticleScreen extends ConsumerWidget {
   final LearnCategory category;
@@ -54,13 +55,13 @@ class ArticleScreen extends ConsumerWidget {
               Icon(Icons.error_outline, color: AppColors.error, size: 48),
               const SizedBox(height: 16),
               Text(
-                'Failed to load article',
+                AppLocalizations.of(context)!.learnArticleLoadFailed,
                 style: TextStyle(color: AppColors.textMuted),
               ),
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => ref.refresh(learnArticleProvider((category, locale, slug))),
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.commonRetry),
               ),
             ],
           ),
@@ -97,7 +98,7 @@ class ArticleScreen extends ConsumerWidget {
                         Icon(Icons.translate, color: AppColors.warning, size: 18),
                         const SizedBox(width: 8),
                         Text(
-                          'Content in English',
+                          AppLocalizations.of(context)!.learnContentInEnglish,
                           style: TextStyle(color: AppColors.warning, fontSize: 13),
                         ),
                       ],

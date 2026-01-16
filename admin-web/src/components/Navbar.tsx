@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Stars, LayoutDashboard, BookOpen, LogOut } from 'lucide-react';
+import { Stars, LayoutDashboard, BookOpen, LogOut, Languages } from 'lucide-react';
 import { logout } from '@/lib/auth';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/learn', label: 'Learn CMS', icon: BookOpen },
+  { href: '/translations', label: 'UI Translations', icon: Languages },
 ];
 
 export default function Navbar() {

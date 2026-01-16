@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/universe_loading_overlay.dart';
@@ -89,6 +90,7 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
   }
 
   Widget _buildAppBar(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -97,10 +99,10 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
             onPressed: () => context.pop(),
             icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'My Natal Chart',
-              style: TextStyle(
+              l10n.natalChartTitle,
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
@@ -118,6 +120,7 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
   }
 
   Widget _buildTabBar() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
@@ -142,14 +145,14 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
           fontSize: 14,
         ),
         dividerColor: Colors.transparent,
-        tabs: const [
+        tabs: [
           Tab(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.table_chart_rounded, size: 18),
-                SizedBox(width: 8),
-                Text('Table'),
+                const Icon(Icons.table_chart_rounded, size: 18),
+                const SizedBox(width: 8),
+                Text(l10n.natalChartTabTable),
               ],
             ),
           ),
@@ -157,9 +160,9 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.blur_circular_rounded, size: 18),
-                SizedBox(width: 8),
-                Text('Chart'),
+                const Icon(Icons.blur_circular_rounded, size: 18),
+                const SizedBox(width: 8),
+                Text(l10n.natalChartTabChart),
               ],
             ),
           ),
@@ -187,6 +190,7 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -199,9 +203,9 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
               color: AppColors.accent.withOpacity(0.5),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'No Natal Chart Data',
-              style: TextStyle(
+            Text(
+              l10n.natalChartEmptyTitle,
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
@@ -209,7 +213,7 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'Please complete your birth data to see your natal chart.',
+              l10n.natalChartEmptySubtitle,
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 14,
@@ -223,7 +227,7 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
                 backgroundColor: AppColors.accent,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
-              child: const Text('Add Birth Data'),
+              child: Text(l10n.natalChartAddBirthData),
             ),
           ],
         ),
@@ -232,6 +236,7 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
   }
 
   Widget _buildErrorState(String error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -244,9 +249,9 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
               color: AppColors.error.withOpacity(0.7),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Unable to load chart',
-              style: TextStyle(
+            Text(
+              l10n.natalChartErrorTitle,
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
@@ -267,7 +272,7 @@ class _NatalChartScreenState extends ConsumerState<NatalChartScreen>
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accent,
               ),
-              child: const Text('Try Again'),
+              child: Text(l10n.commonTryAgain),
             ),
           ],
         ),

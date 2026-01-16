@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
@@ -56,20 +57,6 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
 
   late ContextAnswers _answers;
 
-  final List<String> _stepTitles = [
-    'People around you',
-    'Professional Life',
-    'How life feels right now',
-    'What matters most to you',
-  ];
-
-  final List<String> _stepSubtitles = [
-    'Your relationship and family context helps us understand your emotional landscape.',
-    'Your work and daily rhythm shape how you experience pressure, growth, and purpose.',
-    'There are no right or wrong answers, just your current reality',
-    'So your guidance aligns with what you truly care about',
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -118,7 +105,7 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
     // Validate priorities (required, max 2)
     if (_answers.priorities.isEmpty) {
       setState(() {
-        _error = 'Please select at least one priority area.';
+        _error = AppLocalizations.of(context)!.contextPriorityRequired;
       });
       return;
     }
@@ -155,7 +142,7 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
       debugPrint('Context save error: $e');
       debugPrint('Stack trace: $stackTrace');
       setState(() {
-        _error = 'Failed to save profile: $e';
+        _error = AppLocalizations.of(context)!.contextSaveFailed(e.toString());
         _isSubmitting = false;
       });
     }
@@ -178,6 +165,20 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final stepTitles = [
+      l10n.contextStep1Title,
+      l10n.contextStep2Title,
+      l10n.contextStep3Title,
+      l10n.contextStep4Title,
+    ];
+    final stepSubtitles = [
+      l10n.contextStep1Subtitle,
+      l10n.contextStep2Subtitle,
+      l10n.contextStep3Subtitle,
+      l10n.contextStep4Subtitle,
+    ];
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -206,11 +207,11 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                       )
                     else
                       const SizedBox(width: 48),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Personal Context',
+                        l10n.contextTitle,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -221,7 +222,7 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                       TextButton(
                         onPressed: () => context.pop(),
                         child: Text(
-                          'Cancel',
+                          l10n.commonCancel,
                           style: TextStyle(color: ContextColors.goldLight),
                         ),
                       )
@@ -241,7 +242,10 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Step ${_currentStep + 1} of 4',
+                      l10n.contextStepOf(
+                        _currentStep + 1,
+                        4,
+                      ),
                       style: TextStyle(
                         color: ContextColors.gold,
                         fontWeight: FontWeight.w600,
@@ -249,7 +253,7 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _stepTitles[_currentStep],
+                      stepTitles[_currentStep],
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -258,7 +262,7 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      _stepSubtitles[_currentStep],
+                      stepSubtitles[_currentStep],
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white.withOpacity(0.85),
@@ -351,6 +355,7 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
   }
 
   Widget _buildBottomNavigation() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -373,7 +378,7 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Back'),
+                child: Text(l10n.commonBack),
               ),
             ),
           if (_currentStep > 0) const SizedBox(width: 12),
@@ -402,7 +407,9 @@ class _ContextWizardScreenState extends ConsumerState<ContextWizardScreen> {
                       ),
                     )
                   : Text(
-                      _currentStep < 3 ? 'Continue' : 'Save & Continue',
+                      _currentStep < 3
+                          ? l10n.commonContinue
+                          : l10n.contextSaveContinue,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

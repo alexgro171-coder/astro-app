@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -26,7 +27,10 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
 
   Future<void> _submit() async {
     if (_textController.text.trim().length < 10) {
-      setState(() => _errorMessage = 'Please describe your concern in more detail (at least 10 characters)');
+      setState(
+        () => _errorMessage =
+            AppLocalizations.of(context)!.concernsMinLength,
+      );
       return;
     }
 
@@ -47,7 +51,7 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to submit concern. Please try again.';
+        _errorMessage = AppLocalizations.of(context)!.concernsSubmitFailed;
         _isLoading = false;
       });
     }
@@ -55,6 +59,7 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -72,10 +77,10 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.close, color: AppColors.textPrimary),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        "What's on your mind?",
-                        style: TextStyle(
+                        l10n.concernsAddTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -103,12 +108,13 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
   }
 
   Widget _buildInputState() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Share your current concern, question, or life situation. Our AI will analyze it and provide focused guidance starting tomorrow.',
-          style: TextStyle(
+        Text(
+          l10n.concernsAddDescription,
+          style: const TextStyle(
             fontSize: 14,
             color: AppColors.textSecondary,
             height: 1.5,
@@ -152,12 +158,12 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
             maxLines: 6,
             maxLength: 2000,
             style: const TextStyle(color: AppColors.textPrimary),
-            decoration: const InputDecoration(
-              hintText: 'Example: I have a job offer in another city and I\'m not sure if I should accept it...',
-              hintStyle: TextStyle(color: AppColors.textMuted),
+            decoration: InputDecoration(
+              hintText: l10n.concernsHintExample,
+              hintStyle: const TextStyle(color: AppColors.textMuted),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.all(16),
-              counterStyle: TextStyle(color: AppColors.textMuted),
+              contentPadding: const EdgeInsets.all(16),
+              counterStyle: const TextStyle(color: AppColors.textMuted),
             ),
           ),
         ),
@@ -165,20 +171,20 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
         const SizedBox(height: 24),
 
         // Examples
-        const Text(
-          'Examples of concerns:',
-          style: TextStyle(
+        Text(
+          l10n.concernsExamplesTitle,
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: AppColors.textSecondary,
           ),
         ),
         const SizedBox(height: 12),
-        _buildExampleChip('Career change decision'),
-        _buildExampleChip('Relationship challenges'),
-        _buildExampleChip('Financial investment timing'),
-        _buildExampleChip('Health and wellness focus'),
-        _buildExampleChip('Personal growth direction'),
+        _buildExampleChip(l10n.concernsExampleCareer),
+        _buildExampleChip(l10n.concernsExampleRelationship),
+        _buildExampleChip(l10n.concernsExampleFinance),
+        _buildExampleChip(l10n.concernsExampleHealth),
+        _buildExampleChip(l10n.concernsExampleGrowth),
 
         const SizedBox(height: 32),
 
@@ -196,7 +202,7 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
                       color: AppColors.primary,
                     ),
                   )
-                : const Text('Submit Concern'),
+                : Text(l10n.concernsSubmitButton),
           ),
         ),
       ],
@@ -236,6 +242,7 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
   }
 
   Widget _buildSuccessState() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         const SizedBox(height: 40),
@@ -253,9 +260,9 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
           ),
         ),
         const SizedBox(height: 24),
-        const Text(
-          'Concern Recorded!',
-          style: TextStyle(
+        Text(
+          l10n.concernsSuccessTitle,
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
@@ -272,9 +279,9 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
             children: [
               Row(
                 children: [
-                  const Text(
-                    'Category: ',
-                    style: TextStyle(color: AppColors.textSecondary),
+                  Text(
+                    l10n.concernsCategoryLabel,
+                    style: const TextStyle(color: AppColors.textSecondary),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -283,7 +290,7 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      _result?['category'] ?? 'Unknown',
+                      _result?['category'] ?? l10n.commonUnknownError,
                       style: const TextStyle(
                         color: AppColors.accent,
                         fontWeight: FontWeight.w600,
@@ -297,7 +304,7 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
         ),
         const SizedBox(height: 16),
         Text(
-          _result?['message'] ?? 'Starting tomorrow, your daily guidance will focus more on this topic.',
+          _result?['message'] ?? l10n.concernsSuccessMessage,
           style: const TextStyle(
             fontSize: 14,
             color: AppColors.textSecondary,
@@ -313,13 +320,13 @@ class _AddConcernScreenState extends ConsumerState<AddConcernScreen> {
               // Pop back to concerns screen which will refresh the list
               context.pop();
             },
-            child: const Text('View My Focus Topics'),
+            child: Text(l10n.concernsViewFocusTopics),
           ),
         ),
         const SizedBox(height: 12),
         TextButton(
           onPressed: () => context.go('/home'),
-          child: const Text('Back to Home'),
+          child: Text(l10n.commonBackToHome),
         ),
       ],
     );

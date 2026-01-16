@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -107,7 +109,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     setState(() {
       _isLoading = false;
       _isGenerating = true;
-      _progressHint = "Reading the stars and asking the Universe about you…";
+      _progressHint = AppLocalizations.of(context)!.homeGuidancePreparing;
     });
 
     try {
@@ -128,7 +130,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       debugPrint('Error starting guidance job: $e');
       setState(() {
         _isGenerating = false;
-        _error = 'Failed to generate guidance. Please try again.';
+        _error = AppLocalizations.of(context)!.homeGuidanceFailed;
       });
     }
   }
@@ -160,7 +162,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (mounted) {
             setState(() {
               _isGenerating = false;
-              _error = status.errorMsg ?? 'Generation failed. Please try again.';
+              _error = status.errorMsg ?? AppLocalizations.of(context)!.homeGuidanceFailed;
             });
           }
           return;
@@ -175,7 +177,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (mounted) {
       setState(() {
         _isGenerating = false;
-        _error = 'Taking longer than expected. Tap Retry or check back in a moment.';
+        _error = AppLocalizations.of(context)!.homeGuidanceTimeout;
       });
     }
   }
@@ -199,7 +201,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (mounted) {
         setState(() {
           _isGenerating = false;
-          _error = 'Failed to load guidance';
+          _error = AppLocalizations.of(context)!.homeGuidanceLoadFailed;
         });
       }
     }
@@ -236,6 +238,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildErrorState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -246,7 +249,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadData,
-            child: const Text('Retry'),
+            child: Text(l10n.commonRetry),
           ),
         ],
       ),
@@ -291,9 +294,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Today's Guidance",
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.homeTodaysGuidance,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
@@ -305,7 +308,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         context.push('/guidance/${_guidance!['id']}');
                       }
                     },
-                    child: const Text('See all'),
+                    child: Text(AppLocalizations.of(context)!.homeSeeAll),
                   ),
                 ],
               ),
@@ -328,42 +331,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 delegate: SliverChildListDelegate([
                   _buildGridCard(
                     icon: Icons.favorite_rounded,
-                    title: 'Health',
+                    title: AppLocalizations.of(context)!.homeHealth,
                     score: sections['health']?['score'] ?? 5,
                     color: const Color(0xFFE53935),
                     sectionKey: 'health',
                   ),
                   _buildGridCard(
                     icon: Icons.work_rounded,
-                    title: 'Career',
+                    title: AppLocalizations.of(context)!.homeCareer,
                     score: sections['job']?['score'] ?? 5,
                     color: const Color(0xFF1E88E5),
                     sectionKey: 'job',
                   ),
                   _buildGridCard(
                     icon: Icons.attach_money_rounded,
-                    title: 'Money',
+                    title: AppLocalizations.of(context)!.homeMoney,
                     score: sections['business_money']?['score'] ?? 5,
                     color: const Color(0xFF43A047),
                     sectionKey: 'business_money',
                   ),
                   _buildGridCard(
                     icon: Icons.favorite_border_rounded,
-                    title: 'Love',
+                    title: AppLocalizations.of(context)!.homeLove,
                     score: sections['love']?['score'] ?? 5,
                     color: const Color(0xFFE91E63),
                     sectionKey: 'love',
                   ),
                   _buildGridCard(
                     icon: Icons.handshake_rounded,
-                    title: 'Partners',
+                    title: AppLocalizations.of(context)!.homePartners,
                     score: sections['partnerships']?['score'] ?? 5,
                     color: const Color(0xFFFF9800),
                     sectionKey: 'partnerships',
                   ),
                   _buildGridCard(
                     icon: Icons.self_improvement_rounded,
-                    title: 'Growth',
+                    title: AppLocalizations.of(context)!.homeGrowth,
                     score: sections['personal_growth']?['score'] ?? 5,
                     color: const Color(0xFF9C27B0),
                     sectionKey: 'personal_growth',
@@ -391,7 +394,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildHeader(String? sunSign) {
     final zodiac = ZodiacUtils.getZodiacData(sunSign);
-    final firstName = _user?['name']?.split(' ').first ?? 'Traveler';
+    final firstName = _user?['name']?.split(' ').first ??
+        AppLocalizations.of(context)!.homeTraveler;
     
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -401,7 +405,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Hello, $firstName',
+                AppLocalizations.of(context)!.homeGreeting(firstName),
                 style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -558,7 +562,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildDailySummaryCard(Map<String, dynamic> summary) {
     final mood = summary['mood'] as String? ?? 'Balanced';
-    final focusArea = summary['focusArea'] as String? ?? 'Personal Growth';
+    final focusArea = summary['focusArea'] as String? ?? AppLocalizations.of(context)!.homeFocusFallback;
     final content = summary['content'] as String? ?? '';
 
     final moodColors = {
@@ -660,9 +664,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 color: AppColors.accent,
               ),
               const SizedBox(width: 8),
-              const Text(
-                'Your Daily Message',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.homeDailyMessage,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
@@ -715,7 +719,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    _isDailySummaryExpanded ? 'View less' : 'View more',
+                    _isDailySummaryExpanded
+                        ? AppLocalizations.of(context)!.commonViewLess
+                        : AppLocalizations.of(context)!.commonViewMore,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -767,14 +773,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   String _getFormattedDate() {
+    final locale = Localizations.localeOf(context).languageCode;
     final now = DateTime.now();
-    final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    
-    return '${days[now.weekday - 1]}, ${months[now.month - 1]} ${now.day}';
+    return DateFormat('EEE, MMM d', locale).format(now);
   }
 
   Widget _buildNatalChartButton() {
@@ -822,13 +823,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               const SizedBox(width: 16),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'My Natal Chart',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.homeNatalChartTitle,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textPrimary,
@@ -836,8 +837,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Explore your birth chart & interpretations',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.homeNatalChartSubtitle,
+                      style: const TextStyle(
                         fontSize: 13,
                         color: AppColors.textSecondary,
                       ),

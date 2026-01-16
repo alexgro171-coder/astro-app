@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 
@@ -24,21 +25,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingPage> _pages = [
-    OnboardingPage(
-      title: 'Welcome to Inner Wisdom Astro',
-      description:
-          'Innerwisdom Astro brings together over 30 years of astrological expertise from Madi G. with the power of advanced AI, creating one of the most refined and high-performance astrology applications available today.\n\nBy blending deep human insight with intelligent technology, Innerwisdom Astro delivers interpretations that are precise, personalized, and meaningful, supporting users on their journey of self-discovery, clarity, and conscious growth.',
-    ),
-    OnboardingPage(
-      title: 'Your Complete Astrological Journey',
-      description:
-          'From personalized daily guidance to your Natal Birth Chart, Karmic Astrology, in-depth personality reports, Love and Friendship Compatibility, Romantic Forecasts for Couples, and much more — all are now at your fingertips.\n\nDesigned to support clarity, connection, and self-understanding, Innerwisdom Astro offers a complete astrological experience, tailored to you.',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final pages = _buildPages(l10n);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -61,7 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: TextButton(
                   onPressed: () => context.go('/login'),
                   child: Text(
-                    'Skip',
+                    l10n.onboardingSkip,
                     style: TextStyle(
                       color: OnboardingColors.goldLight.withOpacity(0.8),
                       fontSize: 16,
@@ -77,9 +68,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onPageChanged: (index) {
                     setState(() => _currentPage = index);
                   },
-                  itemCount: _pages.length,
+                  itemCount: pages.length,
                   itemBuilder: (context, index) {
-                    return _buildPage(_pages[index], index);
+                    return _buildPage(pages[index], index);
                   },
                 ),
               ),
@@ -88,7 +79,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                  _pages.length,
+                  pages.length,
                   (index) => _buildIndicator(index),
                 ),
               ).animate().fadeIn(delay: 800.ms, duration: 400.ms),
@@ -104,7 +95,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (_currentPage < _pages.length - 1) {
+                          if (_currentPage < pages.length - 1) {
                             _pageController.nextPage(
                               duration: const Duration(milliseconds: 400),
                               curve: Curves.easeInOut,
@@ -122,9 +113,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                         ),
                         child: Text(
-                          _currentPage < _pages.length - 1
-                              ? 'Next'
-                              : 'Get Started',
+                          _currentPage < pages.length - 1
+                              ? l10n.onboardingNext
+                              : l10n.onboardingGetStarted,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -136,7 +127,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     TextButton(
                       onPressed: () => context.go('/login'),
                       child: Text(
-                        'Already have an account? Login',
+                        l10n.onboardingAlreadyHaveAccount,
                         style: TextStyle(
                           color: OnboardingColors.goldLight.withOpacity(0.9),
                           fontSize: 14,
@@ -158,6 +149,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
       ),
     );
+  }
+
+  List<OnboardingPage> _buildPages(AppLocalizations l10n) {
+    return [
+      OnboardingPage(
+        title: l10n.onboardingTitle1,
+        description: l10n.onboardingDesc1,
+      ),
+      OnboardingPage(
+        title: l10n.onboardingTitle2,
+        description: l10n.onboardingDesc2,
+      ),
+    ];
   }
 
   Widget _buildPage(OnboardingPage page, int index) {

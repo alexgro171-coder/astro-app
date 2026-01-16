@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 
@@ -9,6 +10,7 @@ class ProNatalOfferScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -27,10 +29,10 @@ class ProNatalOfferScreen extends ConsumerWidget {
                         onPressed: () => context.pop(),
                         icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                       ),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Pro Natal Chart',
-                          style: TextStyle(
+                          l10n.proNatalTitle,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                             color: AppColors.textPrimary,
@@ -81,9 +83,9 @@ class ProNatalOfferScreen extends ConsumerWidget {
                       
                       const SizedBox(height: 24),
                       
-                      const Text(
-                        'Unlock Deep Insights',
-                        style: TextStyle(
+                      Text(
+                        l10n.proNatalHeroTitle,
+                        style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
@@ -93,9 +95,9 @@ class ProNatalOfferScreen extends ConsumerWidget {
                       
                       const SizedBox(height: 12),
                       
-                      const Text(
-                        'Get comprehensive 150-200 word interpretations for each planetary placement in your birth chart.',
-                        style: TextStyle(
+                      Text(
+                        l10n.proNatalHeroSubtitle,
+                        style: const TextStyle(
                           fontSize: 16,
                           color: AppColors.textSecondary,
                           height: 1.5,
@@ -108,26 +110,26 @@ class ProNatalOfferScreen extends ConsumerWidget {
                       // Features list
                       _buildFeatureCard(
                         icon: Icons.psychology_rounded,
-                        title: 'Deep Personality Insights',
-                        description: 'Understand how each planet shapes your unique personality and life path.',
+                        title: l10n.proNatalFeature1Title,
+                        description: l10n.proNatalFeature1Body,
                       ),
                       
                       _buildFeatureCard(
                         icon: Icons.auto_awesome_rounded,
-                        title: 'AI-Powered Analysis',
-                        description: 'Advanced interpretations tailored to your exact planetary positions.',
+                        title: l10n.proNatalFeature2Title,
+                        description: l10n.proNatalFeature2Body,
                       ),
                       
                       _buildFeatureCard(
                         icon: Icons.lightbulb_rounded,
-                        title: 'Actionable Guidance',
-                        description: 'Practical advice for career, relationships, and personal growth.',
+                        title: l10n.proNatalFeature3Title,
+                        description: l10n.proNatalFeature3Body,
                       ),
                       
                       _buildFeatureCard(
                         icon: Icons.history_rounded,
-                        title: 'Lifetime Access',
-                        description: 'Your interpretations are saved forever. Access anytime.',
+                        title: l10n.proNatalFeature4Title,
+                        description: l10n.proNatalFeature4Body,
                       ),
                       
                       const SizedBox(height: 32),
@@ -151,9 +153,9 @@ class ProNatalOfferScreen extends ConsumerWidget {
                         ),
                         child: Column(
                           children: [
-                            const Text(
-                              'One-time purchase',
-                              style: TextStyle(
+                            Text(
+                              l10n.proNatalOneTime,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: AppColors.textSecondary,
                               ),
@@ -182,9 +184,9 @@ class ProNatalOfferScreen extends ConsumerWidget {
                               ],
                             ),
                             const SizedBox(height: 4),
-                            const Text(
-                              'No subscription required',
-                              style: TextStyle(
+                            Text(
+                              l10n.proNatalNoSubscription,
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: AppColors.textMuted,
                               ),

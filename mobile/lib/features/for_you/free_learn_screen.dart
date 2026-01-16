@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
@@ -40,6 +41,7 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final locale = _locale;
     
     return Scaffold(
@@ -59,10 +61,10 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Learn Astrology',
-                        style: TextStyle(
+                        l10n.learnTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -82,18 +84,18 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Free Learning Resources',
-                        style: TextStyle(
+                      Text(
+                        l10n.learnFreeTitle,
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Explore the fundamentals of astrology',
-                        style: TextStyle(
+                      Text(
+                        l10n.learnFreeSubtitle,
+                        style: const TextStyle(
                           fontSize: 14,
                           color: AppColors.textSecondary,
                         ),
@@ -114,8 +116,8 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
                             context,
                             category: LearnCategory.signs,
                             icon: Icons.brightness_7_rounded,
-                            title: 'Signs',
-                            subtitle: '12 Zodiac signs and their meanings',
+                            title: l10n.learnSignsTitle,
+                            subtitle: l10n.learnSignsSubtitle,
                             color: const Color(0xFFFF9800),
                             locale: locale,
                           ),
@@ -123,8 +125,8 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
                             context,
                             category: LearnCategory.planets,
                             icon: Icons.public_rounded,
-                            title: 'Planets',
-                            subtitle: 'Celestial bodies in astrology',
+                            title: l10n.learnPlanetsTitle,
+                            subtitle: l10n.learnPlanetsSubtitle,
                             color: const Color(0xFF2196F3),
                             locale: locale,
                           ),
@@ -132,8 +134,8 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
                             context,
                             category: LearnCategory.houses,
                             icon: Icons.home_rounded,
-                            title: 'Houses',
-                            subtitle: '12 life areas in your chart',
+                            title: l10n.learnHousesTitle,
+                            subtitle: l10n.learnHousesSubtitle,
                             color: const Color(0xFF9C27B0),
                             locale: locale,
                           ),
@@ -141,8 +143,8 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
                             context,
                             category: LearnCategory.transits,
                             icon: Icons.sync_alt_rounded,
-                            title: 'Transits',
-                            subtitle: 'Planetary movements & effects',
+                            title: l10n.learnTransitsTitle,
+                            subtitle: l10n.learnTransitsSubtitle,
                             color: const Color(0xFF4CAF50),
                             locale: locale,
                           ),
@@ -176,13 +178,13 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
                               ),
                             ),
                             const SizedBox(width: 16),
-                            const Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Learn at Your Pace',
-                                    style: TextStyle(
+                                    l10n.learnPaceTitle,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.textPrimary,
@@ -190,8 +192,8 @@ class _FreeLearnScreenState extends ConsumerState<FreeLearnScreen> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    'Comprehensive lessons to deepen your astrological knowledge',
-                                    style: TextStyle(
+                                    l10n.learnPaceSubtitle,
+                                    style: const TextStyle(
                                       fontSize: 13,
                                       color: AppColors.textSecondary,
                                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -61,13 +62,14 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
       });
     } catch (e) {
       setState(() {
-        _error = 'Failed to load data';
+        _error = AppLocalizations.of(context)!.askGuideLoadFailed;
         _isLoading = false;
       });
     }
   }
 
   Future<void> _askQuestion() async {
+    final l10n = AppLocalizations.of(context)!;
     final question = _questionController.text.trim();
     if (question.isEmpty) return;
 
@@ -116,7 +118,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to send question: ${e.toString()}'),
+            content: Text(l10n.askGuideSendFailed(e.toString())),
             backgroundColor: AppColors.error,
           ),
         );
@@ -125,6 +127,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
   }
 
   void _showLimitReachedDialog() {
+    final l10n = AppLocalizations.of(context)!;
     final billingEnd = _usage?['billingMonthEnd'] ?? 'your next billing date';
     
     showDialog(
@@ -136,9 +139,9 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
           children: [
             Icon(Icons.info_outline, color: AppColors.accent),
             const SizedBox(width: 8),
-            const Text(
-              'Monthly Limit Reached',
-              style: TextStyle(color: AppColors.textPrimary, fontSize: 18),
+            Text(
+              l10n.askGuideLimitTitle,
+              style: const TextStyle(color: AppColors.textPrimary, fontSize: 18),
             ),
           ],
         ),
@@ -146,18 +149,18 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "You've reached your monthly limit of requests.",
-              style: TextStyle(color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'You can purchase a \$1.99 add-on to continue using this service for the rest of the current billing month.',
-              style: TextStyle(color: AppColors.textSecondary),
+            Text(
+              l10n.askGuideLimitBody,
+              style: const TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 12),
             Text(
-              'Your billing month ends on: $billingEnd',
+              l10n.askGuideLimitAddon,
+              style: const TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              l10n.askGuideLimitBillingEnd(billingEnd),
               style: const TextStyle(
                 color: AppColors.accent,
                 fontWeight: FontWeight.w600,
@@ -168,7 +171,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Later'),
+            child: Text(l10n.commonLater),
           ),
           ElevatedButton(
             onPressed: () {
@@ -178,7 +181,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
             ),
-            child: const Text('Get Add-On'),
+            child: Text(l10n.askGuideLimitGetAddon),
           ),
         ],
       ),
@@ -208,6 +211,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
   }
 
   Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context)!;
     final remaining = _usage?['remaining'] ?? 0;
     final limit = _usage?['limitCount'] ?? 40;
 
@@ -222,9 +226,9 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Ask Your Guide',
-                    style: TextStyle(
+                  Text(
+                    l10n.askGuideTitle,
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
@@ -232,7 +236,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Personal cosmic guidance',
+                    l10n.askGuideSubtitle,
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
@@ -265,7 +269,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      '$remaining left',
+                      l10n.askGuideRemaining(remaining),
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -305,6 +309,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
   }
 
   Widget _buildInputArea() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(16),
@@ -323,7 +328,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
             maxLength: 500,
             style: const TextStyle(color: AppColors.textPrimary),
             decoration: InputDecoration(
-              hintText: 'Ask anything - love, career, decisions, emotions...',
+              hintText: l10n.askGuideQuestionHint,
               hintStyle: TextStyle(color: AppColors.textMuted),
               border: InputBorder.none,
               counterStyle: TextStyle(color: AppColors.textMuted),
@@ -334,7 +339,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Based on your birth chart & today\'s cosmic energies',
+                  l10n.askGuideBasedOnChart,
                   style: TextStyle(
                     fontSize: 11,
                     color: AppColors.textMuted,
@@ -390,6 +395,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
   }
 
   Widget _buildHistoryItem(Map<String, dynamic> request) {
+    final l10n = AppLocalizations.of(context)!;
     final question = request['question'] as String? ?? '';
     final answer = request['answer'] as String?;
     final status = request['status'] as String? ?? 'PENDING';
@@ -470,7 +476,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'Your Guide is thinking...',
+                        l10n.askGuideThinking,
                         style: TextStyle(
                           color: AppColors.textMuted,
                           fontStyle: FontStyle.italic,
@@ -516,9 +522,9 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              const Text(
-                                'Your Guide',
-                                style: TextStyle(
+                              Text(
+                                l10n.askGuideYourGuide,
+                                style: const TextStyle(
                                   color: AppColors.accent,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 13,
@@ -543,14 +549,14 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
                               onPressed: () {
                                 Clipboard.setData(ClipboardData(text: answer ?? ''));
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Copied to clipboard'),
-                                    duration: Duration(seconds: 2),
+                                  SnackBar(
+                                    content: Text(l10n.commonCopied),
+                                    duration: const Duration(seconds: 2),
                                   ),
                                 );
                               },
                               icon: const Icon(Icons.copy, size: 16),
-                              label: const Text('Copy'),
+                              label: Text(l10n.commonCopy),
                               style: TextButton.styleFrom(
                                 foregroundColor: AppColors.textMuted,
                               ),
@@ -565,6 +571,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
       child: Column(
@@ -580,9 +587,9 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Ask Your First Question',
-            style: TextStyle(
+          Text(
+            l10n.askGuideEmptyTitle,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
@@ -590,7 +597,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Get instant, deeply personal guidance based on your birth chart and today\'s cosmic energies.',
+            l10n.askGuideEmptyBody,
             style: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 14,
@@ -598,9 +605,9 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Ask anything — love, career, decisions, emotions.',
-            style: TextStyle(
+          Text(
+            l10n.askGuideEmptyHint,
+            style: const TextStyle(
               color: AppColors.textMuted,
               fontSize: 13,
             ),
@@ -613,6 +620,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
   }
 
   Widget _buildErrorState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -623,7 +631,7 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadData,
-            child: const Text('Retry'),
+            child: Text(l10n.commonRetry),
           ),
         ],
       ),
@@ -631,19 +639,20 @@ class _AskGuideScreenState extends ConsumerState<AskGuideScreen> {
   }
 
   String _formatDate(DateTime date) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final diff = now.difference(date);
     
     if (diff.inMinutes < 1) {
-      return 'Just now';
+      return l10n.commonJustNow;
     } else if (diff.inHours < 1) {
-      return '${diff.inMinutes} min ago';
+      return l10n.commonMinutesAgo(diff.inMinutes);
     } else if (diff.inDays < 1) {
-      return '${diff.inHours}h ago';
+      return l10n.commonHoursAgo(diff.inHours);
     } else if (diff.inDays < 7) {
-      return '${diff.inDays}d ago';
+      return l10n.commonDaysAgo(diff.inDays);
     } else {
-      return '${date.day}/${date.month}/${date.year}';
+      return l10n.commonDateShort(date.day, date.month, date.year);
     }
   }
 }

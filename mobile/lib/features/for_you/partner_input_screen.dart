@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/location_autocomplete.dart';
@@ -15,6 +16,22 @@ class PartnerInputScreen extends ConsumerStatefulWidget {
   ConsumerState<PartnerInputScreen> createState() => _PartnerInputScreenState();
 }
 
+// Gender options (match onboarding)
+enum Gender { male, female, preferNotToSay }
+
+extension GenderExtension on Gender {
+  String get apiValue {
+    switch (this) {
+      case Gender.male:
+        return 'MALE';
+      case Gender.female:
+        return 'FEMALE';
+      case Gender.preferNotToSay:
+        return 'PREFER_NOT_TO_SAY';
+    }
+  }
+}
+
 class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -23,6 +40,7 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
   TimeOfDay? _birthTime;
   bool _unknownTime = false;
   LocationResult? _selectedLocation;
+  Gender? _selectedGender;
   String? _errorMessage;
 
   @override
@@ -33,9 +51,11 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Partner Details'),
+        title: Text(l10n.partnerDetailsTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -53,9 +73,9 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Enter partner\'s birth data',
-                    style: TextStyle(
+                  Text(
+                    l10n.partnerBirthDataTitle,
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
@@ -63,7 +83,7 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'For "${widget.title}"',
+                    l10n.partnerBirthDataFor(widget.title),
                     style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
@@ -74,18 +94,69 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                   // Name (optional)
                   TextFormField(
                     controller: _nameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Name (optional)',
-                      hintText: 'Partner\'s name',
-                      prefixIcon: Icon(Icons.person_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.partnerNameOptionalLabel,
+                      hintText: l10n.partnerNameHint,
+                      prefixIcon: const Icon(Icons.person_outline),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Gender (optional)
+                  Text(
+                    l10n.partnerGenderOptionalLabel,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceLight,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: Gender.values.map((gender) {
+                        final isSelected = _selectedGender == gender;
+                        return InkWell(
+                          onTap: () => setState(() => _selectedGender = gender),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.accent.withOpacity(0.15) : null,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                                  color: isSelected ? AppColors.accent : AppColors.textMuted,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  _genderLabel(gender, l10n),
+                                  style: TextStyle(
+                                    color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                                    fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
                   const SizedBox(height: 20),
 
                   // Birth Date (required)
-                  const Text(
-                    'Birth Date *',
-                    style: TextStyle(
+                  Text(
+                    l10n.partnerBirthDateLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -109,7 +180,7 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                             child: Text(
                               _birthDate != null
                                   ? DateFormat('MMMM d, yyyy').format(_birthDate!)
-                                  : 'Select birth date',
+                                  : l10n.partnerBirthDateSelect,
                               style: TextStyle(
                                 color: _birthDate != null
                                     ? AppColors.textPrimary
@@ -125,9 +196,9 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                   const SizedBox(height: 20),
 
                   // Birth Time (optional)
-                  const Text(
-                    'Birth Time (optional)',
-                    style: TextStyle(
+                  Text(
+                    l10n.partnerBirthTimeOptionalLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -155,10 +226,10 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                           Expanded(
                             child: Text(
                               _unknownTime
-                                  ? 'Unknown'
+                                  ? l10n.birthTimeUnknown
                                   : _birthTime != null
                                       ? '${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}'
-                                      : 'Select birth time',
+                                      : l10n.partnerBirthTimeSelect,
                               style: TextStyle(
                                 color: _unknownTime
                                     ? AppColors.textMuted.withOpacity(0.5)
@@ -189,9 +260,9 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                         },
                         activeColor: AppColors.accent,
                       ),
-                      const Text(
-                        "I don't know the exact birth time",
-                        style: TextStyle(
+                      Text(
+                        l10n.birthTimeUnknownCheckbox,
+                        style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 13,
                         ),
@@ -202,9 +273,9 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                   const SizedBox(height: 20),
 
                   // Birth Place with Autocomplete
-                  const Text(
-                    'Birth Place *',
-                    style: TextStyle(
+                  Text(
+                    l10n.partnerBirthPlaceLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -212,7 +283,7 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                   ),
                   const SizedBox(height: 8),
                   LocationAutocomplete(
-                    hintText: 'Start typing a city name...',
+                    hintText: l10n.birthPlaceHint,
                     initialValue: _selectedLocation,
                     onSelected: (location) {
                       setState(() {
@@ -222,16 +293,16 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                     },
                     validator: (value) {
                       if (_selectedLocation == null) {
-                        return 'Please select a location from the suggestions';
+                        return l10n.birthPlaceValidation;
                       }
                       return null;
                     },
                   ),
 
                   const SizedBox(height: 16),
-                  const Text(
-                    '* Required fields',
-                    style: TextStyle(
+                  Text(
+                    l10n.requiredFieldsNote,
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textMuted,
                     ),
@@ -272,9 +343,9 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text(
-                        'Continue',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.commonContinue,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -345,13 +416,14 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
   }
 
   void _submit() {
+    final l10n = AppLocalizations.of(context)!;
     // Manual validation
     if (_birthDate == null) {
-      setState(() => _errorMessage = 'Please select the birth date');
+      setState(() => _errorMessage = l10n.partnerBirthDateMissing);
       return;
     }
     if (_selectedLocation == null) {
-      setState(() => _errorMessage = 'Please select a birth place from the suggestions');
+      setState(() => _errorMessage = l10n.birthPlaceMissing);
       return;
     }
 
@@ -375,10 +447,25 @@ class _PartnerInputScreenState extends ConsumerState<PartnerInputScreen> {
       partnerData['name'] = _nameController.text;
     }
 
+    if (_selectedGender != null) {
+      partnerData['gender'] = _selectedGender!.apiValue;
+    }
+
     if (_birthTime != null && !_unknownTime) {
       partnerData['birthTime'] = '${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}';
     }
 
     context.pop(partnerData);
+  }
+
+  String _genderLabel(Gender gender, AppLocalizations l10n) {
+    switch (gender) {
+      case Gender.male:
+        return l10n.genderMale;
+      case Gender.female:
+        return l10n.genderFemale;
+      case Gender.preferNotToSay:
+        return l10n.genderPreferNotToSay;
+    }
   }
 }

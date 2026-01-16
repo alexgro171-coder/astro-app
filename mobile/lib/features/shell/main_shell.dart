@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/starry_background.dart';
@@ -34,6 +35,7 @@ class _MainShellState extends ConsumerState<MainShell> {
   }
 
   Widget _buildBottomNav(BuildContext context, int currentIndex) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface.withOpacity(0.95),
@@ -59,32 +61,32 @@ class _MainShellState extends ConsumerState<MainShell> {
             children: [
               _NavItem(
                 icon: Icons.home_rounded,
-                label: 'Home',
+                label: l10n.navHome,
                 isSelected: currentIndex == 0,
                 onTap: () => _onNavTap(context, 0),
               ),
               _NavItem(
                 icon: Icons.history_rounded,
-                label: 'History',
+                label: l10n.navHistory,
                 isSelected: currentIndex == 1,
                 onTap: () => _onNavTap(context, 1),
               ),
               _NavItem(
                 icon: Icons.auto_awesome_rounded,
-                label: 'Guide',
+                label: l10n.navGuide,
                 isSelected: currentIndex == 2,
                 onTap: () => _onNavTap(context, 2),
                 badge: null,
               ),
               _NavItem(
                 icon: Icons.person_rounded,
-                label: 'Profile',
+                label: l10n.navProfile,
                 isSelected: currentIndex == 3,
                 onTap: () => _onNavTap(context, 3),
               ),
               _NavItem(
                 icon: Icons.auto_awesome_rounded,
-                label: 'For You',
+                label: l10n.navForYou,
                 isSelected: currentIndex == 4,
                 onTap: () => _onNavTap(context, 4),
               ),

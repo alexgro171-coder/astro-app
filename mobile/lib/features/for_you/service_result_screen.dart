@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 
@@ -19,6 +20,9 @@ class ServiceResultScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final showNotSavedNotice = serviceType == 'LOVE_COMPATIBILITY_REPORT';
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -32,13 +36,13 @@ class ServiceResultScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.copy),
-            tooltip: 'Copy to clipboard',
+            tooltip: l10n.commonCopy,
             onPressed: () {
               Clipboard.setData(ClipboardData(text: content));
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Copied to clipboard'),
-                  duration: Duration(seconds: 2),
+                SnackBar(
+                  content: Text(l10n.commonCopied),
+                  duration: const Duration(seconds: 2),
                 ),
               );
             },
@@ -82,9 +86,9 @@ class ServiceResultScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Report Generated',
-                              style: TextStyle(
+                            Text(
+                              l10n.serviceResultGenerated,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.green,
@@ -92,7 +96,7 @@ class ServiceResultScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'Your personalized $title is ready',
+                              l10n.serviceResultReady(title),
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.green.withOpacity(0.8),
@@ -134,14 +138,14 @@ class ServiceResultScreen extends ConsumerWidget {
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: content));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Copied to clipboard'),
-                              duration: Duration(seconds: 2),
-                            ),
+                              SnackBar(
+                                content: Text(l10n.commonCopied),
+                                duration: const Duration(seconds: 2),
+                              ),
                           );
                         },
                         icon: const Icon(Icons.copy),
-                        label: const Text('Copy'),
+                          label: Text(l10n.commonCopy),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
@@ -152,7 +156,7 @@ class ServiceResultScreen extends ConsumerWidget {
                       child: ElevatedButton.icon(
                         onPressed: () => context.go('/for-you'),
                         icon: const Icon(Icons.home),
-                        label: const Text('Back to For You'),
+                        label: Text(l10n.serviceResultBackToForYou),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
@@ -160,6 +164,18 @@ class ServiceResultScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
+
+                if (showNotSavedNotice) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.serviceResultNotSavedNotice,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textMuted,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
 
                 const SizedBox(height: 40),
               ],

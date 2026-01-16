@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -48,7 +49,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     } catch (e) {
       print('History load error: $e');
       setState(() {
-        _error = 'Failed to load history';
+        _error = AppLocalizations.of(context)!.historyLoadFailed;
         _isLoading = false;
       });
     }
@@ -56,6 +57,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,9 +68,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Guidance History',
-                  style: TextStyle(
+                Text(
+                  l10n.historyTitle,
+                  style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -76,7 +78,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Your cosmic journey through time',
+                  l10n.historySubtitle,
                   style: TextStyle(
                     fontSize: 14,
                     color: AppColors.textSecondary,
@@ -104,6 +106,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   }
 
   Widget _buildErrorState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +117,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadHistory,
-            child: const Text('Retry'),
+            child: Text(l10n.commonRetry),
           ),
         ],
       ),
@@ -122,6 +125,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -132,18 +136,18 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             color: AppColors.textMuted.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'No history yet',
-            style: TextStyle(
+          Text(
+            l10n.historyEmptyTitle,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Your daily guidances will appear here',
-            style: TextStyle(color: AppColors.textMuted),
+          Text(
+            l10n.historyEmptySubtitle,
+            style: const TextStyle(color: AppColors.textMuted),
           ),
         ],
       ),
@@ -167,9 +171,10 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
   Widget _buildHistoryItem(Map<String, dynamic> guidance) {
     final date = DateTime.parse(guidance['date']);
-    final dateStr = DateFormat('EEEE, MMM d').format(date);
-    final isToday = DateFormat('yyyy-MM-dd').format(date) == 
-                    DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final locale = Localizations.localeOf(context).languageCode;
+    final dateStr = DateFormat('EEEE, MMM d', locale).format(date);
+    final todayKey = DateFormat('yyyy-MM-dd', locale).format(DateTime.now());
+    final isToday = DateFormat('yyyy-MM-dd', locale).format(date) == todayKey;
     
     final dailySummary = guidance['dailySummary'] as Map<String, dynamic>?;
     final mood = dailySummary?['mood'] ?? 'Balanced';
@@ -242,7 +247,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                     Row(
                       children: [
                         Text(
-                          isToday ? 'Today' : dateStr,
+                          isToday
+                              ? AppLocalizations.of(context)!.commonToday
+                              : dateStr,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -260,9 +267,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                               color: AppColors.accent,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Text(
-                              'NEW',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context)!.historyNewBadge,
+                              style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primary,

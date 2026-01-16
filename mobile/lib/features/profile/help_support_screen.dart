@@ -1,49 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
-  static const List<Map<String, String>> _faqs = [
-    {
-      'question': 'How accurate is the daily guidance?',
-      'answer': 'Our daily guidance combines traditional astrological principles with your personal birth chart. While astrology is interpretive, our AI provides personalized insights based on real planetary positions and aspects.',
-    },
-    {
-      'question': 'Why do I need my birth time?',
-      'answer': 'Your birth time determines your Ascendant (Rising sign) and the positions of houses in your chart. Without it, we use noon as a default, which may affect the accuracy of house-related interpretations.',
-    },
-    {
-      'question': 'How do I change my birth data?',
-      'answer': 'Currently, birth data cannot be changed after initial setup to ensure consistency in your readings. Contact support if you need to make corrections.',
-    },
-    {
-      'question': 'What is a Focus topic?',
-      'answer': 'A Focus topic is a current concern or life area you want to emphasize. When set, your daily guidance will pay special attention to this area, providing more relevant insights.',
-    },
-    {
-      'question': 'How does the subscription work?',
-      'answer': 'The free tier includes basic daily guidance. Premium subscribers get enhanced personalization, audio readings, and access to special features like Karmic Astrology readings.',
-    },
-    {
-      'question': 'Is my data private?',
-      'answer': 'Yes! We take privacy seriously. Your birth data and personal information are encrypted and never shared with third parties. You can delete your account at any time.',
-    },
-    {
-      'question': 'What if I disagree with a reading?',
-      'answer': 'Astrology is interpretive, and not every reading will resonate. Use the feedback feature to help us improve. Our AI learns from your preferences over time.',
-    },
-  ];
-
   Future<void> _contactSupport(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: 'support@innerwisdomapp.com',
       queryParameters: {
-        'subject': 'Inner Wisdom Support Request',
+        'subject': l10n.helpSupportEmailSubject,
       },
     );
 
@@ -53,8 +24,8 @@ class HelpSupportScreen extends StatelessWidget {
       } else {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Could not open email app. Please email support@innerwisdomapp.com'),
+            SnackBar(
+              content: Text(l10n.helpSupportEmailAppFailed),
               backgroundColor: AppColors.error,
             ),
           );
@@ -63,8 +34,8 @@ class HelpSupportScreen extends StatelessWidget {
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please email us at support@innerwisdomapp.com'),
+          SnackBar(
+            content: Text(l10n.helpSupportEmailFallback),
             backgroundColor: AppColors.accent,
           ),
         );
@@ -74,6 +45,37 @@ class HelpSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final faqs = [
+      {
+        'question': l10n.helpSupportFaq1Q,
+        'answer': l10n.helpSupportFaq1A,
+      },
+      {
+        'question': l10n.helpSupportFaq2Q,
+        'answer': l10n.helpSupportFaq2A,
+      },
+      {
+        'question': l10n.helpSupportFaq3Q,
+        'answer': l10n.helpSupportFaq3A,
+      },
+      {
+        'question': l10n.helpSupportFaq4Q,
+        'answer': l10n.helpSupportFaq4A,
+      },
+      {
+        'question': l10n.helpSupportFaq5Q,
+        'answer': l10n.helpSupportFaq5A,
+      },
+      {
+        'question': l10n.helpSupportFaq6Q,
+        'answer': l10n.helpSupportFaq6A,
+      },
+      {
+        'question': l10n.helpSupportFaq7Q,
+        'answer': l10n.helpSupportFaq7A,
+      },
+    ];
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -91,10 +93,10 @@ class HelpSupportScreen extends StatelessWidget {
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Help & Support',
-                        style: TextStyle(
+                        l10n.helpSupportTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -145,13 +147,13 @@ class HelpSupportScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 16),
-                              const Expanded(
+                              Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Contact Support',
-                                      style: TextStyle(
+                                      l10n.helpSupportContactTitle,
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.textPrimary,
@@ -159,8 +161,8 @@ class HelpSupportScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: 4),
                                     Text(
-                                      'We typically respond within 24 hours',
-                                      style: TextStyle(
+                                      l10n.helpSupportContactSubtitle,
+                                      style: const TextStyle(
                                         fontSize: 13,
                                         color: AppColors.textSecondary,
                                       ),
@@ -180,9 +182,9 @@ class HelpSupportScreen extends StatelessWidget {
 
                       const SizedBox(height: 32),
 
-                      const Text(
-                        'Frequently Asked Questions',
-                        style: TextStyle(
+                      Text(
+                        l10n.helpSupportFaqTitle,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textSecondary,
@@ -191,7 +193,9 @@ class HelpSupportScreen extends StatelessWidget {
                       const SizedBox(height: 16),
 
                       // FAQ list
-                      ..._faqs.map((faq) => _buildFaqItem(faq['question']!, faq['answer']!)),
+                      ...faqs.map(
+                        (faq) => _buildFaqItem(faq['question']!, faq['answer']!),
+                      ),
                     ],
                   ),
                 ),

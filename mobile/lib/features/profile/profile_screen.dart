@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/utils/zodiac_utils.dart';
+import '../../core/providers/locale_provider.dart';
+import '../../core/services/social_auth_service.dart';
 import '../shell/main_shell.dart';
 import '../context/widgets/context_settings_card.dart';
 import '../natal_chart/services/natal_chart_service.dart';
@@ -33,6 +36,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     'PL': {'name': 'Polski', 'flag': '🇵🇱'},
   };
 
+  // UI languages (lowercase codes)
+  static const Map<String, Map<String, String>> _uiLanguages = {
+    'en': {'name': 'English', 'flag': '🇬🇧'},
+    'ro': {'name': 'Română', 'flag': '🇷🇴'},
+    'fr': {'name': 'Français', 'flag': '🇫🇷'},
+    'de': {'name': 'Deutsch', 'flag': '🇩🇪'},
+    'es': {'name': 'Español', 'flag': '🇪🇸'},
+    'it': {'name': 'Italiano', 'flag': '🇮🇹'},
+    'hu': {'name': 'Magyar', 'flag': '🇭🇺'},
+    'pl': {'name': 'Polski', 'flag': '🇵🇱'},
+  };
+
   @override
   void initState() {
     super.initState();
@@ -57,29 +72,31 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _logout() async {
+    final l10n = AppLocalizations.of(context)!;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Logout', style: TextStyle(color: AppColors.textPrimary)),
-        content: const Text(
-          'Are you sure you want to logout?',
-          style: TextStyle(color: AppColors.textSecondary),
+        title: Text(l10n.profileLogout, style: const TextStyle(color: AppColors.textPrimary)),
+        content: Text(
+          l10n.profileLogoutConfirm,
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Logout', style: TextStyle(color: AppColors.error)),
+            child: Text(l10n.profileLogout, style: const TextStyle(color: AppColors.error)),
           ),
         ],
       ),
     );
 
     if (confirm == true) {
+      await SocialAuthService().signOut();
       final apiClient = ref.read(apiClientProvider);
       await apiClient.clearTokens();
       
@@ -96,6 +113,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SafeArea(
       child: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppColors.accent))
@@ -117,11 +136,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 24),
 
                   // Personal Context Card
-                  const Padding(
-                    padding: EdgeInsets.only(left: 4, bottom: 12),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
-                      'Personal Context',
-                      style: TextStyle(
+                      l10n.profilePersonalContext,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textSecondary,
@@ -138,9 +157,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 32),
 
                   // Version
-                  const Text(
-                    'Inner Wisdom v1.0.0',
-                    style: TextStyle(
+                  Text(
+                    l10n.profileVersion('1.0.0'),
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textMuted,
                     ),
@@ -154,6 +173,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildProfileHeader() {
+    final l10n = AppLocalizations.of(context)!;
     final sunSign = _user?['natalChart']?['sunSign'] as String?;
     final zodiac = ZodiacUtils.getZodiacData(sunSign);
     
@@ -216,7 +236,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
         const SizedBox(height: 16),
         Text(
-          _user?['name'] ?? 'User',
+          _user?['name'] ?? l10n.profileUserFallback,
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -260,9 +280,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             children: [
               const Icon(Icons.auto_awesome, size: 18, color: AppColors.accent),
               const SizedBox(width: 8),
-              const Text(
-                'Your Cosmic Blueprint',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.profileCosmicBlueprint,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
@@ -274,9 +294,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildZodiacInfo('☀️ Sun', sunSign),
-              _buildZodiacInfo('🌙 Moon', moonSign),
-              _buildZodiacInfo('⬆️ Rising', ascendant),
+              _buildZodiacInfo(
+                AppLocalizations.of(context)!.profileSunLabel,
+                sunSign,
+              ),
+              _buildZodiacInfo(
+                AppLocalizations.of(context)!.profileMoonLabel,
+                moonSign,
+              ),
+              _buildZodiacInfo(
+                AppLocalizations.of(context)!.profileRisingLabel,
+                ascendant,
+              ),
             ],
           ),
         ],
@@ -285,6 +314,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildZodiacInfo(String label, String? sign) {
+    final l10n = AppLocalizations.of(context)!;
     final zodiac = ZodiacUtils.getZodiacData(sign);
     
     return Column(
@@ -307,7 +337,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         const SizedBox(height: 4),
         Text(
-          sign ?? 'Unknown',
+          sign ?? l10n.profileUnknown,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -319,14 +349,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildSettingsSection() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 4, bottom: 12),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 12),
           child: Text(
-            'Settings',
-            style: TextStyle(
+            l10n.profileSettings,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,
@@ -335,48 +367,59 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
         _buildSettingsItem(
           icon: Icons.language_rounded,
-          title: 'Language',
+          title: l10n.profileAppLanguage,
+          subtitle: _getUiLanguageDisplayName(
+            ref.watch(appLocaleProvider),
+            l10n,
+          ),
+          onTap: () => _showAppLanguagePicker(l10n),
+        ),
+        _buildSettingsItem(
+          icon: Icons.translate_rounded,
+          title: l10n.profileContentLanguage,
           subtitle: _getLanguageDisplayName(_user?['language'] ?? 'EN'),
           onTap: _showLanguagePicker,
         ),
         _buildSettingsItem(
           icon: Icons.notifications_rounded,
-          title: 'Notifications',
-          subtitle: _user?['notifyEnabled'] == true ? 'Enabled' : 'Disabled',
+          title: l10n.profileNotifications,
+          subtitle: _user?['notifyEnabled'] == true
+              ? l10n.profileNotificationsEnabled
+              : l10n.profileNotificationsDisabled,
           onTap: () => context.push('/notifications-settings'),
         ),
         _buildSettingsItem(
           icon: Icons.color_lens_rounded,
-          title: 'Appearance',
-          subtitle: 'Dark theme',
+          title: l10n.profileAppearance,
+          subtitle: l10n.appearanceDarkTitle,
           onTap: () => context.push('/appearance'),
         ),
         _buildSettingsItem(
           icon: Icons.help_outline_rounded,
-          title: 'Help & Support',
+          title: l10n.profileHelpSupport,
           onTap: () => context.push('/help-support'),
         ),
         _buildSettingsItem(
           icon: Icons.privacy_tip_rounded,
-          title: 'Privacy Policy',
+          title: l10n.profilePrivacyPolicy,
           onTap: () => context.push('/privacy-policy'),
         ),
         _buildSettingsItem(
           icon: Icons.article_outlined,
-          title: 'Terms of Service',
+          title: l10n.profileTermsOfService,
           onTap: () => context.push('/terms-of-service'),
         ),
         const SizedBox(height: 16),
         _buildSettingsItem(
           icon: Icons.logout_rounded,
-          title: 'Logout',
+          title: l10n.profileLogout,
           titleColor: AppColors.error,
           onTap: _logout,
         ),
         const SizedBox(height: 8),
         _buildSettingsItem(
           icon: Icons.delete_forever_rounded,
-          title: 'Delete Account',
+          title: l10n.profileDeleteAccount,
           titleColor: AppColors.error,
           onTap: () => context.push('/delete-account'),
         ),
@@ -390,8 +433,102 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return '${lang['name']} ${lang['flag']}';
   }
 
+  String _getUiLanguageDisplayName(Locale locale, AppLocalizations l10n) {
+    final lang = _uiLanguages[locale.languageCode];
+  if (lang == null) return _uiLanguages['en']!['name']! + ' ' + _uiLanguages['en']!['flag']!;
+    return '${lang['name']} ${lang['flag']}';
+  }
+
+  Future<void> _showAppLanguagePicker(AppLocalizations l10n) async {
+    final currentLocale = ref.read(appLocaleProvider);
+
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.profileSelectLanguageTitle,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: AppColors.textMuted),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.profileAppLanguage,
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  ..._uiLanguages.entries.map((entry) {
+                    final code = entry.key;
+                    final lang = entry.value;
+                    final isSelected = currentLocale.languageCode == code;
+                    return ListTile(
+                      leading: Text(
+                        lang['flag']!,
+                        style: const TextStyle(fontSize: 28),
+                      ),
+                      title: Text(
+                        lang['name']!,
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                      trailing: isSelected
+                          ? const Icon(Icons.check_circle, color: AppColors.accent)
+                          : null,
+                      onTap: () => Navigator.pop(context, code),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      tileColor: isSelected
+                          ? AppColors.accent.withOpacity(0.1)
+                          : null,
+                    );
+                  }),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    if (selected == null) return;
+    await ref.read(appLocaleProvider.notifier).setLocaleCode(selected);
+  }
+
   Future<void> _showLanguagePicker() async {
     final currentLanguage = _user?['language'] ?? 'EN';
+    final l10n = AppLocalizations.of(context)!;
     
     final selected = await showModalBottomSheet<String>(
       context: context,
@@ -408,9 +545,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Select Language',
-                  style: TextStyle(
+                Text(
+                  l10n.profileSelectLanguageTitle,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -423,9 +560,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            const Text(
-              'All AI-generated content will be in your selected language.',
-              style: TextStyle(
+            Text(
+              l10n.profileSelectLanguageSubtitle,
+              style: const TextStyle(
                 fontSize: 13,
                 color: AppColors.textSecondary,
               ),
@@ -478,6 +615,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _updateLanguage(String languageCode) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       setState(() => _isLoading = true);
       
@@ -490,7 +628,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Language updated to ${_languages[languageCode]?['name'] ?? languageCode}'),
+            content: Text(
+              l10n.profileLanguageUpdated(
+                _languages[languageCode]?['name'] ?? languageCode,
+              ),
+            ),
             backgroundColor: AppColors.success,
           ),
         );
@@ -500,7 +642,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update language: $e'),
+            content: Text(l10n.profileLanguageUpdateFailed(e.toString())),
             backgroundColor: AppColors.error,
           ),
         );

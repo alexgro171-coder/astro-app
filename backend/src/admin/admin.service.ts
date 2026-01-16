@@ -1,4 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
+import * as path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { StripeService } from '../billing/stripe/stripe.service';
 
@@ -10,6 +13,7 @@ import { StripeService } from '../billing/stripe/stripe.service';
 @Injectable()
 export class AdminService {
   private readonly logger = new Logger(AdminService.name);
+  private readonly execFileAsync = promisify(execFile);
 
   constructor(
     private prisma: PrismaService,
@@ -393,6 +397,29 @@ export class AdminService {
       subscription: user.subscription,
       payments,
       refunds,
+    };
+  }
+
+  /**
+   * Run UI ARB translation script (OpenAI-powered)
+   */
+  async runUiTranslations() {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is not set on the server');
+    }
+
+    const scriptPath = path.resolve(process.cwd(), 'scripts', 'translate-ui-arb.js');
+    this.logger.log(`Running UI translation script: ${scriptPath}`);
+
+    const { stdout, stderr } = await this.execFileAsync('node', [scriptPath], {
+      env: process.env,
+      maxBuffer: 10 * 1024 * 1024,
+    });
+
+    return {
+      ok: true,
+      stdout: stdout?.trim() || '',
+      stderr: stderr?.trim() || '',
     };
   }
 }

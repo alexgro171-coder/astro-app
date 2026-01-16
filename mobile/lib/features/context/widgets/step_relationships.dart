@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
 import '../screens/context_wizard_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Step 1: Relationships & Family
 class StepRelationships extends StatelessWidget {
@@ -16,33 +17,35 @@ class StepRelationships extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // A1: Relationship Status
-          _buildSectionTitle('Current relationship status'),
+          _buildSectionTitle(l10n.contextRelationshipStatusTitle),
           const SizedBox(height: 12),
-          _buildRelationshipOptions(),
+          _buildRelationshipOptions(l10n),
 
           const SizedBox(height: 24),
 
           // A2: Seeking relationship (conditional)
           if (answers.shouldShowSeekingRelationship) ...[
-            _buildSectionTitle('Are you looking for a relationship?'),
+            _buildSectionTitle(l10n.contextSeekingRelationshipTitle),
             const SizedBox(height: 12),
             _buildYesNoToggle(
               value: answers.seekingRelationship,
               onChanged: (value) {
                 onUpdate(answers.copyWith(seekingRelationship: value));
               },
+              l10n: l10n,
             ),
             const SizedBox(height: 24),
           ],
 
           // A3: Children
-          _buildSectionTitle('Do you have children?'),
+          _buildSectionTitle(l10n.contextHasChildrenTitle),
           const SizedBox(height: 12),
           _buildYesNoToggle(
             value: answers.hasChildren,
@@ -52,6 +55,7 @@ class StepRelationships extends StatelessWidget {
                 children: value ? answers.children : [],
               ));
             },
+            l10n: l10n,
           ),
 
           // Children list (conditional)
@@ -77,7 +81,7 @@ class StepRelationships extends StatelessWidget {
     );
   }
 
-  Widget _buildRelationshipOptions() {
+  Widget _buildRelationshipOptions(AppLocalizations l10n) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -110,7 +114,7 @@ class StepRelationships extends StatelessWidget {
                   const SizedBox(width: 6),
                 ],
                 Text(
-                  status.label,
+                  _relationshipLabel(status, l10n),
                   style: TextStyle(
                     color: isSelected ? Colors.white : AppColors.textSecondary,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -127,12 +131,13 @@ class StepRelationships extends StatelessWidget {
   Widget _buildYesNoToggle({
     required bool? value,
     required Function(bool) onChanged,
+    required AppLocalizations l10n,
   }) {
     return Row(
       children: [
         Expanded(
           child: _buildToggleButton(
-            label: 'Yes',
+            label: l10n.commonYes,
             isSelected: value == true,
             onTap: () => onChanged(true),
           ),
@@ -140,7 +145,7 @@ class StepRelationships extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: _buildToggleButton(
-            label: 'No',
+            label: l10n.commonNo,
             isSelected: value == false,
             onTap: () => onChanged(false),
           ),
@@ -182,11 +187,12 @@ class StepRelationships extends StatelessWidget {
   }
 
   Widget _buildChildrenList() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Children details (optional)',
+          l10n.contextChildrenDetailsOptional,
           style: TextStyle(
             fontSize: 14,
             color: Colors.white.withOpacity(0.7),
@@ -210,7 +216,7 @@ class StepRelationships extends StatelessWidget {
               onUpdate(answers.copyWith(children: newChildren));
             },
             icon: Icon(Icons.add_circle_outline, color: ContextColors.gold),
-            label: Text('Add child', style: TextStyle(color: ContextColors.gold)),
+            label: Text(l10n.contextAddChild, style: TextStyle(color: ContextColors.gold)),
           ),
       ],
     );
@@ -232,9 +238,9 @@ class StepRelationships extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Age',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.contextChildAgeLabel,
+                  style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textMuted,
                   ),
@@ -247,7 +253,9 @@ class StepRelationships extends StatelessWidget {
                   items: List.generate(51, (i) => i)
                       .map((age) => DropdownMenuItem(
                             value: age,
-                            child: Text('$age ${age == 1 ? 'year' : 'years'}'),
+                            child: Text(
+                              AppLocalizations.of(context)!.contextChildAgeYears(age),
+                            ),
                           ))
                       .toList(),
                   onChanged: (value) {
@@ -272,9 +280,9 @@ class StepRelationships extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Gender',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.contextChildGenderLabel,
+                  style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textMuted,
                   ),
@@ -287,7 +295,7 @@ class StepRelationships extends StatelessWidget {
                   items: ChildGender.values
                       .map((g) => DropdownMenuItem(
                             value: g,
-                            child: Text(g.label),
+                            child: Text(_childGenderLabel(g, AppLocalizations.of(context)!)),
                           ))
                       .toList(),
                   onChanged: (value) {
@@ -317,6 +325,34 @@ class StepRelationships extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _relationshipLabel(RelationshipStatus status, AppLocalizations l10n) {
+    switch (status) {
+      case RelationshipStatus.single:
+        return l10n.contextRelationshipSingle;
+      case RelationshipStatus.inRelationship:
+        return l10n.contextRelationshipInRelationship;
+      case RelationshipStatus.married:
+        return l10n.contextRelationshipMarried;
+      case RelationshipStatus.separated:
+        return l10n.contextRelationshipSeparated;
+      case RelationshipStatus.widowed:
+        return l10n.contextRelationshipWidowed;
+      case RelationshipStatus.preferNotToSay:
+        return l10n.contextRelationshipPreferNotToSay;
+    }
+  }
+
+  String _childGenderLabel(ChildGender gender, AppLocalizations l10n) {
+    switch (gender) {
+      case ChildGender.male:
+        return l10n.genderMale;
+      case ChildGender.female:
+        return l10n.genderFemale;
+      case ChildGender.preferNotToSay:
+        return l10n.genderPreferNotToSay;
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -31,7 +32,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
   Future<void> _deleteAccount() async {
     if (!_canDelete) {
       setState(() {
-        _errorMessage = 'Please type DELETE to confirm';
+        _errorMessage = AppLocalizations.of(context)!.deleteAccountConfirmError;
       });
       return;
     }
@@ -41,32 +42,29 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 28),
             SizedBox(width: 12),
-            Text('Final Warning', style: TextStyle(color: AppColors.textPrimary)),
+            Text(
+              AppLocalizations.of(context)!.deleteAccountFinalWarningTitle,
+              style: const TextStyle(color: AppColors.textPrimary),
+            ),
           ],
         ),
-        content: const Text(
-          'This action cannot be undone. All your data, including:\n\n'
-          '• Your profile and birth data\n'
-          '• Natal chart and interpretations\n'
-          '• Daily guidance history\n'
-          '• Personal context and preferences\n'
-          '• All purchased content\n\n'
-          'Will be permanently deleted.',
-          style: TextStyle(color: AppColors.textSecondary),
+        content: Text(
+          AppLocalizations.of(context)!.deleteAccountFinalWarningBody,
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Delete Forever'),
+            child: Text(AppLocalizations.of(context)!.deleteAccountConfirmButton),
           ),
         ],
       ),
@@ -99,8 +97,8 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
 
       // Show success and navigate to onboarding
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Your account has been deleted'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.deleteAccountSuccess),
           backgroundColor: AppColors.success,
         ),
       );
@@ -109,7 +107,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
     } catch (e) {
       debugPrint('Delete account error: $e');
       setState(() {
-        _errorMessage = 'Failed to delete account. Please try again.';
+        _errorMessage = AppLocalizations.of(context)!.deleteAccountFailed;
       });
     } finally {
       if (mounted) {
@@ -120,6 +118,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -137,10 +136,10 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Delete Account',
-                        style: TextStyle(
+                        l10n.deleteAccountTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -179,9 +178,9 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
 
                       const SizedBox(height: 24),
 
-                      const Text(
-                        'Delete Your Account?',
-                        style: TextStyle(
+                      Text(
+                        l10n.deleteAccountHeading,
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
@@ -197,7 +196,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: AppColors.error.withOpacity(0.3)),
                         ),
-                        child: const Column(
+                        child: Column(
                           children: [
                             Row(
                               children: [
@@ -205,8 +204,8 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    'This action is permanent and cannot be undone',
-                                    style: TextStyle(
+                                    l10n.deleteAccountPermanentWarning,
+                                    style: const TextStyle(
                                       color: AppColors.error,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -216,8 +215,8 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                             ),
                             SizedBox(height: 12),
                             Text(
-                              'All your personal data, including your natal chart, guidance history, and any purchases will be permanently deleted.',
-                              style: TextStyle(color: AppColors.textSecondary),
+                              l10n.deleteAccountWarningDetail,
+                              style: const TextStyle(color: AppColors.textSecondary),
                             ),
                           ],
                         ),
@@ -235,21 +234,21 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'What will be deleted:',
-                              style: TextStyle(
+                            Text(
+                              l10n.deleteAccountWhatTitle,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 12),
-                            _buildDeleteItem('Your profile and account'),
-                            _buildDeleteItem('Birth data and natal chart'),
-                            _buildDeleteItem('All daily guidance history'),
-                            _buildDeleteItem('Personal context & preferences'),
-                            _buildDeleteItem('Karmic astrology readings'),
-                            _buildDeleteItem('All purchased content'),
+                            _buildDeleteItem(l10n.deleteAccountItemProfile),
+                            _buildDeleteItem(l10n.deleteAccountItemBirthData),
+                            _buildDeleteItem(l10n.deleteAccountItemGuidance),
+                            _buildDeleteItem(l10n.deleteAccountItemContext),
+                            _buildDeleteItem(l10n.deleteAccountItemKarmic),
+                            _buildDeleteItem(l10n.deleteAccountItemPurchases),
                           ],
                         ),
                       ),
@@ -257,9 +256,9 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                       const SizedBox(height: 32),
 
                       // Confirmation input
-                      const Text(
-                        'Type DELETE to confirm',
-                        style: TextStyle(
+                      Text(
+                        l10n.deleteAccountTypeDelete,
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textSecondary,
@@ -274,8 +273,8 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                           letterSpacing: 4,
                           fontWeight: FontWeight.bold,
                         ),
-                        decoration: const InputDecoration(
-                          hintText: 'DELETE',
+                        decoration: InputDecoration(
+                          hintText: l10n.deleteAccountDeleteHint,
                         ),
                         onChanged: (_) => setState(() {}),
                       ),
@@ -308,7 +307,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                                     color: AppColors.textPrimary,
                                   ),
                                 )
-                              : const Text('Delete My Account'),
+                              : Text(l10n.deleteAccountButton),
                         ),
                       ),
 
@@ -317,7 +316,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                       // Cancel button
                       TextButton(
                         onPressed: () => context.pop(),
-                        child: const Text('Cancel, keep my account'),
+                        child: Text(l10n.deleteAccountCancel),
                       ),
                     ],
                   ),

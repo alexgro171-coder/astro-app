@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -46,7 +47,7 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
     } catch (e) {
       print('GuidanceDetailScreen error: $e');
       setState(() {
-        _error = 'Failed to load guidance';
+        _error = AppLocalizations.of(context)!.guidanceLoadFailed;
         _isLoading = false;
       });
     }
@@ -71,10 +72,10 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Daily Guidance',
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.guidanceTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -105,6 +106,7 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
   }
 
   Widget _buildErrorState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -115,7 +117,7 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadGuidance,
-            child: const Text('Retry'),
+            child: Text(l10n.commonRetry),
           ),
         ],
       ),
@@ -127,10 +129,10 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
     final dailySummary = _guidance?['dailySummary'] as Map<String, dynamic>?;
     
     if (sections == null) {
-      return const Center(
+      return Center(
         child: Text(
-          'No guidance available',
-          style: TextStyle(color: AppColors.textSecondary),
+          AppLocalizations.of(context)!.guidanceNoneAvailable,
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
       );
     }
@@ -195,8 +197,9 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
   }
 
   Widget _buildSummaryHeader(Map<String, dynamic> summary) {
+    final l10n = AppLocalizations.of(context)!;
     final mood = summary['mood'] as String? ?? 'Balanced';
-    final focusArea = summary['focusArea'] as String? ?? 'Personal Growth';
+    final focusArea = summary['focusArea'] as String? ?? l10n.homeFocusFallback;
 
     final moodColors = {
       'Transformative': Colors.purple,
@@ -235,7 +238,7 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
               Icon(Icons.auto_awesome, color: moodColor, size: 24),
               const SizedBox(width: 8),
               Text(
-                "Today's Cosmic Energy",
+                l10n.guidanceCosmicEnergyTitle,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -250,13 +253,13 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
             children: [
               _buildInfoChip(
                 icon: Icons.mood,
-                label: 'Mood',
+                label: l10n.guidanceMoodLabel,
                 value: mood,
                 color: moodColor,
               ),
               _buildInfoChip(
                 icon: Icons.gps_fixed,
-                label: 'Focus',
+                label: l10n.guidanceFocusLabel,
                 value: focusArea,
                 color: AppColors.accent,
               ),
@@ -467,7 +470,7 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Your Guidance',
+                                    AppLocalizations.of(context)!.guidanceYourGuidance,
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -503,7 +506,7 @@ class _GuidanceDetailScreenState extends ConsumerState<GuidanceDetailScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              'Tap to collapse',
+                                AppLocalizations.of(context)!.guidanceTapToCollapse,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: AppColors.textMuted,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import 'services/karmic_service.dart';
@@ -17,6 +18,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final statusAsync = ref.watch(karmicStatusProvider);
 
     return Scaffold(
@@ -28,9 +30,9 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Karmic Astrology',
-          style: TextStyle(
+        title: Text(
+          l10n.karmicTitle,
+          style: const TextStyle(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w600,
           ),
@@ -38,15 +40,15 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
         centerTitle: true,
       ),
       body: statusAsync.when(
-        loading: () => const Center(
+        loading: () => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(color: AppColors.accent),
-              SizedBox(height: 24),
+              const CircularProgressIndicator(color: AppColors.accent),
+              const SizedBox(height: 24),
               Text(
-                'Loading your karmic reading...',
-                style: TextStyle(color: AppColors.textSecondary),
+                l10n.karmicLoading,
+                style: const TextStyle(color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -68,7 +70,9 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
 
           // If failed, show error with retry
           if (status.isFailed) {
-            return _buildErrorState(status.errorMsg ?? 'Generation failed');
+            return _buildErrorState(
+              status.errorMsg ?? l10n.karmicGenerationFailedShort,
+            );
           }
 
           // If none (no reading yet), trigger generation
@@ -87,6 +91,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
   }
 
   Widget _buildGeneratingState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -116,9 +121,9 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
             const SizedBox(height: 32),
             const CircularProgressIndicator(color: Color(0xFF7C4DFF)),
             const SizedBox(height: 24),
-            const Text(
-              'Generating Your Karmic Reading...',
-              style: TextStyle(
+            Text(
+              l10n.karmicGeneratingTitle,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
@@ -126,9 +131,9 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Analyzing your natal chart for karmic patterns and soul lessons.',
-              style: TextStyle(
+            Text(
+              l10n.karmicGeneratingSubtitle,
+              style: const TextStyle(
                 fontSize: 14,
                 color: AppColors.textSecondary,
                 height: 1.5,
@@ -142,6 +147,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
   }
 
   Widget _buildErrorState(String error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -150,9 +156,9 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
           children: [
             const Icon(Icons.error_outline, color: Colors.red, size: 48),
             const SizedBox(height: 24),
-            const Text(
-              'Something went wrong',
-              style: TextStyle(
+            Text(
+              l10n.commonSomethingWentWrong,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
@@ -177,7 +183,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.refresh),
-              label: const Text('Try Again'),
+              label: Text(l10n.commonTryAgain),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF7C4DFF),
                 foregroundColor: Colors.white,
@@ -194,7 +200,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
   /// - Replace "#" markers with bullet points "•"
   String _processKarmicContent(String? content) {
     if (content == null || content.isEmpty) {
-      return 'No content available.';
+      return AppLocalizations.of(context)!.commonNoContent;
     }
     
     String processed = content;
@@ -220,6 +226,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
   }
 
   Widget _buildReadyState(KarmicStatus status) {
+    final l10n = AppLocalizations.of(context)!;
     final processedContent = _processKarmicContent(status.content);
     
     return SingleChildScrollView(
@@ -257,13 +264,13 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '🔮 Your Karmic Reading',
-                        style: TextStyle(
+                        l10n.karmicReadingTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
@@ -271,8 +278,8 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'Messages of the Soul',
-                        style: TextStyle(
+                        l10n.karmicReadingSubtitle,
+                        style: const TextStyle(
                           fontSize: 14,
                           color: AppColors.textSecondary,
                         ),
@@ -328,7 +335,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'This reading is for self-reflection and entertainment purposes. It does not constitute professional advice.',
+                    l10n.karmicDisclaimer,
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.orange.shade800,
@@ -358,7 +365,7 @@ class _KarmicResultScreenState extends ConsumerState<KarmicResultScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
+          content: Text(AppLocalizations.of(context)!.commonErrorWithMessage(e.toString())),
           backgroundColor: Colors.red,
         ),
       );

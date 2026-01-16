@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -51,8 +52,8 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Notification settings saved'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.notificationsSaved),
           backgroundColor: AppColors.success,
         ),
       );
@@ -61,6 +62,7 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -78,10 +80,10 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Notifications',
-                        style: TextStyle(
+                        l10n.notificationsTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -103,9 +105,9 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Push Notifications',
-                              style: TextStyle(
+                            Text(
+                              l10n.notificationsSectionTitle,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary,
@@ -115,8 +117,8 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
 
                             _buildToggleItem(
                               icon: Icons.wb_sunny_rounded,
-                              title: 'Daily Guidance',
-                              subtitle: 'Get notified when your daily guidance is ready',
+                              title: l10n.notificationsDailyTitle,
+                              subtitle: l10n.notificationsDailySubtitle,
                               value: _dailyGuidance,
                               onChanged: (v) {
                                 setState(() => _dailyGuidance = v);
@@ -126,8 +128,8 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
 
                             _buildToggleItem(
                               icon: Icons.calendar_month_rounded,
-                              title: 'Weekly Highlights',
-                              subtitle: 'Weekly cosmic overview and key transits',
+                              title: l10n.notificationsWeeklyTitle,
+                              subtitle: l10n.notificationsWeeklySubtitle,
                               value: _weeklyHighlights,
                               onChanged: (v) {
                                 setState(() => _weeklyHighlights = v);
@@ -137,8 +139,8 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
 
                             _buildToggleItem(
                               icon: Icons.auto_awesome_rounded,
-                              title: 'Special Events',
-                              subtitle: 'Full moons, eclipses, and retrogrades',
+                              title: l10n.notificationsSpecialTitle,
+                              subtitle: l10n.notificationsSpecialSubtitle,
                               value: _specialEvents,
                               onChanged: (v) {
                                 setState(() => _specialEvents = v);
@@ -166,10 +168,10 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
                                     size: 20,
                                   ),
                                   const SizedBox(width: 12),
-                                  const Expanded(
+                                  Expanded(
                                     child: Text(
-                                      'You can also control notifications in your device settings.',
-                                      style: TextStyle(
+                                      l10n.notificationsDeviceHint,
+                                      style: const TextStyle(
                                         fontSize: 13,
                                         color: AppColors.textSecondary,
                                       ),

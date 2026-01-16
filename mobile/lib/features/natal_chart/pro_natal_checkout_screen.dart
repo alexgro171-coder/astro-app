@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import 'services/natal_chart_service.dart';
@@ -30,6 +31,7 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -47,10 +49,10 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Checkout',
-                        style: TextStyle(
+                        l10n.checkoutTitle,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -82,9 +84,9 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Order Summary',
-                              style: TextStyle(
+                            Text(
+                              l10n.checkoutOrderSummary,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
@@ -112,13 +114,13 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
                                   ),
                                 ),
                                 const SizedBox(width: 16),
-                                const Expanded(
+                                Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Pro Natal Chart',
-                                        style: TextStyle(
+                                        l10n.checkoutProTitle,
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           color: AppColors.textPrimary,
@@ -126,8 +128,8 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
                                       ),
                                       SizedBox(height: 4),
                                       Text(
-                                        'Full planetary interpretations',
-                                        style: TextStyle(
+                                        l10n.checkoutProSubtitle,
+                                        style: const TextStyle(
                                           fontSize: 13,
                                           color: AppColors.textSecondary,
                                         ),
@@ -146,20 +148,20 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
                               ],
                             ),
                             const Divider(height: 32),
-                            const Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Total',
-                                  style: TextStyle(
+                                  l10n.checkoutTotalLabel,
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.textPrimary,
                                   ),
                                 ),
                                 Text(
-                                  '\$9.99 USD',
-                                  style: TextStyle(
+                                  l10n.checkoutTotalAmount,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.accent,
@@ -191,18 +193,18 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
                               color: AppColors.accent.withOpacity(0.7),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Payment Integration',
-                              style: TextStyle(
+                            Text(
+                              l10n.checkoutPaymentTitle,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              'In-App Purchase integration is being finalized. Please check back soon!',
-                              style: TextStyle(
+                            Text(
+                              l10n.checkoutPaymentSubtitle,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: AppColors.textSecondary,
                               ),
@@ -223,9 +225,11 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
                                       ),
                                     )
                                   : const Icon(Icons.science_rounded),
-                              label: Text(_isProcessing
-                                  ? 'Processing...'
-                                  : 'Demo Purchase (Testing)'),
+                              label: Text(
+                                _isProcessing
+                                    ? l10n.checkoutProcessing
+                                    : l10n.checkoutDemoPurchase,
+                              ),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: AppColors.accent,
                                 side: const BorderSide(color: AppColors.accent),
@@ -288,10 +292,10 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
                               size: 20,
                             ),
                             const SizedBox(width: 12),
-                            const Expanded(
+                            Expanded(
                               child: Text(
-                                'Payment is processed securely through Apple/Google. Your card details are never stored.',
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.checkoutSecurityNote,
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: AppColors.textSecondary,
                                 ),
@@ -328,8 +332,8 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
       if (result != null && mounted) {
         // Show success and navigate back
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('🎉 Pro Natal Chart unlocked successfully!'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.checkoutSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -341,12 +345,12 @@ class _ProNatalCheckoutScreenState extends ConsumerState<ProNatalCheckoutScreen>
         context.go('/natal-chart');
       } else {
         setState(() {
-          _error = 'Failed to generate interpretations. Please try again.';
+          _error = AppLocalizations.of(context)!.checkoutGenerateFailed;
         });
       }
     } catch (e) {
       setState(() {
-        _error = 'An error occurred: $e';
+        _error = AppLocalizations.of(context)!.checkoutErrorWithMessage(e.toString());
       });
     } finally {
       if (mounted) {

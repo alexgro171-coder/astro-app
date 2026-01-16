@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
@@ -256,7 +257,7 @@ class PlacementsTableView extends ConsumerWidget {
               ),
               const Spacer(),
               Text(
-                _getHouseTheme(house),
+                _getHouseTheme(house, AppLocalizations.of(context)!),
                 style: const TextStyle(
                   fontSize: 12,
                   color: AppColors.textMuted,
@@ -630,7 +631,11 @@ class PlacementsTableView extends ConsumerWidget {
                 children: [
                   Icon(Icons.check_circle, color: Colors.white),
                   SizedBox(width: 12),
-                  Expanded(child: Text('Pro interpretations generated! Scroll up to see them.')),
+                  Expanded(
+                    child: Text(
+                      AppLocalizations.of(context)!.natalChartProGenerated,
+                    ),
+                  ),
                 ],
               ),
               backgroundColor: Colors.green,
@@ -652,22 +657,35 @@ class PlacementsTableView extends ConsumerWidget {
     }
   }
 
-  String _getHouseTheme(int house) {
-    const themes = {
-      1: 'Self & Identity',
-      2: 'Money & Values',
-      3: 'Communication',
-      4: 'Home & Family',
-      5: 'Creativity & Romance',
-      6: 'Health & Routine',
-      7: 'Relationships',
-      8: 'Transformation',
-      9: 'Philosophy & Travel',
-      10: 'Career & Status',
-      11: 'Friends & Goals',
-      12: 'Spirituality',
-    };
-    return themes[house] ?? '';
+  String _getHouseTheme(int house, AppLocalizations l10n) {
+    switch (house) {
+      case 1:
+        return l10n.natalChartHouse1;
+      case 2:
+        return l10n.natalChartHouse2;
+      case 3:
+        return l10n.natalChartHouse3;
+      case 4:
+        return l10n.natalChartHouse4;
+      case 5:
+        return l10n.natalChartHouse5;
+      case 6:
+        return l10n.natalChartHouse6;
+      case 7:
+        return l10n.natalChartHouse7;
+      case 8:
+        return l10n.natalChartHouse8;
+      case 9:
+        return l10n.natalChartHouse9;
+      case 10:
+        return l10n.natalChartHouse10;
+      case 11:
+        return l10n.natalChartHouse11;
+      case 12:
+        return l10n.natalChartHouse12;
+      default:
+        return '';
+    }
   }
 }
 

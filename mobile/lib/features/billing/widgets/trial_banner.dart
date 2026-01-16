@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/services/entitlements_service.dart';
@@ -14,6 +15,7 @@ class TrialBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final entitlements = ref.watch(entitlementsProvider);
 
     // Don't show if not in trial
@@ -208,7 +210,7 @@ class PremiumFeatureLock extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            '$featureName is a Premium feature',
+            l10n.billingFeatureLocked(featureName),
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -217,9 +219,9 @@ class PremiumFeatureLock extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Upgrade to Premium to unlock this feature and get the most personalized guidance.',
-            style: TextStyle(
+          Text(
+            l10n.billingUpgradeBody,
+            style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 14,
             ),
@@ -232,12 +234,12 @@ class PremiumFeatureLock extends StatelessWidget {
               backgroundColor: AppColors.accent,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
             ),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.star, size: 18),
-                SizedBox(width: 8),
-                Text('Upgrade to Premium'),
+                const Icon(Icons.star, size: 18),
+                const SizedBox(width: 8),
+                Text(l10n.billingUpgrade),
               ],
             ),
           ),

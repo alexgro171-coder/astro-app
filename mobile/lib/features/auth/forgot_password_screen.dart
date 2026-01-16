@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -27,6 +28,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   Future<void> _sendResetCode() async {
     if (!_formKey.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
 
     setState(() {
       _isLoading = true;
@@ -41,7 +43,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       if (!mounted) return;
 
       setState(() {
-        _successMessage = 'If an account exists, a reset code has been sent to your email.';
+        _successMessage = l10n.forgotPasswordSent;
       });
 
       // Navigate to reset password screen after a short delay
@@ -52,7 +54,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     } catch (e) {
       debugPrint('ForgotPassword error: $e');
       setState(() {
-        _errorMessage = 'Failed to send reset code. Please try again.';
+        _errorMessage = l10n.forgotPasswordFailed;
       });
     } finally {
       if (mounted) {
@@ -63,6 +65,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -102,18 +105,18 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
-                          'Forgot Password?',
-                          style: TextStyle(
+                        Text(
+                          l10n.forgotPasswordTitle,
+                          style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Enter your email and we\'ll send you a code to reset your password',
-                          style: TextStyle(
+                        Text(
+                          l10n.forgotPasswordSubtitle,
+                          style: const TextStyle(
                             fontSize: 14,
                             color: AppColors.textSecondary,
                           ),
@@ -174,9 +177,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
 
                   // Email field
-                  const Text(
-                    'Email',
-                    style: TextStyle(
+                  Text(
+                    l10n.commonEmailLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -188,16 +191,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _sendResetCode(),
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your email',
-                      prefixIcon: Icon(Icons.email_outlined, color: AppColors.textMuted),
+                    decoration: InputDecoration(
+                      hintText: l10n.commonEmailHint,
+                      prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textMuted),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return l10n.commonEmailRequired;
                       }
                       if (!value.contains('@')) {
-                        return 'Please enter a valid email';
+                        return l10n.commonEmailInvalid;
                       }
                       return null;
                     },
@@ -219,7 +222,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                 color: AppColors.primary,
                               ),
                             )
-                          : const Text('Send Reset Code'),
+                          : Text(l10n.forgotPasswordSendCode),
                     ),
                   ),
 
@@ -229,7 +232,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   Center(
                     child: TextButton(
                       onPressed: () => context.push('/reset-password'),
-                      child: const Text('Already have a code?'),
+                      child: Text(l10n.forgotPasswordHaveCode),
                     ),
                   ),
 
@@ -240,13 +243,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Remember your password? ',
-                          style: TextStyle(color: AppColors.textSecondary),
+                        Text(
+                          l10n.forgotPasswordRemember,
+                          style: const TextStyle(color: AppColors.textSecondary),
                         ),
                         TextButton(
                           onPressed: () => context.go('/login'),
-                          child: const Text('Sign In'),
+                          child: Text(l10n.loginSignIn),
                         ),
                       ],
                     ),

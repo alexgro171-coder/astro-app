@@ -86,5 +86,11 @@ export const uploadLearnZip = async (file: File) => {
   return data;
 };
 
+// UI Translations
+export const runUiTranslations = async () => {
+  const { data } = await api.post('/admin/translations/run');
+  return data;
+};
+
 export default api;
 

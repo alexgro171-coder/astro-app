@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../shell/main_shell.dart';
@@ -23,6 +24,7 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       bottom: false,
       child: SingleChildScrollView(
@@ -33,18 +35,18 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
             const SizedBox(height: 20),
             
             // Header
-            const Text(
-              'For You',
-              style: TextStyle(
+            Text(
+              l10n.forYouTitle,
+              style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Personalized cosmic insights',
-              style: TextStyle(
+            Text(
+              l10n.forYouSubtitle,
+              style: const TextStyle(
                 fontSize: 14,
                 color: AppColors.textSecondary,
               ),
@@ -56,8 +58,8 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
             // 1. My Natal Chart
             _buildMenuItem(
               icon: Icons.stars_rounded,
-              title: 'My Natal Chart',
-              subtitle: 'Your birth chart analysis',
+              title: l10n.forYouNatalChartTitle,
+              subtitle: l10n.forYouNatalChartSubtitle,
               color: const Color(0xFF9C27B0),
               onTap: () => context.push('/natal-chart'),
             ),
@@ -65,8 +67,8 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
             // 2. Compatibilities Hub (replaces Romantic + Partnership)
             _buildMenuItem(
               icon: Icons.favorite_rounded,
-              title: 'Compatibilities',
-              subtitle: 'Love, friendship & partnership reports',
+              title: l10n.forYouCompatibilitiesTitle,
+              subtitle: l10n.forYouCompatibilitiesSubtitle,
               color: const Color(0xFFE91E63),
               onTap: () => context.push('/compatibilities'),
             ),
@@ -74,8 +76,8 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
             // 3. Karmic Astrology
             _buildMenuItem(
               icon: Icons.auto_awesome_rounded,
-              title: 'Karmic Astrology',
-              subtitle: 'Soul lessons & past life patterns',
+              title: l10n.forYouKarmicTitle,
+              subtitle: l10n.forYouKarmicSubtitle,
               color: const Color(0xFF7C4DFF),
               onTap: () => context.push('/karmic-astrology'),
             ),
@@ -92,8 +94,8 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
             // 4. Learn Astrology
             _buildMenuItem(
               icon: Icons.school_rounded,
-              title: 'Learn Astrology',
-              subtitle: 'Free educational content',
+              title: l10n.forYouLearnTitle,
+              subtitle: l10n.forYouLearnSubtitle,
               color: const Color(0xFF4CAF50),
               onTap: () => context.push('/free-learn'),
               isFree: true,
@@ -179,9 +181,9 @@ class _ForYouScreenState extends ConsumerState<ForYouScreen> {
                                 color: Colors.green.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Text(
-                                'FREE',
-                                style: TextStyle(
+                              child: Text(
+                                AppLocalizations.of(context)!.commonFree,
+                                style: const TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.green,

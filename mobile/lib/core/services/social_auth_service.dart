@@ -18,6 +18,13 @@ class SocialAuthService {
   /// Returns Firebase ID token if successful, null otherwise
   Future<SocialAuthResult?> signInWithGoogle() async {
     try {
+      // Ensure account picker is shown by clearing any previous session
+      try {
+        await _googleSignIn.disconnect();
+      } catch (_) {
+        // Ignore if not signed in or disconnect not supported
+      }
+
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
@@ -115,7 +122,8 @@ class SocialAuthService {
   Future<void> signOut() async {
     await Future.wait([
       _firebaseAuth.signOut(),
-      _googleSignIn.signOut(),
+      _googleSignIn.disconnect().catchError((_) {}),
+      _googleSignIn.signOut().catchError((_) {}),
     ]);
   }
 

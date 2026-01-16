@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -70,9 +71,10 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Moon Phase Report'),
+        title: Text(l10n.moonPhaseTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -92,6 +94,8 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
   }
 
   Widget _buildOfferView() {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -130,9 +134,9 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
 
           const SizedBox(height: 32),
 
-          const Text(
-            'Moon Phase Report',
-            style: TextStyle(
+          Text(
+            l10n.moonPhaseTitle,
+            style: const TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
@@ -142,9 +146,9 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
 
           const SizedBox(height: 16),
 
-          const Text(
-            'Understand the current lunar energy and how it affects you. Get guidance aligned with the moon\'s phase.',
-            style: TextStyle(
+          Text(
+            l10n.moonPhaseSubtitle,
+            style: const TextStyle(
               fontSize: 16,
               color: AppColors.textSecondary,
               height: 1.5,
@@ -164,9 +168,9 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Select Date',
-                  style: TextStyle(
+                Text(
+                  l10n.moonPhaseSelectDate,
+                  style: const TextStyle(
                     fontSize: 14,
                     color: AppColors.textSecondary,
                   ),
@@ -189,7 +193,8 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
+                            DateFormat('EEEE, MMMM d, yyyy', locale)
+                                .format(_selectedDate),
                             style: const TextStyle(
                               fontSize: 16,
                               color: AppColors.textPrimary,
@@ -222,7 +227,7 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '\$2.99',
+                    l10n.moonPhaseOriginalPrice,
                     style: TextStyle(
                       fontSize: 16,
                       color: AppColors.textMuted,
@@ -231,7 +236,7 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
                   ),
                   SizedBox(width: 8),
                   Text(
-                    'FREE',
+                    l10n.commonFree,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -279,9 +284,9 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
                         color: Colors.white,
                       ),
                     )
-                  : const Text(
-                      'Generate Report',
-                      style: TextStyle(
+                  : Text(
+                      l10n.moonPhaseGenerate,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -296,6 +301,8 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
   }
 
   Widget _buildResultView() {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -324,16 +331,17 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Moon Phase Report',
-                        style: TextStyle(
+                      Text(
+                        l10n.moonPhaseTitle,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colors.green,
                         ),
                       ),
                       Text(
-                        DateFormat('MMMM d, yyyy').format(_selectedDate),
+                        DateFormat('MMMM d, yyyy', locale)
+                            .format(_selectedDate),
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.green.withOpacity(0.8),
@@ -377,7 +385,7 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
                 });
               },
               icon: const Icon(Icons.refresh),
-              label: const Text('Generate for Different Date'),
+              label: Text(l10n.moonPhaseGenerateDifferentDate),
             ),
           ),
 
@@ -438,17 +446,18 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
         });
       } else if (status == 'FAILED') {
         setState(() {
-          _error = response.data['errorMsg'] ?? 'Generation failed';
+          _error = response.data['errorMsg'] ??
+              AppLocalizations.of(context)!.moonPhaseGenerationFailed;
         });
       } else {
         setState(() {
-          _error = 'Report is being generated. Please try again.';
+          _error = AppLocalizations.of(context)!.moonPhaseGenerating;
         });
       }
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _error = AppLocalizations.of(context)!.moonPhaseUnknownError;
       });
     } finally {
       if (mounted) {

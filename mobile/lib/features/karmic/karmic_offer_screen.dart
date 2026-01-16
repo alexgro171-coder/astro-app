@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/universe_loading_overlay.dart';
@@ -20,6 +21,7 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final statusAsync = ref.watch(karmicStatusProvider);
 
     return Scaffold(
@@ -47,14 +49,14 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
                 const Icon(Icons.error_outline, color: Colors.red, size: 48),
                 const SizedBox(height: 16),
                 Text(
-                  'Failed to load: $err',
+                  l10n.karmicLoadFailed(err.toString()),
                   style: const TextStyle(color: AppColors.textSecondary),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () => ref.invalidate(karmicStatusProvider),
-                  child: const Text('Retry'),
+                  child: Text(l10n.commonRetry),
                 ),
               ],
             ),
@@ -100,9 +102,9 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
                 const SizedBox(height: 32),
 
                 // Title
-                const Text(
-                  '🔮 Karmic Astrology – Messages of the Soul',
-                  style: TextStyle(
+                Text(
+                  l10n.karmicOfferTitle,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -122,12 +124,9 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
                       color: const Color(0xFF7C4DFF).withOpacity(0.2),
                     ),
                   ),
-                  child: const Text(
-                    'Karmic Astrology reveals the deep patterns shaping your life, beyond everyday events.\n\n'
-                    'It offers an interpretation that speaks about unresolved lessons, karmic connections, and the soul\'s path of growth.\n\n'
-                    'This is not about what comes next,\nbut about why you are experiencing what you experience.\n\n'
-                    '✨ Activate Karmic Astrology and discover the deeper meaning of your journey.',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.karmicOfferBody,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: AppColors.textPrimary,
                       height: 1.6,
@@ -158,7 +157,7 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Beta Testers – FREE Access!',
+                          l10n.karmicBetaFreeBadge,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -195,8 +194,8 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
                           )
                         : Text(
                             status.betaFree
-                                ? '\$${status.priceUsd} – Beta Testers Free'
-                                : 'Unlock for \$${status.priceUsd}',
+                                ? l10n.karmicPriceBeta(status.priceUsd)
+                                : l10n.karmicPriceUnlock(status.priceUsd),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -209,8 +208,8 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
                 // Hint text
                 Text(
                   status.betaFree
-                      ? 'Your reading will be generated instantly'
-                      : 'One-time purchase, no subscription',
+                      ? l10n.karmicHintInstant
+                      : l10n.karmicHintOneTime,
                   style: const TextStyle(
                     fontSize: 13,
                     color: AppColors.textMuted,
@@ -240,7 +239,7 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
       // Use job system for generation
       setState(() {
         _isGenerating = true;
-        _progressHint = "Connecting to your karmic path…";
+        _progressHint = AppLocalizations.of(context)!.karmicProgressHint;
       });
 
       try {
@@ -267,7 +266,7 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
         setState(() => _isGenerating = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to generate: $e'),
+            content: Text(AppLocalizations.of(context)!.karmicGenerateFailed(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -275,8 +274,8 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
     } else {
       // Navigate to checkout (placeholder for now)
       context.push('/placeholder', extra: {
-        'title': 'Karmic Astrology Checkout',
-        'subtitle': 'Purchase flow coming soon',
+        'title': AppLocalizations.of(context)!.karmicCheckoutTitle,
+        'subtitle': AppLocalizations.of(context)!.karmicCheckoutSubtitle,
         'icon': Icons.shopping_cart_rounded,
       });
     }
@@ -310,7 +309,11 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
             setState(() => _isGenerating = false);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Generation failed: ${status.errorMsg ?? "Unknown error"}'),
+                content: Text(
+                  AppLocalizations.of(context)!.karmicGenerationFailed(
+                    status.errorMsg ?? AppLocalizations.of(context)!.commonUnknownError,
+                  ),
+                ),
                 backgroundColor: Colors.red,
               ),
             );
@@ -327,8 +330,8 @@ class _KarmicOfferScreenState extends ConsumerState<KarmicOfferScreen> {
     if (mounted) {
       setState(() => _isGenerating = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Taking longer than expected. Please try again.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.commonTakingLonger),
           backgroundColor: Colors.orange,
         ),
       );

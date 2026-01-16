@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
 import '../screens/context_wizard_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Step 3: Self-Assessment (Likert 1-5 scales)
 class StepSelfAssessment extends StatelessWidget {
@@ -16,13 +17,14 @@ class StepSelfAssessment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Rate your current situation in each area (1 = struggling, 5 = thriving)',
+            l10n.contextSelfAssessmentIntro,
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withOpacity(0.85),
@@ -32,8 +34,8 @@ class StepSelfAssessment extends StatelessWidget {
 
           // Health & Energy
           _buildLikertScale(
-            title: 'Health & Energy',
-            subtitle: '1 = serious issues/low energy, 5 = excellent vitality',
+            title: l10n.contextSelfHealthTitle,
+            subtitle: l10n.contextSelfHealthSubtitle,
             icon: Icons.favorite_rounded,
             color: const Color(0xFFE53935),
             value: answers.healthScore,
@@ -43,8 +45,8 @@ class StepSelfAssessment extends StatelessWidget {
 
           // Social Life
           _buildLikertScale(
-            title: 'Social Life',
-            subtitle: '1 = isolated, 5 = thriving social connections',
+            title: l10n.contextSelfSocialTitle,
+            subtitle: l10n.contextSelfSocialSubtitle,
             icon: Icons.groups_rounded,
             color: const Color(0xFF43A047),
             value: answers.socialScore,
@@ -54,8 +56,8 @@ class StepSelfAssessment extends StatelessWidget {
 
           // Romantic Life
           _buildLikertScale(
-            title: 'Romantic Life',
-            subtitle: '1 = absent/challenging, 5 = fulfilled',
+            title: l10n.contextSelfRomanceTitle,
+            subtitle: l10n.contextSelfRomanceSubtitle,
             icon: Icons.favorite_border_rounded,
             color: const Color(0xFFE91E63),
             value: answers.romanceScore,
@@ -65,8 +67,8 @@ class StepSelfAssessment extends StatelessWidget {
 
           // Financial Stability
           _buildLikertScale(
-            title: 'Financial Stability',
-            subtitle: '1 = major hardship, 5 = excellent',
+            title: l10n.contextSelfFinanceTitle,
+            subtitle: l10n.contextSelfFinanceSubtitle,
             icon: Icons.attach_money_rounded,
             color: const Color(0xFF2E7D32),
             value: answers.financeScore,
@@ -76,8 +78,8 @@ class StepSelfAssessment extends StatelessWidget {
 
           // Career Satisfaction
           _buildLikertScale(
-            title: 'Career Satisfaction',
-            subtitle: '1 = stuck/stressed, 5 = progress/clarity',
+            title: l10n.contextSelfCareerTitle,
+            subtitle: l10n.contextSelfCareerSubtitle,
             icon: Icons.work_rounded,
             color: const Color(0xFF1E88E5),
             value: answers.careerScore,
@@ -87,8 +89,8 @@ class StepSelfAssessment extends StatelessWidget {
 
           // Personal Growth Interest
           _buildLikertScale(
-            title: 'Personal Growth Interest',
-            subtitle: '1 = low interest, 5 = very high',
+            title: l10n.contextSelfGrowthTitle,
+            subtitle: l10n.contextSelfGrowthSubtitle,
             icon: Icons.self_improvement_rounded,
             color: const Color(0xFF9C27B0),
             value: answers.growthScore,
@@ -221,14 +223,14 @@ class StepSelfAssessment extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Struggling',
+                  l10n.contextSelfStruggling,
                   style: TextStyle(
                     fontSize: 10,
                     color: AppColors.textMuted,
                   ),
                 ),
                 Text(
-                  'Thriving',
+                  l10n.contextSelfThriving,
                   style: TextStyle(
                     fontSize: 10,
                     color: AppColors.textMuted,

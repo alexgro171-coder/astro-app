@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
+import '../../core/providers/locale_provider.dart';
 import '../../core/services/fcm_service.dart' show fcmServiceProvider;
 import '../../core/services/social_auth_service.dart';
 
@@ -70,6 +72,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   Future<void> _signup() async {
     if (!_formKey.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
 
     setState(() {
       _isLoading = true;
@@ -87,6 +90,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+      await ref
+          .read(appLocaleProvider.notifier)
+          .setLocaleCode(_selectedLanguage.toLowerCase());
 
       // Register FCM token for push notifications
       await _registerFcmToken();
@@ -95,7 +101,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       context.go('/birth-data');
     } catch (e) {
       setState(() {
-        _errorMessage = 'Email already exists or invalid data';
+        _errorMessage = l10n.signupEmailExists;
       });
     } finally {
       if (mounted) {
@@ -105,6 +111,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Future<void> _signInWithGoogle() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isSocialLoading = true;
       _errorMessage = null;
@@ -129,6 +136,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+      await ref
+          .read(appLocaleProvider.notifier)
+          .setLocaleCode(_selectedLanguage.toLowerCase());
       debugPrint('SignupScreen: Backend authentication successful');
 
       // Register FCM token for push notifications
@@ -144,11 +154,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       }
     } catch (e) {
       debugPrint('SignupScreen: Google sign-in error: $e');
-      String errorMsg = 'Google sign-in failed. Please try again.';
+      String errorMsg = l10n.signupGoogleFailed;
       if (e.toString().contains('network')) {
-        errorMsg = 'Network error. Please check your connection.';
+        errorMsg = l10n.loginNetworkError;
       } else if (e.toString().contains('cancel')) {
-        errorMsg = 'Sign-in was cancelled.';
+        errorMsg = l10n.loginSignInCancelled;
       }
       setState(() {
         _errorMessage = errorMsg;
@@ -161,6 +171,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Future<void> _signInWithApple() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isSocialLoading = true;
       _errorMessage = null;
@@ -185,6 +196,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       final data = response.data;
       await apiClient.saveTokens(data['accessToken'], data['refreshToken']);
+      await ref
+          .read(appLocaleProvider.notifier)
+          .setLocaleCode(_selectedLanguage.toLowerCase());
       debugPrint('SignupScreen: Backend authentication successful');
 
       // Register FCM token for push notifications
@@ -200,11 +214,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       }
     } catch (e) {
       debugPrint('SignupScreen: Apple sign-in error: $e');
-      String errorMsg = 'Apple sign-in failed. Please try again.';
+      String errorMsg = l10n.signupAppleFailed;
       if (e.toString().contains('AuthorizationErrorCode.canceled')) {
-        errorMsg = 'Sign-in was cancelled.';
+        errorMsg = l10n.loginSignInCancelled;
       } else if (e.toString().contains('network')) {
-        errorMsg = 'Network error. Please check your connection.';
+        errorMsg = l10n.loginNetworkError;
       }
       setState(() {
         _errorMessage = errorMsg;
@@ -218,6 +232,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -240,18 +255,18 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   const SizedBox(height: 20),
 
                   // Header
-                  const Text(
-                    'Create Account',
-                    style: TextStyle(
+                  Text(
+                    l10n.signupTitle,
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Start your cosmic journey with Inner Wisdom',
-                    style: TextStyle(
+                  Text(
+                    l10n.signupSubtitle,
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
                     ),
@@ -284,9 +299,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ),
 
                   // Name field
-                  const Text(
-                    'Name',
-                    style: TextStyle(
+                  Text(
+                    l10n.commonNameLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -297,13 +312,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     controller: _nameController,
                     textInputAction: TextInputAction.next,
                     textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your name',
-                      prefixIcon: Icon(Icons.person_outline, color: AppColors.textMuted),
+                    decoration: InputDecoration(
+                      hintText: l10n.commonNameHint,
+                      prefixIcon: const Icon(Icons.person_outline, color: AppColors.textMuted),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your name';
+                        return l10n.commonNameRequired;
                       }
                       return null;
                     },
@@ -312,9 +327,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   const SizedBox(height: 20),
 
                   // Email field
-                  const Text(
-                    'Email',
-                    style: TextStyle(
+                  Text(
+                    l10n.commonEmailLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -325,16 +340,16 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your email',
-                      prefixIcon: Icon(Icons.email_outlined, color: AppColors.textMuted),
+                    decoration: InputDecoration(
+                      hintText: l10n.commonEmailHint,
+                      prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textMuted),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return l10n.commonEmailRequired;
                       }
                       if (!value.contains('@')) {
-                        return 'Please enter a valid email';
+                        return l10n.commonEmailInvalid;
                       }
                       return null;
                     },
@@ -343,9 +358,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   const SizedBox(height: 20),
 
                   // Password field
-                  const Text(
-                    'Password',
-                    style: TextStyle(
+                  Text(
+                    l10n.commonPasswordLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -357,7 +372,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     obscureText: _obscurePassword,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
-                      hintText: 'Create a password (min. 8 characters)',
+                      hintText: l10n.signupPasswordHint,
                       prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -371,10 +386,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a password';
+                        return l10n.commonPasswordRequired;
                       }
                       if (value.length < 8) {
-                        return 'Password must be at least 8 characters';
+                        return l10n.signupPasswordMin;
                       }
                       return null;
                     },
@@ -383,9 +398,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   const SizedBox(height: 20),
 
                   // Confirm Password field
-                  const Text(
-                    'Confirm Password',
-                    style: TextStyle(
+                  Text(
+                    l10n.signupConfirmPasswordLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -397,7 +412,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     obscureText: _obscureConfirmPassword,
                     textInputAction: TextInputAction.done,
                     decoration: InputDecoration(
-                      hintText: 'Confirm your password',
+                      hintText: l10n.signupConfirmPasswordHint,
                       prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -411,10 +426,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
+                        return l10n.signupConfirmPasswordRequired;
                       }
                       if (value != _passwordController.text) {
-                        return 'Passwords do not match';
+                        return l10n.signupPasswordMismatch;
                       }
                       return null;
                     },
@@ -423,18 +438,18 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   const SizedBox(height: 20),
 
                   // Language selection
-                  const Text(
-                    'Preferred Language',
-                    style: TextStyle(
+                  Text(
+                    l10n.signupPreferredLanguage,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'AI-generated content will be in your selected language',
-                    style: TextStyle(
+                  Text(
+                    l10n.profileSelectLanguageSubtitle,
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textMuted,
                     ),
@@ -458,7 +473,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 color: AppColors.primary,
                               ),
                             )
-                          : const Text('Create Account'),
+                          : Text(l10n.signupCreateAccount),
                     ),
                   ),
 
@@ -473,11 +488,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           color: AppColors.textMuted.withOpacity(0.3),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          'or continue with',
-                          style: TextStyle(
+                          l10n.commonOrContinueWith,
+                          style: const TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 14,
                           ),
@@ -513,7 +528,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   height: 20,
                                   errorBuilder: (_, __, ___) => const Icon(Icons.g_mobiledata, size: 24),
                                 ),
-                          label: const Text('Google'),
+                          label: Text(l10n.commonGoogle),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppColors.textPrimary,
                             side: BorderSide(color: AppColors.textMuted.withOpacity(0.3)),
@@ -534,7 +549,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                     child: CircularProgressIndicator(strokeWidth: 2),
                                   )
                                 : const Icon(Icons.apple, size: 24),
-                            label: const Text('Apple'),
+                            label: Text(l10n.commonApple),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.textPrimary,
                               side: BorderSide(color: AppColors.textMuted.withOpacity(0.3)),
@@ -552,13 +567,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Already have an account? ',
-                          style: TextStyle(color: AppColors.textSecondary),
+                        Text(
+                          l10n.signupHaveAccount,
+                          style: const TextStyle(color: AppColors.textSecondary),
                         ),
                         TextButton(
                           onPressed: () => context.go('/login'),
-                          child: const Text('Sign In'),
+                          child: Text(l10n.loginSignIn),
                         ),
                       ],
                     ),
@@ -616,6 +631,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   void _showLanguagePicker() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.surface,
@@ -631,9 +647,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Select Language',
-                  style: TextStyle(
+                Text(
+                  l10n.profileSelectLanguageTitle,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -646,9 +662,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            const Text(
-              'AI-generated content will be in your selected language.',
-              style: TextStyle(
+            Text(
+              l10n.profileSelectLanguageSubtitle,
+              style: const TextStyle(
                 fontSize: 13,
                 color: AppColors.textSecondary,
               ),

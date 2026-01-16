@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -46,6 +47,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   Future<void> _resetPassword() async {
     if (!_formKey.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
 
     setState(() {
       _isLoading = true;
@@ -64,7 +66,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       if (!mounted) return;
 
       setState(() {
-        _successMessage = 'Password reset successful! Redirecting to login...';
+        _successMessage = l10n.resetPasswordSuccess;
       });
 
       // Navigate to login after a short delay
@@ -74,12 +76,12 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       }
     } catch (e) {
       debugPrint('ResetPassword error: $e');
-      String errorMsg = 'Failed to reset password. Please try again.';
+      String errorMsg = l10n.resetPasswordFailed;
       
       if (e.toString().contains('Invalid') || e.toString().contains('expired')) {
-        errorMsg = 'Invalid or expired reset code. Please request a new one.';
+        errorMsg = l10n.resetPasswordInvalidCode;
       } else if (e.toString().contains('attempts')) {
-        errorMsg = 'Maximum attempts exceeded. Please request a new code.';
+        errorMsg = l10n.resetPasswordMaxAttempts;
       }
       
       setState(() {
@@ -94,6 +96,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -133,18 +136,18 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
-                          'Reset Password',
-                          style: TextStyle(
+                        Text(
+                          l10n.resetPasswordTitle,
+                          style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Enter the code sent to your email and set a new password',
-                          style: TextStyle(
+                        Text(
+                          l10n.resetPasswordSubtitle,
+                          style: const TextStyle(
                             fontSize: 14,
                             color: AppColors.textSecondary,
                           ),
@@ -205,9 +208,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     ),
 
                   // Email field
-                  const Text(
-                    'Email',
-                    style: TextStyle(
+                  Text(
+                    l10n.commonEmailLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -218,16 +221,16 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your email',
-                      prefixIcon: Icon(Icons.email_outlined, color: AppColors.textMuted),
+                    decoration: InputDecoration(
+                      hintText: l10n.commonEmailHint,
+                      prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textMuted),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return l10n.commonEmailRequired;
                       }
                       if (!value.contains('@')) {
-                        return 'Please enter a valid email';
+                        return l10n.commonEmailInvalid;
                       }
                       return null;
                     },
@@ -236,9 +239,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   const SizedBox(height: 20),
 
                   // Reset code field
-                  const Text(
-                    'Reset Code',
-                    style: TextStyle(
+                  Text(
+                    l10n.resetCodeLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -251,17 +254,17 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     textInputAction: TextInputAction.next,
                     maxLength: 6,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: const InputDecoration(
-                      hintText: 'Enter 6-digit code',
-                      prefixIcon: Icon(Icons.lock_outline, color: AppColors.textMuted),
+                    decoration: InputDecoration(
+                      hintText: l10n.resetCodeHint,
+                      prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted),
                       counterText: '',
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter the reset code';
+                        return l10n.resetCodeRequired;
                       }
                       if (value.length != 6) {
-                        return 'Code must be 6 digits';
+                        return l10n.resetCodeLength;
                       }
                       return null;
                     },
@@ -270,9 +273,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   const SizedBox(height: 20),
 
                   // New password field
-                  const Text(
-                    'New Password',
-                    style: TextStyle(
+                  Text(
+                    l10n.resetNewPasswordLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -284,7 +287,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     obscureText: _obscurePassword,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
-                      hintText: 'Create a new password (min. 8 characters)',
+                      hintText: l10n.resetNewPasswordHint,
                       prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -298,10 +301,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a new password';
+                        return l10n.resetNewPasswordRequired;
                       }
                       if (value.length < 8) {
-                        return 'Password must be at least 8 characters';
+                        return l10n.signupPasswordMin;
                       }
                       return null;
                     },
@@ -310,9 +313,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   const SizedBox(height: 20),
 
                   // Confirm password field
-                  const Text(
-                    'Confirm Password',
-                    style: TextStyle(
+                  Text(
+                    l10n.signupConfirmPasswordLabel,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
@@ -325,7 +328,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _resetPassword(),
                     decoration: InputDecoration(
-                      hintText: 'Confirm your new password',
+                      hintText: l10n.resetConfirmPasswordHint,
                       prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textMuted),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -339,10 +342,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
+                        return l10n.signupConfirmPasswordRequired;
                       }
                       if (value != _passwordController.text) {
-                        return 'Passwords do not match';
+                        return l10n.signupPasswordMismatch;
                       }
                       return null;
                     },
@@ -364,7 +367,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                                 color: AppColors.primary,
                               ),
                             )
-                          : const Text('Reset Password'),
+                          : Text(l10n.resetPasswordButton),
                     ),
                   ),
 
@@ -374,7 +377,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   Center(
                     child: TextButton(
                       onPressed: () => context.go('/forgot-password'),
-                      child: const Text('Request a new code'),
+                      child: Text(l10n.resetRequestNewCode),
                     ),
                   ),
                 ],

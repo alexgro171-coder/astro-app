@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -119,7 +120,7 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Compatibilities'),
+        title: Text(AppLocalizations.of(context)!.compatibilitiesTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -141,6 +142,7 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
   }
 
   Widget _buildErrorState(BuildContext context, WidgetRef ref, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -153,9 +155,9 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
               color: AppColors.error,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Failed to load services',
-              style: TextStyle(
+            Text(
+              l10n.compatibilitiesLoadFailed,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
@@ -173,7 +175,7 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => ref.invalidate(compatibilityCatalogProvider),
-              child: const Text('Retry'),
+              child: Text(l10n.commonRetry),
             ),
           ],
         ),
@@ -182,6 +184,7 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
   }
 
   Widget _buildServiceList(BuildContext context, Map<String, dynamic> catalogData) {
+    final l10n = AppLocalizations.of(context)!;
     final bool betaFree = catalogData['betaFree'] ?? false;
     final List<dynamic> backendServices = catalogData['services'] ?? [];
 
@@ -209,14 +212,14 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: Colors.green.withOpacity(0.3)),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.star, color: Colors.green, size: 16),
-                  SizedBox(width: 6),
+                  const Icon(Icons.star, color: Colors.green, size: 16),
+                  const SizedBox(width: 6),
                   Text(
-                    'Beta: All reports are FREE!',
-                    style: TextStyle(
+                    l10n.compatibilitiesBetaFree,
+                    style: const TextStyle(
                       color: Colors.green,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -226,18 +229,18 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
               ),
             ),
 
-          const Text(
-            'Choose a Report',
-            style: TextStyle(
+          Text(
+            l10n.compatibilitiesChooseReport,
+            style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Discover insights about yourself and your relationships',
-            style: TextStyle(
+          Text(
+            l10n.compatibilitiesSubtitle,
+            style: const TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
             ),
@@ -253,6 +256,8 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
             return _buildServiceCard(
               context,
               service: service,
+              title: _serviceTitle(service, l10n),
+              description: _serviceDescription(service, l10n),
               priceUsd: priceUsd,
               isUnlocked: isUnlocked,
               betaFree: betaFree,
@@ -268,10 +273,13 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
   Widget _buildServiceCard(
     BuildContext context, {
     required ServiceEntry service,
+    required String title,
+    required String description,
     required int priceUsd,
     required bool isUnlocked,
     required bool betaFree,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     final priceDisplay = '\$${(priceUsd / 100).toStringAsFixed(2)}';
     final isComingSoon = service.comingSoon;
 
@@ -287,8 +295,8 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
                     '/service-offer',
                     extra: {
                       'serviceType': service.apiType,
-                      'title': service.title,
-                      'description': service.description,
+                      'title': title,
+                      'description': description,
                       'priceUsd': priceUsd,
                       'requiresPartner': service.requiresPartner,
                       'isUnlocked': isUnlocked,
@@ -338,7 +346,7 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
                           children: [
                             Flexible(
                               child: Text(
-                                service.title,
+                                title,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -358,9 +366,9 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
                                   color: Colors.blue.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                child: const Text(
-                                  '+Partner',
-                                  style: TextStyle(
+                                child: Text(
+                                  l10n.compatibilitiesPartnerBadge,
+                                  style: const TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.blue,
@@ -372,7 +380,7 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          service.description,
+                          description,
                           style: const TextStyle(
                             fontSize: 13,
                             color: AppColors.textSecondary,
@@ -398,9 +406,9 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
                                     color: Colors.orange.withOpacity(0.3),
                                   ),
                                 ),
-                                child: const Text(
-                                  'Coming Soon',
-                                  style: TextStyle(
+                                child: Text(
+                                  l10n.commonComingSoon,
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.orange,
@@ -427,9 +435,9 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
                                   color: Colors.green.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Text(
-                                  'FREE',
-                                  style: TextStyle(
+                                child: Text(
+                                  l10n.commonFree,
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.green,
@@ -438,7 +446,7 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
                               ),
                             ] else ...[
                               Text(
-                                isUnlocked ? 'Unlocked' : priceDisplay,
+                                isUnlocked ? l10n.commonUnlocked : priceDisplay,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
@@ -467,6 +475,36 @@ class CompatibilitiesHubScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _serviceTitle(ServiceEntry service, AppLocalizations l10n) {
+    switch (service.type) {
+      case OneTimeServiceType.personalityReport:
+        return l10n.compatibilitiesPersonalityTitle;
+      case OneTimeServiceType.romanticPersonalityReport:
+        return l10n.compatibilitiesRomanticPersonalityTitle;
+      case OneTimeServiceType.loveCompatibilityReport:
+        return l10n.compatibilitiesLoveCompatibilityTitle;
+      case OneTimeServiceType.romanticForecastCoupleReport:
+        return l10n.compatibilitiesRomanticForecastTitle;
+      case OneTimeServiceType.friendshipReport:
+        return l10n.compatibilitiesFriendshipTitle;
+    }
+  }
+
+  String _serviceDescription(ServiceEntry service, AppLocalizations l10n) {
+    switch (service.type) {
+      case OneTimeServiceType.personalityReport:
+        return l10n.compatibilitiesPersonalitySubtitle;
+      case OneTimeServiceType.romanticPersonalityReport:
+        return l10n.compatibilitiesRomanticPersonalitySubtitle;
+      case OneTimeServiceType.loveCompatibilityReport:
+        return l10n.compatibilitiesLoveCompatibilitySubtitle;
+      case OneTimeServiceType.romanticForecastCoupleReport:
+        return l10n.compatibilitiesRomanticForecastSubtitle;
+      case OneTimeServiceType.friendshipReport:
+        return l10n.compatibilitiesFriendshipSubtitle;
+    }
   }
 }
 
