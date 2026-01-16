@@ -59,6 +59,7 @@ ${JSON.stringify(entries, null, 2)}
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
+      response_format: { type: 'json_object' },
       temperature: 0.2,
       max_tokens: 4000,
     }),
@@ -81,7 +82,16 @@ ${JSON.stringify(entries, null, 2)}
     .replace(/```$/i, '')
     .trim();
 
-  return JSON.parse(cleaned);
+  try {
+    return JSON.parse(cleaned);
+  } catch (err) {
+    const start = cleaned.indexOf('{');
+    const end = cleaned.lastIndexOf('}');
+    if (start >= 0 && end > start) {
+      return JSON.parse(cleaned.slice(start, end + 1));
+    }
+    throw err;
+  }
 }
 
 async function run() {
