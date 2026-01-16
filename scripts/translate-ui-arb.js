@@ -75,7 +75,13 @@ ${JSON.stringify(entries, null, 2)}
     throw new Error('OpenAI returned empty response');
   }
 
-  return JSON.parse(content);
+  const cleaned = content
+    .replace(/^```json\s*/i, '')
+    .replace(/^```\s*/i, '')
+    .replace(/```$/i, '')
+    .trim();
+
+  return JSON.parse(cleaned);
 }
 
 async function run() {
