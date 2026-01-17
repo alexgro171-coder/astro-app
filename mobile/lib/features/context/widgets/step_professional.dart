@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
 import '../screens/context_wizard_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:astro_app/l10n/app_localizations.dart';
 
 /// Step 2: Professional Life
 class StepProfessional extends StatelessWidget {

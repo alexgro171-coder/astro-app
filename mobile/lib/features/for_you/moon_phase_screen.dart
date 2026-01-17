@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:astro_app/l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -223,21 +223,21 @@ class _MoonPhaseScreenState extends ConsumerState<MoonPhaseScreen> {
                 color: Colors.green.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     l10n.moonPhaseOriginalPrice,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: AppColors.textMuted,
                       decoration: TextDecoration.lineThrough,
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     l10n.commonFree,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.green,

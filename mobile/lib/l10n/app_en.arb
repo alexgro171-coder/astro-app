@@ -498,6 +498,8 @@
   "moonPhaseGenerating": "Report is being generated. Please try again.",
   "moonPhaseUnknownError": "Something went wrong. Please try again.",
 
+  "requiredFieldsNote": "Fields marked with * are required.",
+
   "karmicTitle": "Karmic Astrology",
   "karmicLoadFailed": "Failed to load: {error}",
   "@karmicLoadFailed": {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
 import '../screens/context_wizard_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:astro_app/l10n/app_localizations.dart';
 
 /// Step 1: Relationships & Family
 class StepRelationships extends StatelessWidget {
@@ -61,7 +61,7 @@ class StepRelationships extends StatelessWidget {
           // Children list (conditional)
           if (answers.hasChildren) ...[
             const SizedBox(height: 16),
-            _buildChildrenList(),
+          _buildChildrenList(context),
           ],
 
           const SizedBox(height: 40),
@@ -186,7 +186,7 @@ class StepRelationships extends StatelessWidget {
     );
   }
 
-  Widget _buildChildrenList() {
+  Widget _buildChildrenList(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +204,7 @@ class StepRelationships extends StatelessWidget {
         ...answers.children.asMap().entries.map((entry) {
           final index = entry.key;
           final child = entry.value;
-          return _buildChildCard(child, index);
+          return _buildChildCard(context, child, index);
         }),
 
         // Add child button
@@ -222,7 +222,7 @@ class StepRelationships extends StatelessWidget {
     );
   }
 
-  Widget _buildChildCard(ChildInfo child, int index) {
+  Widget _buildChildCard(BuildContext context, ChildInfo child, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),

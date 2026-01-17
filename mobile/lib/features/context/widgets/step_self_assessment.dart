@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
 import '../screens/context_wizard_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:astro_app/l10n/app_localizations.dart';
 
 /// Step 3: Self-Assessment (Likert 1-5 scales)
 class StepSelfAssessment extends StatelessWidget {
@@ -40,6 +40,7 @@ class StepSelfAssessment extends StatelessWidget {
             color: const Color(0xFFE53935),
             value: answers.healthScore,
             onChanged: (v) => onUpdate(answers.copyWith(healthScore: v)),
+            l10n: l10n,
           ),
           const SizedBox(height: 20),
 
@@ -51,6 +52,7 @@ class StepSelfAssessment extends StatelessWidget {
             color: const Color(0xFF43A047),
             value: answers.socialScore,
             onChanged: (v) => onUpdate(answers.copyWith(socialScore: v)),
+            l10n: l10n,
           ),
           const SizedBox(height: 20),
 
@@ -62,6 +64,7 @@ class StepSelfAssessment extends StatelessWidget {
             color: const Color(0xFFE91E63),
             value: answers.romanceScore,
             onChanged: (v) => onUpdate(answers.copyWith(romanceScore: v)),
+            l10n: l10n,
           ),
           const SizedBox(height: 20),
 
@@ -73,6 +76,7 @@ class StepSelfAssessment extends StatelessWidget {
             color: const Color(0xFF2E7D32),
             value: answers.financeScore,
             onChanged: (v) => onUpdate(answers.copyWith(financeScore: v)),
+            l10n: l10n,
           ),
           const SizedBox(height: 20),
 
@@ -84,6 +88,7 @@ class StepSelfAssessment extends StatelessWidget {
             color: const Color(0xFF1E88E5),
             value: answers.careerScore,
             onChanged: (v) => onUpdate(answers.copyWith(careerScore: v)),
+            l10n: l10n,
           ),
           const SizedBox(height: 20),
 
@@ -95,6 +100,7 @@ class StepSelfAssessment extends StatelessWidget {
             color: const Color(0xFF9C27B0),
             value: answers.growthScore,
             onChanged: (v) => onUpdate(answers.copyWith(growthScore: v)),
+            l10n: l10n,
           ),
 
           const SizedBox(height: 40),
@@ -110,6 +116,7 @@ class StepSelfAssessment extends StatelessWidget {
     required Color color,
     required int value,
     required Function(int) onChanged,
+    required AppLocalizations l10n,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),

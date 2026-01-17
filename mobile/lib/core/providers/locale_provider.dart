@@ -55,7 +55,7 @@ class AppLocaleNotifier extends StateNotifier<Locale> {
     await setLocaleCode(code?.toLowerCase());
   }
 
-  Locale? _localeFromCode(String code) {
+  Locale _localeFromCode(String code) {
     final normalized = code.toLowerCase();
     return supportedLocales.firstWhere(
       (locale) => locale.languageCode == normalized,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:astro_app/l10n/app_localizations.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
@@ -23,6 +23,8 @@ class _ServiceOfferScreenState extends ConsumerState<ServiceOfferScreen> {
   String? _progressHint;
   String? _error;
   String? _usedLocale; // Track the locale used for generation
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   String get serviceType => widget.serviceData['serviceType'] as String;
   String get title => widget.serviceData['title'] as String;

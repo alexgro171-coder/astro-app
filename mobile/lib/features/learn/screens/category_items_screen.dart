@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../services/learn_service.dart';
 import '../providers/learn_session_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:astro_app/l10n/app_localizations.dart';
 
 class CategoryItemsScreen extends ConsumerStatefulWidget {
   final LearnCategory category;

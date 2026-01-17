@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../models/context_answers.dart';
 import '../screens/context_wizard_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:astro_app/l10n/app_localizations.dart';
 
 /// Step 4: Priorities & Tone
 class StepPriorities extends StatelessWidget {
@@ -34,7 +34,7 @@ class StepPriorities extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildPrioritiesGrid(),
+          _buildPrioritiesGrid(l10n),
 
           const SizedBox(height: 32),
 
@@ -65,7 +65,7 @@ class StepPriorities extends StatelessWidget {
     );
   }
 
-  Widget _buildPrioritiesGrid() {
+  Widget _buildPrioritiesGrid(AppLocalizations l10n) {
     return Wrap(
       spacing: 10,
       runSpacing: 10,
@@ -77,6 +77,7 @@ class StepPriorities extends StatelessWidget {
           priority: priority,
           isSelected: isSelected,
           enabled: canSelect,
+          l10n: l10n,
           onTap: () {
             List<Priority> newPriorities;
             if (isSelected) {
@@ -97,6 +98,7 @@ class StepPriorities extends StatelessWidget {
     required Priority priority,
     required bool isSelected,
     required bool enabled,
+    required AppLocalizations l10n,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -129,7 +131,7 @@ class StepPriorities extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              _priorityLabel(priority, AppLocalizations.of(context)!),
+              _priorityLabel(priority, l10n),
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
