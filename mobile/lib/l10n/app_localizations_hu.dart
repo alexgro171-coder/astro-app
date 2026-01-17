@@ -9,204 +9,204 @@ class AppLocalizationsHu extends AppLocalizations {
   AppLocalizationsHu([String locale = 'hu']) : super(locale);
 
   @override
-  String get onboardingSkip => 'Skip';
+  String get onboardingSkip => 'Kihagyás';
 
   @override
-  String get onboardingTitle1 => 'Welcome to Inner Wisdom Astro';
+  String get onboardingTitle1 => 'Üdvözöljük az Inner Wisdom Astro-nál';
 
   @override
   String get onboardingDesc1 =>
-      'Innerwisdom Astro brings together over 30 years of astrological expertise from Madi G. with the power of advanced AI, creating one of the most refined and high-performance astrology applications available today.\n\nBy blending deep human insight with intelligent technology, Innerwisdom Astro delivers interpretations that are precise, personalized, and meaningful, supporting users on their journey of self-discovery, clarity, and conscious growth.';
+      'Az Innerwisdom Astro több mint 30 éves asztrológiai szakértelmet hoz össze Madi G. vezetésével és a fejlett mesterséges intelligencia erejével, létrehozva a legfinomabb és legmagasabb teljesítményű asztrológiai alkalmazások egyikét, amely ma elérhető.\n\nA mély emberi megértés és az intelligens technológia ötvözésével az Innerwisdom Astro pontos, személyre szabott és jelentős értelmezéseket nyújt, támogatva a felhasználókat önfelfedezésük, tisztánlátásuk és tudatos növekedésük útján.';
 
   @override
-  String get onboardingTitle2 => 'Your Complete Astrological Journey';
+  String get onboardingTitle2 => 'Teljes Asztrológiai Utazásod';
 
   @override
   String get onboardingDesc2 =>
-      'From personalized daily guidance to your Natal Birth Chart, Karmic Astrology, in-depth personality reports, Love and Friendship Compatibility, Romantic Forecasts for Couples, and much more — all are now at your fingertips.\n\nDesigned to support clarity, connection, and self-understanding, Innerwisdom Astro offers a complete astrological experience, tailored to you.';
+      'A személyre szabott napi útmutatásoktól kezdve a Natal Születési Térképedig, Karmikus Asztrológia, részletes személyiségi jelentések, Szerelmi és Barátsági Kompatibilitás, Romantikus Előrejelzések Párnak és még sok más — mindez most a kezed ügyében van.\n\nAz Innerwisdom Astro a tisztánlátás, a kapcsolat és az önmegértés támogatására lett tervezve, teljes asztrológiai élményt kínálva, amely a te igényeidhez van szabva.';
 
   @override
-  String get onboardingNext => 'Next';
+  String get onboardingNext => 'Következő';
 
   @override
-  String get onboardingGetStarted => 'Get Started';
+  String get onboardingGetStarted => 'Kezdjük';
 
   @override
-  String get onboardingAlreadyHaveAccount => 'Already have an account? Login';
+  String get onboardingAlreadyHaveAccount => 'Már van fiókod? Bejelentkezés';
 
   @override
-  String get birthDataTitle => 'Your Birth Chart';
+  String get birthDataTitle => 'Születési Térképed';
 
   @override
   String get birthDataSubtitle =>
-      'We need your birth details to create\nyour personalized astrological profile';
+      'Szükségünk van a születési adataidra, hogy létrehozzuk\na személyre szabott asztrológiai profilodat';
 
   @override
-  String get birthDateLabel => 'Birth Date';
+  String get birthDateLabel => 'Születési Dátum';
 
   @override
-  String get birthDateSelectHint => 'Select your birth date';
+  String get birthDateSelectHint => 'Válaszd ki a születési dátumodat';
 
   @override
-  String get birthTimeLabel => 'Birth Time';
+  String get birthTimeLabel => 'Születési Idő';
 
   @override
-  String get birthTimeUnknown => 'Unknown';
+  String get birthTimeUnknown => 'Ismeretlen';
 
   @override
-  String get birthTimeSelectHint => 'Select your birth time';
+  String get birthTimeSelectHint => 'Válaszd ki a születési idődet';
 
   @override
-  String get birthTimeUnknownCheckbox => 'I don\'t know my exact birth time';
+  String get birthTimeUnknownCheckbox => 'Nem tudom a pontos születési időmet';
 
   @override
-  String get birthPlaceLabel => 'Birth Place';
+  String get birthPlaceLabel => 'Születési Hely';
 
   @override
-  String get birthPlaceHint => 'Start typing a city name...';
+  String get birthPlaceHint => 'Kezdj el gépelni egy városnevet...';
 
   @override
   String get birthPlaceValidation =>
-      'Please select a location from the suggestions';
+      'Kérlek, válassz egy helyet a javaslatok közül';
 
   @override
   String birthPlaceSelected(Object location) {
-    return 'Selected: $location';
+    return 'Kiválasztva: $location';
   }
 
   @override
-  String get genderLabel => 'Gender';
+  String get genderLabel => 'Nem';
 
   @override
-  String get genderMale => 'Male';
+  String get genderMale => 'Férfi';
 
   @override
-  String get genderFemale => 'Female';
+  String get genderFemale => 'Nő';
 
   @override
-  String get genderPreferNotToSay => 'Prefer not to say';
+  String get genderPreferNotToSay => 'Nem szeretném megmondani';
 
   @override
-  String get birthDataSubmit => 'Generate My Birth Chart';
+  String get birthDataSubmit => 'Generálj Születési Térképet';
 
   @override
   String get birthDataPrivacyNote =>
-      'Your birth data is used only to calculate your\nastrological chart and is stored securely.';
+      'A születési adataidat csak a\nasztrológiai térkép kiszámításához használjuk, és biztonságosan tároljuk.';
 
   @override
-  String get birthDateMissing => 'Please select your birth date';
+  String get birthDateMissing => 'Kérlek, válaszd ki a születési dátumodat';
 
   @override
   String get birthPlaceMissing =>
-      'Please select a birth place from the suggestions';
+      'Kérlek, válassz egy születési helyet a javaslatok közül';
 
   @override
   String get birthDataSaveError =>
-      'Could not save birth data. Please try again.';
+      'Nem sikerült menteni a születési adatokat. Kérlek, próbáld újra.';
 
   @override
-  String get appearanceTitle => 'Appearance';
+  String get appearanceTitle => 'Megjelenés';
 
   @override
-  String get appearanceTheme => 'Theme';
+  String get appearanceTheme => 'Téma';
 
   @override
-  String get appearanceDarkTitle => 'Dark';
+  String get appearanceDarkTitle => 'Sötét';
 
   @override
-  String get appearanceDarkSubtitle => 'Easy on the eyes in low light';
+  String get appearanceDarkSubtitle => 'Könnyen olvasható gyenge fényben';
 
   @override
-  String get appearanceLightTitle => 'Light';
+  String get appearanceLightTitle => 'Világos';
 
   @override
-  String get appearanceLightSubtitle => 'Classic bright appearance';
+  String get appearanceLightSubtitle => 'Hagyományos világos megjelenés';
 
   @override
-  String get appearanceSystemTitle => 'System';
+  String get appearanceSystemTitle => 'Rendszer';
 
   @override
-  String get appearanceSystemSubtitle => 'Match your device settings';
+  String get appearanceSystemSubtitle => 'Illeszkedj a készülék beállításaihoz';
 
   @override
-  String get appearancePreviewTitle => 'Preview';
+  String get appearancePreviewTitle => 'Előnézet';
 
   @override
   String get appearancePreviewBody =>
-      'The cosmic theme is designed to create an immersive astrology experience. The dark theme is recommended for the best visual experience.';
+      'A kozmikus téma célja, hogy magával ragadó asztrológiai élményt nyújtson. A sötét téma ajánlott a legjobb vizuális élmény érdekében.';
 
   @override
   String appearanceThemeChanged(Object theme) {
-    return 'Theme changed to $theme';
+    return 'A téma megváltozott: $theme';
   }
 
   @override
-  String get profileUserFallback => 'User';
+  String get profileUserFallback => 'Felhasználó';
 
   @override
-  String get profilePersonalContext => 'Personal Context';
+  String get profilePersonalContext => 'Személyes Kontextus';
 
   @override
-  String get profileSettings => 'Settings';
+  String get profileSettings => 'Beállítások';
 
   @override
-  String get profileAppLanguage => 'App Language';
+  String get profileAppLanguage => 'Alkalmazás Nyelve';
 
   @override
-  String get profileContentLanguage => 'Content Language';
+  String get profileContentLanguage => 'Tartalom Nyelve';
 
   @override
   String get profileContentLanguageHint =>
-      'AI content uses the selected language.';
+      'A mesterséges intelligencia tartalom a kiválasztott nyelvet használja.';
 
   @override
-  String get profileNotifications => 'Notifications';
+  String get profileNotifications => 'Értesítések';
 
   @override
-  String get profileNotificationsEnabled => 'Enabled';
+  String get profileNotificationsEnabled => 'Engedélyezve';
 
   @override
-  String get profileNotificationsDisabled => 'Disabled';
+  String get profileNotificationsDisabled => 'Letiltva';
 
   @override
-  String get profileAppearance => 'Appearance';
+  String get profileAppearance => 'Megjelenés';
 
   @override
-  String get profileHelpSupport => 'Help & Support';
+  String get profileHelpSupport => 'Segítség & Támogatás';
 
   @override
-  String get profilePrivacyPolicy => 'Privacy Policy';
+  String get profilePrivacyPolicy => 'Adatvédelmi Irányelvek';
 
   @override
-  String get profileTermsOfService => 'Terms of Service';
+  String get profileTermsOfService => 'Szolgáltatási Feltételek';
 
   @override
-  String get profileLogout => 'Logout';
+  String get profileLogout => 'Kijelentkezés';
 
   @override
-  String get profileLogoutConfirm => 'Are you sure you want to logout?';
+  String get profileLogoutConfirm => 'Biztosan ki akarsz jelentkezni?';
 
   @override
-  String get profileDeleteAccount => 'Delete Account';
+  String get profileDeleteAccount => 'Fiók Törlése';
 
   @override
-  String get commonCancel => 'Cancel';
+  String get commonCancel => 'Mégse';
 
   @override
-  String get profileSelectLanguageTitle => 'Select Language';
+  String get profileSelectLanguageTitle => 'Nyelv Kiválasztása';
 
   @override
   String get profileSelectLanguageSubtitle =>
-      'All AI-generated content will be in your selected language.';
+      'Minden mesterséges intelligenciával generált tartalom a kiválasztott nyelven lesz.';
 
   @override
   String profileLanguageUpdated(Object language) {
-    return 'Language updated to $language';
+    return 'Nyelv frissítve: $language';
   }
 
   @override
   String profileLanguageUpdateFailed(Object error) {
-    return 'Failed to update language: $error';
+    return 'A nyelv frissítése nem sikerült: $error';
   }
 
   @override
@@ -215,101 +215,104 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
-  String get profileCosmicBlueprint => 'Your Cosmic Blueprint';
+  String get profileCosmicBlueprint => 'A Te Kozmikus Terved';
 
   @override
-  String get profileSunLabel => '☀️ Sun';
+  String get profileSunLabel => '☀️ Nap';
 
   @override
-  String get profileMoonLabel => '🌙 Moon';
+  String get profileMoonLabel => '🌙 Hold';
 
   @override
-  String get profileRisingLabel => '⬆️ Rising';
+  String get profileRisingLabel => '⬆️ Felkelő';
 
   @override
-  String get profileUnknown => 'Unknown';
+  String get profileUnknown => 'Ismeretlen';
 
   @override
-  String get forgotPasswordTitle => 'Forgot Password?';
+  String get forgotPasswordTitle => 'Elfelejtetted a Jelszavad?';
 
   @override
   String get forgotPasswordSubtitle =>
-      'Enter your email and we\'ll send you a code to reset your password';
+      'Add meg az email címed, és küldünk egy kódot a jelszavad visszaállításához';
 
   @override
   String get forgotPasswordSent =>
-      'If an account exists, a reset code has been sent to your email.';
+      'Ha létezik fiók, egy visszaállító kódot küldtünk az email címedre.';
 
   @override
   String get forgotPasswordFailed =>
-      'Failed to send reset code. Please try again.';
+      'A visszaállító kód küldése nem sikerült. Kérlek, próbáld újra.';
 
   @override
-  String get forgotPasswordSendCode => 'Send Reset Code';
+  String get forgotPasswordSendCode => 'Visszaállító Kód Küldése';
 
   @override
-  String get forgotPasswordHaveCode => 'Already have a code?';
+  String get forgotPasswordHaveCode => 'Már van kódod?';
 
   @override
-  String get forgotPasswordRemember => 'Remember your password? ';
+  String get forgotPasswordRemember => 'Emlékszel a jelszavadra? ';
 
   @override
-  String get loginWelcomeBack => 'Welcome Back';
+  String get loginWelcomeBack => 'Üdvözlünk Vissza';
 
   @override
-  String get loginSubtitle => 'Sign in to continue your cosmic journey';
+  String get loginSubtitle =>
+      'Jelentkezz be, hogy folytathasd kozmikus utazásodat';
 
   @override
-  String get loginInvalidCredentials => 'Invalid email or password';
+  String get loginInvalidCredentials => 'Érvénytelen email vagy jelszó';
 
   @override
-  String get loginGoogleFailed => 'Google sign-in failed. Please try again.';
+  String get loginGoogleFailed =>
+      'A Google bejelentkezés nem sikerült. Kérlek, próbáld újra.';
 
   @override
-  String get loginAppleFailed => 'Apple sign-in failed. Please try again.';
+  String get loginAppleFailed =>
+      'Az Apple bejelentkezés nem sikerült. Kérlek, próbáld újra.';
 
   @override
   String get loginNetworkError =>
-      'Network error. Please check your connection.';
+      'Hálózati hiba. Kérlek, ellenőrizd a kapcsolatodat.';
 
   @override
-  String get loginSignInCancelled => 'Sign-in was cancelled.';
+  String get loginSignInCancelled => 'A bejelentkezés megszakítva.';
 
   @override
-  String get loginPasswordHint => 'Enter your password';
+  String get loginPasswordHint => 'Add meg a jelszavad';
 
   @override
-  String get loginForgotPassword => 'Forgot Password?';
+  String get loginForgotPassword => 'Elfelejtetted a Jelszavad?';
 
   @override
-  String get loginSignIn => 'Sign In';
+  String get loginSignIn => 'Bejelentkezés';
 
   @override
-  String get loginNoAccount => 'Don\'t have an account? ';
+  String get loginNoAccount => 'Nincs fiókod? ';
 
   @override
-  String get loginSignUp => 'Sign Up';
+  String get loginSignUp => 'Regisztráció';
 
   @override
   String get commonEmailLabel => 'Email';
 
   @override
-  String get commonEmailHint => 'Enter your email';
+  String get commonEmailHint => 'Add meg az email címed';
 
   @override
-  String get commonEmailRequired => 'Please enter your email';
+  String get commonEmailRequired => 'Kérlek, add meg az email címed';
 
   @override
-  String get commonEmailInvalid => 'Please enter a valid email';
+  String get commonEmailInvalid => 'Kérlek, adj meg egy érvényes email címet';
 
   @override
-  String get commonPasswordLabel => 'Password';
+  String get commonPasswordLabel => 'Jelszó';
 
   @override
-  String get commonPasswordRequired => 'Please enter your password';
+  String get commonPasswordRequired => 'Kérlek, add meg a jelszavad';
 
   @override
-  String get commonOrContinueWith => 'or continue with';
+  String get commonOrContinueWith => 'vagy folytasd a';
 
   @override
   String get commonGoogle => 'Google';
@@ -318,250 +321,259 @@ class AppLocalizationsHu extends AppLocalizations {
   String get commonApple => 'Apple';
 
   @override
-  String get commonNameLabel => 'Name';
+  String get commonNameLabel => 'Név';
 
   @override
-  String get commonNameHint => 'Enter your name';
+  String get commonNameHint => 'Add meg a neved';
 
   @override
-  String get commonNameRequired => 'Please enter your name';
+  String get commonNameRequired => 'Kérlek, add meg a neved';
 
   @override
-  String get signupTitle => 'Create Account';
+  String get signupTitle => 'Fiók Létrehozása';
 
   @override
-  String get signupSubtitle => 'Start your cosmic journey with Inner Wisdom';
+  String get signupSubtitle =>
+      'Kezdd el kozmikus utazásodat az Inner Wisdom-mal';
 
   @override
-  String get signupEmailExists => 'Email already exists or invalid data';
+  String get signupEmailExists => 'Az email már létezik vagy érvénytelen adat';
 
   @override
-  String get signupGoogleFailed => 'Google sign-in failed. Please try again.';
+  String get signupGoogleFailed =>
+      'A Google bejelentkezés nem sikerült. Kérjük, próbálja újra.';
 
   @override
-  String get signupAppleFailed => 'Apple sign-in failed. Please try again.';
+  String get signupAppleFailed =>
+      'Az Apple bejelentkezés nem sikerült. Kérjük, próbálja újra.';
 
   @override
-  String get signupPasswordHint => 'Create a password (min. 8 characters)';
+  String get signupPasswordHint => 'Hozzon létre egy jelszót (min. 8 karakter)';
 
   @override
-  String get signupPasswordMin => 'Password must be at least 8 characters';
+  String get signupPasswordMin =>
+      'A jelszónak legalább 8 karakterből kell állnia';
 
   @override
-  String get signupConfirmPasswordLabel => 'Confirm Password';
+  String get signupConfirmPasswordLabel => 'Jelszó megerősítése';
 
   @override
-  String get signupConfirmPasswordHint => 'Confirm your password';
+  String get signupConfirmPasswordHint => 'Erősítse meg a jelszavát';
 
   @override
-  String get signupConfirmPasswordRequired => 'Please confirm your password';
+  String get signupConfirmPasswordRequired =>
+      'Kérjük, erősítse meg a jelszavát';
 
   @override
-  String get signupPasswordMismatch => 'Passwords do not match';
+  String get signupPasswordMismatch => 'A jelszavak nem egyeznek';
 
   @override
-  String get signupPreferredLanguage => 'Preferred Language';
+  String get signupPreferredLanguage => 'Preferált nyelv';
 
   @override
-  String get signupCreateAccount => 'Create Account';
+  String get signupCreateAccount => 'Fiók létrehozása';
 
   @override
-  String get signupHaveAccount => 'Already have an account? ';
+  String get signupHaveAccount => 'Már van fiókja? ';
 
   @override
-  String get resetPasswordTitle => 'Reset Password';
+  String get resetPasswordTitle => 'Jelszó visszaállítása';
 
   @override
   String get resetPasswordSubtitle =>
-      'Enter the code sent to your email and set a new password';
+      'Adja meg az email címére küldött kódot, és állítson be egy új jelszót';
 
   @override
   String get resetPasswordSuccess =>
-      'Password reset successful! Redirecting to login...';
+      'A jelszó visszaállítása sikeres! Átirányítás a bejelentkezéshez...';
 
   @override
   String get resetPasswordFailed =>
-      'Failed to reset password. Please try again.';
+      'A jelszó visszaállítása nem sikerült. Kérjük, próbálja újra.';
 
   @override
   String get resetPasswordInvalidCode =>
-      'Invalid or expired reset code. Please request a new one.';
+      'Érvénytelen vagy lejárt visszaállító kód. Kérjük, kérjen egy újat.';
 
   @override
   String get resetPasswordMaxAttempts =>
-      'Maximum attempts exceeded. Please request a new code.';
+      'A maximális próbálkozások száma túllépve. Kérjük, kérjen egy új kódot.';
 
   @override
-  String get resetCodeLabel => 'Reset Code';
+  String get resetCodeLabel => 'Visszaállító kód';
 
   @override
-  String get resetCodeHint => 'Enter 6-digit code';
+  String get resetCodeHint => 'Adja meg a 6 számjegyű kódot';
 
   @override
-  String get resetCodeRequired => 'Please enter the reset code';
+  String get resetCodeRequired => 'Kérjük, adja meg a visszaállító kódot';
 
   @override
-  String get resetCodeLength => 'Code must be 6 digits';
+  String get resetCodeLength => 'A kódnak 6 számjegyűnek kell lennie';
 
   @override
-  String get resetNewPasswordLabel => 'New Password';
+  String get resetNewPasswordLabel => 'Új jelszó';
 
   @override
   String get resetNewPasswordHint =>
-      'Create a new password (min. 8 characters)';
+      'Hozzon létre egy új jelszót (min. 8 karakter)';
 
   @override
-  String get resetNewPasswordRequired => 'Please enter a new password';
+  String get resetNewPasswordRequired => 'Kérjük, adjon meg egy új jelszót';
 
   @override
-  String get resetConfirmPasswordHint => 'Confirm your new password';
+  String get resetConfirmPasswordHint => 'Erősítse meg az új jelszavát';
 
   @override
-  String get resetPasswordButton => 'Reset Password';
+  String get resetPasswordButton => 'Jelszó visszaállítása';
 
   @override
-  String get resetRequestNewCode => 'Request a new code';
+  String get resetRequestNewCode => 'Kérjen egy új kódot';
 
   @override
-  String get serviceResultGenerated => 'Report Generated';
+  String get serviceResultGenerated => 'Jelentés generálva';
 
   @override
   String serviceResultReady(Object title) {
-    return 'Your personalized $title is ready';
+    return 'A személyre szabott $title készen áll';
   }
 
   @override
-  String get serviceResultBackToForYou => 'Back to For You';
+  String get serviceResultBackToForYou => 'Vissza a Számodra';
 
   @override
   String get serviceResultNotSavedNotice =>
-      'This Report will not be saved. If you wish, you can copy it and save it elsewhere using the Copy function.';
+      'Ez a Jelentés nem lesz mentve. Ha szeretné, másolja ki, és mentse el máshol a Másolás funkcióval.';
 
   @override
-  String get commonCopy => 'Copy';
+  String get commonCopy => 'Másolás';
 
   @override
-  String get commonCopied => 'Copied to clipboard';
+  String get commonCopied => 'Másolva a vágólapra';
 
   @override
-  String get commonContinue => 'Continue';
+  String get commonContinue => 'Folytatás';
 
   @override
-  String get partnerDetailsTitle => 'Partner Details';
+  String get partnerDetailsTitle => 'Partner részletei';
 
   @override
-  String get partnerBirthDataTitle => 'Enter partner\'s birth data';
+  String get partnerBirthDataTitle => 'Adja meg a partner születési adatait';
 
   @override
   String partnerBirthDataFor(Object title) {
-    return 'For \"$title\"';
+    return '\"$title\" számára';
   }
 
   @override
-  String get partnerNameOptionalLabel => 'Name (optional)';
+  String get partnerNameOptionalLabel => 'Név (opcionális)';
 
   @override
-  String get partnerNameHint => 'Partner\'s name';
+  String get partnerNameHint => 'Partner neve';
 
   @override
-  String get partnerGenderOptionalLabel => 'Gender (optional)';
+  String get partnerGenderOptionalLabel => 'Nem (opcionális)';
 
   @override
-  String get partnerBirthDateLabel => 'Birth Date *';
+  String get partnerBirthDateLabel => 'Születési dátum *';
 
   @override
-  String get partnerBirthDateSelect => 'Select birth date';
+  String get partnerBirthDateSelect => 'Válassza ki a születési dátumot';
 
   @override
-  String get partnerBirthDateMissing => 'Please select the birth date';
+  String get partnerBirthDateMissing =>
+      'Kérjük, válassza ki a születési dátumot';
 
   @override
-  String get partnerBirthTimeOptionalLabel => 'Birth Time (optional)';
+  String get partnerBirthTimeOptionalLabel => 'Születési idő (opcionális)';
 
   @override
-  String get partnerBirthTimeSelect => 'Select birth time';
+  String get partnerBirthTimeSelect => 'Válassza ki a születési időt';
 
   @override
-  String get partnerBirthPlaceLabel => 'Birth Place *';
+  String get partnerBirthPlaceLabel => 'Születési hely *';
 
   @override
-  String get serviceOfferRequiresPartner => 'Requires partner birth data';
+  String get serviceOfferRequiresPartner =>
+      'Szükséges a partner születési adatai';
 
   @override
-  String get serviceOfferBetaFree => 'Beta testers get free access!';
+  String get serviceOfferBetaFree =>
+      'A béta tesztelők ingyenes hozzáférést kapnak!';
 
   @override
-  String get serviceOfferUnlocked => 'Unlocked';
+  String get serviceOfferUnlocked => 'Feloldva';
 
   @override
-  String get serviceOfferGenerate => 'Generate Report';
+  String get serviceOfferGenerate => 'Jelentés generálása';
 
   @override
   String serviceOfferUnlockFor(Object price) {
-    return 'Unlock for $price';
+    return 'Feloldás $price-ért';
   }
 
   @override
-  String get serviceOfferPreparing => 'Preparing your personalized report…';
+  String get serviceOfferPreparing =>
+      'A személyre szabott jelentésed előkészítése…';
 
   @override
-  String get serviceOfferTimeout =>
-      'Taking longer than expected. Please try again.';
+  String get serviceOfferTimeout => 'Túl sokáig tart. Kérjük, próbálja újra.';
 
   @override
-  String get serviceOfferNotReady => 'Report not ready yet. Please try again.';
+  String get serviceOfferNotReady =>
+      'A jelentés még nem készült el. Kérjük, próbálja újra.';
 
   @override
   String serviceOfferFetchFailed(Object error) {
-    return 'Failed to fetch report: $error';
+    return 'A jelentés lekérése nem sikerült: $error';
   }
 
   @override
-  String get commonFree => 'FREE';
+  String get commonFree => 'INGYENES';
 
   @override
-  String get commonLater => 'Later';
+  String get commonLater => 'Később';
 
   @override
-  String get commonRetry => 'Retry';
+  String get commonRetry => 'Újrapróbálkozás';
 
   @override
-  String get commonYes => 'Yes';
+  String get commonYes => 'Igen';
 
   @override
-  String get commonNo => 'No';
+  String get commonNo => 'Nem';
 
   @override
-  String get commonBack => 'Back';
+  String get commonBack => 'Vissza';
 
   @override
-  String get commonOptional => 'Optional';
+  String get commonOptional => 'Opcionális';
 
   @override
-  String get commonNotSpecified => 'Not specified';
+  String get commonNotSpecified => 'Nincs megadva';
 
   @override
-  String get commonJustNow => 'Just now';
+  String get commonJustNow => 'Éppen most';
 
   @override
-  String get commonViewMore => 'View more';
+  String get commonViewMore => 'Továbbiak megtekintése';
 
   @override
-  String get commonViewLess => 'View less';
+  String get commonViewLess => 'Kevesebb megtekintése';
 
   @override
   String commonMinutesAgo(Object count) {
-    return '$count min ago';
+    return '$count perce';
   }
 
   @override
   String commonHoursAgo(Object count) {
-    return '${count}h ago';
+    return '$count órája';
   }
 
   @override
   String commonDaysAgo(Object count) {
-    return '${count}d ago';
+    return '$count napja';
   }
 
   @override
@@ -570,1288 +582,1300 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
-  String get askGuideTitle => 'Ask Your Guide';
+  String get askGuideTitle => 'Kérdezze meg az Útmutatóját';
 
   @override
-  String get askGuideSubtitle => 'Personal cosmic guidance';
+  String get askGuideSubtitle => 'Személyes kozmikus útmutatás';
 
   @override
   String askGuideRemaining(Object count) {
-    return '$count left';
+    return '$count maradt';
   }
 
   @override
   String get askGuideQuestionHint =>
-      'Ask anything - love, career, decisions, emotions...';
+      'Kérdezzen bármit - szerelem, karrier, döntések, érzelmek...';
 
   @override
   String get askGuideBasedOnChart =>
-      'Based on your birth chart & today\'s cosmic energies';
+      'A születési diagramja és a mai kozmikus energiák alapján';
 
   @override
-  String get askGuideThinking => 'Your Guide is thinking...';
+  String get askGuideThinking => 'Az Ön Útmutatója gondolkodik...';
 
   @override
-  String get askGuideYourGuide => 'Your Guide';
+  String get askGuideYourGuide => 'Az Ön Útmutatója';
 
   @override
-  String get askGuideEmptyTitle => 'Ask Your First Question';
+  String get askGuideEmptyTitle => 'Kérdezze meg az Első Kérdését';
 
   @override
   String get askGuideEmptyBody =>
-      'Get instant, deeply personal guidance based on your birth chart and today\'s cosmic energies.';
+      'Azonnali, mélyen személyes útmutatást kap a születési diagramja és a mai kozmikus energiák alapján.';
 
   @override
   String get askGuideEmptyHint =>
-      'Ask anything — love, career, decisions, emotions.';
+      'Kérdezzen bármit — szerelem, karrier, döntések, érzelmek.';
 
   @override
-  String get askGuideLoadFailed => 'Failed to load data';
+  String get askGuideLoadFailed => 'Az adatok betöltése nem sikerült';
 
   @override
   String askGuideSendFailed(Object error) {
-    return 'Failed to send question: $error';
+    return 'A kérdés elküldése nem sikerült: $error';
   }
 
   @override
-  String get askGuideLimitTitle => 'Monthly Limit Reached';
+  String get askGuideLimitTitle => 'Havi Korlát Elérve';
 
   @override
-  String get askGuideLimitBody =>
-      'You\'ve reached your monthly limit of requests.';
+  String get askGuideLimitBody => 'Elérte a havi kérésének korlátját.';
 
   @override
   String get askGuideLimitAddon =>
-      'You can purchase a \$1.99 add-on to continue using this service for the rest of the current billing month.';
+      'Vásárolhat egy \$1.99 kiegészítőt, hogy továbbra is használhassa ezt a szolgáltatást a jelenlegi számlázási hónap hátralévő részében.';
 
   @override
   String askGuideLimitBillingEnd(Object date) {
-    return 'Your billing month ends on: $date';
+    return 'A számlázási hónapja vége: $date';
   }
 
   @override
-  String get askGuideLimitGetAddon => 'Get Add-On';
+  String get askGuideLimitGetAddon => 'Kiegészítő beszerzése';
 
   @override
-  String get contextTitle => 'Personal Context';
+  String get contextTitle => 'Személyes Kontextus';
 
   @override
   String contextStepOf(Object current, Object total) {
-    return 'Step $current of $total';
+    return '$current lépés a $total-ból';
   }
 
   @override
-  String get contextStep1Title => 'People around you';
+  String get contextStep1Title => 'Az Önt körülvevő emberek';
 
   @override
   String get contextStep1Subtitle =>
-      'Your relationship and family context helps us understand your emotional landscape.';
+      'A kapcsolati és családi kontextus segít megérteni érzelmi táját.';
 
   @override
-  String get contextStep2Title => 'Professional Life';
+  String get contextStep2Title => 'Szakmai élet';
 
   @override
   String get contextStep2Subtitle =>
-      'Your work and daily rhythm shape how you experience pressure, growth, and purpose.';
+      'A munkája és napi ritmusa alakítja, hogyan tapasztalja meg a nyomást, a növekedést és a célt.';
 
   @override
-  String get contextStep3Title => 'How life feels right now';
+  String get contextStep3Title => 'Hogyan érzi most az életet';
 
   @override
   String get contextStep3Subtitle =>
-      'There are no right or wrong answers, just your current reality';
+      'Nincsenek helyes vagy helytelen válaszok, csak a jelenlegi valósága';
 
   @override
-  String get contextStep4Title => 'What matters most to you';
+  String get contextStep4Title => 'Mi számít Önnek a legjobban';
 
   @override
   String get contextStep4Subtitle =>
-      'So your guidance aligns with what you truly care about';
+      'Így az útmutatása összhangban van azzal, ami igazán fontos Önnek';
 
   @override
   String get contextPriorityRequired =>
-      'Please select at least one priority area.';
+      'Kérjük, válasszon ki legalább egy prioritási területet.';
 
   @override
   String contextSaveFailed(Object error) {
-    return 'Failed to save profile: $error';
+    return 'A profil mentése nem sikerült: $error';
   }
 
   @override
-  String get contextSaveContinue => 'Save & Continue';
+  String get contextSaveContinue => 'Mentés és folytatás';
 
   @override
-  String get contextRelationshipStatusTitle => 'Current relationship status';
+  String get contextRelationshipStatusTitle =>
+      'Jelenlegi párkapcsolati státusz';
 
   @override
-  String get contextSeekingRelationshipTitle =>
-      'Are you looking for a relationship?';
+  String get contextSeekingRelationshipTitle => 'Keresel párkapcsolatot?';
 
   @override
-  String get contextHasChildrenTitle => 'Do you have children?';
+  String get contextHasChildrenTitle => 'Vannak gyermekeid?';
 
   @override
-  String get contextChildrenDetailsOptional => 'Children details (optional)';
+  String get contextChildrenDetailsOptional =>
+      'Gyermekek részletei (opcionális)';
 
   @override
-  String get contextAddChild => 'Add child';
+  String get contextAddChild => 'Gyermek hozzáadása';
 
   @override
-  String get contextChildAgeLabel => 'Age';
+  String get contextChildAgeLabel => 'Kor';
 
   @override
   String contextChildAgeYears(num age) {
     String _temp0 = intl.Intl.pluralLogic(
       age,
       locale: localeName,
-      other: 'years',
-      one: 'year',
+      other: 'év',
+      one: 'év',
     );
     return '$age $_temp0';
   }
 
   @override
-  String get contextChildGenderLabel => 'Gender';
+  String get contextChildGenderLabel => 'Nem';
 
   @override
-  String get contextRelationshipSingle => 'Single';
+  String get contextRelationshipSingle => 'Egyedülálló';
 
   @override
-  String get contextRelationshipInRelationship => 'In a relationship';
+  String get contextRelationshipInRelationship => 'Kapcsolatban';
 
   @override
-  String get contextRelationshipMarried => 'Married / Civil partnership';
+  String get contextRelationshipMarried => 'Házas / Élettársi kapcsolat';
 
   @override
-  String get contextRelationshipSeparated => 'Separated / Divorced';
+  String get contextRelationshipSeparated => 'Elvált / Különélő';
 
   @override
-  String get contextRelationshipWidowed => 'Widowed';
+  String get contextRelationshipWidowed => 'Özvegy';
 
   @override
-  String get contextRelationshipPreferNotToSay => 'Prefer not to say';
+  String get contextRelationshipPreferNotToSay => 'Nem szeretném megmondani';
 
   @override
-  String get contextProfessionalStatusTitle => 'Current professional status';
+  String get contextProfessionalStatusTitle => 'Jelenlegi szakmai státusz';
 
   @override
   String get contextProfessionalStatusOtherHint =>
-      'Please specify your work status';
+      'Kérlek, add meg a munkavállalói státuszodat';
 
   @override
-  String get contextIndustryTitle => 'Main industry/domain';
+  String get contextIndustryTitle => 'Fő iparág/terület';
 
   @override
-  String get contextWorkStatusStudent => 'Student';
+  String get contextWorkStatusStudent => 'Diák';
 
   @override
-  String get contextWorkStatusUnemployed => 'Unemployed / Between jobs';
+  String get contextWorkStatusUnemployed => 'Munkanélküli / Két munka között';
 
   @override
-  String get contextWorkStatusEmployedIc => 'Employed (Individual contributor)';
+  String get contextWorkStatusEmployedIc =>
+      'Foglalkoztatott (Egyéni hozzájáruló)';
 
   @override
-  String get contextWorkStatusEmployedManagement => 'Employed (Management)';
+  String get contextWorkStatusEmployedManagement => 'Foglalkoztatott (Vezetői)';
 
   @override
-  String get contextWorkStatusExecutive => 'Executive / Leadership (C-level)';
+  String get contextWorkStatusExecutive => 'Vezető / Vezetőség (C-szint)';
 
   @override
-  String get contextWorkStatusSelfEmployed => 'Self-employed / Freelancer';
+  String get contextWorkStatusSelfEmployed => 'Önálló vállalkozó / Szabadúszó';
 
   @override
-  String get contextWorkStatusEntrepreneur => 'Entrepreneur / Business owner';
+  String get contextWorkStatusEntrepreneur => 'Vállalkozó / Cégvezető';
 
   @override
-  String get contextWorkStatusInvestor => 'Investor';
+  String get contextWorkStatusInvestor => 'Befektető';
 
   @override
-  String get contextWorkStatusRetired => 'Retired';
+  String get contextWorkStatusRetired => 'Nyugdíjas';
 
   @override
-  String get contextWorkStatusHomemaker => 'Homemaker / Stay-at-home parent';
+  String get contextWorkStatusHomemaker =>
+      'Háztartásbeli / Otthon maradó szülő';
 
   @override
-  String get contextWorkStatusCareerBreak => 'Career break / Sabbatical';
+  String get contextWorkStatusCareerBreak => 'Karrier szünet / Szabadság';
 
   @override
-  String get contextWorkStatusOther => 'Other';
+  String get contextWorkStatusOther => 'Egyéb';
 
   @override
-  String get contextIndustryTech => 'Tech / IT';
+  String get contextIndustryTech => 'Technológia / IT';
 
   @override
-  String get contextIndustryFinance => 'Finance / Investments';
+  String get contextIndustryFinance => 'Pénzügy / Befektetések';
 
   @override
-  String get contextIndustryHealthcare => 'Healthcare';
+  String get contextIndustryHealthcare => 'Egészségügy';
 
   @override
-  String get contextIndustryEducation => 'Education';
+  String get contextIndustryEducation => 'Oktatás';
 
   @override
-  String get contextIndustrySalesMarketing => 'Sales / Marketing';
+  String get contextIndustrySalesMarketing => 'Értékesítés / Marketing';
 
   @override
-  String get contextIndustryRealEstate => 'Real Estate';
+  String get contextIndustryRealEstate => 'Ingatlan';
 
   @override
-  String get contextIndustryHospitality => 'Hospitality';
+  String get contextIndustryHospitality => 'Vendéglátás';
 
   @override
-  String get contextIndustryGovernment => 'Government / Public sector';
+  String get contextIndustryGovernment => 'Kormány / Közszolgáltatás';
 
   @override
-  String get contextIndustryCreative => 'Creative industries';
+  String get contextIndustryCreative => 'Kreatív iparágak';
 
   @override
-  String get contextIndustryOther => 'Other';
+  String get contextIndustryOther => 'Egyéb';
 
   @override
   String get contextSelfAssessmentIntro =>
-      'Rate your current situation in each area (1 = struggling, 5 = thriving)';
+      'Értékeld a jelenlegi helyzetedet minden területen (1 = küzdő, 5 = virágzó)';
 
   @override
-  String get contextSelfHealthTitle => 'Health & Energy';
+  String get contextSelfHealthTitle => 'Egészség és energia';
 
   @override
   String get contextSelfHealthSubtitle =>
-      '1 = serious issues/low energy, 5 = excellent vitality';
+      '1 = súlyos problémák/alacsony energia, 5 = kiváló vitalitás';
 
   @override
-  String get contextSelfSocialTitle => 'Social Life';
+  String get contextSelfSocialTitle => 'Társadalmi élet';
 
   @override
   String get contextSelfSocialSubtitle =>
-      '1 = isolated, 5 = thriving social connections';
+      '1 = elszigetelt, 5 = virágzó társadalmi kapcsolatok';
 
   @override
-  String get contextSelfRomanceTitle => 'Romantic Life';
+  String get contextSelfRomanceTitle => 'Romantikus élet';
 
   @override
   String get contextSelfRomanceSubtitle =>
-      '1 = absent/challenging, 5 = fulfilled';
+      '1 = hiányzó/kihívásokkal teli, 5 = beteljesült';
 
   @override
-  String get contextSelfFinanceTitle => 'Financial Stability';
+  String get contextSelfFinanceTitle => 'Pénzügyi stabilitás';
 
   @override
-  String get contextSelfFinanceSubtitle => '1 = major hardship, 5 = excellent';
+  String get contextSelfFinanceSubtitle =>
+      '1 = jelentős nehézségek, 5 = kiváló';
 
   @override
-  String get contextSelfCareerTitle => 'Career Satisfaction';
+  String get contextSelfCareerTitle => 'Karrier elégedettség';
 
   @override
   String get contextSelfCareerSubtitle =>
-      '1 = stuck/stressed, 5 = progress/clarity';
+      '1 = megrekedt/stresszes, 5 = előrehaladás/tisztánlátás';
 
   @override
-  String get contextSelfGrowthTitle => 'Personal Growth Interest';
+  String get contextSelfGrowthTitle => 'Személyes fejlődés érdeklődés';
 
   @override
-  String get contextSelfGrowthSubtitle => '1 = low interest, 5 = very high';
+  String get contextSelfGrowthSubtitle =>
+      '1 = alacsony érdeklődés, 5 = nagyon magas';
 
   @override
-  String get contextSelfStruggling => 'Struggling';
+  String get contextSelfStruggling => 'Küzdő';
 
   @override
-  String get contextSelfThriving => 'Thriving';
+  String get contextSelfThriving => 'Virágzó';
 
   @override
-  String get contextPrioritiesTitle =>
-      'What are your top priorities right now?';
+  String get contextPrioritiesTitle => 'Mik a legfontosabb prioritásaid most?';
 
   @override
   String get contextPrioritiesSubtitle =>
-      'Select up to 2 areas you want to focus on';
+      'Válassz ki legfeljebb 2 területet, amire fókuszálni szeretnél';
 
   @override
-  String get contextGuidanceStyleTitle => 'Preferred guidance style';
+  String get contextGuidanceStyleTitle => 'Preferált útmutatási stílus';
 
   @override
-  String get contextSensitivityTitle => 'Sensitivity Mode';
+  String get contextSensitivityTitle => 'Érzékenységi mód';
 
   @override
   String get contextSensitivitySubtitle =>
-      'Avoid anxiety-inducing or deterministic phrasing in guidance';
+      'Kerüld az szorongást keltő vagy determinisztikus megfogalmazásokat az útmutatásban';
 
   @override
-  String get contextPriorityHealth => 'Health & habits';
+  String get contextPriorityHealth => 'Egészség és szokások';
 
   @override
-  String get contextPriorityCareer => 'Career growth';
+  String get contextPriorityCareer => 'Karrier fejlődés';
 
   @override
-  String get contextPriorityBusiness => 'Business decisions';
+  String get contextPriorityBusiness => 'Üzleti döntések';
 
   @override
-  String get contextPriorityMoney => 'Money & stability';
+  String get contextPriorityMoney => 'Pénz és stabilitás';
 
   @override
-  String get contextPriorityLove => 'Love & relationship';
+  String get contextPriorityLove => 'Szerelem és párkapcsolat';
 
   @override
-  String get contextPriorityFamily => 'Family & parenting';
+  String get contextPriorityFamily => 'Család és szülőség';
 
   @override
-  String get contextPrioritySocial => 'Social life';
+  String get contextPrioritySocial => 'Társadalmi élet';
 
   @override
-  String get contextPriorityGrowth => 'Personal growth / mindset';
+  String get contextPriorityGrowth => 'Személyes fejlődés / gondolkodásmód';
 
   @override
-  String get contextGuidanceStyleDirect => 'Direct & practical';
+  String get contextGuidanceStyleDirect => 'Közvetlen és praktikus';
 
   @override
   String get contextGuidanceStyleDirectDesc =>
-      'Get straight to actionable advice';
+      'Közvetlenül a cselekvőképes tanácsra';
 
   @override
-  String get contextGuidanceStyleEmpathetic => 'Empathetic & reflective';
+  String get contextGuidanceStyleEmpathetic => 'Empatikus és reflektív';
 
   @override
-  String get contextGuidanceStyleEmpatheticDesc => 'Warm, supportive guidance';
+  String get contextGuidanceStyleEmpatheticDesc => 'Meleg, támogató útmutatás';
 
   @override
-  String get contextGuidanceStyleBalanced => 'Balanced';
+  String get contextGuidanceStyleBalanced => 'Kiegyensúlyozott';
 
   @override
   String get contextGuidanceStyleBalancedDesc =>
-      'Mix of practical and emotional support';
+      'Praktikus és érzelmi támogatás keveréke';
 
   @override
   String get homeGuidancePreparing =>
-      'Reading the stars and asking the Universe about you…';
+      'Olvasom a csillagokat és kérdezem az Univerzumban rólad…';
 
   @override
   String get homeGuidanceFailed =>
-      'Failed to generate guidance. Please try again.';
+      'Nem sikerült útmutatást generálni. Kérlek, próbáld újra.';
 
   @override
   String get homeGuidanceTimeout =>
-      'Taking longer than expected. Tap Retry or check back in a moment.';
+      'Több időt vesz igénybe, mint vártuk. Koppints a Próbáld újra gombra, vagy nézz vissza egy pillanat múlva.';
 
   @override
-  String get homeGuidanceLoadFailed => 'Failed to load guidance';
+  String get homeGuidanceLoadFailed => 'Nem sikerült betölteni az útmutatást';
 
   @override
-  String get homeTodaysGuidance => 'Today\'s Guidance';
+  String get homeTodaysGuidance => 'Mai útmutatás';
 
   @override
-  String get homeSeeAll => 'See all';
+  String get homeSeeAll => 'Összes megtekintése';
 
   @override
-  String get homeHealth => 'Health';
+  String get homeHealth => 'Egészség';
 
   @override
-  String get homeCareer => 'Career';
+  String get homeCareer => 'Karrier';
 
   @override
-  String get homeMoney => 'Money';
+  String get homeMoney => 'Pénz';
 
   @override
-  String get homeLove => 'Love';
+  String get homeLove => 'Szerelem';
 
   @override
-  String get homePartners => 'Partners';
+  String get homePartners => 'Partnerek';
 
   @override
-  String get homeGrowth => 'Growth';
+  String get homeGrowth => 'Fejlődés';
 
   @override
-  String get homeTraveler => 'Traveler';
+  String get homeTraveler => 'Utazó';
 
   @override
   String homeGreeting(Object name) {
-    return 'Hello, $name';
+    return 'Helló, $name';
   }
 
   @override
-  String get homeFocusFallback => 'Personal Growth';
+  String get homeFocusFallback => 'Személyes fejlődés';
 
   @override
-  String get homeDailyMessage => 'Your Daily Message';
+  String get homeDailyMessage => 'A napi üzeneted';
 
   @override
-  String get homeNatalChartTitle => 'My Natal Chart';
+  String get homeNatalChartTitle => 'Születési térképem';
 
   @override
   String get homeNatalChartSubtitle =>
-      'Explore your birth chart & interpretations';
+      'Fedezd fel a születési térképedet és értelmezéseit';
 
   @override
-  String get navHome => 'Home';
+  String get navHome => 'Kezdőlap';
 
   @override
-  String get navHistory => 'History';
+  String get navHistory => 'Történelem';
 
   @override
-  String get navGuide => 'Guide';
+  String get navGuide => 'Útmutató';
 
   @override
-  String get navProfile => 'Profile';
+  String get navProfile => 'Profil';
 
   @override
-  String get navForYou => 'For You';
+  String get navForYou => 'Számodra';
 
   @override
-  String get commonToday => 'Today';
+  String get commonToday => 'Ma';
 
   @override
-  String get commonTryAgain => 'Try Again';
+  String get commonTryAgain => 'Próbáld újra';
 
   @override
-  String get natalChartTitle => 'My Natal Chart';
+  String get natalChartTitle => 'Születési térképem';
 
   @override
-  String get natalChartTabTable => 'Table';
+  String get natalChartTabTable => 'Táblázat';
 
   @override
-  String get natalChartTabChart => 'Chart';
+  String get natalChartTabChart => 'Diagram';
 
   @override
-  String get natalChartEmptyTitle => 'No Natal Chart Data';
+  String get natalChartEmptyTitle => 'Nincs születési diagram adat';
 
   @override
   String get natalChartEmptySubtitle =>
-      'Please complete your birth data to see your natal chart.';
+      'Kérjük, töltsd ki a születési adataidat a születési diagram megtekintéséhez.';
 
   @override
-  String get natalChartAddBirthData => 'Add Birth Data';
+  String get natalChartAddBirthData => 'Születési adatok hozzáadása';
 
   @override
-  String get natalChartErrorTitle => 'Unable to load chart';
+  String get natalChartErrorTitle => 'A diagram betöltése nem sikerült';
 
   @override
-  String get guidanceTitle => 'Daily Guidance';
+  String get guidanceTitle => 'Napi Útmutatás';
 
   @override
-  String get guidanceLoadFailed => 'Failed to load guidance';
+  String get guidanceLoadFailed => 'Az útmutatás betöltése nem sikerült';
 
   @override
-  String get guidanceNoneAvailable => 'No guidance available';
+  String get guidanceNoneAvailable => 'Nincs elérhető útmutatás';
 
   @override
-  String get guidanceCosmicEnergyTitle => 'Today\'s Cosmic Energy';
+  String get guidanceCosmicEnergyTitle => 'A mai Kozmikus Energia';
 
   @override
-  String get guidanceMoodLabel => 'Mood';
+  String get guidanceMoodLabel => 'Hangulat';
 
   @override
-  String get guidanceFocusLabel => 'Focus';
+  String get guidanceFocusLabel => 'Fókusz';
 
   @override
-  String get guidanceYourGuidance => 'Your Guidance';
+  String get guidanceYourGuidance => 'A te útmutatásod';
 
   @override
-  String get guidanceTapToCollapse => 'Tap to collapse';
+  String get guidanceTapToCollapse => 'Koppints a bezáráshoz';
 
   @override
-  String get historyTitle => 'Guidance History';
+  String get historyTitle => 'Útmutatás Történet';
 
   @override
-  String get historySubtitle => 'Your cosmic journey through time';
+  String get historySubtitle => 'Kozmikus utazásod az időben';
 
   @override
-  String get historyLoadFailed => 'Failed to load history';
+  String get historyLoadFailed => 'A történet betöltése nem sikerült';
 
   @override
-  String get historyEmptyTitle => 'No history yet';
+  String get historyEmptyTitle => 'Még nincs történet';
 
   @override
-  String get historyEmptySubtitle => 'Your daily guidances will appear here';
+  String get historyEmptySubtitle =>
+      'A napi útmutatásaid itt fognak megjelenni';
 
   @override
-  String get historyNewBadge => 'NEW';
+  String get historyNewBadge => 'ÚJ';
 
   @override
-  String get commonUnlocked => 'Unlocked';
+  String get commonUnlocked => 'Feloldva';
 
   @override
-  String get commonComingSoon => 'Coming Soon';
+  String get commonComingSoon => 'Hamarosan';
 
   @override
-  String get commonSomethingWentWrong => 'Something went wrong';
+  String get commonSomethingWentWrong => 'Valami hiba történt';
 
   @override
-  String get commonNoContent => 'No content available.';
+  String get commonNoContent => 'Nincs elérhető tartalom.';
 
   @override
-  String get commonUnknownError => 'Unknown error';
+  String get commonUnknownError => 'Ismeretlen hiba';
 
   @override
   String get commonTakingLonger =>
-      'Taking longer than expected. Please try again.';
+      'Hosszabb ideig tart, mint vártuk. Kérjük, próbáld újra.';
 
   @override
   String commonErrorWithMessage(Object error) {
-    return 'Error: $error';
+    return 'Hiba: $error';
   }
 
   @override
-  String get forYouTitle => 'For You';
+  String get forYouTitle => 'Számodra';
 
   @override
-  String get forYouSubtitle => 'Personalized cosmic insights';
+  String get forYouSubtitle => 'Személyre szabott kozmikus betekintések';
 
   @override
-  String get forYouNatalChartTitle => 'My Natal Chart';
+  String get forYouNatalChartTitle => 'Születési Diagramom';
 
   @override
-  String get forYouNatalChartSubtitle => 'Your birth chart analysis';
+  String get forYouNatalChartSubtitle => 'A születési diagramod elemzése';
 
   @override
-  String get forYouCompatibilitiesTitle => 'Compatibilities';
+  String get forYouCompatibilitiesTitle => 'Kompatibilitások';
 
   @override
   String get forYouCompatibilitiesSubtitle =>
-      'Love, friendship & partnership reports';
+      'Szerelem, barátság és partnerségi jelentések';
 
   @override
-  String get forYouKarmicTitle => 'Karmic Astrology';
+  String get forYouKarmicTitle => 'Karmikus Asztrológia';
 
   @override
-  String get forYouKarmicSubtitle => 'Soul lessons & past life patterns';
+  String get forYouKarmicSubtitle => 'Lélekleckék és múltbeli életminták';
 
   @override
-  String get forYouLearnTitle => 'Learn Astrology';
+  String get forYouLearnTitle => 'Tanulj Asztrológiát';
 
   @override
-  String get forYouLearnSubtitle => 'Free educational content';
+  String get forYouLearnSubtitle => 'Ingyenes oktatási tartalom';
 
   @override
-  String get compatibilitiesTitle => 'Compatibilities';
+  String get compatibilitiesTitle => 'Kompatibilitások';
 
   @override
-  String get compatibilitiesLoadFailed => 'Failed to load services';
+  String get compatibilitiesLoadFailed =>
+      'A szolgáltatások betöltése nem sikerült';
 
   @override
-  String get compatibilitiesBetaFree => 'Beta: All reports are FREE!';
+  String get compatibilitiesBetaFree => 'Béta: Minden jelentés INGYENES!';
 
   @override
-  String get compatibilitiesChooseReport => 'Choose a Report';
+  String get compatibilitiesChooseReport => 'Jelentés választása';
 
   @override
   String get compatibilitiesSubtitle =>
-      'Discover insights about yourself and your relationships';
+      'Fedezd fel önmagadra és kapcsolataidra vonatkozó betekintéseket';
 
   @override
   String get compatibilitiesPartnerBadge => '+Partner';
 
   @override
-  String get compatibilitiesPersonalityTitle => 'Personality Report';
+  String get compatibilitiesPersonalityTitle => 'Személyiség Jelentés';
 
   @override
   String get compatibilitiesPersonalitySubtitle =>
-      'Comprehensive analysis of your personality based on your natal chart';
+      'Átfogó elemzés a személyiségedről a születési diagramod alapján';
 
   @override
   String get compatibilitiesRomanticPersonalityTitle =>
-      'Romantic Personality Report';
+      'Romantikus Személyiség Jelentés';
 
   @override
   String get compatibilitiesRomanticPersonalitySubtitle =>
-      'Understand how you approach love and romance';
+      'Értsd meg, hogyan közelítesz a szerelemhez és a romantikához';
 
   @override
-  String get compatibilitiesLoveCompatibilityTitle => 'Love Compatibility';
+  String get compatibilitiesLoveCompatibilityTitle => 'Szerelem Kompatibilitás';
 
   @override
   String get compatibilitiesLoveCompatibilitySubtitle =>
-      'Detailed romantic compatibility analysis with your partner';
+      'Részletes romantikus kompatibilitási elemzés a partnereddel';
 
   @override
-  String get compatibilitiesRomanticForecastTitle => 'Romantic Couple Forecast';
+  String get compatibilitiesRomanticForecastTitle =>
+      'Romantikus Pár Előrejelzés';
 
   @override
   String get compatibilitiesRomanticForecastSubtitle =>
-      'Insights into the future of your relationship';
+      'Betekintés a kapcsolatod jövőjébe';
 
   @override
-  String get compatibilitiesFriendshipTitle => 'Friendship Report';
+  String get compatibilitiesFriendshipTitle => 'Barátság Jelentés';
 
   @override
   String get compatibilitiesFriendshipSubtitle =>
-      'Analyze friendship dynamics and compatibility';
+      'Barátsági dinamikák és kompatibilitás elemzése';
 
   @override
-  String get moonPhaseTitle => 'Moon Phase Report';
+  String get moonPhaseTitle => 'Holdfázis Jelentés';
 
   @override
   String get moonPhaseSubtitle =>
-      'Understand the current lunar energy and how it affects you. Get guidance aligned with the moon\'s phase.';
+      'Értsd meg a jelenlegi holdenergiát és hogy ez hogyan hat rád. Kapj útmutatást a holdfázisnak megfelelően.';
 
   @override
-  String get moonPhaseSelectDate => 'Select Date';
+  String get moonPhaseSelectDate => 'Dátum kiválasztása';
 
   @override
   String get moonPhaseOriginalPrice => '\$2.99';
 
   @override
-  String get moonPhaseGenerate => 'Generate Report';
+  String get moonPhaseGenerate => 'Jelentés generálása';
 
   @override
-  String get moonPhaseGenerateDifferentDate => 'Generate for Different Date';
+  String get moonPhaseGenerateDifferentDate => 'Generálás másik dátumra';
 
   @override
-  String get moonPhaseGenerationFailed => 'Generation failed';
+  String get moonPhaseGenerationFailed => 'Generálás nem sikerült';
 
   @override
   String get moonPhaseGenerating =>
-      'Report is being generated. Please try again.';
+      'A jelentés generálása folyamatban. Kérjük, próbáld újra.';
 
   @override
-  String get moonPhaseUnknownError => 'Something went wrong. Please try again.';
+  String get moonPhaseUnknownError =>
+      'Valami hiba történt. Kérjük, próbáld újra.';
 
   @override
-  String get requiredFieldsNote => 'Fields marked with * are required.';
+  String get requiredFieldsNote => 'A *-gal jelölt mezők kötelezőek.';
 
   @override
-  String get karmicTitle => 'Karmic Astrology';
+  String get karmicTitle => 'Karmikus Asztrológia';
 
   @override
   String karmicLoadFailed(Object error) {
-    return 'Failed to load: $error';
+    return 'Betöltés nem sikerült: $error';
   }
 
   @override
-  String get karmicOfferTitle => '🔮 Karmic Astrology – Messages of the Soul';
+  String get karmicOfferTitle => '🔮 Karmikus Asztrológia – A Lélek Üzenetei';
 
   @override
   String get karmicOfferBody =>
-      'Karmic Astrology reveals the deep patterns shaping your life, beyond everyday events.\n\nIt offers an interpretation that speaks about unresolved lessons, karmic connections, and the soul\'s path of growth.\n\nThis is not about what comes next,\nbut about why you are experiencing what you experience.\n\n✨ Activate Karmic Astrology and discover the deeper meaning of your journey.';
+      'A Karmikus Asztrológia felfedi az életet formáló mély mintákat, a mindennapi eseményeken túl.\n\nOlyan értelmezést kínál, amely a megoldatlan leckékről, karmikus kapcsolódásokról és a lélek növekedési útjáról szól.\n\nEz nem arról szól, hogy mi következik,\nhanem arról, hogy miért tapasztalod meg azt, amit megélsz.\n\n✨ Aktiváld a Karmikus Asztrológiát, és fedezd fel utazásod mélyebb jelentését.';
 
   @override
-  String get karmicBetaFreeBadge => 'Beta Testers – FREE Access!';
+  String get karmicBetaFreeBadge => 'Béta Tesztelők – INGYENES Hozzáférés!';
 
   @override
   String karmicPriceBeta(Object price) {
-    return '\$$price – Beta Testers Free';
+    return '\$$price – Béta Tesztelők Ingyenes';
   }
 
   @override
   String karmicPriceUnlock(Object price) {
-    return 'Unlock for \$$price';
+    return 'Feloldás: \$$price';
   }
 
   @override
-  String get karmicHintInstant => 'Your reading will be generated instantly';
+  String get karmicHintInstant => 'A felolvasás azonnal generálódik';
 
   @override
-  String get karmicHintOneTime => 'One-time purchase, no subscription';
+  String get karmicHintOneTime => 'Egyszeri vásárlás, nincs előfizetés';
 
   @override
-  String get karmicProgressHint => 'Connecting to your karmic path…';
+  String get karmicProgressHint => 'Kapcsolódás a karmikus utadhoz...';
 
   @override
   String karmicGenerateFailed(Object error) {
-    return 'Failed to generate: $error';
+    return 'Generálás nem sikerült: $error';
   }
 
   @override
-  String get karmicCheckoutTitle => 'Karmic Astrology Checkout';
+  String get karmicCheckoutTitle => 'Karmikus Asztrológia Pénztár';
 
   @override
-  String get karmicCheckoutSubtitle => 'Purchase flow coming soon';
+  String get karmicCheckoutSubtitle => 'Vásárlási folyamat hamarosan';
 
   @override
   String karmicGenerationFailed(Object error) {
-    return 'Generation failed: $error';
+    return 'Generálás nem sikerült: $error';
   }
 
   @override
-  String get karmicLoading => 'Loading your karmic reading...';
+  String get karmicLoading => 'A karmikus felolvasásod betöltése...';
 
   @override
-  String get karmicGenerationFailedShort => 'Generation failed';
+  String get karmicGenerationFailedShort => 'Generálás nem sikerült';
 
   @override
-  String get karmicGeneratingTitle => 'Generating Your Karmic Reading...';
+  String get karmicGeneratingTitle => 'A Karmikus Felolvasásod Generálása...';
 
   @override
   String get karmicGeneratingSubtitle =>
-      'Analyzing your natal chart for karmic patterns and soul lessons.';
+      'A születési diagramod elemzése karmikus minták és lélekleckék szempontjából.';
 
   @override
-  String get karmicReadingTitle => '🔮 Your Karmic Reading';
+  String get karmicReadingTitle => '🔮 A Te Karmikus Felolvasásod';
 
   @override
-  String get karmicReadingSubtitle => 'Messages of the Soul';
+  String get karmicReadingSubtitle => 'A Lélek Üzenetei';
 
   @override
   String get karmicDisclaimer =>
-      'This reading is for self-reflection and entertainment purposes. It does not constitute professional advice.';
+      'Ez a felolvasás önreflexióra és szórakozásra szolgál. Nem helyettesít szakmai tanácsadást.';
 
   @override
-  String get commonActive => 'Active';
+  String get commonActive => 'Aktív';
 
   @override
-  String get commonBackToHome => 'Back to Home';
+  String get commonBackToHome => 'Vissza a Főoldalra';
 
   @override
-  String get commonYesterday => 'yesterday';
+  String get commonYesterday => 'tegnap';
 
   @override
   String commonWeeksAgo(Object count) {
-    return '$count weeks ago';
+    return '$count héttel ezelőtt';
   }
 
   @override
   String commonMonthsAgo(Object count) {
-    return '$count months ago';
+    return '$count hónappal ezelőtt';
   }
 
   @override
-  String get commonEdit => 'Edit';
+  String get commonEdit => 'Szerkesztés';
 
   @override
-  String get commonDelete => 'Delete';
+  String get commonDelete => 'Törlés';
 
   @override
   String get natalChartProGenerated =>
-      'Pro interpretations generated! Scroll up to see them.';
+      'Pro értelmezések generálva! Görgess fel, hogy lásd őket.';
 
   @override
-  String get natalChartHouse1 => 'Self & Identity';
+  String get natalChartHouse1 => 'Önmagad és Identitás';
 
   @override
-  String get natalChartHouse2 => 'Money & Values';
+  String get natalChartHouse2 => 'Pénz és Értékek';
 
   @override
-  String get natalChartHouse3 => 'Communication';
+  String get natalChartHouse3 => 'Kommunikáció';
 
   @override
-  String get natalChartHouse4 => 'Home & Family';
+  String get natalChartHouse4 => 'Otthon és Család';
 
   @override
-  String get natalChartHouse5 => 'Creativity & Romance';
+  String get natalChartHouse5 => 'Kreativitás és Romantika';
 
   @override
-  String get natalChartHouse6 => 'Health & Routine';
+  String get natalChartHouse6 => 'Egészség és Rutin';
 
   @override
-  String get natalChartHouse7 => 'Relationships';
+  String get natalChartHouse7 => 'Kapcsolatok';
 
   @override
-  String get natalChartHouse8 => 'Transformation';
+  String get natalChartHouse8 => 'Átalakulás';
 
   @override
-  String get natalChartHouse9 => 'Philosophy & Travel';
+  String get natalChartHouse9 => 'Filozófia és Utazás';
 
   @override
-  String get natalChartHouse10 => 'Career & Status';
+  String get natalChartHouse10 => 'Karrier és Státusz';
 
   @override
-  String get natalChartHouse11 => 'Friends & Goals';
+  String get natalChartHouse11 => 'Barátok és Célok';
 
   @override
-  String get natalChartHouse12 => 'Spirituality';
+  String get natalChartHouse12 => 'Spiritualitás';
 
   @override
-  String get helpSupportTitle => 'Help & Support';
+  String get helpSupportTitle => 'Segítség és Támogatás';
 
   @override
-  String get helpSupportContactTitle => 'Contact Support';
+  String get helpSupportContactTitle => 'Támogatás Kapcsolat';
 
   @override
   String get helpSupportContactSubtitle =>
-      'We typically respond within 24 hours';
+      'Általában 24 órán belül válaszolunk';
 
   @override
-  String get helpSupportFaqTitle => 'Frequently Asked Questions';
+  String get helpSupportFaqTitle => 'Gyakran Ismételt Kérdések';
 
   @override
-  String get helpSupportEmailSubject => 'Inner Wisdom Support Request';
+  String get helpSupportEmailSubject => 'Belső Bölcsesség Támogatási Kérelem';
 
   @override
   String get helpSupportEmailAppFailed =>
-      'Could not open email app. Please email support@innerwisdomapp.com';
+      'Nem sikerült megnyitni az e-mail alkalmazást. Kérjük, írjon a support@innerwisdomapp.com címre';
 
   @override
   String get helpSupportEmailFallback =>
-      'Please email us at support@innerwisdomapp.com';
+      'Kérjük, írjon nekünk a support@innerwisdomapp.com címre';
 
   @override
-  String get helpSupportFaq1Q => 'How accurate is the daily guidance?';
+  String get helpSupportFaq1Q => 'Mennyire pontos a napi útmutatás?';
 
   @override
   String get helpSupportFaq1A =>
-      'Our daily guidance combines traditional astrological principles with your personal birth chart. While astrology is interpretive, our AI provides personalized insights based on real planetary positions and aspects.';
+      'A napi útmutatásunk a hagyományos asztrológiai elveket ötvözi a személyes születési térképeddel. Míg az asztrológia értelmező, az AI-nk valós bolygóhelyzetek és aspektusok alapján nyújt személyre szabott betekintést.';
 
   @override
-  String get helpSupportFaq2Q => 'Why do I need my birth time?';
+  String get helpSupportFaq2Q => 'Miért van szükségem a születési időmre?';
 
   @override
   String get helpSupportFaq2A =>
-      'Your birth time determines your Ascendant (Rising sign) and the positions of houses in your chart. Without it, we use noon as a default, which may affect the accuracy of house-related interpretations.';
+      'A születési időd határozza meg az Aszcendensedet (Fellépő jel) és a házak pozícióit a térképedben. Enélkül délben használjuk alapértelmezettként, ami befolyásolhatja a házakkal kapcsolatos értelmezések pontosságát.';
 
   @override
-  String get helpSupportFaq3Q => 'How do I change my birth data?';
+  String get helpSupportFaq3Q =>
+      'Hogyan tudom megváltoztatni a születési adataimat?';
 
   @override
   String get helpSupportFaq3A =>
-      'Currently, birth data cannot be changed after initial setup to ensure consistency in your readings. Contact support if you need to make corrections.';
+      'Jelenleg a születési adatokat nem lehet megváltoztatni az első beállítás után, hogy biztosítsuk az olvasások következetességét. Lépj kapcsolatba a támogatással, ha javításokra van szükséged.';
 
   @override
-  String get helpSupportFaq4Q => 'What is a Focus topic?';
+  String get helpSupportFaq4Q => 'Mi az a Fókusz téma?';
 
   @override
   String get helpSupportFaq4A =>
-      'A Focus topic is a current concern or life area you want to emphasize. When set, your daily guidance will pay special attention to this area, providing more relevant insights.';
+      'A Fókusz téma egy aktuális aggodalom vagy élet terület, amelyet hangsúlyozni szeretnél. Ha be van állítva, a napi útmutatásod külön figyelmet fordít erre a területre, relevánsabb betekintést nyújtva.';
 
   @override
-  String get helpSupportFaq5Q => 'How does the subscription work?';
+  String get helpSupportFaq5Q => 'Hogyan működik a előfizetés?';
 
   @override
   String get helpSupportFaq5A =>
-      'The free tier includes basic daily guidance. Premium subscribers get enhanced personalization, audio readings, and access to special features like Karmic Astrology readings.';
+      'A ingyenes szint alapvető napi útmutatást tartalmaz. A prémium előfizetők fokozott személyre szabást, audio olvasásokat és hozzáférést kapnak különleges funkciókhoz, mint például a Karmikus Asztrológiai olvasások.';
 
   @override
-  String get helpSupportFaq6Q => 'Is my data private?';
+  String get helpSupportFaq6Q => 'Privát az adatom?';
 
   @override
   String get helpSupportFaq6A =>
-      'Yes! We take privacy seriously. Your birth data and personal information are encrypted and never shared with third parties. You can delete your account at any time.';
+      'Igen! Komolyan vesszük a magánéletet. A születési adataid és személyes információid titkosítva vannak, és soha nem osztjuk meg harmadik felekkel. Bármikor törölheted a fiókodat.';
 
   @override
-  String get helpSupportFaq7Q => 'What if I disagree with a reading?';
+  String get helpSupportFaq7Q => 'Mi van, ha nem értek egyet egy olvasással?';
 
   @override
   String get helpSupportFaq7A =>
-      'Astrology is interpretive, and not every reading will resonate. Use the feedback feature to help us improve. Our AI learns from your preferences over time.';
+      'Az asztrológia értelmező, és nem minden olvasás fog rezonálni. Használj visszajelzési funkciót, hogy segíts nekünk fejlődni. Az AI-nk az idő múlásával tanul a preferenciáidból.';
 
   @override
-  String get notificationsSaved => 'Notification settings saved';
+  String get notificationsSaved => 'Értesítési beállítások mentve';
 
   @override
-  String get notificationsTitle => 'Notifications';
+  String get notificationsTitle => 'Értesítések';
 
   @override
-  String get notificationsSectionTitle => 'Push Notifications';
+  String get notificationsSectionTitle => 'Push Értesítések';
 
   @override
-  String get notificationsDailyTitle => 'Daily Guidance';
+  String get notificationsDailyTitle => 'Napi Útmutatás';
 
   @override
   String get notificationsDailySubtitle =>
-      'Get notified when your daily guidance is ready';
+      'Értesítést kapsz, amikor a napi útmutatásod készen áll';
 
   @override
-  String get notificationsWeeklyTitle => 'Weekly Highlights';
+  String get notificationsWeeklyTitle => 'Heti Főbb Események';
 
   @override
   String get notificationsWeeklySubtitle =>
-      'Weekly cosmic overview and key transits';
+      'Heti kozmikus áttekintés és kulcsfontosságú tranzitok';
 
   @override
-  String get notificationsSpecialTitle => 'Special Events';
+  String get notificationsSpecialTitle => 'Különleges Események';
 
   @override
   String get notificationsSpecialSubtitle =>
-      'Full moons, eclipses, and retrogrades';
+      'Teliholdak, napfogyatkozások és retrográdok';
 
   @override
   String get notificationsDeviceHint =>
-      'You can also control notifications in your device settings.';
+      'Az értesítéseket a készülék beállításaiban is vezérelheted.';
 
   @override
-  String get concernsTitle => 'Your Focus';
+  String get concernsTitle => 'A Te Fókuszod';
 
   @override
-  String get concernsSubtitle => 'Topics shaping your guidance';
+  String get concernsSubtitle => 'Témák, amelyek formálják az útmutatásodat';
 
   @override
   String concernsTabActive(Object count) {
-    return 'Active ($count)';
+    return 'Aktív ($count)';
   }
 
   @override
   String concernsTabResolved(Object count) {
-    return 'Resolved ($count)';
+    return 'Megoldott ($count)';
   }
 
   @override
   String concernsTabArchived(Object count) {
-    return 'Archived ($count)';
+    return 'Archív ($count)';
   }
 
   @override
-  String get concernsEmptyTitle => 'No concerns here';
+  String get concernsEmptyTitle => 'Nincsenek aggodalmak itt';
 
   @override
   String get concernsEmptySubtitle =>
-      'Add a focus topic to get personalized guidance';
+      'Adj hozzá egy fókusz témát, hogy személyre szabott útmutatást kapj';
 
   @override
-  String get concernsCategoryCareer => 'Career & Job';
+  String get concernsCategoryCareer => 'Karrier és Munka';
 
   @override
-  String get concernsCategoryHealth => 'Health';
+  String get concernsCategoryHealth => 'Egészség';
 
   @override
-  String get concernsCategoryRelationship => 'Relationship';
+  String get concernsCategoryRelationship => 'Kapcsolat';
 
   @override
-  String get concernsCategoryFamily => 'Family';
+  String get concernsCategoryFamily => 'Család';
 
   @override
-  String get concernsCategoryMoney => 'Money';
+  String get concernsCategoryMoney => 'Pénz';
 
   @override
-  String get concernsCategoryBusiness => 'Business';
+  String get concernsCategoryBusiness => 'Üzlet';
 
   @override
-  String get concernsCategoryPartnership => 'Partnership';
+  String get concernsCategoryPartnership => 'Partnerség';
 
   @override
-  String get concernsCategoryGrowth => 'Personal Growth';
+  String get concernsCategoryGrowth => 'Személyes Fejlődés';
 
   @override
   String get concernsMinLength =>
-      'Please describe your concern in more detail (at least 10 characters)';
+      'Kérjük, írd le az aggodalmadat részletesebben (legalább 10 karakter)';
 
   @override
   String get concernsSubmitFailed =>
-      'Failed to submit concern. Please try again.';
+      'Nem sikerült benyújtani az aggodalmat. Kérjük, próbáld újra.';
 
   @override
-  String get concernsAddTitle => 'What\'s on your mind?';
+  String get concernsAddTitle => 'Mi jár a fejedben?';
 
   @override
   String get concernsAddDescription =>
-      'Share your current concern, question, or life situation. Our AI will analyze it and provide focused guidance starting tomorrow.';
+      'Oszd meg a jelenlegi aggodalmadat, kérdésedet vagy élethelyzetedet. Az AI-nk elemezni fogja, és fókuszált útmutatást ad holnaptól.';
 
   @override
-  String get concernsExamplesTitle => 'Examples of concerns:';
+  String get concernsExamplesTitle => 'A gondok példái:';
 
   @override
-  String get concernsExampleCareer => 'Career change decision';
+  String get concernsExampleCareer => 'Karrierváltás döntés';
 
   @override
-  String get concernsExampleRelationship => 'Relationship challenges';
+  String get concernsExampleRelationship => 'Kapcsolati kihívások';
 
   @override
-  String get concernsExampleFinance => 'Financial investment timing';
+  String get concernsExampleFinance => 'Pénzügyi befektetés időzítése';
 
   @override
-  String get concernsExampleHealth => 'Health and wellness focus';
+  String get concernsExampleHealth => 'Egészség és wellness fókusz';
 
   @override
-  String get concernsExampleGrowth => 'Personal growth direction';
+  String get concernsExampleGrowth => 'Személyes fejlődés iránya';
 
   @override
-  String get concernsSubmitButton => 'Submit Concern';
+  String get concernsSubmitButton => 'Agyalás Benyújtása';
 
   @override
-  String get concernsSuccessTitle => 'Concern Recorded!';
+  String get concernsSuccessTitle => 'Agyalás Rögzítve!';
 
   @override
-  String get concernsCategoryLabel => 'Category: ';
+  String get concernsCategoryLabel => 'Kategória: ';
 
   @override
   String get concernsSuccessMessage =>
-      'Starting tomorrow, your daily guidance will focus more on this topic.';
+      'Holnaptól a napi útmutatásod jobban fog fókuszálni erre a témára.';
 
   @override
-  String get concernsViewFocusTopics => 'View My Focus Topics';
+  String get concernsViewFocusTopics => 'Nézd meg a Fókusz Témáimat';
 
   @override
-  String get deleteAccountTitle => 'Delete Account';
+  String get deleteAccountTitle => 'Fiók Törlése';
 
   @override
-  String get deleteAccountHeading => 'Delete Your Account?';
+  String get deleteAccountHeading => 'Törölni szeretnéd a fiókodat?';
 
   @override
-  String get deleteAccountConfirmError => 'Please type DELETE to confirm';
+  String get deleteAccountConfirmError =>
+      'Kérjük, írd be a DELETE-et a megerősítéshez';
 
   @override
-  String get deleteAccountFinalWarningTitle => 'Final Warning';
+  String get deleteAccountFinalWarningTitle => 'Végső Figyelmeztetés';
 
   @override
   String get deleteAccountFinalWarningBody =>
-      'This action cannot be undone. All your data, including:\n\n• Your profile and birth data\n• Natal chart and interpretations\n• Daily guidance history\n• Personal context and preferences\n• All purchased content\n\nWill be permanently deleted.';
+      'Ez a művelet nem vonható vissza. Minden adatod, beleértve:\n\n• A profilodat és születési adataidat\n• A születési térképedet és értelmezéseket\n• A napi útmutatás történetét\n• Személyes kontextust és preferenciákat\n• Minden megvásárolt tartalmat\n\nÖrökre törlésre kerül.';
 
   @override
-  String get deleteAccountConfirmButton => 'Delete Forever';
+  String get deleteAccountConfirmButton => 'Törlés Örökre';
 
   @override
-  String get deleteAccountSuccess => 'Your account has been deleted';
+  String get deleteAccountSuccess => 'A fiókod törölve lett';
 
   @override
   String get deleteAccountFailed =>
-      'Failed to delete account. Please try again.';
+      'Nem sikerült törölni a fiókot. Kérjük, próbáld újra.';
 
   @override
   String get deleteAccountPermanentWarning =>
-      'This action is permanent and cannot be undone';
+      'Ez a művelet végleges, és nem vonható vissza';
 
   @override
   String get deleteAccountWarningDetail =>
-      'All your personal data, including your natal chart, guidance history, and any purchases will be permanently deleted.';
+      'Minden személyes adatod, beleértve a születési térképedet, az útmutatás történetét és bármilyen vásárlást, véglegesen törlésre kerül.';
 
   @override
-  String get deleteAccountWhatTitle => 'What will be deleted:';
+  String get deleteAccountWhatTitle => 'Mi fog törlődni:';
 
   @override
-  String get deleteAccountItemProfile => 'Your profile and account';
+  String get deleteAccountItemProfile => 'A profilod és fiókod';
 
   @override
-  String get deleteAccountItemBirthData => 'Birth data and natal chart';
+  String get deleteAccountItemBirthData =>
+      'Születési adatok és születési térkép';
 
   @override
-  String get deleteAccountItemGuidance => 'All daily guidance history';
+  String get deleteAccountItemGuidance => 'Minden napi útmutatás története';
 
   @override
-  String get deleteAccountItemContext => 'Personal context & preferences';
+  String get deleteAccountItemContext => 'Személyes kontextus és preferenciák';
 
   @override
-  String get deleteAccountItemKarmic => 'Karmic astrology readings';
+  String get deleteAccountItemKarmic => 'Karmikus asztrológiai olvasások';
 
   @override
-  String get deleteAccountItemPurchases => 'All purchased content';
+  String get deleteAccountItemPurchases => 'Minden megvásárolt tartalom';
 
   @override
-  String get deleteAccountTypeDelete => 'Type DELETE to confirm';
+  String get deleteAccountTypeDelete => 'Írd be a DELETE-et a megerősítéshez';
 
   @override
   String get deleteAccountDeleteHint => 'DELETE';
 
   @override
-  String get deleteAccountButton => 'Delete My Account';
+  String get deleteAccountButton => 'Fiókom Törlése';
 
   @override
-  String get deleteAccountCancel => 'Cancel, keep my account';
+  String get deleteAccountCancel => 'Mégse, tartsd meg a fiókomat';
 
   @override
-  String get learnArticleLoadFailed => 'Failed to load article';
+  String get learnArticleLoadFailed => 'Nem sikerült betölteni a cikket';
 
   @override
-  String get learnContentInEnglish => 'Content in English';
+  String get learnContentInEnglish => 'Tartalom angolul';
 
   @override
-  String get learnArticlesLoadFailed => 'Failed to load articles';
+  String get learnArticlesLoadFailed => 'Nem sikerült betölteni a cikkeket';
 
   @override
-  String get learnArticlesEmpty => 'No articles available yet';
+  String get learnArticlesEmpty => 'Még nincsenek elérhető cikkek';
 
   @override
   String get learnContentFallback =>
-      'Showing content in English (not available in your language)';
+      'Tartalom angolul (nem elérhető a nyelveden)';
 
   @override
-  String get checkoutTitle => 'Checkout';
+  String get checkoutTitle => 'Pénztár';
 
   @override
-  String get checkoutOrderSummary => 'Order Summary';
+  String get checkoutOrderSummary => 'Rendelés Összegzés';
 
   @override
-  String get checkoutProTitle => 'Pro Natal Chart';
+  String get checkoutProTitle => 'Pro Születési Térkép';
 
   @override
-  String get checkoutProSubtitle => 'Full planetary interpretations';
+  String get checkoutProSubtitle => 'Teljes bolygóértelmezések';
 
   @override
-  String get checkoutTotalLabel => 'Total';
+  String get checkoutTotalLabel => 'Összesen';
 
   @override
   String get checkoutTotalAmount => '\$9.99 USD';
 
   @override
-  String get checkoutPaymentTitle => 'Payment Integration';
+  String get checkoutPaymentTitle => 'Fizetési Integráció';
 
   @override
   String get checkoutPaymentSubtitle =>
-      'In-App Purchase integration is being finalized. Please check back soon!';
+      'Az alkalmazáson belüli vásárlás integrációja folyamatban van. Kérjük, nézd meg később!';
 
   @override
-  String get checkoutProcessing => 'Processing...';
+  String get checkoutProcessing => 'Feldolgozás...';
 
   @override
-  String get checkoutDemoPurchase => 'Demo Purchase (Testing)';
+  String get checkoutDemoPurchase => 'Demó vásárlás (Tesztelés)';
 
   @override
   String get checkoutSecurityNote =>
-      'Payment is processed securely through Apple/Google. Your card details are never stored.';
+      'A fizetés biztonságosan történik az Apple/Google által. A kártyaadatok soha nem kerülnek tárolásra.';
 
   @override
-  String get checkoutSuccess => '🎉 Pro Natal Chart unlocked successfully!';
+  String get checkoutSuccess => '🎉 Pro Natal Chart sikeresen feloldva!';
 
   @override
   String get checkoutGenerateFailed =>
-      'Failed to generate interpretations. Please try again.';
+      'A magyarázatok generálása sikertelen. Kérjük, próbálja újra.';
 
   @override
   String checkoutErrorWithMessage(Object error) {
-    return 'An error occurred: $error';
+    return 'Hiba történt: $error';
   }
 
   @override
-  String get billingUpgrade => 'Upgrade to Premium';
+  String get billingUpgrade => 'Frissítés Prémiumra';
 
   @override
   String billingFeatureLocked(Object feature) {
-    return '$feature is a Premium feature';
+    return '$feature egy Prémium funkció';
   }
 
   @override
   String get billingUpgradeBody =>
-      'Upgrade to Premium to unlock this feature and get the most personalized guidance.';
+      'Frissítsen Prémiumra, hogy feloldja ezt a funkciót és a legszemélyre szabottabb útmutatást kapja.';
 
   @override
-  String get contextReviewFailed => 'Failed to update. Please try again.';
+  String get contextReviewFailed =>
+      'Frissítés sikertelen. Kérjük, próbálja újra.';
 
   @override
-  String get contextReviewTitle => 'Time for a Quick Check-in';
+  String get contextReviewTitle => 'Ideje egy Gyors Ellenőrzésre';
 
   @override
   String get contextReviewBody =>
-      'It\'s been 3 months since we last updated your personal context. Has anything important changed in your life that we should know about?';
+      '3 hónap telt el azóta, hogy utoljára frissítettük a személyes kontextusát. Változott valami fontos az életében, amit tudnunk kellene?';
 
   @override
   String get contextReviewHint =>
-      'This helps us give you more personalized guidance.';
+      'Ez segít nekünk abban, hogy személyre szabottabb útmutatást nyújtsunk.';
 
   @override
-  String get contextReviewNoChanges => 'No changes';
+  String get contextReviewNoChanges => 'Nincs változás';
 
   @override
-  String get contextReviewYesUpdate => 'Yes, update';
+  String get contextReviewYesUpdate => 'Igen, frissítés';
 
   @override
-  String get contextProfileLoadFailed => 'Failed to load profile';
+  String get contextProfileLoadFailed => 'Profil betöltése sikertelen';
 
   @override
-  String get contextCardTitle => 'Personal Context';
+  String get contextCardTitle => 'Személyes Kontextus';
 
   @override
   String get contextCardSubtitle =>
-      'Set up your personal context to receive more tailored guidance.';
+      'Állítsa be a személyes kontextusát, hogy személyre szabottabb útmutatást kapjon.';
 
   @override
-  String get contextCardSetupNow => 'Set Up Now';
+  String get contextCardSetupNow => 'Állítsa be most';
 
   @override
   String contextCardVersionUpdated(Object version, Object date) {
-    return 'Version $version • Last updated $date';
+    return 'Verzió $version • Utoljára frissítve: $date';
   }
 
   @override
-  String get contextCardAiSummary => 'AI Summary';
+  String get contextCardAiSummary => 'AI Összefoglaló';
 
   @override
   String contextCardToneTag(Object tone) {
-    return '$tone tone';
+    return '$tone hangvétel';
   }
 
   @override
-  String get contextCardSensitivityTag => 'sensitivity on';
+  String get contextCardSensitivityTag => 'érzékenység be';
 
   @override
-  String get contextCardReviewDue => 'Review due - update your context';
+  String get contextCardReviewDue =>
+      'Felülvizsgálat esedékes - frissítse a kontextusát';
 
   @override
   String contextCardNextReview(Object days) {
-    return 'Next review in $days days';
+    return 'Következő felülvizsgálat $days napon belül';
   }
 
   @override
-  String get contextDeleteTitle => 'Delete Personal Context?';
+  String get contextDeleteTitle => 'Személyes Kontextus törlése?';
 
   @override
   String get contextDeleteBody =>
-      'This will delete your personal context profile. Your guidance will become less personalized.';
+      'Ez törli a személyes kontextus profilját. Az útmutatása kevésbé lesz személyre szabott.';
 
   @override
-  String get contextDeleteFailed => 'Failed to delete profile';
+  String get contextDeleteFailed => 'Profil törlése sikertelen';
 
   @override
-  String get appTitle => 'Inner Wisdom';
+  String get appTitle => 'Belső Bölcsesség';
 
   @override
   String get concernsHintExample =>
-      'Example: I have a job offer in another city and I\'m not sure if I should accept it...';
+      'Példa: Van egy állásajánlatom egy másik városban, és nem vagyok biztos benne, hogy el kellene-e fogadnom...';
 
   @override
-  String get learnTitle => 'Learn Astrology';
+  String get learnTitle => 'Tanulj Asztrológiát';
 
   @override
-  String get learnFreeTitle => 'Free Learning Resources';
+  String get learnFreeTitle => 'Ingyenes Tanulási Források';
 
   @override
-  String get learnFreeSubtitle => 'Explore the fundamentals of astrology';
+  String get learnFreeSubtitle => 'Fedezze fel az asztrológia alapjait';
 
   @override
-  String get learnSignsTitle => 'Signs';
+  String get learnSignsTitle => 'Jelek';
 
   @override
-  String get learnSignsSubtitle => '12 Zodiac signs and their meanings';
+  String get learnSignsSubtitle => '12 Zodiákus jel és jelentésük';
 
   @override
-  String get learnPlanetsTitle => 'Planets';
+  String get learnPlanetsTitle => 'Bolygók';
 
   @override
-  String get learnPlanetsSubtitle => 'Celestial bodies in astrology';
+  String get learnPlanetsSubtitle => 'Égi testek az asztrológiában';
 
   @override
-  String get learnHousesTitle => 'Houses';
+  String get learnHousesTitle => 'Házak';
 
   @override
-  String get learnHousesSubtitle => '12 life areas in your chart';
+  String get learnHousesSubtitle => '12 életterület a horoszkópjában';
 
   @override
-  String get learnTransitsTitle => 'Transits';
+  String get learnTransitsTitle => 'Átmenetek';
 
   @override
-  String get learnTransitsSubtitle => 'Planetary movements & effects';
+  String get learnTransitsSubtitle => 'Bolygómozgások és hatások';
 
   @override
-  String get learnPaceTitle => 'Learn at Your Pace';
+  String get learnPaceTitle => 'Tanulj a Saját Tempódban';
 
   @override
   String get learnPaceSubtitle =>
-      'Comprehensive lessons to deepen your astrological knowledge';
+      'Átfogó leckék az asztrológiai tudás elmélyítéséhez';
 
   @override
   String get proNatalTitle => 'Pro Natal Chart';
 
   @override
-  String get proNatalHeroTitle => 'Unlock Deep Insights';
+  String get proNatalHeroTitle => 'Mélységi Megértések Feloldása';
 
   @override
   String get proNatalHeroSubtitle =>
-      'Get comprehensive 150-200 word interpretations for each planetary placement in your birth chart.';
+      'Kapjon átfogó, 150-200 szavas magyarázatokat minden bolygóhelyzetre a születési horoszkópjában.';
 
   @override
-  String get proNatalFeature1Title => 'Deep Personality Insights';
+  String get proNatalFeature1Title => 'Mély Személyiség Megértések';
 
   @override
   String get proNatalFeature1Body =>
-      'Understand how each planet shapes your unique personality and life path.';
+      'Értsd meg, hogyan formálja minden bolygó az egyedi személyiségedet és életutad.';
 
   @override
-  String get proNatalFeature2Title => 'AI-Powered Analysis';
+  String get proNatalFeature2Title => 'AI-vezérelt Elemzés';
 
   @override
   String get proNatalFeature2Body =>
-      'Advanced interpretations tailored to your exact planetary positions.';
+      'Fejlett magyarázatok, amelyek a pontos bolygóhelyzeteidhez vannak igazítva.';
 
   @override
-  String get proNatalFeature3Title => 'Actionable Guidance';
+  String get proNatalFeature3Title => 'Használható Útmutatás';
 
   @override
   String get proNatalFeature3Body =>
-      'Practical advice for career, relationships, and personal growth.';
+      'Gyakorlati tanácsok karrierhez, kapcsolatokhoz és személyes fejlődéshez.';
 
   @override
-  String get proNatalFeature4Title => 'Lifetime Access';
+  String get proNatalFeature4Title => 'Élethosszig Tartó Hozzáférés';
 
   @override
   String get proNatalFeature4Body =>
-      'Your interpretations are saved forever. Access anytime.';
+      'A magyarázataid örökre elmentésre kerülnek. Bármikor hozzáférhetsz.';
 
   @override
-  String get proNatalOneTime => 'One-time purchase';
+  String get proNatalOneTime => 'Egyszeri vásárlás';
 
   @override
-  String get proNatalNoSubscription => 'No subscription required';
+  String get proNatalNoSubscription => 'Előfizetés nem szükséges';
 }

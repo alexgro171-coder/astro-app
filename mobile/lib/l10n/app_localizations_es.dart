@@ -9,204 +9,207 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get onboardingSkip => 'Skip';
+  String get onboardingSkip => 'Saltar';
 
   @override
-  String get onboardingTitle1 => 'Welcome to Inner Wisdom Astro';
+  String get onboardingTitle1 => 'Bienvenido a Inner Wisdom Astro';
 
   @override
   String get onboardingDesc1 =>
-      'Innerwisdom Astro brings together over 30 years of astrological expertise from Madi G. with the power of advanced AI, creating one of the most refined and high-performance astrology applications available today.\n\nBy blending deep human insight with intelligent technology, Innerwisdom Astro delivers interpretations that are precise, personalized, and meaningful, supporting users on their journey of self-discovery, clarity, and conscious growth.';
+      'Innerwisdom Astro reúne más de 30 años de experiencia astrológica de Madi G. con el poder de la IA avanzada, creando una de las aplicaciones de astrología más refinadas y de alto rendimiento disponibles hoy en día.\n\nAl combinar una profunda comprensión humana con tecnología inteligente, Innerwisdom Astro ofrece interpretaciones que son precisas, personalizadas y significativas, apoyando a los usuarios en su viaje de autodescubrimiento, claridad y crecimiento consciente.';
 
   @override
-  String get onboardingTitle2 => 'Your Complete Astrological Journey';
+  String get onboardingTitle2 => 'Tu Viaje Astrológico Completo';
 
   @override
   String get onboardingDesc2 =>
-      'From personalized daily guidance to your Natal Birth Chart, Karmic Astrology, in-depth personality reports, Love and Friendship Compatibility, Romantic Forecasts for Couples, and much more — all are now at your fingertips.\n\nDesigned to support clarity, connection, and self-understanding, Innerwisdom Astro offers a complete astrological experience, tailored to you.';
+      'Desde orientación diaria personalizada hasta tu Carta Natal, Astrología Kármica, informes de personalidad en profundidad, Compatibilidad en Amor y Amistad, Pronósticos Románticos para Parejas, y mucho más: todo está ahora al alcance de tu mano.\n\nDiseñado para apoyar la claridad, la conexión y la autocomprensión, Innerwisdom Astro ofrece una experiencia astrológica completa, adaptada a ti.';
 
   @override
-  String get onboardingNext => 'Next';
+  String get onboardingNext => 'Siguiente';
 
   @override
-  String get onboardingGetStarted => 'Get Started';
+  String get onboardingGetStarted => 'Comenzar';
 
   @override
-  String get onboardingAlreadyHaveAccount => 'Already have an account? Login';
+  String get onboardingAlreadyHaveAccount =>
+      '¿Ya tienes una cuenta? Iniciar sesión';
 
   @override
-  String get birthDataTitle => 'Your Birth Chart';
+  String get birthDataTitle => 'Tu Carta Natal';
 
   @override
   String get birthDataSubtitle =>
-      'We need your birth details to create\nyour personalized astrological profile';
+      'Necesitamos tus datos de nacimiento para crear\ntu perfil astrológico personalizado';
 
   @override
-  String get birthDateLabel => 'Birth Date';
+  String get birthDateLabel => 'Fecha de Nacimiento';
 
   @override
-  String get birthDateSelectHint => 'Select your birth date';
+  String get birthDateSelectHint => 'Selecciona tu fecha de nacimiento';
 
   @override
-  String get birthTimeLabel => 'Birth Time';
+  String get birthTimeLabel => 'Hora de Nacimiento';
 
   @override
-  String get birthTimeUnknown => 'Unknown';
+  String get birthTimeUnknown => 'Desconocido';
 
   @override
-  String get birthTimeSelectHint => 'Select your birth time';
+  String get birthTimeSelectHint => 'Selecciona tu hora de nacimiento';
 
   @override
-  String get birthTimeUnknownCheckbox => 'I don\'t know my exact birth time';
+  String get birthTimeUnknownCheckbox => 'No sé mi hora exacta de nacimiento';
 
   @override
-  String get birthPlaceLabel => 'Birth Place';
+  String get birthPlaceLabel => 'Lugar de Nacimiento';
 
   @override
-  String get birthPlaceHint => 'Start typing a city name...';
+  String get birthPlaceHint => 'Comienza a escribir el nombre de una ciudad...';
 
   @override
   String get birthPlaceValidation =>
-      'Please select a location from the suggestions';
+      'Por favor selecciona una ubicación de las sugerencias';
 
   @override
   String birthPlaceSelected(Object location) {
-    return 'Selected: $location';
+    return 'Seleccionado: $location';
   }
 
   @override
-  String get genderLabel => 'Gender';
+  String get genderLabel => 'Género';
 
   @override
-  String get genderMale => 'Male';
+  String get genderMale => 'Masculino';
 
   @override
-  String get genderFemale => 'Female';
+  String get genderFemale => 'Femenino';
 
   @override
-  String get genderPreferNotToSay => 'Prefer not to say';
+  String get genderPreferNotToSay => 'Prefiero no decir';
 
   @override
-  String get birthDataSubmit => 'Generate My Birth Chart';
+  String get birthDataSubmit => 'Generar Mi Carta Natal';
 
   @override
   String get birthDataPrivacyNote =>
-      'Your birth data is used only to calculate your\nastrological chart and is stored securely.';
+      'Tus datos de nacimiento se utilizan solo para calcular tu\ncarta astrológica y se almacenan de forma segura.';
 
   @override
-  String get birthDateMissing => 'Please select your birth date';
+  String get birthDateMissing => 'Por favor selecciona tu fecha de nacimiento';
 
   @override
   String get birthPlaceMissing =>
-      'Please select a birth place from the suggestions';
+      'Por favor selecciona un lugar de nacimiento de las sugerencias';
 
   @override
   String get birthDataSaveError =>
-      'Could not save birth data. Please try again.';
+      'No se pudo guardar los datos de nacimiento. Por favor intenta de nuevo.';
 
   @override
-  String get appearanceTitle => 'Appearance';
+  String get appearanceTitle => 'Apariencia';
 
   @override
-  String get appearanceTheme => 'Theme';
+  String get appearanceTheme => 'Tema';
 
   @override
-  String get appearanceDarkTitle => 'Dark';
+  String get appearanceDarkTitle => 'Oscuro';
 
   @override
-  String get appearanceDarkSubtitle => 'Easy on the eyes in low light';
+  String get appearanceDarkSubtitle => 'Fácil para los ojos en poca luz';
 
   @override
-  String get appearanceLightTitle => 'Light';
+  String get appearanceLightTitle => 'Claro';
 
   @override
-  String get appearanceLightSubtitle => 'Classic bright appearance';
+  String get appearanceLightSubtitle => 'Apariencia clásica brillante';
 
   @override
-  String get appearanceSystemTitle => 'System';
+  String get appearanceSystemTitle => 'Sistema';
 
   @override
-  String get appearanceSystemSubtitle => 'Match your device settings';
+  String get appearanceSystemSubtitle =>
+      'Coincide con la configuración de tu dispositivo';
 
   @override
-  String get appearancePreviewTitle => 'Preview';
+  String get appearancePreviewTitle => 'Vista Previa';
 
   @override
   String get appearancePreviewBody =>
-      'The cosmic theme is designed to create an immersive astrology experience. The dark theme is recommended for the best visual experience.';
+      'El tema cósmico está diseñado para crear una experiencia astrológica inmersiva. Se recomienda el tema oscuro para la mejor experiencia visual.';
 
   @override
   String appearanceThemeChanged(Object theme) {
-    return 'Theme changed to $theme';
+    return 'Tema cambiado a $theme';
   }
 
   @override
-  String get profileUserFallback => 'User';
+  String get profileUserFallback => 'Usuario';
 
   @override
-  String get profilePersonalContext => 'Personal Context';
+  String get profilePersonalContext => 'Contexto Personal';
 
   @override
-  String get profileSettings => 'Settings';
+  String get profileSettings => 'Configuraciones';
 
   @override
-  String get profileAppLanguage => 'App Language';
+  String get profileAppLanguage => 'Idioma de la App';
 
   @override
-  String get profileContentLanguage => 'Content Language';
+  String get profileContentLanguage => 'Idioma del Contenido';
 
   @override
   String get profileContentLanguageHint =>
-      'AI content uses the selected language.';
+      'El contenido de IA utiliza el idioma seleccionado.';
 
   @override
-  String get profileNotifications => 'Notifications';
+  String get profileNotifications => 'Notificaciones';
 
   @override
-  String get profileNotificationsEnabled => 'Enabled';
+  String get profileNotificationsEnabled => 'Habilitado';
 
   @override
-  String get profileNotificationsDisabled => 'Disabled';
+  String get profileNotificationsDisabled => 'Deshabilitado';
 
   @override
-  String get profileAppearance => 'Appearance';
+  String get profileAppearance => 'Apariencia';
 
   @override
-  String get profileHelpSupport => 'Help & Support';
+  String get profileHelpSupport => 'Ayuda y Soporte';
 
   @override
-  String get profilePrivacyPolicy => 'Privacy Policy';
+  String get profilePrivacyPolicy => 'Política de Privacidad';
 
   @override
-  String get profileTermsOfService => 'Terms of Service';
+  String get profileTermsOfService => 'Términos de Servicio';
 
   @override
-  String get profileLogout => 'Logout';
+  String get profileLogout => 'Cerrar sesión';
 
   @override
-  String get profileLogoutConfirm => 'Are you sure you want to logout?';
+  String get profileLogoutConfirm =>
+      '¿Estás seguro de que quieres cerrar sesión?';
 
   @override
-  String get profileDeleteAccount => 'Delete Account';
+  String get profileDeleteAccount => 'Eliminar Cuenta';
 
   @override
-  String get commonCancel => 'Cancel';
+  String get commonCancel => 'Cancelar';
 
   @override
-  String get profileSelectLanguageTitle => 'Select Language';
+  String get profileSelectLanguageTitle => 'Seleccionar Idioma';
 
   @override
   String get profileSelectLanguageSubtitle =>
-      'All AI-generated content will be in your selected language.';
+      'Todo el contenido generado por IA estará en tu idioma seleccionado.';
 
   @override
   String profileLanguageUpdated(Object language) {
-    return 'Language updated to $language';
+    return 'Idioma actualizado a $language';
   }
 
   @override
   String profileLanguageUpdateFailed(Object error) {
-    return 'Failed to update language: $error';
+    return 'Error al actualizar el idioma: $error';
   }
 
   @override
@@ -215,101 +218,105 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get profileCosmicBlueprint => 'Your Cosmic Blueprint';
+  String get profileCosmicBlueprint => 'Tu Plano Cósmico';
 
   @override
-  String get profileSunLabel => '☀️ Sun';
+  String get profileSunLabel => '☀️ Sol';
 
   @override
-  String get profileMoonLabel => '🌙 Moon';
+  String get profileMoonLabel => '🌙 Luna';
 
   @override
-  String get profileRisingLabel => '⬆️ Rising';
+  String get profileRisingLabel => '⬆️ Ascendente';
 
   @override
-  String get profileUnknown => 'Unknown';
+  String get profileUnknown => 'Desconocido';
 
   @override
-  String get forgotPasswordTitle => 'Forgot Password?';
+  String get forgotPasswordTitle => '¿Olvidaste tu Contraseña?';
 
   @override
   String get forgotPasswordSubtitle =>
-      'Enter your email and we\'ll send you a code to reset your password';
+      'Ingresa tu correo electrónico y te enviaremos un código para restablecer tu contraseña';
 
   @override
   String get forgotPasswordSent =>
-      'If an account exists, a reset code has been sent to your email.';
+      'Si existe una cuenta, se ha enviado un código de restablecimiento a tu correo electrónico.';
 
   @override
   String get forgotPasswordFailed =>
-      'Failed to send reset code. Please try again.';
+      'Error al enviar el código de restablecimiento. Por favor intenta de nuevo.';
 
   @override
-  String get forgotPasswordSendCode => 'Send Reset Code';
+  String get forgotPasswordSendCode => 'Enviar Código de Restablecimiento';
 
   @override
-  String get forgotPasswordHaveCode => 'Already have a code?';
+  String get forgotPasswordHaveCode => '¿Ya tienes un código?';
 
   @override
-  String get forgotPasswordRemember => 'Remember your password? ';
+  String get forgotPasswordRemember => '¿Recuerdas tu contraseña? ';
 
   @override
-  String get loginWelcomeBack => 'Welcome Back';
+  String get loginWelcomeBack => 'Bienvenido de nuevo';
 
   @override
-  String get loginSubtitle => 'Sign in to continue your cosmic journey';
+  String get loginSubtitle => 'Inicia sesión para continuar tu viaje cósmico';
 
   @override
-  String get loginInvalidCredentials => 'Invalid email or password';
+  String get loginInvalidCredentials =>
+      'Correo electrónico o contraseña inválidos';
 
   @override
-  String get loginGoogleFailed => 'Google sign-in failed. Please try again.';
+  String get loginGoogleFailed =>
+      'Error al iniciar sesión con Google. Por favor intenta de nuevo.';
 
   @override
-  String get loginAppleFailed => 'Apple sign-in failed. Please try again.';
+  String get loginAppleFailed =>
+      'Error al iniciar sesión con Apple. Por favor intenta de nuevo.';
 
   @override
   String get loginNetworkError =>
-      'Network error. Please check your connection.';
+      'Error de red. Por favor verifica tu conexión.';
 
   @override
-  String get loginSignInCancelled => 'Sign-in was cancelled.';
+  String get loginSignInCancelled => 'La sesión fue cancelada.';
 
   @override
-  String get loginPasswordHint => 'Enter your password';
+  String get loginPasswordHint => 'Ingresa tu contraseña';
 
   @override
-  String get loginForgotPassword => 'Forgot Password?';
+  String get loginForgotPassword => '¿Olvidaste tu Contraseña?';
 
   @override
-  String get loginSignIn => 'Sign In';
+  String get loginSignIn => 'Iniciar Sesión';
 
   @override
-  String get loginNoAccount => 'Don\'t have an account? ';
+  String get loginNoAccount => '¿No tienes una cuenta? ';
 
   @override
-  String get loginSignUp => 'Sign Up';
+  String get loginSignUp => 'Registrarse';
 
   @override
-  String get commonEmailLabel => 'Email';
+  String get commonEmailLabel => 'Correo Electrónico';
 
   @override
-  String get commonEmailHint => 'Enter your email';
+  String get commonEmailHint => 'Ingresa tu correo electrónico';
 
   @override
-  String get commonEmailRequired => 'Please enter your email';
+  String get commonEmailRequired => 'Por favor ingresa tu correo electrónico';
 
   @override
-  String get commonEmailInvalid => 'Please enter a valid email';
+  String get commonEmailInvalid =>
+      'Por favor ingresa un correo electrónico válido';
 
   @override
-  String get commonPasswordLabel => 'Password';
+  String get commonPasswordLabel => 'Contraseña';
 
   @override
-  String get commonPasswordRequired => 'Please enter your password';
+  String get commonPasswordRequired => 'Por favor ingresa tu contraseña';
 
   @override
-  String get commonOrContinueWith => 'or continue with';
+  String get commonOrContinueWith => 'o continuar con';
 
   @override
   String get commonGoogle => 'Google';
@@ -318,250 +325,262 @@ class AppLocalizationsEs extends AppLocalizations {
   String get commonApple => 'Apple';
 
   @override
-  String get commonNameLabel => 'Name';
+  String get commonNameLabel => 'Nombre';
 
   @override
-  String get commonNameHint => 'Enter your name';
+  String get commonNameHint => 'Ingresa tu nombre';
 
   @override
-  String get commonNameRequired => 'Please enter your name';
+  String get commonNameRequired => 'Por favor ingresa tu nombre';
 
   @override
-  String get signupTitle => 'Create Account';
+  String get signupTitle => 'Crear Cuenta';
 
   @override
-  String get signupSubtitle => 'Start your cosmic journey with Inner Wisdom';
+  String get signupSubtitle => 'Comienza tu viaje cósmico con Inner Wisdom';
 
   @override
-  String get signupEmailExists => 'Email already exists or invalid data';
+  String get signupEmailExists =>
+      'El correo electrónico ya existe o los datos son inválidos';
 
   @override
-  String get signupGoogleFailed => 'Google sign-in failed. Please try again.';
+  String get signupGoogleFailed =>
+      'Error al iniciar sesión con Google. Por favor, inténtalo de nuevo.';
 
   @override
-  String get signupAppleFailed => 'Apple sign-in failed. Please try again.';
+  String get signupAppleFailed =>
+      'Error al iniciar sesión con Apple. Por favor, inténtalo de nuevo.';
 
   @override
-  String get signupPasswordHint => 'Create a password (min. 8 characters)';
+  String get signupPasswordHint => 'Crea una contraseña (mín. 8 caracteres)';
 
   @override
-  String get signupPasswordMin => 'Password must be at least 8 characters';
+  String get signupPasswordMin =>
+      'La contraseña debe tener al menos 8 caracteres';
 
   @override
-  String get signupConfirmPasswordLabel => 'Confirm Password';
+  String get signupConfirmPasswordLabel => 'Confirmar Contraseña';
 
   @override
-  String get signupConfirmPasswordHint => 'Confirm your password';
+  String get signupConfirmPasswordHint => 'Confirma tu contraseña';
 
   @override
-  String get signupConfirmPasswordRequired => 'Please confirm your password';
+  String get signupConfirmPasswordRequired =>
+      'Por favor, confirma tu contraseña';
 
   @override
-  String get signupPasswordMismatch => 'Passwords do not match';
+  String get signupPasswordMismatch => 'Las contraseñas no coinciden';
 
   @override
-  String get signupPreferredLanguage => 'Preferred Language';
+  String get signupPreferredLanguage => 'Idioma Preferido';
 
   @override
-  String get signupCreateAccount => 'Create Account';
+  String get signupCreateAccount => 'Crear Cuenta';
 
   @override
-  String get signupHaveAccount => 'Already have an account? ';
+  String get signupHaveAccount => '¿Ya tienes una cuenta? ';
 
   @override
-  String get resetPasswordTitle => 'Reset Password';
+  String get resetPasswordTitle => 'Restablecer Contraseña';
 
   @override
   String get resetPasswordSubtitle =>
-      'Enter the code sent to your email and set a new password';
+      'Ingresa el código enviado a tu correo electrónico y establece una nueva contraseña';
 
   @override
   String get resetPasswordSuccess =>
-      'Password reset successful! Redirecting to login...';
+      '¡Restablecimiento de contraseña exitoso! Redirigiendo a inicio de sesión...';
 
   @override
   String get resetPasswordFailed =>
-      'Failed to reset password. Please try again.';
+      'Error al restablecer la contraseña. Por favor, inténtalo de nuevo.';
 
   @override
   String get resetPasswordInvalidCode =>
-      'Invalid or expired reset code. Please request a new one.';
+      'Código de restablecimiento inválido o expirado. Por favor, solicita uno nuevo.';
 
   @override
   String get resetPasswordMaxAttempts =>
-      'Maximum attempts exceeded. Please request a new code.';
+      'Se ha superado el número máximo de intentos. Por favor, solicita un nuevo código.';
 
   @override
-  String get resetCodeLabel => 'Reset Code';
+  String get resetCodeLabel => 'Código de Restablecimiento';
 
   @override
-  String get resetCodeHint => 'Enter 6-digit code';
+  String get resetCodeHint => 'Ingresa el código de 6 dígitos';
 
   @override
-  String get resetCodeRequired => 'Please enter the reset code';
+  String get resetCodeRequired =>
+      'Por favor, ingresa el código de restablecimiento';
 
   @override
-  String get resetCodeLength => 'Code must be 6 digits';
+  String get resetCodeLength => 'El código debe tener 6 dígitos';
 
   @override
-  String get resetNewPasswordLabel => 'New Password';
+  String get resetNewPasswordLabel => 'Nueva Contraseña';
 
   @override
   String get resetNewPasswordHint =>
-      'Create a new password (min. 8 characters)';
+      'Crea una nueva contraseña (mín. 8 caracteres)';
 
   @override
-  String get resetNewPasswordRequired => 'Please enter a new password';
+  String get resetNewPasswordRequired =>
+      'Por favor, ingresa una nueva contraseña';
 
   @override
-  String get resetConfirmPasswordHint => 'Confirm your new password';
+  String get resetConfirmPasswordHint => 'Confirma tu nueva contraseña';
 
   @override
-  String get resetPasswordButton => 'Reset Password';
+  String get resetPasswordButton => 'Restablecer Contraseña';
 
   @override
-  String get resetRequestNewCode => 'Request a new code';
+  String get resetRequestNewCode => 'Solicitar un nuevo código';
 
   @override
-  String get serviceResultGenerated => 'Report Generated';
+  String get serviceResultGenerated => 'Informe Generado';
 
   @override
   String serviceResultReady(Object title) {
-    return 'Your personalized $title is ready';
+    return 'Tu $title personalizado está listo';
   }
 
   @override
-  String get serviceResultBackToForYou => 'Back to For You';
+  String get serviceResultBackToForYou => 'Volver a Para Ti';
 
   @override
   String get serviceResultNotSavedNotice =>
-      'This Report will not be saved. If you wish, you can copy it and save it elsewhere using the Copy function.';
+      'Este Informe no se guardará. Si lo deseas, puedes copiarlo y guardarlo en otro lugar utilizando la función Copiar.';
 
   @override
-  String get commonCopy => 'Copy';
+  String get commonCopy => 'Copiar';
 
   @override
-  String get commonCopied => 'Copied to clipboard';
+  String get commonCopied => 'Copiado al portapapeles';
 
   @override
-  String get commonContinue => 'Continue';
+  String get commonContinue => 'Continuar';
 
   @override
-  String get partnerDetailsTitle => 'Partner Details';
+  String get partnerDetailsTitle => 'Detalles del Pareja';
 
   @override
-  String get partnerBirthDataTitle => 'Enter partner\'s birth data';
+  String get partnerBirthDataTitle =>
+      'Ingresa los datos de nacimiento del pareja';
 
   @override
   String partnerBirthDataFor(Object title) {
-    return 'For \"$title\"';
+    return 'Para \"$title\"';
   }
 
   @override
-  String get partnerNameOptionalLabel => 'Name (optional)';
+  String get partnerNameOptionalLabel => 'Nombre (opcional)';
 
   @override
-  String get partnerNameHint => 'Partner\'s name';
+  String get partnerNameHint => 'Nombre del pareja';
 
   @override
-  String get partnerGenderOptionalLabel => 'Gender (optional)';
+  String get partnerGenderOptionalLabel => 'Género (opcional)';
 
   @override
-  String get partnerBirthDateLabel => 'Birth Date *';
+  String get partnerBirthDateLabel => 'Fecha de Nacimiento *';
 
   @override
-  String get partnerBirthDateSelect => 'Select birth date';
+  String get partnerBirthDateSelect => 'Seleccionar fecha de nacimiento';
 
   @override
-  String get partnerBirthDateMissing => 'Please select the birth date';
+  String get partnerBirthDateMissing =>
+      'Por favor, selecciona la fecha de nacimiento';
 
   @override
-  String get partnerBirthTimeOptionalLabel => 'Birth Time (optional)';
+  String get partnerBirthTimeOptionalLabel => 'Hora de Nacimiento (opcional)';
 
   @override
-  String get partnerBirthTimeSelect => 'Select birth time';
+  String get partnerBirthTimeSelect => 'Seleccionar hora de nacimiento';
 
   @override
-  String get partnerBirthPlaceLabel => 'Birth Place *';
+  String get partnerBirthPlaceLabel => 'Lugar de Nacimiento *';
 
   @override
-  String get serviceOfferRequiresPartner => 'Requires partner birth data';
+  String get serviceOfferRequiresPartner =>
+      'Requiere datos de nacimiento del pareja';
 
   @override
-  String get serviceOfferBetaFree => 'Beta testers get free access!';
+  String get serviceOfferBetaFree =>
+      '¡Los beta testers obtienen acceso gratuito!';
 
   @override
-  String get serviceOfferUnlocked => 'Unlocked';
+  String get serviceOfferUnlocked => 'Desbloqueado';
 
   @override
-  String get serviceOfferGenerate => 'Generate Report';
+  String get serviceOfferGenerate => 'Generar Informe';
 
   @override
   String serviceOfferUnlockFor(Object price) {
-    return 'Unlock for $price';
+    return 'Desbloquear por $price';
   }
 
   @override
-  String get serviceOfferPreparing => 'Preparing your personalized report…';
+  String get serviceOfferPreparing => 'Preparando tu informe personalizado…';
 
   @override
   String get serviceOfferTimeout =>
-      'Taking longer than expected. Please try again.';
+      'Tardando más de lo esperado. Por favor, inténtalo de nuevo.';
 
   @override
-  String get serviceOfferNotReady => 'Report not ready yet. Please try again.';
+  String get serviceOfferNotReady =>
+      'Informe aún no listo. Por favor, inténtalo de nuevo.';
 
   @override
   String serviceOfferFetchFailed(Object error) {
-    return 'Failed to fetch report: $error';
+    return 'Error al obtener el informe: $error';
   }
 
   @override
-  String get commonFree => 'FREE';
+  String get commonFree => 'GRATIS';
 
   @override
-  String get commonLater => 'Later';
+  String get commonLater => 'Más tarde';
 
   @override
-  String get commonRetry => 'Retry';
+  String get commonRetry => 'Reintentar';
 
   @override
-  String get commonYes => 'Yes';
+  String get commonYes => 'Sí';
 
   @override
   String get commonNo => 'No';
 
   @override
-  String get commonBack => 'Back';
+  String get commonBack => 'Atrás';
 
   @override
-  String get commonOptional => 'Optional';
+  String get commonOptional => 'Opcional';
 
   @override
-  String get commonNotSpecified => 'Not specified';
+  String get commonNotSpecified => 'No especificado';
 
   @override
-  String get commonJustNow => 'Just now';
+  String get commonJustNow => 'Justo ahora';
 
   @override
-  String get commonViewMore => 'View more';
+  String get commonViewMore => 'Ver más';
 
   @override
-  String get commonViewLess => 'View less';
+  String get commonViewLess => 'Ver menos';
 
   @override
   String commonMinutesAgo(Object count) {
-    return '$count min ago';
+    return 'hace $count min';
   }
 
   @override
   String commonHoursAgo(Object count) {
-    return '${count}h ago';
+    return 'hace ${count}h';
   }
 
   @override
   String commonDaysAgo(Object count) {
-    return '${count}d ago';
+    return 'hace ${count}d';
   }
 
   @override
@@ -570,518 +589,524 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get askGuideTitle => 'Ask Your Guide';
+  String get askGuideTitle => 'Pregunta a Tu Guía';
 
   @override
-  String get askGuideSubtitle => 'Personal cosmic guidance';
+  String get askGuideSubtitle => 'Guía cósmica personal';
 
   @override
   String askGuideRemaining(Object count) {
-    return '$count left';
+    return '$count restantes';
   }
 
   @override
   String get askGuideQuestionHint =>
-      'Ask anything - love, career, decisions, emotions...';
+      'Pregunta cualquier cosa - amor, carrera, decisiones, emociones...';
 
   @override
   String get askGuideBasedOnChart =>
-      'Based on your birth chart & today\'s cosmic energies';
+      'Basado en tu carta natal y las energías cósmicas de hoy';
 
   @override
-  String get askGuideThinking => 'Your Guide is thinking...';
+  String get askGuideThinking => 'Tu Guía está pensando...';
 
   @override
-  String get askGuideYourGuide => 'Your Guide';
+  String get askGuideYourGuide => 'Tu Guía';
 
   @override
-  String get askGuideEmptyTitle => 'Ask Your First Question';
+  String get askGuideEmptyTitle => 'Haz Tu Primera Pregunta';
 
   @override
   String get askGuideEmptyBody =>
-      'Get instant, deeply personal guidance based on your birth chart and today\'s cosmic energies.';
+      'Obtén orientación instantánea y profundamente personal basada en tu carta natal y las energías cósmicas de hoy.';
 
   @override
   String get askGuideEmptyHint =>
-      'Ask anything — love, career, decisions, emotions.';
+      'Pregunta cualquier cosa — amor, carrera, decisiones, emociones.';
 
   @override
-  String get askGuideLoadFailed => 'Failed to load data';
+  String get askGuideLoadFailed => 'Error al cargar datos';
 
   @override
   String askGuideSendFailed(Object error) {
-    return 'Failed to send question: $error';
+    return 'Error al enviar la pregunta: $error';
   }
 
   @override
-  String get askGuideLimitTitle => 'Monthly Limit Reached';
+  String get askGuideLimitTitle => 'Límite Mensual Alcanzado';
 
   @override
   String get askGuideLimitBody =>
-      'You\'ve reached your monthly limit of requests.';
+      'Has alcanzado tu límite mensual de solicitudes.';
 
   @override
   String get askGuideLimitAddon =>
-      'You can purchase a \$1.99 add-on to continue using this service for the rest of the current billing month.';
+      'Puedes comprar un complemento de \$1.99 para seguir utilizando este servicio durante el resto del mes de facturación actual.';
 
   @override
   String askGuideLimitBillingEnd(Object date) {
-    return 'Your billing month ends on: $date';
+    return 'Tu mes de facturación termina el: $date';
   }
 
   @override
-  String get askGuideLimitGetAddon => 'Get Add-On';
+  String get askGuideLimitGetAddon => 'Obtener complemento';
 
   @override
-  String get contextTitle => 'Personal Context';
+  String get contextTitle => 'Contexto Personal';
 
   @override
   String contextStepOf(Object current, Object total) {
-    return 'Step $current of $total';
+    return 'Paso $current de $total';
   }
 
   @override
-  String get contextStep1Title => 'People around you';
+  String get contextStep1Title => 'Personas a tu alrededor';
 
   @override
   String get contextStep1Subtitle =>
-      'Your relationship and family context helps us understand your emotional landscape.';
+      'Tu contexto de relaciones y familia nos ayuda a entender tu paisaje emocional.';
 
   @override
-  String get contextStep2Title => 'Professional Life';
+  String get contextStep2Title => 'Vida Profesional';
 
   @override
   String get contextStep2Subtitle =>
-      'Your work and daily rhythm shape how you experience pressure, growth, and purpose.';
+      'Tu trabajo y ritmo diario moldean cómo experimentas la presión, el crecimiento y el propósito.';
 
   @override
-  String get contextStep3Title => 'How life feels right now';
+  String get contextStep3Title => 'Cómo se siente la vida ahora mismo';
 
   @override
   String get contextStep3Subtitle =>
-      'There are no right or wrong answers, just your current reality';
+      'No hay respuestas correctas o incorrectas, solo tu realidad actual';
 
   @override
-  String get contextStep4Title => 'What matters most to you';
+  String get contextStep4Title => 'Lo que más te importa';
 
   @override
   String get contextStep4Subtitle =>
-      'So your guidance aligns with what you truly care about';
+      'Para que tu orientación se alinee con lo que realmente te importa';
 
   @override
   String get contextPriorityRequired =>
-      'Please select at least one priority area.';
+      'Por favor, selecciona al menos un área de prioridad.';
 
   @override
   String contextSaveFailed(Object error) {
-    return 'Failed to save profile: $error';
+    return 'Error al guardar el perfil: $error';
   }
 
   @override
-  String get contextSaveContinue => 'Save & Continue';
+  String get contextSaveContinue => 'Guardar y continuar';
 
   @override
-  String get contextRelationshipStatusTitle => 'Current relationship status';
+  String get contextRelationshipStatusTitle => 'Estado actual de la relación';
 
   @override
-  String get contextSeekingRelationshipTitle =>
-      'Are you looking for a relationship?';
+  String get contextSeekingRelationshipTitle => '¿Estás buscando una relación?';
 
   @override
-  String get contextHasChildrenTitle => 'Do you have children?';
+  String get contextHasChildrenTitle => '¿Tienes hijos?';
 
   @override
-  String get contextChildrenDetailsOptional => 'Children details (optional)';
+  String get contextChildrenDetailsOptional =>
+      'Detalles de los hijos (opcional)';
 
   @override
-  String get contextAddChild => 'Add child';
+  String get contextAddChild => 'Agregar hijo';
 
   @override
-  String get contextChildAgeLabel => 'Age';
+  String get contextChildAgeLabel => 'Edad';
 
   @override
   String contextChildAgeYears(num age) {
     String _temp0 = intl.Intl.pluralLogic(
       age,
       locale: localeName,
-      other: 'years',
-      one: 'year',
+      other: 'años',
+      one: 'año',
     );
     return '$age $_temp0';
   }
 
   @override
-  String get contextChildGenderLabel => 'Gender';
+  String get contextChildGenderLabel => 'Género';
 
   @override
-  String get contextRelationshipSingle => 'Single';
+  String get contextRelationshipSingle => 'Soltero';
 
   @override
-  String get contextRelationshipInRelationship => 'In a relationship';
+  String get contextRelationshipInRelationship => 'En una relación';
 
   @override
-  String get contextRelationshipMarried => 'Married / Civil partnership';
+  String get contextRelationshipMarried => 'Casado / Pareja de hecho';
 
   @override
-  String get contextRelationshipSeparated => 'Separated / Divorced';
+  String get contextRelationshipSeparated => 'Separado / Divorciado';
 
   @override
-  String get contextRelationshipWidowed => 'Widowed';
+  String get contextRelationshipWidowed => 'Viudo';
 
   @override
-  String get contextRelationshipPreferNotToSay => 'Prefer not to say';
+  String get contextRelationshipPreferNotToSay => 'Prefiero no decirlo';
 
   @override
-  String get contextProfessionalStatusTitle => 'Current professional status';
+  String get contextProfessionalStatusTitle => 'Estado profesional actual';
 
   @override
   String get contextProfessionalStatusOtherHint =>
-      'Please specify your work status';
+      'Por favor especifica tu estado laboral';
 
   @override
-  String get contextIndustryTitle => 'Main industry/domain';
+  String get contextIndustryTitle => 'Industria/dominio principal';
 
   @override
-  String get contextWorkStatusStudent => 'Student';
+  String get contextWorkStatusStudent => 'Estudiante';
 
   @override
-  String get contextWorkStatusUnemployed => 'Unemployed / Between jobs';
+  String get contextWorkStatusUnemployed => 'Desempleado / Entre trabajos';
 
   @override
-  String get contextWorkStatusEmployedIc => 'Employed (Individual contributor)';
+  String get contextWorkStatusEmployedIc =>
+      'Empleado (Contribuyente individual)';
 
   @override
-  String get contextWorkStatusEmployedManagement => 'Employed (Management)';
+  String get contextWorkStatusEmployedManagement => 'Empleado (Gestión)';
 
   @override
-  String get contextWorkStatusExecutive => 'Executive / Leadership (C-level)';
+  String get contextWorkStatusExecutive => 'Ejecutivo / Liderazgo (nivel C)';
 
   @override
-  String get contextWorkStatusSelfEmployed => 'Self-employed / Freelancer';
+  String get contextWorkStatusSelfEmployed => 'Autónomo / Freelance';
 
   @override
-  String get contextWorkStatusEntrepreneur => 'Entrepreneur / Business owner';
+  String get contextWorkStatusEntrepreneur =>
+      'Emprendedor / Propietario de negocio';
 
   @override
-  String get contextWorkStatusInvestor => 'Investor';
+  String get contextWorkStatusInvestor => 'Inversor';
 
   @override
-  String get contextWorkStatusRetired => 'Retired';
+  String get contextWorkStatusRetired => 'Jubilado';
 
   @override
-  String get contextWorkStatusHomemaker => 'Homemaker / Stay-at-home parent';
+  String get contextWorkStatusHomemaker =>
+      'Ama de casa / Padre que se queda en casa';
 
   @override
-  String get contextWorkStatusCareerBreak => 'Career break / Sabbatical';
+  String get contextWorkStatusCareerBreak => 'Descanso profesional / Sabático';
 
   @override
-  String get contextWorkStatusOther => 'Other';
+  String get contextWorkStatusOther => 'Otro';
 
   @override
-  String get contextIndustryTech => 'Tech / IT';
+  String get contextIndustryTech => 'Tecnología / TI';
 
   @override
-  String get contextIndustryFinance => 'Finance / Investments';
+  String get contextIndustryFinance => 'Finanzas / Inversiones';
 
   @override
-  String get contextIndustryHealthcare => 'Healthcare';
+  String get contextIndustryHealthcare => 'Salud';
 
   @override
-  String get contextIndustryEducation => 'Education';
+  String get contextIndustryEducation => 'Educación';
 
   @override
-  String get contextIndustrySalesMarketing => 'Sales / Marketing';
+  String get contextIndustrySalesMarketing => 'Ventas / Marketing';
 
   @override
-  String get contextIndustryRealEstate => 'Real Estate';
+  String get contextIndustryRealEstate => 'Bienes raíces';
 
   @override
-  String get contextIndustryHospitality => 'Hospitality';
+  String get contextIndustryHospitality => 'Hospitalidad';
 
   @override
-  String get contextIndustryGovernment => 'Government / Public sector';
+  String get contextIndustryGovernment => 'Gobierno / Sector público';
 
   @override
-  String get contextIndustryCreative => 'Creative industries';
+  String get contextIndustryCreative => 'Industrias creativas';
 
   @override
-  String get contextIndustryOther => 'Other';
+  String get contextIndustryOther => 'Otro';
 
   @override
   String get contextSelfAssessmentIntro =>
-      'Rate your current situation in each area (1 = struggling, 5 = thriving)';
+      'Evalúa tu situación actual en cada área (1 = luchando, 5 = prosperando)';
 
   @override
-  String get contextSelfHealthTitle => 'Health & Energy';
+  String get contextSelfHealthTitle => 'Salud y energía';
 
   @override
   String get contextSelfHealthSubtitle =>
-      '1 = serious issues/low energy, 5 = excellent vitality';
+      '1 = problemas graves/baja energía, 5 = excelente vitalidad';
 
   @override
-  String get contextSelfSocialTitle => 'Social Life';
+  String get contextSelfSocialTitle => 'Vida social';
 
   @override
   String get contextSelfSocialSubtitle =>
-      '1 = isolated, 5 = thriving social connections';
+      '1 = aislado, 5 = conexiones sociales prósperas';
 
   @override
-  String get contextSelfRomanceTitle => 'Romantic Life';
+  String get contextSelfRomanceTitle => 'Vida romántica';
 
   @override
   String get contextSelfRomanceSubtitle =>
-      '1 = absent/challenging, 5 = fulfilled';
+      '1 = ausente/desafiante, 5 = realizado';
 
   @override
-  String get contextSelfFinanceTitle => 'Financial Stability';
+  String get contextSelfFinanceTitle => 'Estabilidad financiera';
 
   @override
-  String get contextSelfFinanceSubtitle => '1 = major hardship, 5 = excellent';
+  String get contextSelfFinanceSubtitle =>
+      '1 = dificultades importantes, 5 = excelente';
 
   @override
-  String get contextSelfCareerTitle => 'Career Satisfaction';
+  String get contextSelfCareerTitle => 'Satisfacción profesional';
 
   @override
   String get contextSelfCareerSubtitle =>
-      '1 = stuck/stressed, 5 = progress/clarity';
+      '1 = estancado/estresado, 5 = progreso/claridad';
 
   @override
-  String get contextSelfGrowthTitle => 'Personal Growth Interest';
+  String get contextSelfGrowthTitle => 'Interés en el crecimiento personal';
 
   @override
-  String get contextSelfGrowthSubtitle => '1 = low interest, 5 = very high';
+  String get contextSelfGrowthSubtitle => '1 = bajo interés, 5 = muy alto';
 
   @override
-  String get contextSelfStruggling => 'Struggling';
+  String get contextSelfStruggling => 'Luchando';
 
   @override
-  String get contextSelfThriving => 'Thriving';
+  String get contextSelfThriving => 'Prosperando';
 
   @override
   String get contextPrioritiesTitle =>
-      'What are your top priorities right now?';
+      '¿Cuáles son tus principales prioridades en este momento?';
 
   @override
   String get contextPrioritiesSubtitle =>
-      'Select up to 2 areas you want to focus on';
+      'Selecciona hasta 2 áreas en las que deseas enfocarte';
 
   @override
-  String get contextGuidanceStyleTitle => 'Preferred guidance style';
+  String get contextGuidanceStyleTitle => 'Estilo de orientación preferido';
 
   @override
-  String get contextSensitivityTitle => 'Sensitivity Mode';
+  String get contextSensitivityTitle => 'Modo de sensibilidad';
 
   @override
   String get contextSensitivitySubtitle =>
-      'Avoid anxiety-inducing or deterministic phrasing in guidance';
+      'Evitar frases que induzcan ansiedad o deterministas en la orientación';
 
   @override
-  String get contextPriorityHealth => 'Health & habits';
+  String get contextPriorityHealth => 'Salud y hábitos';
 
   @override
-  String get contextPriorityCareer => 'Career growth';
+  String get contextPriorityCareer => 'Crecimiento profesional';
 
   @override
-  String get contextPriorityBusiness => 'Business decisions';
+  String get contextPriorityBusiness => 'Decisiones empresariales';
 
   @override
-  String get contextPriorityMoney => 'Money & stability';
+  String get contextPriorityMoney => 'Dinero y estabilidad';
 
   @override
-  String get contextPriorityLove => 'Love & relationship';
+  String get contextPriorityLove => 'Amor y relación';
 
   @override
-  String get contextPriorityFamily => 'Family & parenting';
+  String get contextPriorityFamily => 'Familia y crianza';
 
   @override
-  String get contextPrioritySocial => 'Social life';
+  String get contextPrioritySocial => 'Vida social';
 
   @override
-  String get contextPriorityGrowth => 'Personal growth / mindset';
+  String get contextPriorityGrowth => 'Crecimiento personal / mentalidad';
 
   @override
-  String get contextGuidanceStyleDirect => 'Direct & practical';
+  String get contextGuidanceStyleDirect => 'Directo y práctico';
 
   @override
   String get contextGuidanceStyleDirectDesc =>
-      'Get straight to actionable advice';
+      'Ve directo a consejos prácticos';
 
   @override
-  String get contextGuidanceStyleEmpathetic => 'Empathetic & reflective';
+  String get contextGuidanceStyleEmpathetic => 'Empático y reflexivo';
 
   @override
-  String get contextGuidanceStyleEmpatheticDesc => 'Warm, supportive guidance';
+  String get contextGuidanceStyleEmpatheticDesc =>
+      'Orientación cálida y de apoyo';
 
   @override
-  String get contextGuidanceStyleBalanced => 'Balanced';
+  String get contextGuidanceStyleBalanced => 'Equilibrado';
 
   @override
   String get contextGuidanceStyleBalancedDesc =>
-      'Mix of practical and emotional support';
+      'Mezcla de apoyo práctico y emocional';
 
   @override
   String get homeGuidancePreparing =>
-      'Reading the stars and asking the Universe about you…';
+      'Leyendo las estrellas y preguntando al Universo sobre ti...';
 
   @override
   String get homeGuidanceFailed =>
-      'Failed to generate guidance. Please try again.';
+      'No se pudo generar la orientación. Por favor, inténtalo de nuevo.';
 
   @override
   String get homeGuidanceTimeout =>
-      'Taking longer than expected. Tap Retry or check back in a moment.';
+      'Tomando más tiempo del esperado. Toca Reintentar o vuelve en un momento.';
 
   @override
-  String get homeGuidanceLoadFailed => 'Failed to load guidance';
+  String get homeGuidanceLoadFailed => 'No se pudo cargar la orientación';
 
   @override
-  String get homeTodaysGuidance => 'Today\'s Guidance';
+  String get homeTodaysGuidance => 'Orientación de hoy';
 
   @override
-  String get homeSeeAll => 'See all';
+  String get homeSeeAll => 'Ver todo';
 
   @override
-  String get homeHealth => 'Health';
+  String get homeHealth => 'Salud';
 
   @override
-  String get homeCareer => 'Career';
+  String get homeCareer => 'Carrera';
 
   @override
-  String get homeMoney => 'Money';
+  String get homeMoney => 'Dinero';
 
   @override
-  String get homeLove => 'Love';
+  String get homeLove => 'Amor';
 
   @override
-  String get homePartners => 'Partners';
+  String get homePartners => 'Parejas';
 
   @override
-  String get homeGrowth => 'Growth';
+  String get homeGrowth => 'Crecimiento';
 
   @override
-  String get homeTraveler => 'Traveler';
+  String get homeTraveler => 'Viajero';
 
   @override
   String homeGreeting(Object name) {
-    return 'Hello, $name';
+    return 'Hola, $name';
   }
 
   @override
-  String get homeFocusFallback => 'Personal Growth';
+  String get homeFocusFallback => 'Crecimiento personal';
 
   @override
-  String get homeDailyMessage => 'Your Daily Message';
+  String get homeDailyMessage => 'Tu mensaje diario';
 
   @override
-  String get homeNatalChartTitle => 'My Natal Chart';
+  String get homeNatalChartTitle => 'Mi carta natal';
 
   @override
   String get homeNatalChartSubtitle =>
-      'Explore your birth chart & interpretations';
+      'Explora tu carta natal e interpretaciones';
 
   @override
-  String get navHome => 'Home';
+  String get navHome => 'Inicio';
 
   @override
-  String get navHistory => 'History';
+  String get navHistory => 'Historial';
 
   @override
-  String get navGuide => 'Guide';
+  String get navGuide => 'Guía';
 
   @override
-  String get navProfile => 'Profile';
+  String get navProfile => 'Perfil';
 
   @override
-  String get navForYou => 'For You';
+  String get navForYou => 'Para ti';
 
   @override
-  String get commonToday => 'Today';
+  String get commonToday => 'Hoy';
 
   @override
-  String get commonTryAgain => 'Try Again';
+  String get commonTryAgain => 'Inténtalo de nuevo';
 
   @override
-  String get natalChartTitle => 'My Natal Chart';
+  String get natalChartTitle => 'Mi carta natal';
 
   @override
-  String get natalChartTabTable => 'Table';
+  String get natalChartTabTable => 'Tabla';
 
   @override
-  String get natalChartTabChart => 'Chart';
+  String get natalChartTabChart => 'Gráfico';
 
   @override
-  String get natalChartEmptyTitle => 'No Natal Chart Data';
+  String get natalChartEmptyTitle => 'No hay datos de la carta natal';
 
   @override
   String get natalChartEmptySubtitle =>
-      'Please complete your birth data to see your natal chart.';
+      'Por favor completa tus datos de nacimiento para ver tu carta natal.';
 
   @override
-  String get natalChartAddBirthData => 'Add Birth Data';
+  String get natalChartAddBirthData => 'Agregar datos de nacimiento';
 
   @override
-  String get natalChartErrorTitle => 'Unable to load chart';
+  String get natalChartErrorTitle => 'No se pudo cargar el gráfico';
 
   @override
-  String get guidanceTitle => 'Daily Guidance';
+  String get guidanceTitle => 'Orientación Diaria';
 
   @override
-  String get guidanceLoadFailed => 'Failed to load guidance';
+  String get guidanceLoadFailed => 'Error al cargar la orientación';
 
   @override
-  String get guidanceNoneAvailable => 'No guidance available';
+  String get guidanceNoneAvailable => 'No hay orientación disponible';
 
   @override
-  String get guidanceCosmicEnergyTitle => 'Today\'s Cosmic Energy';
+  String get guidanceCosmicEnergyTitle => 'La Energía Cósmica de Hoy';
 
   @override
-  String get guidanceMoodLabel => 'Mood';
+  String get guidanceMoodLabel => 'Estado de Ánimo';
 
   @override
-  String get guidanceFocusLabel => 'Focus';
+  String get guidanceFocusLabel => 'Enfoque';
 
   @override
-  String get guidanceYourGuidance => 'Your Guidance';
+  String get guidanceYourGuidance => 'Tu Orientación';
 
   @override
-  String get guidanceTapToCollapse => 'Tap to collapse';
+  String get guidanceTapToCollapse => 'Toca para colapsar';
 
   @override
-  String get historyTitle => 'Guidance History';
+  String get historyTitle => 'Historial de Orientación';
 
   @override
-  String get historySubtitle => 'Your cosmic journey through time';
+  String get historySubtitle => 'Tu viaje cósmico a través del tiempo';
 
   @override
-  String get historyLoadFailed => 'Failed to load history';
+  String get historyLoadFailed => 'Error al cargar el historial';
 
   @override
-  String get historyEmptyTitle => 'No history yet';
+  String get historyEmptyTitle => 'Aún no hay historial';
 
   @override
-  String get historyEmptySubtitle => 'Your daily guidances will appear here';
+  String get historyEmptySubtitle =>
+      'Tus orientaciones diarias aparecerán aquí';
 
   @override
-  String get historyNewBadge => 'NEW';
+  String get historyNewBadge => 'NUEVO';
 
   @override
-  String get commonUnlocked => 'Unlocked';
+  String get commonUnlocked => 'Desbloqueado';
 
   @override
-  String get commonComingSoon => 'Coming Soon';
+  String get commonComingSoon => 'Próximamente';
 
   @override
-  String get commonSomethingWentWrong => 'Something went wrong';
+  String get commonSomethingWentWrong => 'Algo salió mal';
 
   @override
-  String get commonNoContent => 'No content available.';
+  String get commonNoContent => 'No hay contenido disponible.';
 
   @override
-  String get commonUnknownError => 'Unknown error';
+  String get commonUnknownError => 'Error desconocido';
 
   @override
   String get commonTakingLonger =>
-      'Taking longer than expected. Please try again.';
+      'Tomando más tiempo de lo esperado. Por favor, intenta de nuevo.';
 
   @override
   String commonErrorWithMessage(Object error) {
@@ -1089,566 +1114,572 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get forYouTitle => 'For You';
+  String get forYouTitle => 'Para Ti';
 
   @override
-  String get forYouSubtitle => 'Personalized cosmic insights';
+  String get forYouSubtitle => 'Perspectivas cósmicas personalizadas';
 
   @override
-  String get forYouNatalChartTitle => 'My Natal Chart';
+  String get forYouNatalChartTitle => 'Mi Carta Natal';
 
   @override
-  String get forYouNatalChartSubtitle => 'Your birth chart analysis';
+  String get forYouNatalChartSubtitle => 'Análisis de tu carta natal';
 
   @override
-  String get forYouCompatibilitiesTitle => 'Compatibilities';
+  String get forYouCompatibilitiesTitle => 'Compatibilidades';
 
   @override
   String get forYouCompatibilitiesSubtitle =>
-      'Love, friendship & partnership reports';
+      'Informes de amor, amistad y asociación';
 
   @override
-  String get forYouKarmicTitle => 'Karmic Astrology';
+  String get forYouKarmicTitle => 'Astrología Kármica';
 
   @override
-  String get forYouKarmicSubtitle => 'Soul lessons & past life patterns';
+  String get forYouKarmicSubtitle =>
+      'Lecciones del alma y patrones de vidas pasadas';
 
   @override
-  String get forYouLearnTitle => 'Learn Astrology';
+  String get forYouLearnTitle => 'Aprender Astrología';
 
   @override
-  String get forYouLearnSubtitle => 'Free educational content';
+  String get forYouLearnSubtitle => 'Contenido educativo gratuito';
 
   @override
-  String get compatibilitiesTitle => 'Compatibilities';
+  String get compatibilitiesTitle => 'Compatibilidades';
 
   @override
-  String get compatibilitiesLoadFailed => 'Failed to load services';
+  String get compatibilitiesLoadFailed => 'Error al cargar los servicios';
 
   @override
-  String get compatibilitiesBetaFree => 'Beta: All reports are FREE!';
+  String get compatibilitiesBetaFree => 'Beta: ¡Todos los informes son GRATIS!';
 
   @override
-  String get compatibilitiesChooseReport => 'Choose a Report';
+  String get compatibilitiesChooseReport => 'Elige un Informe';
 
   @override
   String get compatibilitiesSubtitle =>
-      'Discover insights about yourself and your relationships';
+      'Descubre perspectivas sobre ti mismo y tus relaciones';
 
   @override
-  String get compatibilitiesPartnerBadge => '+Partner';
+  String get compatibilitiesPartnerBadge => '+Pareja';
 
   @override
-  String get compatibilitiesPersonalityTitle => 'Personality Report';
+  String get compatibilitiesPersonalityTitle => 'Informe de Personalidad';
 
   @override
   String get compatibilitiesPersonalitySubtitle =>
-      'Comprehensive analysis of your personality based on your natal chart';
+      'Análisis completo de tu personalidad basado en tu carta natal';
 
   @override
   String get compatibilitiesRomanticPersonalityTitle =>
-      'Romantic Personality Report';
+      'Informe de Personalidad Romántica';
 
   @override
   String get compatibilitiesRomanticPersonalitySubtitle =>
-      'Understand how you approach love and romance';
+      'Entiende cómo te acercas al amor y al romance';
 
   @override
-  String get compatibilitiesLoveCompatibilityTitle => 'Love Compatibility';
+  String get compatibilitiesLoveCompatibilityTitle => 'Compatibilidad Amorosa';
 
   @override
   String get compatibilitiesLoveCompatibilitySubtitle =>
-      'Detailed romantic compatibility analysis with your partner';
+      'Análisis detallado de la compatibilidad romántica con tu pareja';
 
   @override
-  String get compatibilitiesRomanticForecastTitle => 'Romantic Couple Forecast';
+  String get compatibilitiesRomanticForecastTitle =>
+      'Pronóstico de Pareja Romántica';
 
   @override
   String get compatibilitiesRomanticForecastSubtitle =>
-      'Insights into the future of your relationship';
+      'Perspectivas sobre el futuro de tu relación';
 
   @override
-  String get compatibilitiesFriendshipTitle => 'Friendship Report';
+  String get compatibilitiesFriendshipTitle => 'Informe de Amistad';
 
   @override
   String get compatibilitiesFriendshipSubtitle =>
-      'Analyze friendship dynamics and compatibility';
+      'Analiza la dinámica y compatibilidad de la amistad';
 
   @override
-  String get moonPhaseTitle => 'Moon Phase Report';
+  String get moonPhaseTitle => 'Informe de Fase Lunar';
 
   @override
   String get moonPhaseSubtitle =>
-      'Understand the current lunar energy and how it affects you. Get guidance aligned with the moon\'s phase.';
+      'Entiende la energía lunar actual y cómo te afecta. Obtén orientación alineada con la fase de la luna.';
 
   @override
-  String get moonPhaseSelectDate => 'Select Date';
+  String get moonPhaseSelectDate => 'Seleccionar Fecha';
 
   @override
   String get moonPhaseOriginalPrice => '\$2.99';
 
   @override
-  String get moonPhaseGenerate => 'Generate Report';
+  String get moonPhaseGenerate => 'Generar Informe';
 
   @override
-  String get moonPhaseGenerateDifferentDate => 'Generate for Different Date';
+  String get moonPhaseGenerateDifferentDate => 'Generar para Fecha Diferente';
 
   @override
-  String get moonPhaseGenerationFailed => 'Generation failed';
+  String get moonPhaseGenerationFailed => 'Generación fallida';
 
   @override
   String get moonPhaseGenerating =>
-      'Report is being generated. Please try again.';
+      'El informe se está generando. Por favor, intenta de nuevo.';
 
   @override
-  String get moonPhaseUnknownError => 'Something went wrong. Please try again.';
+  String get moonPhaseUnknownError =>
+      'Algo salió mal. Por favor, intenta de nuevo.';
 
   @override
-  String get requiredFieldsNote => 'Fields marked with * are required.';
+  String get requiredFieldsNote =>
+      'Los campos marcados con * son obligatorios.';
 
   @override
-  String get karmicTitle => 'Karmic Astrology';
+  String get karmicTitle => 'Astrología Kármica';
 
   @override
   String karmicLoadFailed(Object error) {
-    return 'Failed to load: $error';
+    return 'Error al cargar: $error';
   }
 
   @override
-  String get karmicOfferTitle => '🔮 Karmic Astrology – Messages of the Soul';
+  String get karmicOfferTitle => '🔮 Astrología Kármica – Mensajes del Alma';
 
   @override
   String get karmicOfferBody =>
-      'Karmic Astrology reveals the deep patterns shaping your life, beyond everyday events.\n\nIt offers an interpretation that speaks about unresolved lessons, karmic connections, and the soul\'s path of growth.\n\nThis is not about what comes next,\nbut about why you are experiencing what you experience.\n\n✨ Activate Karmic Astrology and discover the deeper meaning of your journey.';
+      'La Astrología Kármica revela los patrones profundos que dan forma a tu vida, más allá de los eventos cotidianos.\n\nOfrece una interpretación que habla sobre lecciones no resueltas, conexiones kármicas y el camino de crecimiento del alma.\n\nEsto no se trata de lo que viene después,\nsino de por qué estás experimentando lo que experimentas.\n\n✨ Activa la Astrología Kármica y descubre el significado más profundo de tu viaje.';
 
   @override
-  String get karmicBetaFreeBadge => 'Beta Testers – FREE Access!';
+  String get karmicBetaFreeBadge => 'Beta Testers – ¡Acceso GRATIS!';
 
   @override
   String karmicPriceBeta(Object price) {
-    return '\$$price – Beta Testers Free';
+    return '\$$price – Beta Testers Gratis';
   }
 
   @override
   String karmicPriceUnlock(Object price) {
-    return 'Unlock for \$$price';
+    return 'Desbloquear por \$$price';
   }
 
   @override
-  String get karmicHintInstant => 'Your reading will be generated instantly';
+  String get karmicHintInstant => 'Tu lectura se generará instantáneamente';
 
   @override
-  String get karmicHintOneTime => 'One-time purchase, no subscription';
+  String get karmicHintOneTime => 'Compra única, sin suscripción';
 
   @override
-  String get karmicProgressHint => 'Connecting to your karmic path…';
+  String get karmicProgressHint => 'Conectando con tu camino kármico…';
 
   @override
   String karmicGenerateFailed(Object error) {
-    return 'Failed to generate: $error';
+    return 'Error al generar: $error';
   }
 
   @override
-  String get karmicCheckoutTitle => 'Karmic Astrology Checkout';
+  String get karmicCheckoutTitle => 'Pago de Astrología Kármica';
 
   @override
-  String get karmicCheckoutSubtitle => 'Purchase flow coming soon';
+  String get karmicCheckoutSubtitle => 'Flujo de compra próximamente';
 
   @override
   String karmicGenerationFailed(Object error) {
-    return 'Generation failed: $error';
+    return 'Generación fallida: $error';
   }
 
   @override
-  String get karmicLoading => 'Loading your karmic reading...';
+  String get karmicLoading => 'Cargando tu lectura kármica...';
 
   @override
-  String get karmicGenerationFailedShort => 'Generation failed';
+  String get karmicGenerationFailedShort => 'Generación fallida';
 
   @override
-  String get karmicGeneratingTitle => 'Generating Your Karmic Reading...';
+  String get karmicGeneratingTitle => 'Generando Tu Lectura Kármica...';
 
   @override
   String get karmicGeneratingSubtitle =>
-      'Analyzing your natal chart for karmic patterns and soul lessons.';
+      'Analizando tu carta natal para patrones kármicos y lecciones del alma.';
 
   @override
-  String get karmicReadingTitle => '🔮 Your Karmic Reading';
+  String get karmicReadingTitle => '🔮 Tu Lectura Kármica';
 
   @override
-  String get karmicReadingSubtitle => 'Messages of the Soul';
+  String get karmicReadingSubtitle => 'Mensajes del Alma';
 
   @override
   String get karmicDisclaimer =>
-      'This reading is for self-reflection and entertainment purposes. It does not constitute professional advice.';
+      'Esta lectura es para auto-reflexión y entretenimiento. No constituye asesoramiento profesional.';
 
   @override
-  String get commonActive => 'Active';
+  String get commonActive => 'Activo';
 
   @override
-  String get commonBackToHome => 'Back to Home';
+  String get commonBackToHome => 'Volver a Inicio';
 
   @override
-  String get commonYesterday => 'yesterday';
+  String get commonYesterday => 'ayer';
 
   @override
   String commonWeeksAgo(Object count) {
-    return '$count weeks ago';
+    return '$count semanas atrás';
   }
 
   @override
   String commonMonthsAgo(Object count) {
-    return '$count months ago';
+    return '$count meses atrás';
   }
 
   @override
-  String get commonEdit => 'Edit';
+  String get commonEdit => 'Editar';
 
   @override
-  String get commonDelete => 'Delete';
+  String get commonDelete => 'Eliminar';
 
   @override
   String get natalChartProGenerated =>
-      'Pro interpretations generated! Scroll up to see them.';
+      '¡Interpretaciones Pro generadas! Desplázate hacia arriba para verlas.';
 
   @override
-  String get natalChartHouse1 => 'Self & Identity';
+  String get natalChartHouse1 => 'Yo e Identidad';
 
   @override
-  String get natalChartHouse2 => 'Money & Values';
+  String get natalChartHouse2 => 'Dinero y Valores';
 
   @override
-  String get natalChartHouse3 => 'Communication';
+  String get natalChartHouse3 => 'Comunicación';
 
   @override
-  String get natalChartHouse4 => 'Home & Family';
+  String get natalChartHouse4 => 'Hogar y Familia';
 
   @override
-  String get natalChartHouse5 => 'Creativity & Romance';
+  String get natalChartHouse5 => 'Creatividad y Romance';
 
   @override
-  String get natalChartHouse6 => 'Health & Routine';
+  String get natalChartHouse6 => 'Salud y Rutina';
 
   @override
-  String get natalChartHouse7 => 'Relationships';
+  String get natalChartHouse7 => 'Relaciones';
 
   @override
-  String get natalChartHouse8 => 'Transformation';
+  String get natalChartHouse8 => 'Transformación';
 
   @override
-  String get natalChartHouse9 => 'Philosophy & Travel';
+  String get natalChartHouse9 => 'Filosofía y Viajes';
 
   @override
-  String get natalChartHouse10 => 'Career & Status';
+  String get natalChartHouse10 => 'Carrera y Estado';
 
   @override
-  String get natalChartHouse11 => 'Friends & Goals';
+  String get natalChartHouse11 => 'Amigos y Metas';
 
   @override
-  String get natalChartHouse12 => 'Spirituality';
+  String get natalChartHouse12 => 'Espiritualidad';
 
   @override
-  String get helpSupportTitle => 'Help & Support';
+  String get helpSupportTitle => 'Ayuda y Soporte';
 
   @override
-  String get helpSupportContactTitle => 'Contact Support';
+  String get helpSupportContactTitle => 'Contactar Soporte';
 
   @override
   String get helpSupportContactSubtitle =>
-      'We typically respond within 24 hours';
+      'Normalmente respondemos en 24 horas';
 
   @override
-  String get helpSupportFaqTitle => 'Frequently Asked Questions';
+  String get helpSupportFaqTitle => 'Preguntas Frecuentes';
 
   @override
-  String get helpSupportEmailSubject => 'Inner Wisdom Support Request';
+  String get helpSupportEmailSubject => 'Solicitud de Soporte de Inner Wisdom';
 
   @override
   String get helpSupportEmailAppFailed =>
-      'Could not open email app. Please email support@innerwisdomapp.com';
+      'No se pudo abrir la aplicación de correo. Por favor, envía un correo a support@innerwisdomapp.com';
 
   @override
   String get helpSupportEmailFallback =>
-      'Please email us at support@innerwisdomapp.com';
+      'Por favor, envíanos un correo a support@innerwisdomapp.com';
 
   @override
-  String get helpSupportFaq1Q => 'How accurate is the daily guidance?';
+  String get helpSupportFaq1Q => '¿Qué tan precisa es la guía diaria?';
 
   @override
   String get helpSupportFaq1A =>
-      'Our daily guidance combines traditional astrological principles with your personal birth chart. While astrology is interpretive, our AI provides personalized insights based on real planetary positions and aspects.';
+      'Nuestra guía diaria combina principios astrológicos tradicionales con tu carta natal personal. Si bien la astrología es interpretativa, nuestra IA proporciona información personalizada basada en posiciones y aspectos planetarios reales.';
 
   @override
-  String get helpSupportFaq2Q => 'Why do I need my birth time?';
+  String get helpSupportFaq2Q => '¿Por qué necesito mi hora de nacimiento?';
 
   @override
   String get helpSupportFaq2A =>
-      'Your birth time determines your Ascendant (Rising sign) and the positions of houses in your chart. Without it, we use noon as a default, which may affect the accuracy of house-related interpretations.';
+      'Tu hora de nacimiento determina tu Ascendente (signo ascendente) y las posiciones de las casas en tu carta. Sin ella, usamos el mediodía como predeterminado, lo que puede afectar la precisión de las interpretaciones relacionadas con las casas.';
 
   @override
-  String get helpSupportFaq3Q => 'How do I change my birth data?';
+  String get helpSupportFaq3Q => '¿Cómo cambio mis datos de nacimiento?';
 
   @override
   String get helpSupportFaq3A =>
-      'Currently, birth data cannot be changed after initial setup to ensure consistency in your readings. Contact support if you need to make corrections.';
+      'Actualmente, los datos de nacimiento no se pueden cambiar después de la configuración inicial para garantizar la consistencia en tus lecturas. Contacta al soporte si necesitas hacer correcciones.';
 
   @override
-  String get helpSupportFaq4Q => 'What is a Focus topic?';
+  String get helpSupportFaq4Q => '¿Qué es un tema de Enfoque?';
 
   @override
   String get helpSupportFaq4A =>
-      'A Focus topic is a current concern or life area you want to emphasize. When set, your daily guidance will pay special attention to this area, providing more relevant insights.';
+      'Un tema de Enfoque es una preocupación actual o área de vida que deseas enfatizar. Cuando se establece, tu guía diaria prestará especial atención a esta área, proporcionando información más relevante.';
 
   @override
-  String get helpSupportFaq5Q => 'How does the subscription work?';
+  String get helpSupportFaq5Q => '¿Cómo funciona la suscripción?';
 
   @override
   String get helpSupportFaq5A =>
-      'The free tier includes basic daily guidance. Premium subscribers get enhanced personalization, audio readings, and access to special features like Karmic Astrology readings.';
+      'El nivel gratuito incluye guía diaria básica. Los suscriptores premium obtienen personalización mejorada, lecturas de audio y acceso a funciones especiales como lecturas de Astrología Kármica.';
 
   @override
-  String get helpSupportFaq6Q => 'Is my data private?';
+  String get helpSupportFaq6Q => '¿Mis datos son privados?';
 
   @override
   String get helpSupportFaq6A =>
-      'Yes! We take privacy seriously. Your birth data and personal information are encrypted and never shared with third parties. You can delete your account at any time.';
+      '¡Sí! Tomamos la privacidad en serio. Tus datos de nacimiento e información personal están encriptados y nunca se comparten con terceros. Puedes eliminar tu cuenta en cualquier momento.';
 
   @override
-  String get helpSupportFaq7Q => 'What if I disagree with a reading?';
+  String get helpSupportFaq7Q =>
+      '¿Qué pasa si no estoy de acuerdo con una lectura?';
 
   @override
   String get helpSupportFaq7A =>
-      'Astrology is interpretive, and not every reading will resonate. Use the feedback feature to help us improve. Our AI learns from your preferences over time.';
+      'La astrología es interpretativa, y no todas las lecturas resonarán. Usa la función de retroalimentación para ayudarnos a mejorar. Nuestra IA aprende de tus preferencias con el tiempo.';
 
   @override
-  String get notificationsSaved => 'Notification settings saved';
+  String get notificationsSaved => 'Configuraciones de notificación guardadas';
 
   @override
-  String get notificationsTitle => 'Notifications';
+  String get notificationsTitle => 'Notificaciones';
 
   @override
-  String get notificationsSectionTitle => 'Push Notifications';
+  String get notificationsSectionTitle => 'Notificaciones Push';
 
   @override
-  String get notificationsDailyTitle => 'Daily Guidance';
+  String get notificationsDailyTitle => 'Guía Diaria';
 
   @override
   String get notificationsDailySubtitle =>
-      'Get notified when your daily guidance is ready';
+      'Recibe notificaciones cuando tu guía diaria esté lista';
 
   @override
-  String get notificationsWeeklyTitle => 'Weekly Highlights';
+  String get notificationsWeeklyTitle => 'Destacados Semanales';
 
   @override
   String get notificationsWeeklySubtitle =>
-      'Weekly cosmic overview and key transits';
+      'Resumen cósmico semanal y tránsitos clave';
 
   @override
-  String get notificationsSpecialTitle => 'Special Events';
+  String get notificationsSpecialTitle => 'Eventos Especiales';
 
   @override
   String get notificationsSpecialSubtitle =>
-      'Full moons, eclipses, and retrogrades';
+      'Lunas llenas, eclipses y retrógrados';
 
   @override
   String get notificationsDeviceHint =>
-      'You can also control notifications in your device settings.';
+      'También puedes controlar las notificaciones en la configuración de tu dispositivo.';
 
   @override
-  String get concernsTitle => 'Your Focus';
+  String get concernsTitle => 'Tu Enfoque';
 
   @override
-  String get concernsSubtitle => 'Topics shaping your guidance';
+  String get concernsSubtitle => 'Temas que dan forma a tu guía';
 
   @override
   String concernsTabActive(Object count) {
-    return 'Active ($count)';
+    return 'Activo ($count)';
   }
 
   @override
   String concernsTabResolved(Object count) {
-    return 'Resolved ($count)';
+    return 'Resuelto ($count)';
   }
 
   @override
   String concernsTabArchived(Object count) {
-    return 'Archived ($count)';
+    return 'Archivado ($count)';
   }
 
   @override
-  String get concernsEmptyTitle => 'No concerns here';
+  String get concernsEmptyTitle => 'No hay preocupaciones aquí';
 
   @override
   String get concernsEmptySubtitle =>
-      'Add a focus topic to get personalized guidance';
+      'Agrega un tema de enfoque para obtener guía personalizada';
 
   @override
-  String get concernsCategoryCareer => 'Career & Job';
+  String get concernsCategoryCareer => 'Carrera y Trabajo';
 
   @override
-  String get concernsCategoryHealth => 'Health';
+  String get concernsCategoryHealth => 'Salud';
 
   @override
-  String get concernsCategoryRelationship => 'Relationship';
+  String get concernsCategoryRelationship => 'Relación';
 
   @override
-  String get concernsCategoryFamily => 'Family';
+  String get concernsCategoryFamily => 'Familia';
 
   @override
-  String get concernsCategoryMoney => 'Money';
+  String get concernsCategoryMoney => 'Dinero';
 
   @override
-  String get concernsCategoryBusiness => 'Business';
+  String get concernsCategoryBusiness => 'Negocios';
 
   @override
-  String get concernsCategoryPartnership => 'Partnership';
+  String get concernsCategoryPartnership => 'Asociación';
 
   @override
-  String get concernsCategoryGrowth => 'Personal Growth';
+  String get concernsCategoryGrowth => 'Crecimiento Personal';
 
   @override
   String get concernsMinLength =>
-      'Please describe your concern in more detail (at least 10 characters)';
+      'Por favor describe tu preocupación con más detalle (al menos 10 caracteres)';
 
   @override
   String get concernsSubmitFailed =>
-      'Failed to submit concern. Please try again.';
+      'Error al enviar la preocupación. Por favor, intenta de nuevo.';
 
   @override
-  String get concernsAddTitle => 'What\'s on your mind?';
+  String get concernsAddTitle => '¿Qué tienes en mente?';
 
   @override
   String get concernsAddDescription =>
-      'Share your current concern, question, or life situation. Our AI will analyze it and provide focused guidance starting tomorrow.';
+      'Comparte tu preocupación actual, pregunta o situación de vida. Nuestra IA la analizará y proporcionará guía enfocada a partir de mañana.';
 
   @override
-  String get concernsExamplesTitle => 'Examples of concerns:';
+  String get concernsExamplesTitle => 'Ejemplos de preocupaciones:';
 
   @override
-  String get concernsExampleCareer => 'Career change decision';
+  String get concernsExampleCareer => 'Decisión de cambio de carrera';
 
   @override
-  String get concernsExampleRelationship => 'Relationship challenges';
+  String get concernsExampleRelationship => 'Desafíos en la relación';
 
   @override
-  String get concernsExampleFinance => 'Financial investment timing';
+  String get concernsExampleFinance => 'Momento de inversión financiera';
 
   @override
-  String get concernsExampleHealth => 'Health and wellness focus';
+  String get concernsExampleHealth => 'Enfoque en salud y bienestar';
 
   @override
-  String get concernsExampleGrowth => 'Personal growth direction';
+  String get concernsExampleGrowth => 'Dirección de crecimiento personal';
 
   @override
-  String get concernsSubmitButton => 'Submit Concern';
+  String get concernsSubmitButton => 'Enviar Preocupación';
 
   @override
-  String get concernsSuccessTitle => 'Concern Recorded!';
+  String get concernsSuccessTitle => '¡Preocupación Registrada!';
 
   @override
-  String get concernsCategoryLabel => 'Category: ';
+  String get concernsCategoryLabel => 'Categoría: ';
 
   @override
   String get concernsSuccessMessage =>
-      'Starting tomorrow, your daily guidance will focus more on this topic.';
+      'A partir de mañana, tu guía diaria se centrará más en este tema.';
 
   @override
-  String get concernsViewFocusTopics => 'View My Focus Topics';
+  String get concernsViewFocusTopics => 'Ver Mis Temas de Enfoque';
 
   @override
-  String get deleteAccountTitle => 'Delete Account';
+  String get deleteAccountTitle => 'Eliminar Cuenta';
 
   @override
-  String get deleteAccountHeading => 'Delete Your Account?';
+  String get deleteAccountHeading => '¿Eliminar Tu Cuenta?';
 
   @override
-  String get deleteAccountConfirmError => 'Please type DELETE to confirm';
+  String get deleteAccountConfirmError =>
+      'Por favor escribe DELETE para confirmar';
 
   @override
-  String get deleteAccountFinalWarningTitle => 'Final Warning';
+  String get deleteAccountFinalWarningTitle => 'Advertencia Final';
 
   @override
   String get deleteAccountFinalWarningBody =>
-      'This action cannot be undone. All your data, including:\n\n• Your profile and birth data\n• Natal chart and interpretations\n• Daily guidance history\n• Personal context and preferences\n• All purchased content\n\nWill be permanently deleted.';
+      'Esta acción no se puede deshacer. Todos tus datos, incluyendo:\n\n• Tu perfil y datos de nacimiento\n• Carta natal e interpretaciones\n• Historial de guía diaria\n• Contexto personal y preferencias\n• Todo el contenido comprado\n\nSe eliminarán permanentemente.';
 
   @override
-  String get deleteAccountConfirmButton => 'Delete Forever';
+  String get deleteAccountConfirmButton => 'Eliminar Para Siempre';
 
   @override
-  String get deleteAccountSuccess => 'Your account has been deleted';
+  String get deleteAccountSuccess => 'Tu cuenta ha sido eliminada';
 
   @override
   String get deleteAccountFailed =>
-      'Failed to delete account. Please try again.';
+      'Error al eliminar la cuenta. Por favor, intenta de nuevo.';
 
   @override
   String get deleteAccountPermanentWarning =>
-      'This action is permanent and cannot be undone';
+      'Esta acción es permanente y no se puede deshacer';
 
   @override
   String get deleteAccountWarningDetail =>
-      'All your personal data, including your natal chart, guidance history, and any purchases will be permanently deleted.';
+      'Todos tus datos personales, incluyendo tu carta natal, historial de guía y cualquier compra serán eliminados permanentemente.';
 
   @override
-  String get deleteAccountWhatTitle => 'What will be deleted:';
+  String get deleteAccountWhatTitle => '¿Qué se eliminará:';
 
   @override
-  String get deleteAccountItemProfile => 'Your profile and account';
+  String get deleteAccountItemProfile => 'Tu perfil y cuenta';
 
   @override
-  String get deleteAccountItemBirthData => 'Birth data and natal chart';
+  String get deleteAccountItemBirthData => 'Datos de nacimiento y carta natal';
 
   @override
-  String get deleteAccountItemGuidance => 'All daily guidance history';
+  String get deleteAccountItemGuidance => 'Todo el historial de guía diaria';
 
   @override
-  String get deleteAccountItemContext => 'Personal context & preferences';
+  String get deleteAccountItemContext => 'Contexto personal y preferencias';
 
   @override
-  String get deleteAccountItemKarmic => 'Karmic astrology readings';
+  String get deleteAccountItemKarmic => 'Lecturas de astrología kármica';
 
   @override
-  String get deleteAccountItemPurchases => 'All purchased content';
+  String get deleteAccountItemPurchases => 'Todo el contenido comprado';
 
   @override
-  String get deleteAccountTypeDelete => 'Type DELETE to confirm';
+  String get deleteAccountTypeDelete => 'Escribe DELETE para confirmar';
 
   @override
   String get deleteAccountDeleteHint => 'DELETE';
 
   @override
-  String get deleteAccountButton => 'Delete My Account';
+  String get deleteAccountButton => 'Eliminar Mi Cuenta';
 
   @override
-  String get deleteAccountCancel => 'Cancel, keep my account';
+  String get deleteAccountCancel => 'Cancelar, mantener mi cuenta';
 
   @override
-  String get learnArticleLoadFailed => 'Failed to load article';
+  String get learnArticleLoadFailed => 'Error al cargar el artículo';
 
   @override
-  String get learnContentInEnglish => 'Content in English';
+  String get learnContentInEnglish => 'Contenido en inglés';
 
   @override
-  String get learnArticlesLoadFailed => 'Failed to load articles';
+  String get learnArticlesLoadFailed => 'Error al cargar los artículos';
 
   @override
-  String get learnArticlesEmpty => 'No articles available yet';
+  String get learnArticlesEmpty => 'No hay artículos disponibles aún';
 
   @override
   String get learnContentFallback =>
-      'Showing content in English (not available in your language)';
+      'Mostrando contenido en inglés (no disponible en tu idioma)';
 
   @override
-  String get checkoutTitle => 'Checkout';
+  String get checkoutTitle => 'Finalizar Compra';
 
   @override
-  String get checkoutOrderSummary => 'Order Summary';
+  String get checkoutOrderSummary => 'Resumen del Pedido';
 
   @override
-  String get checkoutProTitle => 'Pro Natal Chart';
+  String get checkoutProTitle => 'Carta Natal Pro';
 
   @override
-  String get checkoutProSubtitle => 'Full planetary interpretations';
+  String get checkoutProSubtitle => 'Interpretaciones planetarias completas';
 
   @override
   String get checkoutTotalLabel => 'Total';
@@ -1657,201 +1688,203 @@ class AppLocalizationsEs extends AppLocalizations {
   String get checkoutTotalAmount => '\$9.99 USD';
 
   @override
-  String get checkoutPaymentTitle => 'Payment Integration';
+  String get checkoutPaymentTitle => 'Integración de Pago';
 
   @override
   String get checkoutPaymentSubtitle =>
-      'In-App Purchase integration is being finalized. Please check back soon!';
+      'La integración de compra dentro de la aplicación se está finalizando. ¡Por favor, vuelve pronto!';
 
   @override
-  String get checkoutProcessing => 'Processing...';
+  String get checkoutProcessing => 'Procesando...';
 
   @override
-  String get checkoutDemoPurchase => 'Demo Purchase (Testing)';
+  String get checkoutDemoPurchase => 'Compra de demostración (pruebas)';
 
   @override
   String get checkoutSecurityNote =>
-      'Payment is processed securely through Apple/Google. Your card details are never stored.';
+      'El pago se procesa de forma segura a través de Apple/Google. Los detalles de tu tarjeta nunca se almacenan.';
 
   @override
-  String get checkoutSuccess => '🎉 Pro Natal Chart unlocked successfully!';
+  String get checkoutSuccess => '🎉 ¡Carta Natal Pro desbloqueada con éxito!';
 
   @override
   String get checkoutGenerateFailed =>
-      'Failed to generate interpretations. Please try again.';
+      'Error al generar interpretaciones. Por favor, inténtalo de nuevo.';
 
   @override
   String checkoutErrorWithMessage(Object error) {
-    return 'An error occurred: $error';
+    return 'Ocurrió un error: $error';
   }
 
   @override
-  String get billingUpgrade => 'Upgrade to Premium';
+  String get billingUpgrade => 'Actualizar a Premium';
 
   @override
   String billingFeatureLocked(Object feature) {
-    return '$feature is a Premium feature';
+    return '$feature es una función Premium';
   }
 
   @override
   String get billingUpgradeBody =>
-      'Upgrade to Premium to unlock this feature and get the most personalized guidance.';
+      'Actualiza a Premium para desbloquear esta función y obtener la orientación más personalizada.';
 
   @override
-  String get contextReviewFailed => 'Failed to update. Please try again.';
+  String get contextReviewFailed =>
+      'Error al actualizar. Por favor, inténtalo de nuevo.';
 
   @override
-  String get contextReviewTitle => 'Time for a Quick Check-in';
+  String get contextReviewTitle => 'Es hora de una rápida revisión';
 
   @override
   String get contextReviewBody =>
-      'It\'s been 3 months since we last updated your personal context. Has anything important changed in your life that we should know about?';
+      'Han pasado 3 meses desde la última vez que actualizamos tu contexto personal. ¿Ha cambiado algo importante en tu vida que debamos saber?';
 
   @override
   String get contextReviewHint =>
-      'This helps us give you more personalized guidance.';
+      'Esto nos ayuda a darte una orientación más personalizada.';
 
   @override
-  String get contextReviewNoChanges => 'No changes';
+  String get contextReviewNoChanges => 'Sin cambios';
 
   @override
-  String get contextReviewYesUpdate => 'Yes, update';
+  String get contextReviewYesUpdate => 'Sí, actualizar';
 
   @override
-  String get contextProfileLoadFailed => 'Failed to load profile';
+  String get contextProfileLoadFailed => 'Error al cargar el perfil';
 
   @override
-  String get contextCardTitle => 'Personal Context';
+  String get contextCardTitle => 'Contexto Personal';
 
   @override
   String get contextCardSubtitle =>
-      'Set up your personal context to receive more tailored guidance.';
+      'Configura tu contexto personal para recibir una orientación más adaptada.';
 
   @override
-  String get contextCardSetupNow => 'Set Up Now';
+  String get contextCardSetupNow => 'Configurar ahora';
 
   @override
   String contextCardVersionUpdated(Object version, Object date) {
-    return 'Version $version • Last updated $date';
+    return 'Versión $version • Última actualización $date';
   }
 
   @override
-  String get contextCardAiSummary => 'AI Summary';
+  String get contextCardAiSummary => 'Resumen de IA';
 
   @override
   String contextCardToneTag(Object tone) {
-    return '$tone tone';
+    return 'tono $tone';
   }
 
   @override
-  String get contextCardSensitivityTag => 'sensitivity on';
+  String get contextCardSensitivityTag => 'sensibilidad activada';
 
   @override
-  String get contextCardReviewDue => 'Review due - update your context';
+  String get contextCardReviewDue =>
+      'Revisión pendiente - actualiza tu contexto';
 
   @override
   String contextCardNextReview(Object days) {
-    return 'Next review in $days days';
+    return 'Próxima revisión en $days días';
   }
 
   @override
-  String get contextDeleteTitle => 'Delete Personal Context?';
+  String get contextDeleteTitle => '¿Eliminar el Contexto Personal?';
 
   @override
   String get contextDeleteBody =>
-      'This will delete your personal context profile. Your guidance will become less personalized.';
+      'Esto eliminará tu perfil de contexto personal. Tu orientación se volverá menos personalizada.';
 
   @override
-  String get contextDeleteFailed => 'Failed to delete profile';
+  String get contextDeleteFailed => 'Error al eliminar el perfil';
 
   @override
-  String get appTitle => 'Inner Wisdom';
+  String get appTitle => 'Sabiduría Interior';
 
   @override
   String get concernsHintExample =>
-      'Example: I have a job offer in another city and I\'m not sure if I should accept it...';
+      'Ejemplo: Tengo una oferta de trabajo en otra ciudad y no estoy seguro de si debo aceptarla...';
 
   @override
-  String get learnTitle => 'Learn Astrology';
+  String get learnTitle => 'Aprender Astrología';
 
   @override
-  String get learnFreeTitle => 'Free Learning Resources';
+  String get learnFreeTitle => 'Recursos de Aprendizaje Gratuitos';
 
   @override
-  String get learnFreeSubtitle => 'Explore the fundamentals of astrology';
+  String get learnFreeSubtitle => 'Explora los fundamentos de la astrología';
 
   @override
-  String get learnSignsTitle => 'Signs';
+  String get learnSignsTitle => 'Signos';
 
   @override
-  String get learnSignsSubtitle => '12 Zodiac signs and their meanings';
+  String get learnSignsSubtitle => '12 signos del zodiaco y sus significados';
 
   @override
-  String get learnPlanetsTitle => 'Planets';
+  String get learnPlanetsTitle => 'Planetas';
 
   @override
-  String get learnPlanetsSubtitle => 'Celestial bodies in astrology';
+  String get learnPlanetsSubtitle => 'Cuerpos celestes en astrología';
 
   @override
-  String get learnHousesTitle => 'Houses';
+  String get learnHousesTitle => 'Casas';
 
   @override
-  String get learnHousesSubtitle => '12 life areas in your chart';
+  String get learnHousesSubtitle => '12 áreas de vida en tu carta';
 
   @override
-  String get learnTransitsTitle => 'Transits';
+  String get learnTransitsTitle => 'Tránsitos';
 
   @override
-  String get learnTransitsSubtitle => 'Planetary movements & effects';
+  String get learnTransitsSubtitle => 'Movimientos planetarios y efectos';
 
   @override
-  String get learnPaceTitle => 'Learn at Your Pace';
+  String get learnPaceTitle => 'Aprende a tu Ritmo';
 
   @override
   String get learnPaceSubtitle =>
-      'Comprehensive lessons to deepen your astrological knowledge';
+      'Lecciones completas para profundizar tu conocimiento astrológico';
 
   @override
-  String get proNatalTitle => 'Pro Natal Chart';
+  String get proNatalTitle => 'Carta Natal Pro';
 
   @override
-  String get proNatalHeroTitle => 'Unlock Deep Insights';
+  String get proNatalHeroTitle => 'Desbloquea Perspectivas Profundas';
 
   @override
   String get proNatalHeroSubtitle =>
-      'Get comprehensive 150-200 word interpretations for each planetary placement in your birth chart.';
+      'Obtén interpretaciones completas de 150-200 palabras para cada colocación planetaria en tu carta natal.';
 
   @override
-  String get proNatalFeature1Title => 'Deep Personality Insights';
+  String get proNatalFeature1Title => 'Perspectivas Profundas de Personalidad';
 
   @override
   String get proNatalFeature1Body =>
-      'Understand how each planet shapes your unique personality and life path.';
+      'Entiende cómo cada planeta moldea tu personalidad única y tu camino de vida.';
 
   @override
-  String get proNatalFeature2Title => 'AI-Powered Analysis';
+  String get proNatalFeature2Title => 'Análisis Potenciado por IA';
 
   @override
   String get proNatalFeature2Body =>
-      'Advanced interpretations tailored to your exact planetary positions.';
+      'Interpretaciones avanzadas adaptadas a tus posiciones planetarias exactas.';
 
   @override
-  String get proNatalFeature3Title => 'Actionable Guidance';
+  String get proNatalFeature3Title => 'Orientación Accionable';
 
   @override
   String get proNatalFeature3Body =>
-      'Practical advice for career, relationships, and personal growth.';
+      'Consejos prácticos para carrera, relaciones y crecimiento personal.';
 
   @override
-  String get proNatalFeature4Title => 'Lifetime Access';
+  String get proNatalFeature4Title => 'Acceso de por Vida';
 
   @override
   String get proNatalFeature4Body =>
-      'Your interpretations are saved forever. Access anytime.';
+      'Tus interpretaciones se guardan para siempre. Accede en cualquier momento.';
 
   @override
-  String get proNatalOneTime => 'One-time purchase';
+  String get proNatalOneTime => 'Compra única';
 
   @override
-  String get proNatalNoSubscription => 'No subscription required';
+  String get proNatalNoSubscription => 'No se requiere suscripción';
 }

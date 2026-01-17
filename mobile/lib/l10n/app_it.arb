@@ -1,1 +1,742 @@
-{}
+{
+  "onboardingSkip": "Pule",
+  "onboardingTitle1": "Welkom bij Inner Wisdom Astro",
+  "onboardingDesc1": "Innerwisdom Astro brengt meer dan 30 jaar astrologische expertise van Madi G. samen met de kracht van geavanceerde AI, waardoor een van de meest verfijnde en hoogpresterende astrologie-applicaties van vandaag ontstaat.\n\nDoor diepe menselijke inzichten te combineren met intelligente technologie, levert Innerwisdom Astro interpretaties die nauwkeurig, gepersonaliseerd en betekenisvol zijn, en ondersteunt het gebruikers op hun reis van zelfontdekking, helderheid en bewuste groei.",
+  "onboardingTitle2": "Jouw Complete Astrologische Reis",
+  "onboardingDesc2": "Van gepersonaliseerde dagelijkse begeleiding tot jouw Natal Birth Chart, Karmische Astrologie, diepgaande persoonlijkheidsrapporten, Liefde- en Vriendschapscompatibiliteit, Romantische Voorspellingen voor Stellen, en nog veel meer — alles is nu binnen handbereik.\n\nOntworpen om helderheid, verbinding en zelfbegrip te ondersteunen, biedt Innerwisdom Astro een complete astrologische ervaring, op maat gemaakt voor jou.",
+  "onboardingNext": "Volgende",
+  "onboardingGetStarted": "Aan de Slag",
+  "onboardingAlreadyHaveAccount": "Heb je al een account? Inloggen",
+  "birthDataTitle": "Jouw Geboortehoroscoop",
+  "birthDataSubtitle": "We hebben jouw geboortedetails nodig om\neen gepersonaliseerd astrologisch profiel te maken",
+  "birthDateLabel": "Geboortedatum",
+  "birthDateSelectHint": "Selecteer je geboortedatum",
+  "birthTimeLabel": "Geboortetijd",
+  "birthTimeUnknown": "Onbekend",
+  "birthTimeSelectHint": "Selecteer je geboortetijd",
+  "birthTimeUnknownCheckbox": "Ik weet mijn exacte geboortetijd niet",
+  "birthPlaceLabel": "Geboorteplaats",
+  "birthPlaceHint": "Begin met het typen van een stadsnaam...",
+  "birthPlaceValidation": "Selecteer een locatie uit de suggesties",
+  "birthPlaceSelected": "Geselecteerd: {location}",
+  "@birthPlaceSelected": {
+    "placeholders": {
+      "location": {}
+    }
+  },
+  "genderLabel": "Geslacht",
+  "genderMale": "Man",
+  "genderFemale": "Vrouw",
+  "genderPreferNotToSay": "Lieber niet zeggen",
+  "birthDataSubmit": "Genereer Mijn Geboortehoroscoop",
+  "birthDataPrivacyNote": "Jouw geboortedata wordt alleen gebruikt om jouw\nastrologische horoscoop te berekenen en wordt veilig opgeslagen.",
+  "birthDateMissing": "Selecteer je geboortedatum",
+  "birthPlaceMissing": "Selecteer een geboorteplaats uit de suggesties",
+  "birthDataSaveError": "Kon geboortedata niet opslaan. Probeer het opnieuw.",
+  "appearanceTitle": "Uiterlijk",
+  "appearanceTheme": "Thema",
+  "appearanceDarkTitle": "Donker",
+  "appearanceDarkSubtitle": "Vriendelijk voor de ogen bij weinig licht",
+  "appearanceLightTitle": "Licht",
+  "appearanceLightSubtitle": "Klassiek helder uiterlijk",
+  "appearanceSystemTitle": "Systeem",
+  "appearanceSystemSubtitle": "Stem af op je apparaatsinstellingen",
+  "appearancePreviewTitle": "Voorbeeld",
+  "appearancePreviewBody": "Het kosmische thema is ontworpen om een meeslepende astrologie-ervaring te creëren. Het donkere thema wordt aanbevolen voor de beste visuele ervaring.",
+  "appearanceThemeChanged": "Thema gewijzigd naar {theme}",
+  "@appearanceThemeChanged": {
+    "placeholders": {
+      "theme": {}
+    }
+  },
+  "profileUserFallback": "Gebruiker",
+  "profilePersonalContext": "Persoonlijke Context",
+  "profileSettings": "Instellingen",
+  "profileAppLanguage": "App Taal",
+  "profileContentLanguage": "Inhoud Taal",
+  "profileContentLanguageHint": "AI-inhoud gebruikt de geselecteerde taal.",
+  "profileNotifications": "Meldingen",
+  "profileNotificationsEnabled": "Ingeschakeld",
+  "profileNotificationsDisabled": "Uitgeschakeld",
+  "profileAppearance": "Uiterlijk",
+  "profileHelpSupport": "Hulp & Ondersteuning",
+  "profilePrivacyPolicy": "Privacybeleid",
+  "profileTermsOfService": "Servicevoorwaarden",
+  "profileLogout": "Uitloggen",
+  "profileLogoutConfirm": "Weet je zeker dat je wilt uitloggen?",
+  "profileDeleteAccount": "Account Verwijderen",
+  "commonCancel": "Annuleren",
+  "profileSelectLanguageTitle": "Selecteer Taal",
+  "profileSelectLanguageSubtitle": "Alle AI-gegenereerde inhoud zal in jouw geselecteerde taal zijn.",
+  "profileLanguageUpdated": "Taal bijgewerkt naar {language}",
+  "@profileLanguageUpdated": {
+    "placeholders": {
+      "language": {}
+    }
+  },
+  "profileLanguageUpdateFailed": "Kon taal niet bijwerken: {error}",
+  "@profileLanguageUpdateFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "profileVersion": "Inner Wisdom v{version}",
+  "@profileVersion": {
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "profileCosmicBlueprint": "Jouw Kosmische Blauwdruk",
+  "profileSunLabel": "☀️ Zon",
+  "profileMoonLabel": "🌙 Maan",
+  "profileRisingLabel": "⬆️ Stijgend",
+  "profileUnknown": "Onbekend",
+  "forgotPasswordTitle": "Wachtwoord Vergeten?",
+  "forgotPasswordSubtitle": "Voer je e-mail in en we sturen je een code om je wachtwoord opnieuw in te stellen",
+  "forgotPasswordSent": "Als er een account bestaat, is er een resetcode naar je e-mail gestuurd.",
+  "forgotPasswordFailed": "Kon resetcode niet verzenden. Probeer het opnieuw.",
+  "forgotPasswordSendCode": "Stuur Resetcode",
+  "forgotPasswordHaveCode": "Heb je al een code?",
+  "forgotPasswordRemember": "Vergeet je wachtwoord? ",
+  "loginWelcomeBack": "Welkom Terug",
+  "loginSubtitle": "Log in om je kosmische reis voort te zetten",
+  "loginInvalidCredentials": "Ongeldige e-mail of wachtwoord",
+  "loginGoogleFailed": "Google-inloggen mislukt. Probeer het opnieuw.",
+  "loginAppleFailed": "Apple-inloggen mislukt. Probeer het opnieuw.",
+  "loginNetworkError": "Netwerkfout. Controleer je verbinding.",
+  "loginSignInCancelled": "Inloggen is geannuleerd.",
+  "loginPasswordHint": "Voer je wachtwoord in",
+  "loginForgotPassword": "Wachtwoord Vergeten?",
+  "loginSignIn": "Inloggen",
+  "loginNoAccount": "Heb je geen account? ",
+  "loginSignUp": "Aanmelden",
+  "commonEmailLabel": "E-mail",
+  "commonEmailHint": "Voer je e-mail in",
+  "commonEmailRequired": "Voer je e-mail in",
+  "commonEmailInvalid": "Voer een geldige e-mail in",
+  "commonPasswordLabel": "Wachtwoord",
+  "commonPasswordRequired": "Voer je wachtwoord in",
+  "commonOrContinueWith": "of ga verder met",
+  "commonGoogle": "Google",
+  "commonApple": "Apple",
+  "commonNameLabel": "Naam",
+  "commonNameHint": "Voer je naam in",
+  "commonNameRequired": "Voer je naam in",
+  "signupTitle": "Account Aanmaken",
+  "signupSubtitle": "Begin je kosmische reis met Inner Wisdom",
+  "signupEmailExists": "E-mail já existe ou dados inválidos",
+  "signupGoogleFailed": "Falha ao fazer login com o Google. Por favor, tente novamente.",
+  "signupAppleFailed": "Falha ao fazer login com a Apple. Por favor, tente novamente.",
+  "signupPasswordHint": "Crie uma senha (mín. 8 caracteres)",
+  "signupPasswordMin": "A senha deve ter pelo menos 8 caracteres",
+  "signupConfirmPasswordLabel": "Confirmar Senha",
+  "signupConfirmPasswordHint": "Confirme sua senha",
+  "signupConfirmPasswordRequired": "Por favor, confirme sua senha",
+  "signupPasswordMismatch": "As senhas não coincidem",
+  "signupPreferredLanguage": "Idioma Preferido",
+  "signupCreateAccount": "Criar Conta",
+  "signupHaveAccount": "Já tem uma conta? ",
+  "resetPasswordTitle": "Redefinir Senha",
+  "resetPasswordSubtitle": "Digite o código enviado para seu e-mail e defina uma nova senha",
+  "resetPasswordSuccess": "Redefinição de senha bem-sucedida! Redirecionando para o login...",
+  "resetPasswordFailed": "Falha ao redefinir a senha. Por favor, tente novamente.",
+  "resetPasswordInvalidCode": "Código de redefinição inválido ou expirado. Por favor, solicite um novo.",
+  "resetPasswordMaxAttempts": "Número máximo de tentativas excedido. Por favor, solicite um novo código.",
+  "resetCodeLabel": "Código de Redefinição",
+  "resetCodeHint": "Digite o código de 6 dígitos",
+  "resetCodeRequired": "Por favor, insira o código de redefinição",
+  "resetCodeLength": "O código deve ter 6 dígitos",
+  "resetNewPasswordLabel": "Nova Senha",
+  "resetNewPasswordHint": "Crie uma nova senha (mín. 8 caracteres)",
+  "resetNewPasswordRequired": "Por favor, insira uma nova senha",
+  "resetConfirmPasswordHint": "Confirme sua nova senha",
+  "resetPasswordButton": "Redefinir Senha",
+  "resetRequestNewCode": "Solicitar um novo código",
+  "serviceResultGenerated": "Relatório Gerado",
+  "serviceResultReady": "Seu {title} personalizado está pronto",
+  "@serviceResultReady": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "serviceResultBackToForYou": "Voltar para Você",
+  "serviceResultNotSavedNotice": "Este Relatório não será salvo. Se desejar, você pode copiá-lo e salvá-lo em outro lugar usando a função Copiar.",
+  "commonCopy": "Copiar",
+  "commonCopied": "Copiado para a área de transferência",
+  "commonContinue": "Continuar",
+  "partnerDetailsTitle": "Detalhes do Parceiro",
+  "partnerBirthDataTitle": "Insira os dados de nascimento do parceiro",
+  "partnerBirthDataFor": "Para \"{title}\"",
+  "@partnerBirthDataFor": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "partnerNameOptionalLabel": "Nome (opcional)",
+  "partnerNameHint": "Nome do parceiro",
+  "partnerGenderOptionalLabel": "Gênero (opcional)",
+  "partnerBirthDateLabel": "Data de Nascimento *",
+  "partnerBirthDateSelect": "Selecionar data de nascimento",
+  "partnerBirthDateMissing": "Por favor, selecione a data de nascimento",
+  "partnerBirthTimeOptionalLabel": "Hora de Nascimento (opcional)",
+  "partnerBirthTimeSelect": "Selecionar hora de nascimento",
+  "partnerBirthPlaceLabel": "Local de Nascimento *",
+  "serviceOfferRequiresPartner": "Requer dados de nascimento do parceiro",
+  "serviceOfferBetaFree": "Testadores beta têm acesso gratuito!",
+  "serviceOfferUnlocked": "Desbloqueado",
+  "serviceOfferGenerate": "Gerar Relatório",
+  "serviceOfferUnlockFor": "Desbloquear por {price}",
+  "@serviceOfferUnlockFor": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "serviceOfferPreparing": "Preparando seu relatório personalizado…",
+  "serviceOfferTimeout": "Demorando mais do que o esperado. Por favor, tente novamente.",
+  "serviceOfferNotReady": "Relatório ainda não está pronto. Por favor, tente novamente.",
+  "serviceOfferFetchFailed": "Falha ao buscar relatório: {error}",
+  "@serviceOfferFetchFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "commonFree": "GRATIS",
+  "commonLater": "Depois",
+  "commonRetry": "Tentar Novamente",
+  "commonYes": "Sim",
+  "commonNo": "Não",
+  "commonBack": "Voltar",
+  "commonOptional": "Opcional",
+  "commonNotSpecified": "Não especificado",
+  "commonJustNow": "Agora mesmo",
+  "commonViewMore": "Ver mais",
+  "commonViewLess": "Ver menos",
+  "commonMinutesAgo": "Há {count} min",
+  "@commonMinutesAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonHoursAgo": "Há {count}h",
+  "@commonHoursAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonDaysAgo": "Há {count}d",
+  "@commonDaysAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonDateShort": "{day}/{month}/{year}",
+  "@commonDateShort": {
+    "placeholders": {
+      "day": {},
+      "month": {},
+      "year": {}
+    }
+  },
+  "askGuideTitle": "Pergunte ao Seu Guia",
+  "askGuideSubtitle": "Orientação cósmica pessoal",
+  "askGuideRemaining": "{count} restantes",
+  "@askGuideRemaining": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "askGuideQuestionHint": "Pergunte qualquer coisa - amor, carreira, decisões, emoções...",
+  "askGuideBasedOnChart": "Baseado no seu mapa natal e nas energias cósmicas de hoje",
+  "askGuideThinking": "Seu Guia está pensando...",
+  "askGuideYourGuide": "Seu Guia",
+  "askGuideEmptyTitle": "Faça Sua Primeira Pergunta",
+  "askGuideEmptyBody": "Obtenha orientação instantânea e profundamente pessoal com base no seu mapa natal e nas energias cósmicas de hoje.",
+  "askGuideEmptyHint": "Pergunte qualquer coisa — amor, carreira, decisões, emoções.",
+  "askGuideLoadFailed": "Falha ao carregar dados",
+  "askGuideSendFailed": "Falha ao enviar pergunta: {error}",
+  "@askGuideSendFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "askGuideLimitTitle": "Limite Mensal Atingido",
+  "askGuideLimitBody": "Você atingiu seu limite mensal de solicitações.",
+  "askGuideLimitAddon": "Você pode comprar um complemento de $1,99 para continuar usando este serviço pelo resto do mês de faturamento atual.",
+  "askGuideLimitBillingEnd": "Seu mês de faturamento termina em: {date}",
+  "@askGuideLimitBillingEnd": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "askGuideLimitGetaddon": "Obter Complemento",
+  "contextTitle": "Contexto Pessoal",
+  "contextStepOf": "Passo {current} de {total}",
+  "@contextStepOf": {
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "contextStep1Title": "Pessoas ao seu redor",
+  "contextStep1Subtitle": "Seu contexto de relacionamento e familiar nos ajuda a entender sua paisagem emocional.",
+  "contextStep2Title": "Vida Profissional",
+  "contextStep2Subtitle": "Seu trabalho e ritmo diário moldam como você experimenta pressão, crescimento e propósito.",
+  "contextStep3Title": "Como a vida se sente agora",
+  "contextStep3Subtitle": "Não há respostas certas ou erradas, apenas sua realidade atual",
+  "contextStep4Title": "O que mais importa para você",
+  "contextStep4Subtitle": "Para que sua orientação esteja alinhada com o que você realmente se importa",
+  "contextPriorityRequired": "Por favor, selecione pelo menos uma área de prioridade.",
+  "contextSaveFailed": "Falha ao salvar perfil: {error}",
+  "@contextSaveFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "contextSaveContinue": "Opslaan & Doorgaan",
+  "contextRelationshipStatusTitle": "Huidige relatie status",
+  "contextSeekingRelationshipTitle": "Zoek je een relatie?",
+  "contextHasChildrenTitle": "Heb je kinderen?",
+  "contextChildrenDetailsOptional": "Kinderen details (optioneel)",
+  "contextAddChild": "Voeg kind toe",
+  "contextChildAgeLabel": "Leeftijd",
+  "contextChildAgeYears": "{age} {age, plural, =1{jaar} other{jaren}}",
+  "@contextChildAgeYears": {
+    "placeholders": {
+      "age": {}
+    }
+  },
+  "contextChildGenderLabel": "Geslacht",
+  "contextRelationshipSingle": "Single",
+  "contextRelationshipInRelationship": "In een relatie",
+  "contextRelationshipMarried": "Getrouwd / Geregistreerd partnerschap",
+  "contextRelationshipSeparated": "Gescheiden / Divorced",
+  "contextRelationshipWidowed": "Weduwe / Weduwnaar",
+  "contextRelationshipPreferNotToSay": "Liever niet zeggen",
+  "contextProfessionalStatusTitle": "Huidige professionele status",
+  "contextProfessionalStatusOtherHint": "Geef alstublieft je werkstatus op",
+  "contextIndustryTitle": "Hoofd industrie/domein",
+  "contextWorkStatusStudent": "Student",
+  "contextWorkStatusUnemployed": "Werkloos / Tussen banen",
+  "contextWorkStatusEmployedIc": "In dienst (Individuele bijdrager)",
+  "contextWorkStatusEmployedManagement": "In dienst (Management)",
+  "contextWorkStatusExecutive": "Executive / Leiderschap (C-niveau)",
+  "contextWorkStatusSelfEmployed": "Zelfstandig / Freelancer",
+  "contextWorkStatusEntrepreneur": "Ondernemer / Bedrijfseigenaar",
+  "contextWorkStatusInvestor": "Investeerder",
+  "contextWorkStatusRetired": "Met pensioen",
+  "contextWorkStatusHomemaker": "Huisvrouw / Thuisblijvende ouder",
+  "contextWorkStatusCareerBreak": "Carrièrepauze / Sabbatical",
+  "contextWorkStatusOther": "Anders",
+  "contextIndustryTech": "Technologie / IT",
+  "contextIndustryFinance": "Financiën / Investeringen",
+  "contextIndustryHealthcare": "Gezondheidszorg",
+  "contextIndustryEducation": "Onderwijs",
+  "contextIndustrySalesMarketing": "Verkoop / Marketing",
+  "contextIndustryRealEstate": "Vastgoed",
+  "contextIndustryHospitality": "Gastvrijheid",
+  "contextIndustryGovernment": "Overheid / Publieke sector",
+  "contextIndustryCreative": "Creatieve industrieën",
+  "contextIndustryOther": "Anders",
+  "contextSelfAssessmentIntro": "Beoordeel je huidige situatie in elk gebied (1 = worstelen, 5 = bloeien)",
+  "contextSelfHealthTitle": "Gezondheid & Energie",
+  "contextSelfHealthSubtitle": "1 = ernstige problemen/lage energie, 5 = uitstekende vitaliteit",
+  "contextSelfSocialTitle": "Sociaal Leven",
+  "contextSelfSocialSubtitle": "1 = geïsoleerd, 5 = bloeiende sociale connecties",
+  "contextSelfRomanceTitle": "Romantisch Leven",
+  "contextSelfRomanceSubtitle": "1 = afwezig/uitdagend, 5 = vervuld",
+  "contextSelfFinanceTitle": "Financiële Stabiliteit",
+  "contextSelfFinanceSubtitle": "1 = grote moeilijkheden, 5 = uitstekend",
+  "contextSelfCareerTitle": "Carrière Tevredenheid",
+  "contextSelfCareerSubtitle": "1 = vast/gestrest, 5 = vooruitgang/helderheid",
+  "contextSelfGrowthTitle": "Persoonlijke Groei Interesse",
+  "contextSelfGrowthSubtitle": "1 = lage interesse, 5 = zeer hoog",
+  "contextSelfStruggling": "Worstelen",
+  "contextSelfThriving": "Bloeien",
+  "contextPrioritiesTitle": "Wat zijn je belangrijkste prioriteiten op dit moment?",
+  "contextPrioritiesSubtitle": "Selecteer tot 2 gebieden waarop je je wilt concentreren",
+  "contextGuidanceStyleTitle": "Voorkeurs begeleidingsstijl",
+  "contextSensitivityTitle": "Gevoeligheidsmodus",
+  "contextSensitivitySubtitle": "Vermijd angstaanjagende of deterministische formuleringen in begeleiding",
+  "contextPriorityHealth": "Gezondheid & gewoonten",
+  "contextPriorityCareer": "Carrièregroei",
+  "contextPriorityBusiness": "Zakelijke beslissingen",
+  "contextPriorityMoney": "Geld & stabiliteit",
+  "contextPriorityLove": "Liefde & relatie",
+  "contextPriorityFamily": "Familie & ouderschap",
+  "contextPrioritySocial": "Sociaal leven",
+  "contextPriorityGrowth": "Persoonlijke groei / mindset",
+  "contextGuidanceStyleDirect": "Direct & praktisch",
+  "contextGuidanceStyleDirectDesc": "Ga recht naar uitvoerbare adviezen",
+  "contextGuidanceStyleEmpathetic": "Empathisch & reflectief",
+  "contextGuidanceStyleEmpatheticDesc": "Warme, ondersteunende begeleiding",
+  "contextGuidanceStyleBalanced": "Gebalanceerd",
+  "contextGuidanceStyleBalancedDesc": "Mix van praktische en emotionele ondersteuning",
+  "homeGuidancePreparing": "De sterren lezen en het Universum over jou vragen…",
+  "homeGuidanceFailed": "Het is niet gelukt om begeleiding te genereren. Probeer het opnieuw.",
+  "homeGuidanceTimeout": "Het duurt langer dan verwacht. Tik op Opnieuw of kijk over een moment terug.",
+  "homeGuidanceLoadFailed": "Het is niet gelukt om begeleiding te laden",
+  "homeTodaysGuidance": "Vandaag's Begeleiding",
+  "homeSeeAll": "Bekijk alles",
+  "homeHealth": "Gezondheid",
+  "homeCareer": "Carrière",
+  "homeMoney": "Geld",
+  "homeLove": "Liefde",
+  "homePartners": "Partners",
+  "homeGrowth": "Groei",
+  "homeTraveler": "Reiziger",
+  "homeGreeting": "Hallo, {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "homeFocusFallback": "Persoonlijke Groei",
+  "homeDailyMessage": "Je Dagelijkse Bericht",
+  "homeNatalChartTitle": "Mijn Geboortehoroscoop",
+  "homeNatalChartSubtitle": "Verken je geboortehoroscoop & interpretaties",
+  "navHome": "Home",
+  "navHistory": "Geschiedenis",
+  "navGuide": "Gids",
+  "navProfile": "Profiel",
+  "navForYou": "Voor Jou",
+  "commonToday": "Vandaag",
+  "commonTryAgain": "Probeer Opnieuw",
+  "natalChartTitle": "Mijn Geboortehoroscoop",
+  "natalChartTabTable": "Tabelle",
+  "natalChartTabChart": "Diagramm",
+  "natalChartEmptyTitle": "Keine Natal Chart-Daten",
+  "natalChartEmptySubtitle": "Bitte vervollständigen Sie Ihre Geburtsdaten, um Ihr Natal Chart zu sehen.",
+  "natalChartAddBirthData": "Geburtsdaten hinzufügen",
+  "natalChartErrorTitle": "Diagramm konnte nicht geladen werden",
+  "guidanceTitle": "Tägliche Anleitung",
+  "guidanceLoadFailed": "Anleitung konnte nicht geladen werden",
+  "guidanceNoneAvailable": "Keine Anleitung verfügbar",
+  "guidanceCosmicEnergyTitle": "Heutige kosmische Energie",
+  "guidanceMoodLabel": "Stimmung",
+  "guidanceFocusLabel": "Fokus",
+  "guidanceYourGuidance": "Ihre Anleitung",
+  "guidanceTapToCollapse": "Tippen, um zu minimieren",
+  "historyTitle": "Anleitungsverlauf",
+  "historySubtitle": "Ihre kosmische Reise durch die Zeit",
+  "historyLoadFailed": "Verlauf konnte nicht geladen werden",
+  "historyEmptyTitle": "Noch keine Historie",
+  "historyEmptySubtitle": "Ihre täglichen Anleitungen werden hier angezeigt",
+  "historyNewBadge": "NEU",
+  "commonUnlocked": "Freigeschaltet",
+  "commonComingSoon": "Demnächst",
+  "commonSomethingWentWrong": "Etwas ist schiefgelaufen",
+  "commonNoContent": "Keine Inhalte verfügbar.",
+  "commonUnknownError": "Unbekannter Fehler",
+  "commonTakingLonger": "Dauert länger als erwartet. Bitte versuchen Sie es erneut.",
+  "commonErrorWithMessage": "Fehler: {error}",
+  "@commonErrorWithMessage": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "forYouTitle": "Für Sie",
+  "forYouSubtitle": "Personalisierte kosmische Einblicke",
+  "forYouNatalChartTitle": "Mein Natal Chart",
+  "forYouNatalChartSubtitle": "Ihre Geburtschart-Analyse",
+  "forYouCompatibilitiesTitle": "Kompatibilitäten",
+  "forYouCompatibilitiesSubtitle": "Berichte über Liebe, Freundschaft und Partnerschaft",
+  "forYouKarmicTitle": "Karmische Astrologie",
+  "forYouKarmicSubtitle": "Seelenlektionen und Muster aus vergangenen Leben",
+  "forYouLearnTitle": "Astrologie lernen",
+  "forYouLearnSubtitle": "Kostenlose Bildungsinhalte",
+  "compatibilitiesTitle": "Kompatibilitäten",
+  "compatibilitiesLoadFailed": "Konnte Dienste nicht laden",
+  "compatibilitiesBetaFree": "Beta: Alle Berichte sind KOSTENLOS!",
+  "compatibilitiesChooseReport": "Wählen Sie einen Bericht",
+  "compatibilitiesSubtitle": "Entdecken Sie Einblicke über sich selbst und Ihre Beziehungen",
+  "compatibilitiesPartnerBadge": "+Partner",
+  "compatibilitiesPersonalityTitle": "Persönlichkeitsbericht",
+  "compatibilitiesPersonalitySubtitle": "Umfassende Analyse Ihrer Persönlichkeit basierend auf Ihrem Natal Chart",
+  "compatibilitiesRomanticPersonalityTitle": "Romantischer Persönlichkeitsbericht",
+  "compatibilitiesRomanticPersonalitySubtitle": "Verstehen, wie Sie Liebe und Romantik angehen",
+  "compatibilitiesLoveCompatibilityTitle": "Liebeskompatibilität",
+  "compatibilitiesLoveCompatibilitySubtitle": "Detaillierte romantische Kompatibilitätsanalyse mit Ihrem Partner",
+  "compatibilitiesRomanticForecastTitle": "Romantische Paarprognose",
+  "compatibilitiesRomanticForecastSubtitle": "Einblicke in die Zukunft Ihrer Beziehung",
+  "compatibilitiesFriendshipTitle": "Freundschaftsbericht",
+  "compatibilitiesFriendshipSubtitle": "Analysieren Sie Freundschaftsdynamiken und Kompatibilität",
+  "moonPhaseTitle": "Mondphasenbericht",
+  "moonPhaseSubtitle": "Verstehen Sie die aktuelle Mondenergie und wie sie Sie beeinflusst. Erhalten Sie Anleitung, die mit der Mondphase übereinstimmt.",
+  "moonPhaseSelectDate": "Datum auswählen",
+  "moonPhaseOriginalPrice": "$2.99",
+  "moonPhaseGenerate": "Bericht generieren",
+  "moonPhaseGenerateDifferentDate": "Für anderes Datum generieren",
+  "moonPhaseGenerationFailed": "Generierung fehlgeschlagen",
+  "moonPhaseGenerating": "Bericht wird generiert. Bitte versuchen Sie es erneut.",
+  "moonPhaseUnknownError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+  "requiredFieldsNote": "Mit * gekennzeichnete Felder sind erforderlich.",
+  "karmicTitle": "Karmische Astrologie",
+  "karmicLoadFailed": "Laden fehlgeschlagen: {error}",
+  "@karmicLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicOfferTitle": "🔮 Karmische Astrologie – Botschaften der Seele",
+  "karmicOfferBody": "Karmische Astrologie offenbart die tiefen Muster, die Ihr Leben prägen, über alltägliche Ereignisse hinaus.\n\nSie bietet eine Interpretation, die von ungelösten Lektionen, karmischen Verbindungen und dem Wachstumsweg der Seele spricht.\n\nEs geht nicht darum, was als Nächstes kommt,\nsondern darum, warum Sie erleben, was Sie erleben.\n\n✨ Aktivieren Sie die karmische Astrologie und entdecken Sie die tiefere Bedeutung Ihrer Reise.",
+  "karmicBetaFreeBadge": "Beta-Tester – KOSTENLOSER Zugang!",
+  "karmicPriceBeta": "${price} – Beta-Tester kostenlos",
+  "@karmicPriceBeta": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "karmicPriceUnlock": "Freischalten für ${price}",
+  "@karmicPriceUnlock": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "karmicHintInstant": "Ihre Lesung wird sofort generiert",
+  "karmicHintOneTime": "Einmaliger Kauf, kein Abonnement",
+  "karmicProgressHint": "Verbinden mit Ihrem karmischen Weg…",
+  "karmicGenerateFailed": "Generierung fehlgeschlagen: {error}",
+  "@karmicGenerateFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicCheckoutTitle": "Karmische Astrologie Checkout",
+  "karmicCheckoutSubtitle": "Kaufprozess kommt bald",
+  "karmicGenerationFailed": "Generierung fehlgeschlagen: {error}",
+  "@karmicGenerationFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicLoading": "Lade Ihre karmische Lesung...",
+  "karmicGenerationFailedShort": "Generierung fehlgeschlagen",
+  "karmicGeneratingTitle": "Generiere Ihre karmische Lesung...",
+  "karmicGeneratingSubtitle": "Analysiere Ihr Natal Chart nach karmischen Mustern und Seelenlektionen.",
+  "karmicReadingTitle": "🔮 Ihre karmische Lesung",
+  "karmicReadingSubtitle": "Botschaften der Seele",
+  "karmicDisclaimer": "Diese Lesung dient der Selbstreflexion und Unterhaltung. Sie stellt keinen professionellen Rat dar.",
+  "commonActive": "Aktiv",
+  "commonBackToHome": "Zurück zur Startseite",
+  "commonYesterday": "gestern",
+  "commonWeeksAgo": "{count} Wochen her",
+  "@commonWeeksAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonMonthsAgo": "{count} Monate her",
+  "@commonMonthsAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonEdit": "Bearbeiten",
+  "commonDelete": "Löschen",
+  "natalChartProGenerated": "Pro-Interpretationen generiert! Nach oben scrollen, um sie zu sehen.",
+  "natalChartHouse1": "Selbst & Identität",
+  "natalChartHouse2": "Geld & Werte",
+  "natalChartHouse3": "Kommunikation",
+  "natalChartHouse4": "Zuhause & Familie",
+  "natalChartHouse5": "Kreativität & Romantik",
+  "natalChartHouse6": "Gesundheit & Routine",
+  "natalChartHouse7": "Beziehungen",
+  "natalChartHouse8": "Transformation",
+  "natalChartHouse9": "Filosofia e Viagem",
+  "natalChartHouse10": "Carreira e Status",
+  "natalChartHouse11": "Amigos e Objetivos",
+  "natalChartHouse12": "Espiritualidade",
+  "helpSupportTitle": "Ajuda e Suporte",
+  "helpSupportContactTitle": "Contato com o Suporte",
+  "helpSupportContactSubtitle": "Normalmente respondemos em até 24 horas",
+  "helpSupportFaqTitle": "Perguntas Frequentes",
+  "helpSupportEmailSubject": "Solicitação de Suporte Inner Wisdom",
+  "helpSupportEmailAppFailed": "Não foi possível abrir o aplicativo de e-mail. Por favor, envie um e-mail para support@innerwisdomapp.com",
+  "helpSupportEmailFallback": "Por favor, envie-nos um e-mail para support@innerwisdomapp.com",
+  "helpSupportFaq1Q": "Quão precisa é a orientação diária?",
+  "helpSupportFaq1A": "Nossa orientação diária combina princípios astrológicos tradicionais com seu mapa natal. Embora a astrologia seja interpretativa, nossa IA fornece insights personalizados com base nas posições e aspectos planetários reais.",
+  "helpSupportFaq2Q": "Por que preciso do meu horário de nascimento?",
+  "helpSupportFaq2A": "Seu horário de nascimento determina seu Ascendente (signo ascendente) e as posições das casas em seu mapa. Sem ele, usamos o meio-dia como padrão, o que pode afetar a precisão das interpretações relacionadas às casas.",
+  "helpSupportFaq3Q": "Como faço para alterar meus dados de nascimento?",
+  "helpSupportFaq3A": "Atualmente, os dados de nascimento não podem ser alterados após a configuração inicial para garantir consistência em suas leituras. Entre em contato com o suporte se precisar fazer correções.",
+  "helpSupportFaq4Q": "O que é um tópico de Foco?",
+  "helpSupportFaq4A": "Um tópico de Foco é uma preocupação atual ou área da vida que você deseja enfatizar. Quando definido, sua orientação diária prestará atenção especial a essa área, fornecendo insights mais relevantes.",
+  "helpSupportFaq5Q": "Como funciona a assinatura?",
+  "helpSupportFaq5A": "O nível gratuito inclui orientação diária básica. Assinantes premium recebem personalização aprimorada, leituras em áudio e acesso a recursos especiais, como leituras de Astrologia Kármica.",
+  "helpSupportFaq6Q": "Meus dados são privados?",
+  "helpSupportFaq6A": "Sim! Levamos a privacidade a sério. Seus dados de nascimento e informações pessoais são criptografados e nunca compartilhados com terceiros. Você pode excluir sua conta a qualquer momento.",
+  "helpSupportFaq7Q": "E se eu discordar de uma leitura?",
+  "helpSupportFaq7A": "A astrologia é interpretativa, e nem toda leitura ressoará. Use o recurso de feedback para nos ajudar a melhorar. Nossa IA aprende com suas preferências ao longo do tempo.",
+  "notificationsSaved": "Configurações de notificação salvas",
+  "notificationsTitle": "Notificações",
+  "notificationsSectionTitle": "Notificações Push",
+  "notificationsDailyTitle": "Orientação Diária",
+  "notificationsDailySubtitle": "Receba notificações quando sua orientação diária estiver pronta",
+  "notificationsWeeklyTitle": "Destaques Semanais",
+  "notificationsWeeklySubtitle": "Visão cósmica semanal e principais trânsitos",
+  "notificationsSpecialTitle": "Eventos Especiais",
+  "notificationsSpecialSubtitle": "Luas cheias, eclipses e retrógrados",
+  "notificationsDeviceHint": "Você também pode controlar as notificações nas configurações do seu dispositivo.",
+  "concernsTitle": "Seu Foco",
+  "concernsSubtitle": "Tópicos que moldam sua orientação",
+  "concernsTabActive": "Ativo ({count})",
+  "@concernsTabActive": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsTabResolved": "Resolvido ({count})",
+  "@concernsTabResolved": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsTabArchived": "Arquivado ({count})",
+  "@concernsTabArchived": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsEmptyTitle": "Nenhuma preocupação aqui",
+  "concernsEmptySubtitle": "Adicione um tópico de foco para obter orientação personalizada",
+  "concernsCategoryCareer": "Carreira e Trabalho",
+  "concernsCategoryHealth": "Saúde",
+  "concernsCategoryRelationship": "Relacionamento",
+  "concernsCategoryFamily": "Família",
+  "concernsCategoryMoney": "Dinheiro",
+  "concernsCategoryBusiness": "Negócios",
+  "concernsCategoryPartnership": "Parceria",
+  "concernsCategoryGrowth": "Crescimento Pessoal",
+  "concernsMinLength": "Por favor, descreva sua preocupação com mais detalhes (pelo menos 10 caracteres)",
+  "concernsSubmitFailed": "Falha ao enviar a preocupação. Por favor, tente novamente.",
+  "concernsAddTitle": "O que está na sua mente?",
+  "concernsAddDescription": "Compartilhe sua preocupação atual, pergunta ou situação de vida. Nossa IA irá analisá-la e fornecer orientação focada a partir de amanhã.",
+  "concernsExamplesTitle": "Exemplos de preocupações:",
+  "concernsExampleCareer": "Decisão de mudança de carreira",
+  "concernsExampleRelationship": "Desafios de relacionamento",
+  "concernsExampleFinance": "Momento de investimento financeiro",
+  "concernsExampleHealth": "Foco em saúde e bem-estar",
+  "concernsExampleGrowth": "Direção de crescimento pessoal",
+  "concernsSubmitButton": "Enviar Preocupação",
+  "concernsSuccessTitle": "Preocupação Registrada!",
+  "concernsCategoryLabel": "Categoria: ",
+  "concernsSuccessMessage": "A partir de amanhã, sua orientação diária se concentrará mais neste tópico.",
+  "concernsViewFocusTopics": "Ver Meus Tópicos de Foco",
+  "deleteAccountTitle": "Excluir Conta",
+  "deleteAccountHeading": "Excluir Sua Conta?",
+  "deleteAccountConfirmError": "Por favor, digite DELETE para confirmar",
+  "deleteAccountFinalWarningTitle": "Aviso Final",
+  "deleteAccountFinalWarningBody": "Esta ação não pode ser desfeita. Todos os seus dados, incluindo:\n\n• Seu perfil e dados de nascimento\n• Mapa natal e interpretações\n• Histórico de orientação diária\n• Contexto pessoal e preferências\n• Todo o conteúdo adquirido\n\nSerão permanentemente excluídos.",
+  "deleteAccountConfirmButton": "Excluir Para Sempre",
+  "deleteAccountSuccess": "Sua conta foi excluída",
+  "deleteAccountFailed": "Falha ao excluir a conta. Por favor, tente novamente.",
+  "deleteAccountPermanentWarning": "Esta ação é permanente e não pode ser desfeita",
+  "deleteAccountWarningDetail": "Todos os seus dados pessoais, incluindo seu mapa natal, histórico de orientação e quaisquer compras serão permanentemente excluídos.",
+  "deleteAccountWhatTitle": "O que será excluído:",
+  "deleteAccountItemProfile": "Seu perfil e conta",
+  "deleteAccountItemBirthData": "Dados de nascimento e mapa natal",
+  "deleteAccountItemGuidance": "Todo o histórico de orientação diária",
+  "deleteAccountItemContext": "Contexto pessoal e preferências",
+  "deleteAccountItemKarmic": "Leituras de astrologia kármica",
+  "deleteAccountItemPurchases": "Todo o conteúdo adquirido",
+  "deleteAccountTypeDelete": "Digite DELETE para confirmar",
+  "deleteAccountDeleteHint": "DELETE",
+  "deleteAccountButton": "Excluir Minha Conta",
+  "deleteAccountCancel": "Cancelar, manter minha conta",
+  "learnArticleLoadFailed": "Falha ao carregar artigo",
+  "learnContentInEnglish": "Conteúdo em inglês",
+  "learnArticlesLoadFailed": "Falha ao carregar artigos",
+  "learnArticlesEmpty": "Nenhum artigo disponível ainda",
+  "learnContentFallback": "Mostrando conteúdo em inglês (não disponível em seu idioma)",
+  "checkoutTitle": "Finalizar Compra",
+  "checkoutOrderSummary": "Resumo do Pedido",
+  "checkoutProTitle": "Mapa Natal Pro",
+  "checkoutProSubtitle": "Interpretações planetárias completas",
+  "checkoutTotalLabel": "Total",
+  "checkoutTotalAmount": "$9.99 USD",
+  "checkoutPaymentTitle": "Integração de Pagamento",
+  "checkoutPaymentSubtitle": "A integração de Compra Dentro do Aplicativo está sendo finalizada. Por favor, volte em breve!",
+  "checkoutProcessing": "Processando...",
+  "checkoutDemoPurchase": "Demo-Kauf (Test)",
+  "checkoutSecurityNote": "Die Zahlung wird sicher über Apple/Google verarbeitet. Ihre Kartendaten werden niemals gespeichert.",
+  "checkoutSuccess": "🎉 Pro Natal Chart erfolgreich freigeschaltet!",
+  "checkoutGenerateFailed": "Interpretationen konnten nicht generiert werden. Bitte versuchen Sie es erneut.",
+  "checkoutErrorWithMessage": "Ein Fehler ist aufgetreten: {error}",
+  "@checkoutErrorWithMessage": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "billingUpgrade": "Upgrade auf Premium",
+  "billingFeatureLocked": "{feature} ist eine Premium-Funktion",
+  "@billingFeatureLocked": {
+    "placeholders": {
+      "feature": {}
+    }
+  },
+  "billingUpgradeBody": "Upgrade auf Premium, um diese Funktion freizuschalten und die personalisierteste Anleitung zu erhalten.",
+  "contextReviewFailed": "Aktualisierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+  "contextReviewTitle": "Zeit für eine schnelle Überprüfung",
+  "contextReviewBody": "Es sind 3 Monate vergangen, seit wir Ihren persönlichen Kontext zuletzt aktualisiert haben. Hat sich etwas Wichtiges in Ihrem Leben geändert, das wir wissen sollten?",
+  "contextReviewHint": "Das hilft uns, Ihnen personalisierte Anleitungen zu geben.",
+  "contextReviewNoChanges": "Keine Änderungen",
+  "contextReviewYesUpdate": "Ja, aktualisieren",
+  "contextProfileLoadFailed": "Profil konnte nicht geladen werden",
+  "contextCardTitle": "Persönlicher Kontext",
+  "contextCardSubtitle": "Richten Sie Ihren persönlichen Kontext ein, um maßgeschneiderte Anleitungen zu erhalten.",
+  "contextCardSetupNow": "Jetzt einrichten",
+  "contextCardVersionUpdated": "Version {version} • Zuletzt aktualisiert am {date}",
+  "@contextCardVersionUpdated": {
+    "placeholders": {
+      "version": {},
+      "date": {}
+    }
+  },
+  "contextCardAiSummary": "KI-Zusammenfassung",
+  "contextCardToneTag": "{tone} Ton",
+  "@contextCardToneTag": {
+    "placeholders": {
+      "tone": {}
+    }
+  },
+  "contextCardSensitivityTag": "Sensibilität aktiviert",
+  "contextCardReviewDue": "Überprüfung fällig - aktualisieren Sie Ihren Kontext",
+  "contextCardNextReview": "Nächste Überprüfung in {days} Tagen",
+  "@contextCardNextReview": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "contextDeleteTitle": "Persönlichen Kontext löschen?",
+  "contextDeleteBody": "Dies löscht Ihr persönliches Kontextprofil. Ihre Anleitung wird weniger personalisiert.",
+  "contextDeleteFailed": "Profil konnte nicht gelöscht werden",
+  "appTitle": "Innere Weisheit",
+  "concernsHintExample": "Beispiel: Ich habe ein Jobangebot in einer anderen Stadt und bin mir nicht sicher, ob ich es annehmen soll...",
+  "learnTitle": "Astrologie lernen",
+  "learnFreeTitle": "Kostenlose Lernressourcen",
+  "learnFreeSubtitle": "Erforschen Sie die Grundlagen der Astrologie",
+  "learnSignsTitle": "Zeichen",
+  "learnSignsSubtitle": "12 Tierkreiszeichen und ihre Bedeutungen",
+  "learnPlanetsTitle": "Planeten",
+  "learnPlanetsSubtitle": "Himmelskörper in der Astrologie",
+  "learnHousesTitle": "Häuser",
+  "learnHousesSubtitle": "12 Lebensbereiche in Ihrem Chart",
+  "learnTransitsTitle": "Transite",
+  "learnTransitsSubtitle": "Planetarische Bewegungen & Auswirkungen",
+  "learnPaceTitle": "In Ihrem Tempo lernen",
+  "learnPaceSubtitle": "Umfassende Lektionen zur Vertiefung Ihres astrologischen Wissens",
+  "proNatalTitle": "Pro Natal Chart",
+  "proNatalHeroTitle": "Tiefere Einblicke freischalten",
+  "proNatalHeroSubtitle": "Erhalten Sie umfassende 150-200 Wörter lange Interpretationen für jede planetarische Platzierung in Ihrem Geburtshoroskop.",
+  "proNatalFeature1Title": "Tiefe Persönlichkeits-Einblicke",
+  "proNatalFeature1Body": "Verstehen Sie, wie jeder Planet Ihre einzigartige Persönlichkeit und Lebensweg prägt.",
+  "proNatalFeature2Title": "KI-gestützte Analyse",
+  "proNatalFeature2Body": "Fortgeschrittene Interpretationen, die auf Ihre genauen planetarischen Positionen zugeschnitten sind.",
+  "proNatalFeature3Title": "Umsetzbare Anleitung",
+  "proNatalFeature3Body": "Praktische Ratschläge für Karriere, Beziehungen und persönliches Wachstum.",
+  "proNatalFeature4Title": "Lebenslanger Zugang",
+  "proNatalFeature4Body": "Ihre Interpretationen werden für immer gespeichert. Jederzeit zugänglich.",
+  "proNatalOneTime": "Einmaliger Kauf",
+  "proNatalNoSubscription": "Keine Abonnement erforderlich",
+  "askGuideLimitGetAddon": "Obtener complemento"
+}

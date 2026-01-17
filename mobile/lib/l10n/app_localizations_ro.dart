@@ -9,204 +9,205 @@ class AppLocalizationsRo extends AppLocalizations {
   AppLocalizationsRo([String locale = 'ro']) : super(locale);
 
   @override
-  String get onboardingSkip => 'Skip';
+  String get onboardingSkip => 'Sari';
 
   @override
-  String get onboardingTitle1 => 'Welcome to Inner Wisdom Astro';
+  String get onboardingTitle1 => 'Bun venit la Inner Wisdom Astro';
 
   @override
   String get onboardingDesc1 =>
-      'Innerwisdom Astro brings together over 30 years of astrological expertise from Madi G. with the power of advanced AI, creating one of the most refined and high-performance astrology applications available today.\n\nBy blending deep human insight with intelligent technology, Innerwisdom Astro delivers interpretations that are precise, personalized, and meaningful, supporting users on their journey of self-discovery, clarity, and conscious growth.';
+      'Innerwisdom Astro reunește peste 30 de ani de expertiză astrologică de la Madi G. cu puterea AI avansat, creând una dintre cele mai rafinate și performante aplicații de astrologie disponibile astăzi.\n\nPrin combinarea unei perspective umane profunde cu tehnologia inteligentă, Innerwisdom Astro oferă interpretări precise, personalizate și semnificative, sprijinind utilizatorii în călătoria lor de auto-descoperire, claritate și creștere conștientă.';
 
   @override
-  String get onboardingTitle2 => 'Your Complete Astrological Journey';
+  String get onboardingTitle2 => 'Călătoria ta astrologică completă';
 
   @override
   String get onboardingDesc2 =>
-      'From personalized daily guidance to your Natal Birth Chart, Karmic Astrology, in-depth personality reports, Love and Friendship Compatibility, Romantic Forecasts for Couples, and much more — all are now at your fingertips.\n\nDesigned to support clarity, connection, and self-understanding, Innerwisdom Astro offers a complete astrological experience, tailored to you.';
+      'De la ghidare zilnică personalizată la Harta Ta Natală, Astrologie Karmică, rapoarte de personalitate detaliate, Compatibilitate în Dragoste și Prietenie, Previziuni Romantice pentru Cupluri și multe altele — toate sunt acum la îndemâna ta.\n\nProiectată pentru a sprijini claritatea, conexiunea și înțelegerea de sine, Innerwisdom Astro oferă o experiență astrologică completă, adaptată ție.';
 
   @override
-  String get onboardingNext => 'Next';
+  String get onboardingNext => 'Următorul';
 
   @override
-  String get onboardingGetStarted => 'Get Started';
+  String get onboardingGetStarted => 'Începe';
 
   @override
-  String get onboardingAlreadyHaveAccount => 'Already have an account? Login';
+  String get onboardingAlreadyHaveAccount => 'Ai deja un cont? Conectează-te';
 
   @override
-  String get birthDataTitle => 'Your Birth Chart';
+  String get birthDataTitle => 'Harta Ta Natală';
 
   @override
   String get birthDataSubtitle =>
-      'We need your birth details to create\nyour personalized astrological profile';
+      'Avem nevoie de detaliile tale de naștere pentru a crea\nprofilul tău astrologic personalizat';
 
   @override
-  String get birthDateLabel => 'Birth Date';
+  String get birthDateLabel => 'Data Nașterii';
 
   @override
-  String get birthDateSelectHint => 'Select your birth date';
+  String get birthDateSelectHint => 'Selectează data nașterii';
 
   @override
-  String get birthTimeLabel => 'Birth Time';
+  String get birthTimeLabel => 'Ora Nașterii';
 
   @override
-  String get birthTimeUnknown => 'Unknown';
+  String get birthTimeUnknown => 'Necunoscut';
 
   @override
-  String get birthTimeSelectHint => 'Select your birth time';
+  String get birthTimeSelectHint => 'Selectează ora nașterii';
 
   @override
-  String get birthTimeUnknownCheckbox => 'I don\'t know my exact birth time';
+  String get birthTimeUnknownCheckbox => 'Nu știu ora exactă a nașterii';
 
   @override
-  String get birthPlaceLabel => 'Birth Place';
+  String get birthPlaceLabel => 'Locul Nașterii';
 
   @override
-  String get birthPlaceHint => 'Start typing a city name...';
+  String get birthPlaceHint => 'Începe să scrii numele unui oraș...';
 
   @override
   String get birthPlaceValidation =>
-      'Please select a location from the suggestions';
+      'Te rugăm să selectezi o locație din sugestii';
 
   @override
   String birthPlaceSelected(Object location) {
-    return 'Selected: $location';
+    return 'Selectat: $location';
   }
 
   @override
-  String get genderLabel => 'Gender';
+  String get genderLabel => 'Gen';
 
   @override
-  String get genderMale => 'Male';
+  String get genderMale => 'Masculin';
 
   @override
-  String get genderFemale => 'Female';
+  String get genderFemale => 'Feminin';
 
   @override
-  String get genderPreferNotToSay => 'Prefer not to say';
+  String get genderPreferNotToSay => 'Prefer să nu spun';
 
   @override
-  String get birthDataSubmit => 'Generate My Birth Chart';
+  String get birthDataSubmit => 'Generează Harta Mea Natală';
 
   @override
   String get birthDataPrivacyNote =>
-      'Your birth data is used only to calculate your\nastrological chart and is stored securely.';
+      'Datele tale de naștere sunt folosite doar pentru a calcula\nharta ta astrologică și sunt stocate în siguranță.';
 
   @override
-  String get birthDateMissing => 'Please select your birth date';
+  String get birthDateMissing => 'Te rugăm să selectezi data nașterii';
 
   @override
   String get birthPlaceMissing =>
-      'Please select a birth place from the suggestions';
+      'Te rugăm să selectezi un loc de naștere din sugestii';
 
   @override
   String get birthDataSaveError =>
-      'Could not save birth data. Please try again.';
+      'Nu s-au putut salva datele de naștere. Te rugăm să încerci din nou.';
 
   @override
-  String get appearanceTitle => 'Appearance';
+  String get appearanceTitle => 'Aspect';
 
   @override
-  String get appearanceTheme => 'Theme';
+  String get appearanceTheme => 'Temă';
 
   @override
-  String get appearanceDarkTitle => 'Dark';
+  String get appearanceDarkTitle => 'Întunecat';
 
   @override
-  String get appearanceDarkSubtitle => 'Easy on the eyes in low light';
+  String get appearanceDarkSubtitle => 'Ușor pentru ochi în lumină slabă';
 
   @override
-  String get appearanceLightTitle => 'Light';
+  String get appearanceLightTitle => 'Lumină';
 
   @override
-  String get appearanceLightSubtitle => 'Classic bright appearance';
+  String get appearanceLightSubtitle => 'Aspect clasic luminos';
 
   @override
-  String get appearanceSystemTitle => 'System';
+  String get appearanceSystemTitle => 'Sistem';
 
   @override
-  String get appearanceSystemSubtitle => 'Match your device settings';
+  String get appearanceSystemSubtitle =>
+      'Se potrivește cu setările dispozitivului tău';
 
   @override
-  String get appearancePreviewTitle => 'Preview';
+  String get appearancePreviewTitle => 'Previzualizare';
 
   @override
   String get appearancePreviewBody =>
-      'The cosmic theme is designed to create an immersive astrology experience. The dark theme is recommended for the best visual experience.';
+      'Tema cosmică este concepută pentru a crea o experiență imersivă de astrologie. Tema întunecată este recomandată pentru cea mai bună experiență vizuală.';
 
   @override
   String appearanceThemeChanged(Object theme) {
-    return 'Theme changed to $theme';
+    return 'Tema a fost schimbată în $theme';
   }
 
   @override
-  String get profileUserFallback => 'User';
+  String get profileUserFallback => 'Utilizator';
 
   @override
-  String get profilePersonalContext => 'Personal Context';
+  String get profilePersonalContext => 'Context Personal';
 
   @override
-  String get profileSettings => 'Settings';
+  String get profileSettings => 'Setări';
 
   @override
-  String get profileAppLanguage => 'App Language';
+  String get profileAppLanguage => 'Limba Aplicației';
 
   @override
-  String get profileContentLanguage => 'Content Language';
+  String get profileContentLanguage => 'Limba Conținutului';
 
   @override
   String get profileContentLanguageHint =>
-      'AI content uses the selected language.';
+      'Conținutul AI folosește limba selectată.';
 
   @override
-  String get profileNotifications => 'Notifications';
+  String get profileNotifications => 'Notificări';
 
   @override
-  String get profileNotificationsEnabled => 'Enabled';
+  String get profileNotificationsEnabled => 'Activat';
 
   @override
-  String get profileNotificationsDisabled => 'Disabled';
+  String get profileNotificationsDisabled => 'Dezactivat';
 
   @override
-  String get profileAppearance => 'Appearance';
+  String get profileAppearance => 'Aspect';
 
   @override
-  String get profileHelpSupport => 'Help & Support';
+  String get profileHelpSupport => 'Ajutor & Suport';
 
   @override
-  String get profilePrivacyPolicy => 'Privacy Policy';
+  String get profilePrivacyPolicy => 'Politica de Confidențialitate';
 
   @override
-  String get profileTermsOfService => 'Terms of Service';
+  String get profileTermsOfService => 'Termeni și Condiții';
 
   @override
-  String get profileLogout => 'Logout';
+  String get profileLogout => 'Deconectare';
 
   @override
-  String get profileLogoutConfirm => 'Are you sure you want to logout?';
+  String get profileLogoutConfirm => 'Ești sigur că vrei să te deconectezi?';
 
   @override
-  String get profileDeleteAccount => 'Delete Account';
+  String get profileDeleteAccount => 'Șterge Contul';
 
   @override
-  String get commonCancel => 'Cancel';
+  String get commonCancel => 'Anulează';
 
   @override
-  String get profileSelectLanguageTitle => 'Select Language';
+  String get profileSelectLanguageTitle => 'Selectează Limba';
 
   @override
   String get profileSelectLanguageSubtitle =>
-      'All AI-generated content will be in your selected language.';
+      'Tot conținutul generat de AI va fi în limba ta selectată.';
 
   @override
   String profileLanguageUpdated(Object language) {
-    return 'Language updated to $language';
+    return 'Limba a fost actualizată în $language';
   }
 
   @override
   String profileLanguageUpdateFailed(Object error) {
-    return 'Failed to update language: $error';
+    return 'Nu s-a reușit actualizarea limbii: $error';
   }
 
   @override
@@ -215,101 +216,105 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get profileCosmicBlueprint => 'Your Cosmic Blueprint';
+  String get profileCosmicBlueprint => 'Planul Tău Cosmic';
 
   @override
-  String get profileSunLabel => '☀️ Sun';
+  String get profileSunLabel => '☀️ Soare';
 
   @override
-  String get profileMoonLabel => '🌙 Moon';
+  String get profileMoonLabel => '🌙 Lună';
 
   @override
-  String get profileRisingLabel => '⬆️ Rising';
+  String get profileRisingLabel => '⬆️ Ascendent';
 
   @override
-  String get profileUnknown => 'Unknown';
+  String get profileUnknown => 'Necunoscut';
 
   @override
-  String get forgotPasswordTitle => 'Forgot Password?';
+  String get forgotPasswordTitle => 'Ai uitat parola?';
 
   @override
   String get forgotPasswordSubtitle =>
-      'Enter your email and we\'ll send you a code to reset your password';
+      'Introdu adresa ta de email și îți vom trimite un cod pentru a-ți reseta parola';
 
   @override
   String get forgotPasswordSent =>
-      'If an account exists, a reset code has been sent to your email.';
+      'Dacă există un cont, un cod de resetare a fost trimis pe emailul tău.';
 
   @override
   String get forgotPasswordFailed =>
-      'Failed to send reset code. Please try again.';
+      'Nu s-a reușit trimiterea codului de resetare. Te rugăm să încerci din nou.';
 
   @override
-  String get forgotPasswordSendCode => 'Send Reset Code';
+  String get forgotPasswordSendCode => 'Trimite Codul de Resetare';
 
   @override
-  String get forgotPasswordHaveCode => 'Already have a code?';
+  String get forgotPasswordHaveCode => 'Ai deja un cod?';
 
   @override
-  String get forgotPasswordRemember => 'Remember your password? ';
+  String get forgotPasswordRemember => 'Îți amintești parola? ';
 
   @override
-  String get loginWelcomeBack => 'Welcome Back';
+  String get loginWelcomeBack => 'Bun venit înapoi';
 
   @override
-  String get loginSubtitle => 'Sign in to continue your cosmic journey';
+  String get loginSubtitle =>
+      'Conectează-te pentru a continua călătoria ta cosmică';
 
   @override
-  String get loginInvalidCredentials => 'Invalid email or password';
+  String get loginInvalidCredentials => 'Email sau parolă invalide';
 
   @override
-  String get loginGoogleFailed => 'Google sign-in failed. Please try again.';
+  String get loginGoogleFailed =>
+      'Conectarea cu Google a eșuat. Te rugăm să încerci din nou.';
 
   @override
-  String get loginAppleFailed => 'Apple sign-in failed. Please try again.';
+  String get loginAppleFailed =>
+      'Conectarea cu Apple a eșuat. Te rugăm să încerci din nou.';
 
   @override
   String get loginNetworkError =>
-      'Network error. Please check your connection.';
+      'Eroare de rețea. Te rugăm să verifici conexiunea ta.';
 
   @override
-  String get loginSignInCancelled => 'Sign-in was cancelled.';
+  String get loginSignInCancelled => 'Conectarea a fost anulată.';
 
   @override
-  String get loginPasswordHint => 'Enter your password';
+  String get loginPasswordHint => 'Introdu parola ta';
 
   @override
-  String get loginForgotPassword => 'Forgot Password?';
+  String get loginForgotPassword => 'Ai uitat parola?';
 
   @override
-  String get loginSignIn => 'Sign In';
+  String get loginSignIn => 'Conectează-te';
 
   @override
-  String get loginNoAccount => 'Don\'t have an account? ';
+  String get loginNoAccount => 'Nu ai un cont? ';
 
   @override
-  String get loginSignUp => 'Sign Up';
+  String get loginSignUp => 'Înscrie-te';
 
   @override
   String get commonEmailLabel => 'Email';
 
   @override
-  String get commonEmailHint => 'Enter your email';
+  String get commonEmailHint => 'Introdu adresa ta de email';
 
   @override
-  String get commonEmailRequired => 'Please enter your email';
+  String get commonEmailRequired => 'Te rugăm să introduci adresa ta de email';
 
   @override
-  String get commonEmailInvalid => 'Please enter a valid email';
+  String get commonEmailInvalid =>
+      'Te rugăm să introduci o adresă de email validă';
 
   @override
-  String get commonPasswordLabel => 'Password';
+  String get commonPasswordLabel => 'Parolă';
 
   @override
-  String get commonPasswordRequired => 'Please enter your password';
+  String get commonPasswordRequired => 'Te rugăm să introduci parola ta';
 
   @override
-  String get commonOrContinueWith => 'or continue with';
+  String get commonOrContinueWith => 'sau continuă cu';
 
   @override
   String get commonGoogle => 'Google';
@@ -318,250 +323,257 @@ class AppLocalizationsRo extends AppLocalizations {
   String get commonApple => 'Apple';
 
   @override
-  String get commonNameLabel => 'Name';
+  String get commonNameLabel => 'Nume';
 
   @override
-  String get commonNameHint => 'Enter your name';
+  String get commonNameHint => 'Introdu numele tău';
 
   @override
-  String get commonNameRequired => 'Please enter your name';
+  String get commonNameRequired => 'Te rugăm să introduci numele tău';
 
   @override
-  String get signupTitle => 'Create Account';
+  String get signupTitle => 'Creează Cont';
 
   @override
-  String get signupSubtitle => 'Start your cosmic journey with Inner Wisdom';
+  String get signupSubtitle => 'Începe-ți călătoria cosmică cu Inner Wisdom';
 
   @override
-  String get signupEmailExists => 'Email already exists or invalid data';
+  String get signupEmailExists =>
+      'Emailul există deja sau datele sunt invalide';
 
   @override
-  String get signupGoogleFailed => 'Google sign-in failed. Please try again.';
+  String get signupGoogleFailed =>
+      'Autentificarea Google a eșuat. Te rugăm să încerci din nou.';
 
   @override
-  String get signupAppleFailed => 'Apple sign-in failed. Please try again.';
+  String get signupAppleFailed =>
+      'Autentificarea Apple a eșuat. Te rugăm să încerci din nou.';
 
   @override
-  String get signupPasswordHint => 'Create a password (min. 8 characters)';
+  String get signupPasswordHint => 'Creează o parolă (min. 8 caractere)';
 
   @override
-  String get signupPasswordMin => 'Password must be at least 8 characters';
+  String get signupPasswordMin =>
+      'Parola trebuie să aibă cel puțin 8 caractere';
 
   @override
-  String get signupConfirmPasswordLabel => 'Confirm Password';
+  String get signupConfirmPasswordLabel => 'Confirmă Parola';
 
   @override
-  String get signupConfirmPasswordHint => 'Confirm your password';
+  String get signupConfirmPasswordHint => 'Confirmă-ți parola';
 
   @override
-  String get signupConfirmPasswordRequired => 'Please confirm your password';
+  String get signupConfirmPasswordRequired => 'Te rugăm să confirmi parola';
 
   @override
-  String get signupPasswordMismatch => 'Passwords do not match';
+  String get signupPasswordMismatch => 'Parolele nu se potrivesc';
 
   @override
-  String get signupPreferredLanguage => 'Preferred Language';
+  String get signupPreferredLanguage => 'Limba Preferată';
 
   @override
-  String get signupCreateAccount => 'Create Account';
+  String get signupCreateAccount => 'Creează Cont';
 
   @override
-  String get signupHaveAccount => 'Already have an account? ';
+  String get signupHaveAccount => 'Ai deja un cont? ';
 
   @override
-  String get resetPasswordTitle => 'Reset Password';
+  String get resetPasswordTitle => 'Resetează Parola';
 
   @override
   String get resetPasswordSubtitle =>
-      'Enter the code sent to your email and set a new password';
+      'Introdu codul trimis pe email și setează o nouă parolă';
 
   @override
   String get resetPasswordSuccess =>
-      'Password reset successful! Redirecting to login...';
+      'Resetarea parolei a fost reușită! Redirecționare către autentificare...';
 
   @override
   String get resetPasswordFailed =>
-      'Failed to reset password. Please try again.';
+      'Eșec la resetarea parolei. Te rugăm să încerci din nou.';
 
   @override
   String get resetPasswordInvalidCode =>
-      'Invalid or expired reset code. Please request a new one.';
+      'Cod de resetare invalid sau expirat. Te rugăm să soliciți unul nou.';
 
   @override
   String get resetPasswordMaxAttempts =>
-      'Maximum attempts exceeded. Please request a new code.';
+      'Numărul maxim de încercări a fost depășit. Te rugăm să soliciți un cod nou.';
 
   @override
-  String get resetCodeLabel => 'Reset Code';
+  String get resetCodeLabel => 'Cod de Resetare';
 
   @override
-  String get resetCodeHint => 'Enter 6-digit code';
+  String get resetCodeHint => 'Introdu codul de 6 cifre';
 
   @override
-  String get resetCodeRequired => 'Please enter the reset code';
+  String get resetCodeRequired => 'Te rugăm să introduci codul de resetare';
 
   @override
-  String get resetCodeLength => 'Code must be 6 digits';
+  String get resetCodeLength => 'Codul trebuie să fie de 6 cifre';
 
   @override
-  String get resetNewPasswordLabel => 'New Password';
+  String get resetNewPasswordLabel => 'Noua Parolă';
 
   @override
-  String get resetNewPasswordHint =>
-      'Create a new password (min. 8 characters)';
+  String get resetNewPasswordHint => 'Creează o nouă parolă (min. 8 caractere)';
 
   @override
-  String get resetNewPasswordRequired => 'Please enter a new password';
+  String get resetNewPasswordRequired => 'Te rugăm să introduci o nouă parolă';
 
   @override
-  String get resetConfirmPasswordHint => 'Confirm your new password';
+  String get resetConfirmPasswordHint => 'Confirmă-ți noua parolă';
 
   @override
-  String get resetPasswordButton => 'Reset Password';
+  String get resetPasswordButton => 'Resetează Parola';
 
   @override
-  String get resetRequestNewCode => 'Request a new code';
+  String get resetRequestNewCode => 'Solicită un cod nou';
 
   @override
-  String get serviceResultGenerated => 'Report Generated';
+  String get serviceResultGenerated => 'Raport Generat';
 
   @override
   String serviceResultReady(Object title) {
-    return 'Your personalized $title is ready';
+    return 'Raportul tău personalizat $title este gata';
   }
 
   @override
-  String get serviceResultBackToForYou => 'Back to For You';
+  String get serviceResultBackToForYou => 'Înapoi la Pentru Tine';
 
   @override
   String get serviceResultNotSavedNotice =>
-      'This Report will not be saved. If you wish, you can copy it and save it elsewhere using the Copy function.';
+      'Acest raport nu va fi salvat. Dacă dorești, poți să-l copiezi și să-l salvezi în altă parte folosind funcția Copiere.';
 
   @override
-  String get commonCopy => 'Copy';
+  String get commonCopy => 'Copiază';
 
   @override
-  String get commonCopied => 'Copied to clipboard';
+  String get commonCopied => 'Copiat în clipboard';
 
   @override
-  String get commonContinue => 'Continue';
+  String get commonContinue => 'Continuă';
 
   @override
-  String get partnerDetailsTitle => 'Partner Details';
+  String get partnerDetailsTitle => 'Detalii Partener';
 
   @override
-  String get partnerBirthDataTitle => 'Enter partner\'s birth data';
+  String get partnerBirthDataTitle =>
+      'Introdu datele de naștere ale partenerului';
 
   @override
   String partnerBirthDataFor(Object title) {
-    return 'For \"$title\"';
+    return 'Pentru \"$title\"';
   }
 
   @override
-  String get partnerNameOptionalLabel => 'Name (optional)';
+  String get partnerNameOptionalLabel => 'Nume (opțional)';
 
   @override
-  String get partnerNameHint => 'Partner\'s name';
+  String get partnerNameHint => 'Numele partenerului';
 
   @override
-  String get partnerGenderOptionalLabel => 'Gender (optional)';
+  String get partnerGenderOptionalLabel => 'Gen (opțional)';
 
   @override
-  String get partnerBirthDateLabel => 'Birth Date *';
+  String get partnerBirthDateLabel => 'Data Nașterii *';
 
   @override
-  String get partnerBirthDateSelect => 'Select birth date';
+  String get partnerBirthDateSelect => 'Selectează data nașterii';
 
   @override
-  String get partnerBirthDateMissing => 'Please select the birth date';
+  String get partnerBirthDateMissing => 'Te rugăm să selectezi data nașterii';
 
   @override
-  String get partnerBirthTimeOptionalLabel => 'Birth Time (optional)';
+  String get partnerBirthTimeOptionalLabel => 'Ora Nașterii (opțional)';
 
   @override
-  String get partnerBirthTimeSelect => 'Select birth time';
+  String get partnerBirthTimeSelect => 'Selectează ora nașterii';
 
   @override
-  String get partnerBirthPlaceLabel => 'Birth Place *';
+  String get partnerBirthPlaceLabel => 'Locul Nașterii *';
 
   @override
-  String get serviceOfferRequiresPartner => 'Requires partner birth data';
+  String get serviceOfferRequiresPartner =>
+      'Necesită datele de naștere ale partenerului';
 
   @override
-  String get serviceOfferBetaFree => 'Beta testers get free access!';
+  String get serviceOfferBetaFree => 'Testeri beta primesc acces gratuit!';
 
   @override
-  String get serviceOfferUnlocked => 'Unlocked';
+  String get serviceOfferUnlocked => 'Deblocat';
 
   @override
-  String get serviceOfferGenerate => 'Generate Report';
+  String get serviceOfferGenerate => 'Generează Raport';
 
   @override
   String serviceOfferUnlockFor(Object price) {
-    return 'Unlock for $price';
+    return 'Deblochează pentru $price';
   }
 
   @override
-  String get serviceOfferPreparing => 'Preparing your personalized report…';
+  String get serviceOfferPreparing =>
+      'Se pregătește raportul tău personalizat…';
 
   @override
   String get serviceOfferTimeout =>
-      'Taking longer than expected. Please try again.';
+      'Durata a fost mai lungă decât era de așteptat. Te rugăm să încerci din nou.';
 
   @override
-  String get serviceOfferNotReady => 'Report not ready yet. Please try again.';
+  String get serviceOfferNotReady =>
+      'Raportul nu este încă gata. Te rugăm să încerci din nou.';
 
   @override
   String serviceOfferFetchFailed(Object error) {
-    return 'Failed to fetch report: $error';
+    return 'Eșec la obținerea raportului: $error';
   }
 
   @override
-  String get commonFree => 'FREE';
+  String get commonFree => 'GRATUIT';
 
   @override
-  String get commonLater => 'Later';
+  String get commonLater => 'Mai târziu';
 
   @override
-  String get commonRetry => 'Retry';
+  String get commonRetry => 'Reîncearcă';
 
   @override
-  String get commonYes => 'Yes';
+  String get commonYes => 'Da';
 
   @override
-  String get commonNo => 'No';
+  String get commonNo => 'Nu';
 
   @override
-  String get commonBack => 'Back';
+  String get commonBack => 'Înapoi';
 
   @override
-  String get commonOptional => 'Optional';
+  String get commonOptional => 'Opțional';
 
   @override
-  String get commonNotSpecified => 'Not specified';
+  String get commonNotSpecified => 'Nespecificat';
 
   @override
-  String get commonJustNow => 'Just now';
+  String get commonJustNow => 'Chiar acum';
 
   @override
-  String get commonViewMore => 'View more';
+  String get commonViewMore => 'Vezi mai mult';
 
   @override
-  String get commonViewLess => 'View less';
+  String get commonViewLess => 'Vezi mai puțin';
 
   @override
   String commonMinutesAgo(Object count) {
-    return '$count min ago';
+    return '$count min în urmă';
   }
 
   @override
   String commonHoursAgo(Object count) {
-    return '${count}h ago';
+    return '${count}h în urmă';
   }
 
   @override
   String commonDaysAgo(Object count) {
-    return '${count}d ago';
+    return '${count}d în urmă';
   }
 
   @override
@@ -570,1085 +582,1097 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String get askGuideTitle => 'Ask Your Guide';
+  String get askGuideTitle => 'Întreabă-ți Ghidul';
 
   @override
-  String get askGuideSubtitle => 'Personal cosmic guidance';
+  String get askGuideSubtitle => 'Ghidare cosmică personală';
 
   @override
   String askGuideRemaining(Object count) {
-    return '$count left';
+    return '$count rămase';
   }
 
   @override
   String get askGuideQuestionHint =>
-      'Ask anything - love, career, decisions, emotions...';
+      'Întreabă orice - dragoste, carieră, decizii, emoții...';
 
   @override
   String get askGuideBasedOnChart =>
-      'Based on your birth chart & today\'s cosmic energies';
+      'Pe baza hărții tale natale și energiilor cosmice de astăzi';
 
   @override
-  String get askGuideThinking => 'Your Guide is thinking...';
+  String get askGuideThinking => 'Ghidul tău se gândește...';
 
   @override
-  String get askGuideYourGuide => 'Your Guide';
+  String get askGuideYourGuide => 'Ghidul tău';
 
   @override
-  String get askGuideEmptyTitle => 'Ask Your First Question';
+  String get askGuideEmptyTitle => 'Întreabă-ți Prima Întrebare';
 
   @override
   String get askGuideEmptyBody =>
-      'Get instant, deeply personal guidance based on your birth chart and today\'s cosmic energies.';
+      'Obține ghidare instantanee, profund personală, bazată pe harta ta natală și energiile cosmice de astăzi.';
 
   @override
   String get askGuideEmptyHint =>
-      'Ask anything — love, career, decisions, emotions.';
+      'Întreabă orice — dragoste, carieră, decizii, emoții.';
 
   @override
-  String get askGuideLoadFailed => 'Failed to load data';
+  String get askGuideLoadFailed => 'Eșec la încărcarea datelor';
 
   @override
   String askGuideSendFailed(Object error) {
-    return 'Failed to send question: $error';
+    return 'Eșec la trimiterea întrebării: $error';
   }
 
   @override
-  String get askGuideLimitTitle => 'Monthly Limit Reached';
+  String get askGuideLimitTitle => 'Limita Lunii A fost Atinge';
 
   @override
-  String get askGuideLimitBody =>
-      'You\'ve reached your monthly limit of requests.';
+  String get askGuideLimitBody => 'Ai atins limita lunară de cereri.';
 
   @override
   String get askGuideLimitAddon =>
-      'You can purchase a \$1.99 add-on to continue using this service for the rest of the current billing month.';
+      'Poți achiziționa un addon de \$1.99 pentru a continua să folosești acest serviciu pentru restul lunii de facturare curente.';
 
   @override
   String askGuideLimitBillingEnd(Object date) {
-    return 'Your billing month ends on: $date';
+    return 'Luna ta de facturare se încheie pe: $date';
   }
 
   @override
-  String get askGuideLimitGetAddon => 'Get Add-On';
+  String get askGuideLimitGetAddon => 'Obține Add-On';
 
   @override
-  String get contextTitle => 'Personal Context';
+  String get contextTitle => 'Context Personal';
 
   @override
   String contextStepOf(Object current, Object total) {
-    return 'Step $current of $total';
+    return 'Pasul $current din $total';
   }
 
   @override
-  String get contextStep1Title => 'People around you';
+  String get contextStep1Title => 'Oamenii din jurul tău';
 
   @override
   String get contextStep1Subtitle =>
-      'Your relationship and family context helps us understand your emotional landscape.';
+      'Relația și contextul tău familial ne ajută să înțelegem peisajul tău emoțional.';
 
   @override
-  String get contextStep2Title => 'Professional Life';
+  String get contextStep2Title => 'Viața Profesională';
 
   @override
   String get contextStep2Subtitle =>
-      'Your work and daily rhythm shape how you experience pressure, growth, and purpose.';
+      'Munca și ritmul tău zilnic modelează modul în care experimentezi presiunea, creșterea și scopul.';
 
   @override
-  String get contextStep3Title => 'How life feels right now';
+  String get contextStep3Title => 'Cum se simte viața acum';
 
   @override
   String get contextStep3Subtitle =>
-      'There are no right or wrong answers, just your current reality';
+      'Nu există răspunsuri corecte sau greșite, doar realitatea ta actuală';
 
   @override
-  String get contextStep4Title => 'What matters most to you';
+  String get contextStep4Title => 'Ce contează cel mai mult pentru tine';
 
   @override
   String get contextStep4Subtitle =>
-      'So your guidance aligns with what you truly care about';
+      'Astfel încât ghidarea ta să se alinieze cu ceea ce îți pasă cu adevărat';
 
   @override
   String get contextPriorityRequired =>
-      'Please select at least one priority area.';
+      'Te rugăm să selectezi cel puțin o zonă de prioritate.';
 
   @override
   String contextSaveFailed(Object error) {
-    return 'Failed to save profile: $error';
+    return 'Eșec la salvarea profilului: $error';
   }
 
   @override
-  String get contextSaveContinue => 'Save & Continue';
+  String get contextSaveContinue => 'Salvează și Continuă';
 
   @override
-  String get contextRelationshipStatusTitle => 'Current relationship status';
+  String get contextRelationshipStatusTitle => 'Starea actuală a relației';
 
   @override
-  String get contextSeekingRelationshipTitle =>
-      'Are you looking for a relationship?';
+  String get contextSeekingRelationshipTitle => 'Cauți o relație?';
 
   @override
-  String get contextHasChildrenTitle => 'Do you have children?';
+  String get contextHasChildrenTitle => 'Ai copii?';
 
   @override
-  String get contextChildrenDetailsOptional => 'Children details (optional)';
+  String get contextChildrenDetailsOptional =>
+      'Detalii despre copii (opțional)';
 
   @override
-  String get contextAddChild => 'Add child';
+  String get contextAddChild => 'Adaugă copil';
 
   @override
-  String get contextChildAgeLabel => 'Age';
+  String get contextChildAgeLabel => 'Vârstă';
 
   @override
   String contextChildAgeYears(num age) {
     String _temp0 = intl.Intl.pluralLogic(
       age,
       locale: localeName,
-      other: 'years',
-      one: 'year',
+      other: 'ani',
+      one: 'an',
     );
     return '$age $_temp0';
   }
 
   @override
-  String get contextChildGenderLabel => 'Gender';
+  String get contextChildGenderLabel => 'Gen';
 
   @override
-  String get contextRelationshipSingle => 'Single';
+  String get contextRelationshipSingle => 'Singur';
 
   @override
-  String get contextRelationshipInRelationship => 'In a relationship';
+  String get contextRelationshipInRelationship => 'Într-o relație';
 
   @override
-  String get contextRelationshipMarried => 'Married / Civil partnership';
+  String get contextRelationshipMarried => 'Căsătorit / Parteneriat civil';
 
   @override
-  String get contextRelationshipSeparated => 'Separated / Divorced';
+  String get contextRelationshipSeparated => 'Separat / Divorțat';
 
   @override
-  String get contextRelationshipWidowed => 'Widowed';
+  String get contextRelationshipWidowed => 'Văduv';
 
   @override
-  String get contextRelationshipPreferNotToSay => 'Prefer not to say';
+  String get contextRelationshipPreferNotToSay => 'Prefer să nu spun';
 
   @override
-  String get contextProfessionalStatusTitle => 'Current professional status';
+  String get contextProfessionalStatusTitle => 'Starea profesională actuală';
 
   @override
   String get contextProfessionalStatusOtherHint =>
-      'Please specify your work status';
+      'Te rugăm să specifici statutul tău profesional';
 
   @override
-  String get contextIndustryTitle => 'Main industry/domain';
+  String get contextIndustryTitle => 'Industria/domeniul principal';
 
   @override
   String get contextWorkStatusStudent => 'Student';
 
   @override
-  String get contextWorkStatusUnemployed => 'Unemployed / Between jobs';
+  String get contextWorkStatusUnemployed => 'Șomer / Între locuri de muncă';
 
   @override
-  String get contextWorkStatusEmployedIc => 'Employed (Individual contributor)';
+  String get contextWorkStatusEmployedIc => 'Angajat (Contribuitor individual)';
 
   @override
-  String get contextWorkStatusEmployedManagement => 'Employed (Management)';
+  String get contextWorkStatusEmployedManagement => 'Angajat (Management)';
 
   @override
-  String get contextWorkStatusExecutive => 'Executive / Leadership (C-level)';
+  String get contextWorkStatusExecutive => 'Executiv / Leadership (nivel C)';
 
   @override
-  String get contextWorkStatusSelfEmployed => 'Self-employed / Freelancer';
+  String get contextWorkStatusSelfEmployed => 'Întreprinzător / Freelancer';
 
   @override
-  String get contextWorkStatusEntrepreneur => 'Entrepreneur / Business owner';
+  String get contextWorkStatusEntrepreneur =>
+      'Antreprenor / Proprietar de afacere';
 
   @override
-  String get contextWorkStatusInvestor => 'Investor';
+  String get contextWorkStatusInvestor => 'Investitor';
 
   @override
-  String get contextWorkStatusRetired => 'Retired';
+  String get contextWorkStatusRetired => 'Pensionat';
 
   @override
-  String get contextWorkStatusHomemaker => 'Homemaker / Stay-at-home parent';
+  String get contextWorkStatusHomemaker =>
+      'Îngrijitor de casă / Părinte care stă acasă';
 
   @override
-  String get contextWorkStatusCareerBreak => 'Career break / Sabbatical';
+  String get contextWorkStatusCareerBreak => 'Pauză în carieră / Sabbatic';
 
   @override
-  String get contextWorkStatusOther => 'Other';
+  String get contextWorkStatusOther => 'Altceva';
 
   @override
-  String get contextIndustryTech => 'Tech / IT';
+  String get contextIndustryTech => 'Tehnologie / IT';
 
   @override
-  String get contextIndustryFinance => 'Finance / Investments';
+  String get contextIndustryFinance => 'Finanțe / Investiții';
 
   @override
-  String get contextIndustryHealthcare => 'Healthcare';
+  String get contextIndustryHealthcare => 'Sănătate';
 
   @override
-  String get contextIndustryEducation => 'Education';
+  String get contextIndustryEducation => 'Educație';
 
   @override
-  String get contextIndustrySalesMarketing => 'Sales / Marketing';
+  String get contextIndustrySalesMarketing => 'Vânzări / Marketing';
 
   @override
-  String get contextIndustryRealEstate => 'Real Estate';
+  String get contextIndustryRealEstate => 'Imobiliare';
 
   @override
-  String get contextIndustryHospitality => 'Hospitality';
+  String get contextIndustryHospitality => 'Ospitalitate';
 
   @override
-  String get contextIndustryGovernment => 'Government / Public sector';
+  String get contextIndustryGovernment => 'Guvern / Sector public';
 
   @override
-  String get contextIndustryCreative => 'Creative industries';
+  String get contextIndustryCreative => 'Industria creativă';
 
   @override
-  String get contextIndustryOther => 'Other';
+  String get contextIndustryOther => 'Altceva';
 
   @override
   String get contextSelfAssessmentIntro =>
-      'Rate your current situation in each area (1 = struggling, 5 = thriving)';
+      'Evaluează-ți situația actuală în fiecare domeniu (1 = dificultăți, 5 = prosperitate)';
 
   @override
-  String get contextSelfHealthTitle => 'Health & Energy';
+  String get contextSelfHealthTitle => 'Sănătate & Energie';
 
   @override
   String get contextSelfHealthSubtitle =>
-      '1 = serious issues/low energy, 5 = excellent vitality';
+      '1 = probleme serioase/energie scăzută, 5 = vitalitate excelentă';
 
   @override
-  String get contextSelfSocialTitle => 'Social Life';
+  String get contextSelfSocialTitle => 'Viața socială';
 
   @override
   String get contextSelfSocialSubtitle =>
-      '1 = isolated, 5 = thriving social connections';
+      '1 = izolat, 5 = conexiuni sociale prospere';
 
   @override
-  String get contextSelfRomanceTitle => 'Romantic Life';
+  String get contextSelfRomanceTitle => 'Viața romantică';
 
   @override
   String get contextSelfRomanceSubtitle =>
-      '1 = absent/challenging, 5 = fulfilled';
+      '1 = absentă/provocatoare, 5 = împlinită';
 
   @override
-  String get contextSelfFinanceTitle => 'Financial Stability';
+  String get contextSelfFinanceTitle => 'Stabilitate financiară';
 
   @override
-  String get contextSelfFinanceSubtitle => '1 = major hardship, 5 = excellent';
+  String get contextSelfFinanceSubtitle =>
+      '1 = dificultăți majore, 5 = excelent';
 
   @override
-  String get contextSelfCareerTitle => 'Career Satisfaction';
+  String get contextSelfCareerTitle => 'Satisfacția în carieră';
 
   @override
   String get contextSelfCareerSubtitle =>
-      '1 = stuck/stressed, 5 = progress/clarity';
+      '1 = blocat/stresat, 5 = progres/claritate';
 
   @override
-  String get contextSelfGrowthTitle => 'Personal Growth Interest';
+  String get contextSelfGrowthTitle => 'Interes pentru dezvoltare personală';
 
   @override
-  String get contextSelfGrowthSubtitle => '1 = low interest, 5 = very high';
+  String get contextSelfGrowthSubtitle =>
+      '1 = interes scăzut, 5 = foarte ridicat';
 
   @override
-  String get contextSelfStruggling => 'Struggling';
+  String get contextSelfStruggling => 'În dificultate';
 
   @override
-  String get contextSelfThriving => 'Thriving';
+  String get contextSelfThriving => 'Prosper';
 
   @override
   String get contextPrioritiesTitle =>
-      'What are your top priorities right now?';
+      'Care sunt prioritățile tale principale în acest moment?';
 
   @override
   String get contextPrioritiesSubtitle =>
-      'Select up to 2 areas you want to focus on';
+      'Selectează până la 2 domenii pe care vrei să te concentrezi';
 
   @override
-  String get contextGuidanceStyleTitle => 'Preferred guidance style';
+  String get contextGuidanceStyleTitle => 'Stilul de ghidare preferat';
 
   @override
-  String get contextSensitivityTitle => 'Sensitivity Mode';
+  String get contextSensitivityTitle => 'Mod de sensibilitate';
 
   @override
   String get contextSensitivitySubtitle =>
-      'Avoid anxiety-inducing or deterministic phrasing in guidance';
+      'Evită formulările care induc anxietate sau sunt deterministe în ghidare';
 
   @override
-  String get contextPriorityHealth => 'Health & habits';
+  String get contextPriorityHealth => 'Sănătate & obiceiuri';
 
   @override
-  String get contextPriorityCareer => 'Career growth';
+  String get contextPriorityCareer => 'Dezvoltare profesională';
 
   @override
-  String get contextPriorityBusiness => 'Business decisions';
+  String get contextPriorityBusiness => 'Decizii de afaceri';
 
   @override
-  String get contextPriorityMoney => 'Money & stability';
+  String get contextPriorityMoney => 'Bani & stabilitate';
 
   @override
-  String get contextPriorityLove => 'Love & relationship';
+  String get contextPriorityLove => 'Dragoste & relație';
 
   @override
-  String get contextPriorityFamily => 'Family & parenting';
+  String get contextPriorityFamily => 'Familie & parenting';
 
   @override
-  String get contextPrioritySocial => 'Social life';
+  String get contextPrioritySocial => 'Viața socială';
 
   @override
-  String get contextPriorityGrowth => 'Personal growth / mindset';
+  String get contextPriorityGrowth => 'Dezvoltare personală / mentalitate';
 
   @override
-  String get contextGuidanceStyleDirect => 'Direct & practical';
+  String get contextGuidanceStyleDirect => 'Direct & practic';
 
   @override
   String get contextGuidanceStyleDirectDesc =>
-      'Get straight to actionable advice';
+      'Obține sfaturi directe și acționabile';
 
   @override
-  String get contextGuidanceStyleEmpathetic => 'Empathetic & reflective';
+  String get contextGuidanceStyleEmpathetic => 'Empatic & reflexiv';
 
   @override
-  String get contextGuidanceStyleEmpatheticDesc => 'Warm, supportive guidance';
+  String get contextGuidanceStyleEmpatheticDesc =>
+      'Ghidare caldă și de susținere';
 
   @override
-  String get contextGuidanceStyleBalanced => 'Balanced';
+  String get contextGuidanceStyleBalanced => 'Echilibrat';
 
   @override
   String get contextGuidanceStyleBalancedDesc =>
-      'Mix of practical and emotional support';
+      'Amestec de suport practic și emoțional';
 
   @override
   String get homeGuidancePreparing =>
-      'Reading the stars and asking the Universe about you…';
+      'Citind stelele și întrebând Universul despre tine…';
 
   @override
   String get homeGuidanceFailed =>
-      'Failed to generate guidance. Please try again.';
+      'Generarea ghidării a eșuat. Te rugăm să încerci din nou.';
 
   @override
   String get homeGuidanceTimeout =>
-      'Taking longer than expected. Tap Retry or check back in a moment.';
+      'Durată mai lungă decât era de așteptat. Apasă Retry sau verifică din nou în câteva momente.';
 
   @override
-  String get homeGuidanceLoadFailed => 'Failed to load guidance';
+  String get homeGuidanceLoadFailed => 'Încărcarea ghidării a eșuat';
 
   @override
-  String get homeTodaysGuidance => 'Today\'s Guidance';
+  String get homeTodaysGuidance => 'Ghidarea de astăzi';
 
   @override
-  String get homeSeeAll => 'See all';
+  String get homeSeeAll => 'Vezi tot';
 
   @override
-  String get homeHealth => 'Health';
+  String get homeHealth => 'Sănătate';
 
   @override
-  String get homeCareer => 'Career';
+  String get homeCareer => 'Carieră';
 
   @override
-  String get homeMoney => 'Money';
+  String get homeMoney => 'Bani';
 
   @override
-  String get homeLove => 'Love';
+  String get homeLove => 'Dragoste';
 
   @override
-  String get homePartners => 'Partners';
+  String get homePartners => 'Parteneri';
 
   @override
-  String get homeGrowth => 'Growth';
+  String get homeGrowth => 'Dezvoltare';
 
   @override
-  String get homeTraveler => 'Traveler';
+  String get homeTraveler => 'Călător';
 
   @override
   String homeGreeting(Object name) {
-    return 'Hello, $name';
+    return 'Bună, $name';
   }
 
   @override
-  String get homeFocusFallback => 'Personal Growth';
+  String get homeFocusFallback => 'Dezvoltare personală';
 
   @override
-  String get homeDailyMessage => 'Your Daily Message';
+  String get homeDailyMessage => 'Mesajul tău zilnic';
 
   @override
-  String get homeNatalChartTitle => 'My Natal Chart';
+  String get homeNatalChartTitle => 'Harta mea natală';
 
   @override
   String get homeNatalChartSubtitle =>
-      'Explore your birth chart & interpretations';
+      'Explorează-ți harta natală și interpretările';
 
   @override
-  String get navHome => 'Home';
+  String get navHome => 'Acasă';
 
   @override
-  String get navHistory => 'History';
+  String get navHistory => 'Istoric';
 
   @override
-  String get navGuide => 'Guide';
+  String get navGuide => 'Ghid';
 
   @override
-  String get navProfile => 'Profile';
+  String get navProfile => 'Profil';
 
   @override
-  String get navForYou => 'For You';
+  String get navForYou => 'Pentru tine';
 
   @override
-  String get commonToday => 'Today';
+  String get commonToday => 'Astăzi';
 
   @override
-  String get commonTryAgain => 'Try Again';
+  String get commonTryAgain => 'Încearcă din nou';
 
   @override
-  String get natalChartTitle => 'My Natal Chart';
+  String get natalChartTitle => 'Harta mea natală';
 
   @override
-  String get natalChartTabTable => 'Table';
+  String get natalChartTabTable => 'Tabel';
 
   @override
-  String get natalChartTabChart => 'Chart';
+  String get natalChartTabChart => 'Grafica';
 
   @override
-  String get natalChartEmptyTitle => 'No Natal Chart Data';
+  String get natalChartEmptyTitle => 'Nu există date pentru harta natală';
 
   @override
   String get natalChartEmptySubtitle =>
-      'Please complete your birth data to see your natal chart.';
+      'Te rugăm să completezi datele nașterii pentru a vedea harta ta natală.';
 
   @override
-  String get natalChartAddBirthData => 'Add Birth Data';
+  String get natalChartAddBirthData => 'Adaugă date de naștere';
 
   @override
-  String get natalChartErrorTitle => 'Unable to load chart';
+  String get natalChartErrorTitle => 'Imposibil de încărcat harta';
 
   @override
-  String get guidanceTitle => 'Daily Guidance';
+  String get guidanceTitle => 'Îndrumare zilnică';
 
   @override
-  String get guidanceLoadFailed => 'Failed to load guidance';
+  String get guidanceLoadFailed => 'Încărcarea îndrumării a eșuat';
 
   @override
-  String get guidanceNoneAvailable => 'No guidance available';
+  String get guidanceNoneAvailable => 'Nu există îndrumări disponibile';
 
   @override
-  String get guidanceCosmicEnergyTitle => 'Today\'s Cosmic Energy';
+  String get guidanceCosmicEnergyTitle => 'Energia cosmică de astăzi';
 
   @override
-  String get guidanceMoodLabel => 'Mood';
+  String get guidanceMoodLabel => 'Stare';
 
   @override
-  String get guidanceFocusLabel => 'Focus';
+  String get guidanceFocusLabel => 'Concentrare';
 
   @override
-  String get guidanceYourGuidance => 'Your Guidance';
+  String get guidanceYourGuidance => 'Îndrumarea ta';
 
   @override
-  String get guidanceTapToCollapse => 'Tap to collapse';
+  String get guidanceTapToCollapse => 'Apasă pentru a restrânge';
 
   @override
-  String get historyTitle => 'Guidance History';
+  String get historyTitle => 'Istoricul îndrumărilor';
 
   @override
-  String get historySubtitle => 'Your cosmic journey through time';
+  String get historySubtitle => 'Călătoria ta cosmică în timp';
 
   @override
-  String get historyLoadFailed => 'Failed to load history';
+  String get historyLoadFailed => 'Încărcarea istoricului a eșuat';
 
   @override
-  String get historyEmptyTitle => 'No history yet';
+  String get historyEmptyTitle => 'Nu există istoric încă';
 
   @override
-  String get historyEmptySubtitle => 'Your daily guidances will appear here';
+  String get historyEmptySubtitle => 'Îndrumările tale zilnice vor apărea aici';
 
   @override
-  String get historyNewBadge => 'NEW';
+  String get historyNewBadge => 'NOU';
 
   @override
-  String get commonUnlocked => 'Unlocked';
+  String get commonUnlocked => 'Dezblocat';
 
   @override
-  String get commonComingSoon => 'Coming Soon';
+  String get commonComingSoon => 'În curând';
 
   @override
-  String get commonSomethingWentWrong => 'Something went wrong';
+  String get commonSomethingWentWrong => 'Ceva a mers prost';
 
   @override
-  String get commonNoContent => 'No content available.';
+  String get commonNoContent => 'Nu există conținut disponibil.';
 
   @override
-  String get commonUnknownError => 'Unknown error';
+  String get commonUnknownError => 'Eroare necunoscută';
 
   @override
   String get commonTakingLonger =>
-      'Taking longer than expected. Please try again.';
+      'Durata este mai lungă decât era de așteptat. Te rugăm să încerci din nou.';
 
   @override
   String commonErrorWithMessage(Object error) {
-    return 'Error: $error';
+    return 'Eroare: $error';
   }
 
   @override
-  String get forYouTitle => 'For You';
+  String get forYouTitle => 'Pentru tine';
 
   @override
-  String get forYouSubtitle => 'Personalized cosmic insights';
+  String get forYouSubtitle => 'Perspectivă cosmică personalizată';
 
   @override
-  String get forYouNatalChartTitle => 'My Natal Chart';
+  String get forYouNatalChartTitle => 'Harta mea natală';
 
   @override
-  String get forYouNatalChartSubtitle => 'Your birth chart analysis';
+  String get forYouNatalChartSubtitle => 'Analiza hărții tale natale';
 
   @override
-  String get forYouCompatibilitiesTitle => 'Compatibilities';
+  String get forYouCompatibilitiesTitle => 'Compatibilități';
 
   @override
   String get forYouCompatibilitiesSubtitle =>
-      'Love, friendship & partnership reports';
+      'Rapoarte despre dragoste, prietenie și parteneriate';
 
   @override
-  String get forYouKarmicTitle => 'Karmic Astrology';
+  String get forYouKarmicTitle => 'Astrologie Karmică';
 
   @override
-  String get forYouKarmicSubtitle => 'Soul lessons & past life patterns';
+  String get forYouKarmicSubtitle =>
+      'Lecții ale sufletului și tipare din viețile anterioare';
 
   @override
-  String get forYouLearnTitle => 'Learn Astrology';
+  String get forYouLearnTitle => 'Învață astrologie';
 
   @override
-  String get forYouLearnSubtitle => 'Free educational content';
+  String get forYouLearnSubtitle => 'Conținut educațional gratuit';
 
   @override
-  String get compatibilitiesTitle => 'Compatibilities';
+  String get compatibilitiesTitle => 'Compatibilități';
 
   @override
-  String get compatibilitiesLoadFailed => 'Failed to load services';
+  String get compatibilitiesLoadFailed => 'Încărcarea serviciilor a eșuat';
 
   @override
-  String get compatibilitiesBetaFree => 'Beta: All reports are FREE!';
+  String get compatibilitiesBetaFree => 'Beta: Toate rapoartele sunt GRATUITE!';
 
   @override
-  String get compatibilitiesChooseReport => 'Choose a Report';
+  String get compatibilitiesChooseReport => 'Alege un raport';
 
   @override
   String get compatibilitiesSubtitle =>
-      'Discover insights about yourself and your relationships';
+      'Descoperă perspective despre tine și relațiile tale';
 
   @override
-  String get compatibilitiesPartnerBadge => '+Partner';
+  String get compatibilitiesPartnerBadge => '+Partener';
 
   @override
-  String get compatibilitiesPersonalityTitle => 'Personality Report';
+  String get compatibilitiesPersonalityTitle => 'Raport de personalitate';
 
   @override
   String get compatibilitiesPersonalitySubtitle =>
-      'Comprehensive analysis of your personality based on your natal chart';
+      'Analiză cuprinzătoare a personalității tale bazată pe harta natală';
 
   @override
   String get compatibilitiesRomanticPersonalityTitle =>
-      'Romantic Personality Report';
+      'Raport de personalitate romantică';
 
   @override
   String get compatibilitiesRomanticPersonalitySubtitle =>
-      'Understand how you approach love and romance';
+      'Înțelege cum abordezi dragostea și romantismul';
 
   @override
-  String get compatibilitiesLoveCompatibilityTitle => 'Love Compatibility';
+  String get compatibilitiesLoveCompatibilityTitle =>
+      'Compatibilitate în dragoste';
 
   @override
   String get compatibilitiesLoveCompatibilitySubtitle =>
-      'Detailed romantic compatibility analysis with your partner';
+      'Analiză detaliată a compatibilității romantice cu partenerul tău';
 
   @override
-  String get compatibilitiesRomanticForecastTitle => 'Romantic Couple Forecast';
+  String get compatibilitiesRomanticForecastTitle =>
+      'Previziune pentru cupluri romantice';
 
   @override
   String get compatibilitiesRomanticForecastSubtitle =>
-      'Insights into the future of your relationship';
+      'Perspective asupra viitorului relației tale';
 
   @override
-  String get compatibilitiesFriendshipTitle => 'Friendship Report';
+  String get compatibilitiesFriendshipTitle => 'Raport de prietenie';
 
   @override
   String get compatibilitiesFriendshipSubtitle =>
-      'Analyze friendship dynamics and compatibility';
+      'Analizează dinamica prieteniei și compatibilitatea';
 
   @override
-  String get moonPhaseTitle => 'Moon Phase Report';
+  String get moonPhaseTitle => 'Raport despre faza lunii';
 
   @override
   String get moonPhaseSubtitle =>
-      'Understand the current lunar energy and how it affects you. Get guidance aligned with the moon\'s phase.';
+      'Înțelege energia lunară actuală și cum te afectează. Obține îndrumări aliniate cu faza lunii.';
 
   @override
-  String get moonPhaseSelectDate => 'Select Date';
+  String get moonPhaseSelectDate => 'Selectează data';
 
   @override
   String get moonPhaseOriginalPrice => '\$2.99';
 
   @override
-  String get moonPhaseGenerate => 'Generate Report';
+  String get moonPhaseGenerate => 'Generează raport';
 
   @override
-  String get moonPhaseGenerateDifferentDate => 'Generate for Different Date';
+  String get moonPhaseGenerateDifferentDate =>
+      'Generează pentru o dată diferită';
 
   @override
-  String get moonPhaseGenerationFailed => 'Generation failed';
+  String get moonPhaseGenerationFailed => 'Generarea a eșuat';
 
   @override
   String get moonPhaseGenerating =>
-      'Report is being generated. Please try again.';
+      'Raportul este în curs de generare. Te rugăm să încerci din nou.';
 
   @override
-  String get moonPhaseUnknownError => 'Something went wrong. Please try again.';
+  String get moonPhaseUnknownError =>
+      'Ceva a mers prost. Te rugăm să încerci din nou.';
 
   @override
-  String get requiredFieldsNote => 'Fields marked with * are required.';
+  String get requiredFieldsNote => 'Câmpurile marcate cu * sunt obligatorii.';
 
   @override
-  String get karmicTitle => 'Karmic Astrology';
+  String get karmicTitle => 'Astrologie Karmică';
 
   @override
   String karmicLoadFailed(Object error) {
-    return 'Failed to load: $error';
+    return 'Încărcarea a eșuat: $error';
   }
 
   @override
-  String get karmicOfferTitle => '🔮 Karmic Astrology – Messages of the Soul';
+  String get karmicOfferTitle =>
+      '🔮 Astrologie Karmică – Mesaje ale Sufletului';
 
   @override
   String get karmicOfferBody =>
-      'Karmic Astrology reveals the deep patterns shaping your life, beyond everyday events.\n\nIt offers an interpretation that speaks about unresolved lessons, karmic connections, and the soul\'s path of growth.\n\nThis is not about what comes next,\nbut about why you are experiencing what you experience.\n\n✨ Activate Karmic Astrology and discover the deeper meaning of your journey.';
+      'Astrologia Karmică dezvăluie tiparele profunde care îți modelează viața, dincolo de evenimentele cotidiene.\n\nOferă o interpretare care vorbește despre lecții nerezolvate, conexiuni karmice și calea de creștere a sufletului.\n\nAceasta nu este despre ce urmează,\nci despre de ce experimentezi ceea ce experimentezi.\n\n✨ Activează Astrologia Karmică și descoperă semnificația mai profundă a călătoriei tale.';
 
   @override
-  String get karmicBetaFreeBadge => 'Beta Testers – FREE Access!';
+  String get karmicBetaFreeBadge => 'Testeri Beta – Acces GRATUIT!';
 
   @override
   String karmicPriceBeta(Object price) {
-    return '\$$price – Beta Testers Free';
+    return '\$$price – Testeri Beta Gratuit';
   }
 
   @override
   String karmicPriceUnlock(Object price) {
-    return 'Unlock for \$$price';
+    return 'Dezblochează pentru \$$price';
   }
 
   @override
-  String get karmicHintInstant => 'Your reading will be generated instantly';
+  String get karmicHintInstant => 'Citirea ta va fi generată instantaneu';
 
   @override
-  String get karmicHintOneTime => 'One-time purchase, no subscription';
+  String get karmicHintOneTime => 'Achiziție unică, fără abonament';
 
   @override
-  String get karmicProgressHint => 'Connecting to your karmic path…';
+  String get karmicProgressHint => 'Conectare la calea ta karmică…';
 
   @override
   String karmicGenerateFailed(Object error) {
-    return 'Failed to generate: $error';
+    return 'Generarea a eșuat: $error';
   }
 
   @override
-  String get karmicCheckoutTitle => 'Karmic Astrology Checkout';
+  String get karmicCheckoutTitle => 'Plata pentru Astrologie Karmică';
 
   @override
-  String get karmicCheckoutSubtitle => 'Purchase flow coming soon';
+  String get karmicCheckoutSubtitle => 'Fluxul de achiziție va veni în curând';
 
   @override
   String karmicGenerationFailed(Object error) {
-    return 'Generation failed: $error';
+    return 'Generarea a eșuat: $error';
   }
 
   @override
-  String get karmicLoading => 'Loading your karmic reading...';
+  String get karmicLoading => 'Se încarcă citirea ta karmică...';
 
   @override
-  String get karmicGenerationFailedShort => 'Generation failed';
+  String get karmicGenerationFailedShort => 'Generarea a eșuat';
 
   @override
-  String get karmicGeneratingTitle => 'Generating Your Karmic Reading...';
+  String get karmicGeneratingTitle => 'Se generează citirea ta karmică...';
 
   @override
   String get karmicGeneratingSubtitle =>
-      'Analyzing your natal chart for karmic patterns and soul lessons.';
+      'Se analizează harta ta natală pentru tipare karmice și lecții ale sufletului.';
 
   @override
-  String get karmicReadingTitle => '🔮 Your Karmic Reading';
+  String get karmicReadingTitle => '🔮 Citirea ta Karmică';
 
   @override
-  String get karmicReadingSubtitle => 'Messages of the Soul';
+  String get karmicReadingSubtitle => 'Mesaje ale Sufletului';
 
   @override
   String get karmicDisclaimer =>
-      'This reading is for self-reflection and entertainment purposes. It does not constitute professional advice.';
+      'Această citire este pentru auto-reflecție și scopuri de divertisment. Nu constituie sfaturi profesionale.';
 
   @override
-  String get commonActive => 'Active';
+  String get commonActive => 'Activ';
 
   @override
-  String get commonBackToHome => 'Back to Home';
+  String get commonBackToHome => 'Înapoi la Acasă';
 
   @override
-  String get commonYesterday => 'yesterday';
+  String get commonYesterday => 'ieri';
 
   @override
   String commonWeeksAgo(Object count) {
-    return '$count weeks ago';
+    return '$count săptămâni în urmă';
   }
 
   @override
   String commonMonthsAgo(Object count) {
-    return '$count months ago';
+    return '$count luni în urmă';
   }
 
   @override
-  String get commonEdit => 'Edit';
+  String get commonEdit => 'Editează';
 
   @override
-  String get commonDelete => 'Delete';
+  String get commonDelete => 'Șterge';
 
   @override
   String get natalChartProGenerated =>
-      'Pro interpretations generated! Scroll up to see them.';
+      'Interpretări Pro generate! Derulează în sus pentru a le vedea.';
 
   @override
-  String get natalChartHouse1 => 'Self & Identity';
+  String get natalChartHouse1 => 'Sine & Identitate';
 
   @override
-  String get natalChartHouse2 => 'Money & Values';
+  String get natalChartHouse2 => 'Bani & Valori';
 
   @override
-  String get natalChartHouse3 => 'Communication';
+  String get natalChartHouse3 => 'Comunicare';
 
   @override
-  String get natalChartHouse4 => 'Home & Family';
+  String get natalChartHouse4 => 'Acasă & Familie';
 
   @override
-  String get natalChartHouse5 => 'Creativity & Romance';
+  String get natalChartHouse5 => 'Creativitate & Romantism';
 
   @override
-  String get natalChartHouse6 => 'Health & Routine';
+  String get natalChartHouse6 => 'Sănătate & Rutine';
 
   @override
-  String get natalChartHouse7 => 'Relationships';
+  String get natalChartHouse7 => 'Relații';
 
   @override
-  String get natalChartHouse8 => 'Transformation';
+  String get natalChartHouse8 => 'Transformare';
 
   @override
-  String get natalChartHouse9 => 'Philosophy & Travel';
+  String get natalChartHouse9 => 'Filozofie și Călătorii';
 
   @override
-  String get natalChartHouse10 => 'Career & Status';
+  String get natalChartHouse10 => 'Carieră și Statut';
 
   @override
-  String get natalChartHouse11 => 'Friends & Goals';
+  String get natalChartHouse11 => 'Prietenii și Obiectivele';
 
   @override
-  String get natalChartHouse12 => 'Spirituality';
+  String get natalChartHouse12 => 'Spiritualitate';
 
   @override
-  String get helpSupportTitle => 'Help & Support';
+  String get helpSupportTitle => 'Ajutor și Suport';
 
   @override
-  String get helpSupportContactTitle => 'Contact Support';
+  String get helpSupportContactTitle => 'Contactați Suportul';
 
   @override
   String get helpSupportContactSubtitle =>
-      'We typically respond within 24 hours';
+      'De obicei, răspundem în termen de 24 de ore';
 
   @override
-  String get helpSupportFaqTitle => 'Frequently Asked Questions';
+  String get helpSupportFaqTitle => 'Întrebări Frecvente';
 
   @override
-  String get helpSupportEmailSubject => 'Inner Wisdom Support Request';
+  String get helpSupportEmailSubject => 'Cerere de Suport Inner Wisdom';
 
   @override
   String get helpSupportEmailAppFailed =>
-      'Could not open email app. Please email support@innerwisdomapp.com';
+      'Nu s-a putut deschide aplicația de email. Vă rugăm să trimiteți un email la support@innerwisdomapp.com';
 
   @override
   String get helpSupportEmailFallback =>
-      'Please email us at support@innerwisdomapp.com';
+      'Vă rugăm să ne trimiteți un email la support@innerwisdomapp.com';
 
   @override
-  String get helpSupportFaq1Q => 'How accurate is the daily guidance?';
+  String get helpSupportFaq1Q => 'Cât de precisă este ghidarea zilnică?';
 
   @override
   String get helpSupportFaq1A =>
-      'Our daily guidance combines traditional astrological principles with your personal birth chart. While astrology is interpretive, our AI provides personalized insights based on real planetary positions and aspects.';
+      'Ghidarea noastră zilnică combină principii astrologice tradiționale cu harta dumneavoastră natală. Deși astrologia este interpretativă, AI-ul nostru oferă perspective personalizate bazate pe pozițiile planetare reale și aspectele acestora.';
 
   @override
-  String get helpSupportFaq2Q => 'Why do I need my birth time?';
+  String get helpSupportFaq2Q => 'De ce am nevoie de ora nașterii mele?';
 
   @override
   String get helpSupportFaq2A =>
-      'Your birth time determines your Ascendant (Rising sign) and the positions of houses in your chart. Without it, we use noon as a default, which may affect the accuracy of house-related interpretations.';
+      'Ora nașterii dumneavoastră determină Ascendentul (Semnul Ascendent) și pozițiile caselor din harta dumneavoastră. Fără aceasta, folosim prânzul ca valoare implicită, ceea ce poate afecta precizia interpretărilor legate de case.';
 
   @override
-  String get helpSupportFaq3Q => 'How do I change my birth data?';
+  String get helpSupportFaq3Q => 'Cum îmi schimb datele de naștere?';
 
   @override
   String get helpSupportFaq3A =>
-      'Currently, birth data cannot be changed after initial setup to ensure consistency in your readings. Contact support if you need to make corrections.';
+      'În prezent, datele de naștere nu pot fi schimbate după configurarea inițială pentru a asigura consistența citirilor dumneavoastră. Contactați suportul dacă trebuie să faceți corecții.';
 
   @override
-  String get helpSupportFaq4Q => 'What is a Focus topic?';
+  String get helpSupportFaq4Q => 'Ce este un subiect de Focus?';
 
   @override
   String get helpSupportFaq4A =>
-      'A Focus topic is a current concern or life area you want to emphasize. When set, your daily guidance will pay special attention to this area, providing more relevant insights.';
+      'Un subiect de Focus este o preocupare actuală sau o zonă de viață pe care doriți să o accentuați. Când este setat, ghidarea dumneavoastră zilnică va acorda o atenție specială acestei zone, oferind perspective mai relevante.';
 
   @override
-  String get helpSupportFaq5Q => 'How does the subscription work?';
+  String get helpSupportFaq5Q => 'Cum funcționează abonamentul?';
 
   @override
   String get helpSupportFaq5A =>
-      'The free tier includes basic daily guidance. Premium subscribers get enhanced personalization, audio readings, and access to special features like Karmic Astrology readings.';
+      'Nivelul gratuit include ghidare zilnică de bază. Abonații premium beneficiază de personalizare îmbunătățită, citiri audio și acces la funcții speciale, cum ar fi citirile de Astrologie Karmică.';
 
   @override
-  String get helpSupportFaq6Q => 'Is my data private?';
+  String get helpSupportFaq6Q => 'Datele mele sunt private?';
 
   @override
   String get helpSupportFaq6A =>
-      'Yes! We take privacy seriously. Your birth data and personal information are encrypted and never shared with third parties. You can delete your account at any time.';
+      'Da! Luăm în serios confidențialitatea. Datele dumneavoastră de naștere și informațiile personale sunt criptate și nu sunt niciodată partajate cu terțe părți. Puteți șterge contul dumneavoastră în orice moment.';
 
   @override
-  String get helpSupportFaq7Q => 'What if I disagree with a reading?';
+  String get helpSupportFaq7Q =>
+      'Ce se întâmplă dacă nu sunt de acord cu o citire?';
 
   @override
   String get helpSupportFaq7A =>
-      'Astrology is interpretive, and not every reading will resonate. Use the feedback feature to help us improve. Our AI learns from your preferences over time.';
+      'Astrologia este interpretativă și nu fiecare citire va rezonează. Folosiți funcția de feedback pentru a ne ajuta să ne îmbunătățim. AI-ul nostru învață din preferințele dumneavoastră în timp.';
 
   @override
-  String get notificationsSaved => 'Notification settings saved';
+  String get notificationsSaved => 'Setările de notificare au fost salvate';
 
   @override
-  String get notificationsTitle => 'Notifications';
+  String get notificationsTitle => 'Notificări';
 
   @override
-  String get notificationsSectionTitle => 'Push Notifications';
+  String get notificationsSectionTitle => 'Notificări Push';
 
   @override
-  String get notificationsDailyTitle => 'Daily Guidance';
+  String get notificationsDailyTitle => 'Ghidare Zilnică';
 
   @override
   String get notificationsDailySubtitle =>
-      'Get notified when your daily guidance is ready';
+      'Fiți notificat când ghidarea dumneavoastră zilnică este gata';
 
   @override
-  String get notificationsWeeklyTitle => 'Weekly Highlights';
+  String get notificationsWeeklyTitle => 'Puncte Săptămânale';
 
   @override
   String get notificationsWeeklySubtitle =>
-      'Weekly cosmic overview and key transits';
+      'Prezentare cosmică săptămânală și tranzite cheie';
 
   @override
-  String get notificationsSpecialTitle => 'Special Events';
+  String get notificationsSpecialTitle => 'Evenimente Speciale';
 
   @override
   String get notificationsSpecialSubtitle =>
-      'Full moons, eclipses, and retrogrades';
+      'Luni pline, eclipse și retrograde';
 
   @override
   String get notificationsDeviceHint =>
-      'You can also control notifications in your device settings.';
+      'De asemenea, puteți controla notificările în setările dispozitivului dumneavoastră.';
 
   @override
-  String get concernsTitle => 'Your Focus';
+  String get concernsTitle => 'Focusul Tău';
 
   @override
-  String get concernsSubtitle => 'Topics shaping your guidance';
+  String get concernsSubtitle => 'Subiecte care modelează ghidarea ta';
 
   @override
   String concernsTabActive(Object count) {
-    return 'Active ($count)';
+    return 'Activ ($count)';
   }
 
   @override
   String concernsTabResolved(Object count) {
-    return 'Resolved ($count)';
+    return 'Rezolvat ($count)';
   }
 
   @override
   String concernsTabArchived(Object count) {
-    return 'Archived ($count)';
+    return 'Arhivat ($count)';
   }
 
   @override
-  String get concernsEmptyTitle => 'No concerns here';
+  String get concernsEmptyTitle => 'Nici o preocupare aici';
 
   @override
   String get concernsEmptySubtitle =>
-      'Add a focus topic to get personalized guidance';
+      'Adăugați un subiect de focus pentru a obține ghidare personalizată';
 
   @override
-  String get concernsCategoryCareer => 'Career & Job';
+  String get concernsCategoryCareer => 'Carieră și Loc de Muncă';
 
   @override
-  String get concernsCategoryHealth => 'Health';
+  String get concernsCategoryHealth => 'Sănătate';
 
   @override
-  String get concernsCategoryRelationship => 'Relationship';
+  String get concernsCategoryRelationship => 'Relație';
 
   @override
-  String get concernsCategoryFamily => 'Family';
+  String get concernsCategoryFamily => 'Familie';
 
   @override
-  String get concernsCategoryMoney => 'Money';
+  String get concernsCategoryMoney => 'Bani';
 
   @override
-  String get concernsCategoryBusiness => 'Business';
+  String get concernsCategoryBusiness => 'Afaceri';
 
   @override
-  String get concernsCategoryPartnership => 'Partnership';
+  String get concernsCategoryPartnership => 'Parteneriat';
 
   @override
-  String get concernsCategoryGrowth => 'Personal Growth';
+  String get concernsCategoryGrowth => 'Dezvoltare Personală';
 
   @override
   String get concernsMinLength =>
-      'Please describe your concern in more detail (at least 10 characters)';
+      'Vă rugăm să descrieți preocuparea dumneavoastră în mai multe detalii (cel puțin 10 caractere)';
 
   @override
   String get concernsSubmitFailed =>
-      'Failed to submit concern. Please try again.';
+      'Nu s-a putut trimite preocuparea. Vă rugăm să încercați din nou.';
 
   @override
-  String get concernsAddTitle => 'What\'s on your mind?';
+  String get concernsAddTitle => 'Ce ai pe minte?';
 
   @override
   String get concernsAddDescription =>
-      'Share your current concern, question, or life situation. Our AI will analyze it and provide focused guidance starting tomorrow.';
+      'Împărtășiți-vă preocuparea, întrebarea sau situația de viață actuală. AI-ul nostru o va analiza și va oferi ghidare concentrată începând de mâine.';
 
   @override
-  String get concernsExamplesTitle => 'Examples of concerns:';
+  String get concernsExamplesTitle => 'Exemple de preocupări:';
 
   @override
-  String get concernsExampleCareer => 'Career change decision';
+  String get concernsExampleCareer => 'Decizia de schimbare a carierei';
 
   @override
-  String get concernsExampleRelationship => 'Relationship challenges';
+  String get concernsExampleRelationship => 'Provocări în relație';
 
   @override
-  String get concernsExampleFinance => 'Financial investment timing';
+  String get concernsExampleFinance => 'Timpul de investiție financiară';
 
   @override
-  String get concernsExampleHealth => 'Health and wellness focus';
+  String get concernsExampleHealth => 'Focus pe sănătate și bunăstare';
 
   @override
-  String get concernsExampleGrowth => 'Personal growth direction';
+  String get concernsExampleGrowth => 'Direcția de dezvoltare personală';
 
   @override
-  String get concernsSubmitButton => 'Submit Concern';
+  String get concernsSubmitButton => 'Trimite Preocuparea';
 
   @override
-  String get concernsSuccessTitle => 'Concern Recorded!';
+  String get concernsSuccessTitle => 'Preocupare Înregistrată!';
 
   @override
-  String get concernsCategoryLabel => 'Category: ';
+  String get concernsCategoryLabel => 'Categorie: ';
 
   @override
   String get concernsSuccessMessage =>
-      'Starting tomorrow, your daily guidance will focus more on this topic.';
+      'Începând de mâine, ghidarea dumneavoastră zilnică se va concentra mai mult pe acest subiect.';
 
   @override
-  String get concernsViewFocusTopics => 'View My Focus Topics';
+  String get concernsViewFocusTopics => 'Vizualizați Subiectele Mele de Focus';
 
   @override
-  String get deleteAccountTitle => 'Delete Account';
+  String get deleteAccountTitle => 'Șterge Contul';
 
   @override
-  String get deleteAccountHeading => 'Delete Your Account?';
+  String get deleteAccountHeading => 'Ștergeți Contul Dumneavoastră?';
 
   @override
-  String get deleteAccountConfirmError => 'Please type DELETE to confirm';
+  String get deleteAccountConfirmError =>
+      'Vă rugăm să tastați DELETE pentru a confirma';
 
   @override
-  String get deleteAccountFinalWarningTitle => 'Final Warning';
+  String get deleteAccountFinalWarningTitle => 'Avertizare Finală';
 
   @override
   String get deleteAccountFinalWarningBody =>
-      'This action cannot be undone. All your data, including:\n\n• Your profile and birth data\n• Natal chart and interpretations\n• Daily guidance history\n• Personal context and preferences\n• All purchased content\n\nWill be permanently deleted.';
+      'Această acțiune nu poate fi anulată. Toate datele dumneavoastră, inclusiv:\n\n• Profilul și datele de naștere\n• Harta natală și interpretările\n• Istoricul ghidării zilnice\n• Contextul personal și preferințele\n• Toate conținuturile achiziționate\n\nVor fi șterse permanent.';
 
   @override
-  String get deleteAccountConfirmButton => 'Delete Forever';
+  String get deleteAccountConfirmButton => 'Șterge pentru Totdeauna';
 
   @override
-  String get deleteAccountSuccess => 'Your account has been deleted';
+  String get deleteAccountSuccess => 'Contul dumneavoastră a fost șters';
 
   @override
   String get deleteAccountFailed =>
-      'Failed to delete account. Please try again.';
+      'Nu s-a putut șterge contul. Vă rugăm să încercați din nou.';
 
   @override
   String get deleteAccountPermanentWarning =>
-      'This action is permanent and cannot be undone';
+      'Această acțiune este permanentă și nu poate fi anulată';
 
   @override
   String get deleteAccountWarningDetail =>
-      'All your personal data, including your natal chart, guidance history, and any purchases will be permanently deleted.';
+      'Toate datele dumneavoastră personale, inclusiv harta natală, istoricul ghidării și orice achiziții vor fi șterse permanent.';
 
   @override
-  String get deleteAccountWhatTitle => 'What will be deleted:';
+  String get deleteAccountWhatTitle => 'Ce va fi șters:';
 
   @override
-  String get deleteAccountItemProfile => 'Your profile and account';
+  String get deleteAccountItemProfile => 'Profilul și contul dumneavoastră';
 
   @override
-  String get deleteAccountItemBirthData => 'Birth data and natal chart';
+  String get deleteAccountItemBirthData => 'Datele de naștere și harta natală';
 
   @override
-  String get deleteAccountItemGuidance => 'All daily guidance history';
+  String get deleteAccountItemGuidance => 'Întreg istoricul ghidării zilnice';
 
   @override
-  String get deleteAccountItemContext => 'Personal context & preferences';
+  String get deleteAccountItemContext => 'Context personal și preferințe';
 
   @override
-  String get deleteAccountItemKarmic => 'Karmic astrology readings';
+  String get deleteAccountItemKarmic => 'Citiri de astrologie karmică';
 
   @override
-  String get deleteAccountItemPurchases => 'All purchased content';
+  String get deleteAccountItemPurchases => 'Toate conținuturile achiziționate';
 
   @override
-  String get deleteAccountTypeDelete => 'Type DELETE to confirm';
+  String get deleteAccountTypeDelete => 'Tastați DELETE pentru a confirma';
 
   @override
   String get deleteAccountDeleteHint => 'DELETE';
 
   @override
-  String get deleteAccountButton => 'Delete My Account';
+  String get deleteAccountButton => 'Șterge Contul Meu';
 
   @override
-  String get deleteAccountCancel => 'Cancel, keep my account';
+  String get deleteAccountCancel => 'Anulează, păstrează-mi contul';
 
   @override
-  String get learnArticleLoadFailed => 'Failed to load article';
+  String get learnArticleLoadFailed => 'Nu s-a putut încărca articolul';
 
   @override
-  String get learnContentInEnglish => 'Content in English';
+  String get learnContentInEnglish => 'Conținut în engleză';
 
   @override
-  String get learnArticlesLoadFailed => 'Failed to load articles';
+  String get learnArticlesLoadFailed => 'Nu s-au putut încărca articolele';
 
   @override
-  String get learnArticlesEmpty => 'No articles available yet';
+  String get learnArticlesEmpty => 'Nu sunt articole disponibile încă';
 
   @override
   String get learnContentFallback =>
-      'Showing content in English (not available in your language)';
+      'Se afișează conținut în engleză (nu este disponibil în limba dumneavoastră)';
 
   @override
-  String get checkoutTitle => 'Checkout';
+  String get checkoutTitle => 'Finalizare Comandă';
 
   @override
-  String get checkoutOrderSummary => 'Order Summary';
+  String get checkoutOrderSummary => 'Sumar Comandă';
 
   @override
-  String get checkoutProTitle => 'Pro Natal Chart';
+  String get checkoutProTitle => 'Harta Natală Pro';
 
   @override
-  String get checkoutProSubtitle => 'Full planetary interpretations';
+  String get checkoutProSubtitle => 'Interpretări planetare complete';
 
   @override
   String get checkoutTotalLabel => 'Total';
@@ -1657,201 +1681,204 @@ class AppLocalizationsRo extends AppLocalizations {
   String get checkoutTotalAmount => '\$9.99 USD';
 
   @override
-  String get checkoutPaymentTitle => 'Payment Integration';
+  String get checkoutPaymentTitle => 'Integrarea Plății';
 
   @override
   String get checkoutPaymentSubtitle =>
-      'In-App Purchase integration is being finalized. Please check back soon!';
+      'Integrarea achizițiilor în aplicație este în curs de finalizare. Vă rugăm să verificați din nou în curând!';
 
   @override
-  String get checkoutProcessing => 'Processing...';
+  String get checkoutProcessing => 'Se procesează...';
 
   @override
-  String get checkoutDemoPurchase => 'Demo Purchase (Testing)';
+  String get checkoutDemoPurchase => 'Achiziție Demo (Testare)';
 
   @override
   String get checkoutSecurityNote =>
-      'Payment is processed securely through Apple/Google. Your card details are never stored.';
+      'Plata este procesată în siguranță prin Apple/Google. Detaliile cardului tău nu sunt niciodată stocate.';
 
   @override
-  String get checkoutSuccess => '🎉 Pro Natal Chart unlocked successfully!';
+  String get checkoutSuccess => '🎉 Graficul Natal Pro deblocat cu succes!';
 
   @override
   String get checkoutGenerateFailed =>
-      'Failed to generate interpretations. Please try again.';
+      'Generarea interpretărilor a eșuat. Te rugăm să încerci din nou.';
 
   @override
   String checkoutErrorWithMessage(Object error) {
-    return 'An error occurred: $error';
+    return 'A apărut o eroare: $error';
   }
 
   @override
-  String get billingUpgrade => 'Upgrade to Premium';
+  String get billingUpgrade => 'Upgrade la Premium';
 
   @override
   String billingFeatureLocked(Object feature) {
-    return '$feature is a Premium feature';
+    return '$feature este o caracteristică Premium';
   }
 
   @override
   String get billingUpgradeBody =>
-      'Upgrade to Premium to unlock this feature and get the most personalized guidance.';
+      'Upgrade la Premium pentru a debloca această caracteristică și a obține cele mai personalizate îndrumări.';
 
   @override
-  String get contextReviewFailed => 'Failed to update. Please try again.';
+  String get contextReviewFailed =>
+      'Actualizarea a eșuat. Te rugăm să încerci din nou.';
 
   @override
-  String get contextReviewTitle => 'Time for a Quick Check-in';
+  String get contextReviewTitle => 'Timp pentru o Verificare Rapidă';
 
   @override
   String get contextReviewBody =>
-      'It\'s been 3 months since we last updated your personal context. Has anything important changed in your life that we should know about?';
+      'Au trecut 3 luni de când am actualizat ultima dată contextul tău personal. A schimbat ceva important în viața ta de care ar trebui să știm?';
 
   @override
   String get contextReviewHint =>
-      'This helps us give you more personalized guidance.';
+      'Acest lucru ne ajută să îți oferim îndrumări mai personalizate.';
 
   @override
-  String get contextReviewNoChanges => 'No changes';
+  String get contextReviewNoChanges => 'Nicio schimbare';
 
   @override
-  String get contextReviewYesUpdate => 'Yes, update';
+  String get contextReviewYesUpdate => 'Da, actualizează';
 
   @override
-  String get contextProfileLoadFailed => 'Failed to load profile';
+  String get contextProfileLoadFailed => 'Încărcarea profilului a eșuat';
 
   @override
-  String get contextCardTitle => 'Personal Context';
+  String get contextCardTitle => 'Context Personal';
 
   @override
   String get contextCardSubtitle =>
-      'Set up your personal context to receive more tailored guidance.';
+      'Configurează-ți contextul personal pentru a primi îndrumări mai adaptate.';
 
   @override
-  String get contextCardSetupNow => 'Set Up Now';
+  String get contextCardSetupNow => 'Configurează Acum';
 
   @override
   String contextCardVersionUpdated(Object version, Object date) {
-    return 'Version $version • Last updated $date';
+    return 'Versiunea $version • Ultima actualizare $date';
   }
 
   @override
-  String get contextCardAiSummary => 'AI Summary';
+  String get contextCardAiSummary => 'Rezumat AI';
 
   @override
   String contextCardToneTag(Object tone) {
-    return '$tone tone';
+    return 'ton $tone';
   }
 
   @override
-  String get contextCardSensitivityTag => 'sensitivity on';
+  String get contextCardSensitivityTag => 'sensibilitate activată';
 
   @override
-  String get contextCardReviewDue => 'Review due - update your context';
+  String get contextCardReviewDue =>
+      'Revizuire necesară - actualizează-ți contextul';
 
   @override
   String contextCardNextReview(Object days) {
-    return 'Next review in $days days';
+    return 'Următoarea revizuire în $days zile';
   }
 
   @override
-  String get contextDeleteTitle => 'Delete Personal Context?';
+  String get contextDeleteTitle => 'Ștergi Contextul Personal?';
 
   @override
   String get contextDeleteBody =>
-      'This will delete your personal context profile. Your guidance will become less personalized.';
+      'Aceasta va șterge profilul tău de context personal. Îndrumările tale vor deveni mai puțin personalizate.';
 
   @override
-  String get contextDeleteFailed => 'Failed to delete profile';
+  String get contextDeleteFailed => 'Ștergerea profilului a eșuat';
 
   @override
-  String get appTitle => 'Inner Wisdom';
+  String get appTitle => 'Înțelepciune Interioară';
 
   @override
   String get concernsHintExample =>
-      'Example: I have a job offer in another city and I\'m not sure if I should accept it...';
+      'Exemplu: Am o ofertă de muncă într-un alt oraș și nu sunt sigur dacă ar trebui să o accept...';
 
   @override
-  String get learnTitle => 'Learn Astrology';
+  String get learnTitle => 'Învață Astrologie';
 
   @override
-  String get learnFreeTitle => 'Free Learning Resources';
+  String get learnFreeTitle => 'Resurse de Învățare Gratuite';
 
   @override
-  String get learnFreeSubtitle => 'Explore the fundamentals of astrology';
+  String get learnFreeSubtitle => 'Explorează fundamentele astrologiei';
 
   @override
-  String get learnSignsTitle => 'Signs';
+  String get learnSignsTitle => 'Semne';
 
   @override
-  String get learnSignsSubtitle => '12 Zodiac signs and their meanings';
+  String get learnSignsSubtitle => '12 semne zodiacale și semnificațiile lor';
 
   @override
-  String get learnPlanetsTitle => 'Planets';
+  String get learnPlanetsTitle => 'Planete';
 
   @override
-  String get learnPlanetsSubtitle => 'Celestial bodies in astrology';
+  String get learnPlanetsSubtitle => 'Corpi cerești în astrologie';
 
   @override
-  String get learnHousesTitle => 'Houses';
+  String get learnHousesTitle => 'Case';
 
   @override
-  String get learnHousesSubtitle => '12 life areas in your chart';
+  String get learnHousesSubtitle => '12 domenii de viață în graficul tău';
 
   @override
-  String get learnTransitsTitle => 'Transits';
+  String get learnTransitsTitle => 'Tranzite';
 
   @override
-  String get learnTransitsSubtitle => 'Planetary movements & effects';
+  String get learnTransitsSubtitle => 'Mișcările planetare și efectele lor';
 
   @override
-  String get learnPaceTitle => 'Learn at Your Pace';
+  String get learnPaceTitle => 'Învață în Ritmul Tău';
 
   @override
   String get learnPaceSubtitle =>
-      'Comprehensive lessons to deepen your astrological knowledge';
+      'Lecții cuprinzătoare pentru a-ți aprofunda cunoștințele astrologice';
 
   @override
-  String get proNatalTitle => 'Pro Natal Chart';
+  String get proNatalTitle => 'Graficul Natal Pro';
 
   @override
-  String get proNatalHeroTitle => 'Unlock Deep Insights';
+  String get proNatalHeroTitle => 'Deblochează Perspective Profunde';
 
   @override
   String get proNatalHeroSubtitle =>
-      'Get comprehensive 150-200 word interpretations for each planetary placement in your birth chart.';
+      'Obține interpretări cuprinzătoare de 150-200 de cuvinte pentru fiecare plasare planetară din graficul tău natal.';
 
   @override
-  String get proNatalFeature1Title => 'Deep Personality Insights';
+  String get proNatalFeature1Title =>
+      'Perspective Profunde asupra Personalității';
 
   @override
   String get proNatalFeature1Body =>
-      'Understand how each planet shapes your unique personality and life path.';
+      'Înțelege cum fiecare planetă îți modelează personalitatea unică și calea în viață.';
 
   @override
-  String get proNatalFeature2Title => 'AI-Powered Analysis';
+  String get proNatalFeature2Title => 'Analiză Alimentată de AI';
 
   @override
   String get proNatalFeature2Body =>
-      'Advanced interpretations tailored to your exact planetary positions.';
+      'Interpretări avansate adaptate pozițiilor tale planetare exacte.';
 
   @override
-  String get proNatalFeature3Title => 'Actionable Guidance';
+  String get proNatalFeature3Title => 'Îndrumări Acționabile';
 
   @override
   String get proNatalFeature3Body =>
-      'Practical advice for career, relationships, and personal growth.';
+      'Sfaturi practice pentru carieră, relații și dezvoltare personală.';
 
   @override
-  String get proNatalFeature4Title => 'Lifetime Access';
+  String get proNatalFeature4Title => 'Acces pe Viață';
 
   @override
   String get proNatalFeature4Body =>
-      'Your interpretations are saved forever. Access anytime.';
+      'Interpretările tale sunt salvate pentru totdeauna. Accesează oricând.';
 
   @override
-  String get proNatalOneTime => 'One-time purchase';
+  String get proNatalOneTime => 'Achiziție unică';
 
   @override
-  String get proNatalNoSubscription => 'No subscription required';
+  String get proNatalNoSubscription => 'Nu este necesar un abonament';
 }

@@ -1,1 +1,742 @@
-{}
+{
+  "onboardingSkip": "Sari",
+  "onboardingTitle1": "Bun venit la Inner Wisdom Astro",
+  "onboardingDesc1": "Innerwisdom Astro reunește peste 30 de ani de expertiză astrologică de la Madi G. cu puterea AI avansat, creând una dintre cele mai rafinate și performante aplicații de astrologie disponibile astăzi.\n\nPrin combinarea unei perspective umane profunde cu tehnologia inteligentă, Innerwisdom Astro oferă interpretări precise, personalizate și semnificative, sprijinind utilizatorii în călătoria lor de auto-descoperire, claritate și creștere conștientă.",
+  "onboardingTitle2": "Călătoria ta astrologică completă",
+  "onboardingDesc2": "De la ghidare zilnică personalizată la Harta Ta Natală, Astrologie Karmică, rapoarte de personalitate detaliate, Compatibilitate în Dragoste și Prietenie, Previziuni Romantice pentru Cupluri și multe altele — toate sunt acum la îndemâna ta.\n\nProiectată pentru a sprijini claritatea, conexiunea și înțelegerea de sine, Innerwisdom Astro oferă o experiență astrologică completă, adaptată ție.",
+  "onboardingNext": "Următorul",
+  "onboardingGetStarted": "Începe",
+  "onboardingAlreadyHaveAccount": "Ai deja un cont? Conectează-te",
+  "birthDataTitle": "Harta Ta Natală",
+  "birthDataSubtitle": "Avem nevoie de detaliile tale de naștere pentru a crea\nprofilul tău astrologic personalizat",
+  "birthDateLabel": "Data Nașterii",
+  "birthDateSelectHint": "Selectează data nașterii",
+  "birthTimeLabel": "Ora Nașterii",
+  "birthTimeUnknown": "Necunoscut",
+  "birthTimeSelectHint": "Selectează ora nașterii",
+  "birthTimeUnknownCheckbox": "Nu știu ora exactă a nașterii",
+  "birthPlaceLabel": "Locul Nașterii",
+  "birthPlaceHint": "Începe să scrii numele unui oraș...",
+  "birthPlaceValidation": "Te rugăm să selectezi o locație din sugestii",
+  "birthPlaceSelected": "Selectat: {location}",
+  "@birthPlaceSelected": {
+    "placeholders": {
+      "location": {}
+    }
+  },
+  "genderLabel": "Gen",
+  "genderMale": "Masculin",
+  "genderFemale": "Feminin",
+  "genderPreferNotToSay": "Prefer să nu spun",
+  "birthDataSubmit": "Generează Harta Mea Natală",
+  "birthDataPrivacyNote": "Datele tale de naștere sunt folosite doar pentru a calcula\nharta ta astrologică și sunt stocate în siguranță.",
+  "birthDateMissing": "Te rugăm să selectezi data nașterii",
+  "birthPlaceMissing": "Te rugăm să selectezi un loc de naștere din sugestii",
+  "birthDataSaveError": "Nu s-au putut salva datele de naștere. Te rugăm să încerci din nou.",
+  "appearanceTitle": "Aspect",
+  "appearanceTheme": "Temă",
+  "appearanceDarkTitle": "Întunecat",
+  "appearanceDarkSubtitle": "Ușor pentru ochi în lumină slabă",
+  "appearanceLightTitle": "Lumină",
+  "appearanceLightSubtitle": "Aspect clasic luminos",
+  "appearanceSystemTitle": "Sistem",
+  "appearanceSystemSubtitle": "Se potrivește cu setările dispozitivului tău",
+  "appearancePreviewTitle": "Previzualizare",
+  "appearancePreviewBody": "Tema cosmică este concepută pentru a crea o experiență imersivă de astrologie. Tema întunecată este recomandată pentru cea mai bună experiență vizuală.",
+  "appearanceThemeChanged": "Tema a fost schimbată în {theme}",
+  "@appearanceThemeChanged": {
+    "placeholders": {
+      "theme": {}
+    }
+  },
+  "profileUserFallback": "Utilizator",
+  "profilePersonalContext": "Context Personal",
+  "profileSettings": "Setări",
+  "profileAppLanguage": "Limba Aplicației",
+  "profileContentLanguage": "Limba Conținutului",
+  "profileContentLanguageHint": "Conținutul AI folosește limba selectată.",
+  "profileNotifications": "Notificări",
+  "profileNotificationsEnabled": "Activat",
+  "profileNotificationsDisabled": "Dezactivat",
+  "profileAppearance": "Aspect",
+  "profileHelpSupport": "Ajutor & Suport",
+  "profilePrivacyPolicy": "Politica de Confidențialitate",
+  "profileTermsOfService": "Termeni și Condiții",
+  "profileLogout": "Deconectare",
+  "profileLogoutConfirm": "Ești sigur că vrei să te deconectezi?",
+  "profileDeleteAccount": "Șterge Contul",
+  "commonCancel": "Anulează",
+  "profileSelectLanguageTitle": "Selectează Limba",
+  "profileSelectLanguageSubtitle": "Tot conținutul generat de AI va fi în limba ta selectată.",
+  "profileLanguageUpdated": "Limba a fost actualizată în {language}",
+  "@profileLanguageUpdated": {
+    "placeholders": {
+      "language": {}
+    }
+  },
+  "profileLanguageUpdateFailed": "Nu s-a reușit actualizarea limbii: {error}",
+  "@profileLanguageUpdateFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "profileVersion": "Inner Wisdom v{version}",
+  "@profileVersion": {
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "profileCosmicBlueprint": "Planul Tău Cosmic",
+  "profileSunLabel": "☀️ Soare",
+  "profileMoonLabel": "🌙 Lună",
+  "profileRisingLabel": "⬆️ Ascendent",
+  "profileUnknown": "Necunoscut",
+  "forgotPasswordTitle": "Ai uitat parola?",
+  "forgotPasswordSubtitle": "Introdu adresa ta de email și îți vom trimite un cod pentru a-ți reseta parola",
+  "forgotPasswordSent": "Dacă există un cont, un cod de resetare a fost trimis pe emailul tău.",
+  "forgotPasswordFailed": "Nu s-a reușit trimiterea codului de resetare. Te rugăm să încerci din nou.",
+  "forgotPasswordSendCode": "Trimite Codul de Resetare",
+  "forgotPasswordHaveCode": "Ai deja un cod?",
+  "forgotPasswordRemember": "Îți amintești parola? ",
+  "loginWelcomeBack": "Bun venit înapoi",
+  "loginSubtitle": "Conectează-te pentru a continua călătoria ta cosmică",
+  "loginInvalidCredentials": "Email sau parolă invalide",
+  "loginGoogleFailed": "Conectarea cu Google a eșuat. Te rugăm să încerci din nou.",
+  "loginAppleFailed": "Conectarea cu Apple a eșuat. Te rugăm să încerci din nou.",
+  "loginNetworkError": "Eroare de rețea. Te rugăm să verifici conexiunea ta.",
+  "loginSignInCancelled": "Conectarea a fost anulată.",
+  "loginPasswordHint": "Introdu parola ta",
+  "loginForgotPassword": "Ai uitat parola?",
+  "loginSignIn": "Conectează-te",
+  "loginNoAccount": "Nu ai un cont? ",
+  "loginSignUp": "Înscrie-te",
+  "commonEmailLabel": "Email",
+  "commonEmailHint": "Introdu adresa ta de email",
+  "commonEmailRequired": "Te rugăm să introduci adresa ta de email",
+  "commonEmailInvalid": "Te rugăm să introduci o adresă de email validă",
+  "commonPasswordLabel": "Parolă",
+  "commonPasswordRequired": "Te rugăm să introduci parola ta",
+  "commonOrContinueWith": "sau continuă cu",
+  "commonGoogle": "Google",
+  "commonApple": "Apple",
+  "commonNameLabel": "Nume",
+  "commonNameHint": "Introdu numele tău",
+  "commonNameRequired": "Te rugăm să introduci numele tău",
+  "signupTitle": "Creează Cont",
+  "signupSubtitle": "Începe-ți călătoria cosmică cu Inner Wisdom",
+  "signupEmailExists": "Emailul există deja sau datele sunt invalide",
+  "signupGoogleFailed": "Autentificarea Google a eșuat. Te rugăm să încerci din nou.",
+  "signupAppleFailed": "Autentificarea Apple a eșuat. Te rugăm să încerci din nou.",
+  "signupPasswordHint": "Creează o parolă (min. 8 caractere)",
+  "signupPasswordMin": "Parola trebuie să aibă cel puțin 8 caractere",
+  "signupConfirmPasswordLabel": "Confirmă Parola",
+  "signupConfirmPasswordHint": "Confirmă-ți parola",
+  "signupConfirmPasswordRequired": "Te rugăm să confirmi parola",
+  "signupPasswordMismatch": "Parolele nu se potrivesc",
+  "signupPreferredLanguage": "Limba Preferată",
+  "signupCreateAccount": "Creează Cont",
+  "signupHaveAccount": "Ai deja un cont? ",
+  "resetPasswordTitle": "Resetează Parola",
+  "resetPasswordSubtitle": "Introdu codul trimis pe email și setează o nouă parolă",
+  "resetPasswordSuccess": "Resetarea parolei a fost reușită! Redirecționare către autentificare...",
+  "resetPasswordFailed": "Eșec la resetarea parolei. Te rugăm să încerci din nou.",
+  "resetPasswordInvalidCode": "Cod de resetare invalid sau expirat. Te rugăm să soliciți unul nou.",
+  "resetPasswordMaxAttempts": "Numărul maxim de încercări a fost depășit. Te rugăm să soliciți un cod nou.",
+  "resetCodeLabel": "Cod de Resetare",
+  "resetCodeHint": "Introdu codul de 6 cifre",
+  "resetCodeRequired": "Te rugăm să introduci codul de resetare",
+  "resetCodeLength": "Codul trebuie să fie de 6 cifre",
+  "resetNewPasswordLabel": "Noua Parolă",
+  "resetNewPasswordHint": "Creează o nouă parolă (min. 8 caractere)",
+  "resetNewPasswordRequired": "Te rugăm să introduci o nouă parolă",
+  "resetConfirmPasswordHint": "Confirmă-ți noua parolă",
+  "resetPasswordButton": "Resetează Parola",
+  "resetRequestNewCode": "Solicită un cod nou",
+  "serviceResultGenerated": "Raport Generat",
+  "serviceResultReady": "Raportul tău personalizat {title} este gata",
+  "@serviceResultReady": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "serviceResultBackToForYou": "Înapoi la Pentru Tine",
+  "serviceResultNotSavedNotice": "Acest raport nu va fi salvat. Dacă dorești, poți să-l copiezi și să-l salvezi în altă parte folosind funcția Copiere.",
+  "commonCopy": "Copiază",
+  "commonCopied": "Copiat în clipboard",
+  "commonContinue": "Continuă",
+  "partnerDetailsTitle": "Detalii Partener",
+  "partnerBirthDataTitle": "Introdu datele de naștere ale partenerului",
+  "partnerBirthDataFor": "Pentru \"{title}\"",
+  "@partnerBirthDataFor": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "partnerNameOptionalLabel": "Nume (opțional)",
+  "partnerNameHint": "Numele partenerului",
+  "partnerGenderOptionalLabel": "Gen (opțional)",
+  "partnerBirthDateLabel": "Data Nașterii *",
+  "partnerBirthDateSelect": "Selectează data nașterii",
+  "partnerBirthDateMissing": "Te rugăm să selectezi data nașterii",
+  "partnerBirthTimeOptionalLabel": "Ora Nașterii (opțional)",
+  "partnerBirthTimeSelect": "Selectează ora nașterii",
+  "partnerBirthPlaceLabel": "Locul Nașterii *",
+  "serviceOfferRequiresPartner": "Necesită datele de naștere ale partenerului",
+  "serviceOfferBetaFree": "Testeri beta primesc acces gratuit!",
+  "serviceOfferUnlocked": "Deblocat",
+  "serviceOfferGenerate": "Generează Raport",
+  "serviceOfferUnlockFor": "Deblochează pentru {price}",
+  "@serviceOfferUnlockFor": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "serviceOfferPreparing": "Se pregătește raportul tău personalizat…",
+  "serviceOfferTimeout": "Durata a fost mai lungă decât era de așteptat. Te rugăm să încerci din nou.",
+  "serviceOfferNotReady": "Raportul nu este încă gata. Te rugăm să încerci din nou.",
+  "serviceOfferFetchFailed": "Eșec la obținerea raportului: {error}",
+  "@serviceOfferFetchFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "commonFree": "GRATUIT",
+  "commonLater": "Mai târziu",
+  "commonRetry": "Reîncearcă",
+  "commonYes": "Da",
+  "commonNo": "Nu",
+  "commonBack": "Înapoi",
+  "commonOptional": "Opțional",
+  "commonNotSpecified": "Nespecificat",
+  "commonJustNow": "Chiar acum",
+  "commonViewMore": "Vezi mai mult",
+  "commonViewLess": "Vezi mai puțin",
+  "commonMinutesAgo": "{count} min în urmă",
+  "@commonMinutesAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonHoursAgo": "{count}h în urmă",
+  "@commonHoursAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonDaysAgo": "{count}d în urmă",
+  "@commonDaysAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonDateShort": "{day}/{month}/{year}",
+  "@commonDateShort": {
+    "placeholders": {
+      "day": {},
+      "month": {},
+      "year": {}
+    }
+  },
+  "askGuideTitle": "Întreabă-ți Ghidul",
+  "askGuideSubtitle": "Ghidare cosmică personală",
+  "askGuideRemaining": "{count} rămase",
+  "@askGuideRemaining": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "askGuideQuestionHint": "Întreabă orice - dragoste, carieră, decizii, emoții...",
+  "askGuideBasedOnChart": "Pe baza hărții tale natale și energiilor cosmice de astăzi",
+  "askGuideThinking": "Ghidul tău se gândește...",
+  "askGuideYourGuide": "Ghidul tău",
+  "askGuideEmptyTitle": "Întreabă-ți Prima Întrebare",
+  "askGuideEmptyBody": "Obține ghidare instantanee, profund personală, bazată pe harta ta natală și energiile cosmice de astăzi.",
+  "askGuideEmptyHint": "Întreabă orice — dragoste, carieră, decizii, emoții.",
+  "askGuideLoadFailed": "Eșec la încărcarea datelor",
+  "askGuideSendFailed": "Eșec la trimiterea întrebării: {error}",
+  "@askGuideSendFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "askGuideLimitTitle": "Limita Lunii A fost Atinge",
+  "askGuideLimitBody": "Ai atins limita lunară de cereri.",
+  "askGuideLimitAddon": "Poți achiziționa un addon de $1.99 pentru a continua să folosești acest serviciu pentru restul lunii de facturare curente.",
+  "askGuideLimitBillingEnd": "Luna ta de facturare se încheie pe: {date}",
+  "@askGuideLimitBillingEnd": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "askGuideLimitGetaddon": "Obține Add-On",
+  "contextTitle": "Context Personal",
+  "contextStepOf": "Pasul {current} din {total}",
+  "@contextStepOf": {
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "contextStep1Title": "Oamenii din jurul tău",
+  "contextStep1Subtitle": "Relația și contextul tău familial ne ajută să înțelegem peisajul tău emoțional.",
+  "contextStep2Title": "Viața Profesională",
+  "contextStep2Subtitle": "Munca și ritmul tău zilnic modelează modul în care experimentezi presiunea, creșterea și scopul.",
+  "contextStep3Title": "Cum se simte viața acum",
+  "contextStep3Subtitle": "Nu există răspunsuri corecte sau greșite, doar realitatea ta actuală",
+  "contextStep4Title": "Ce contează cel mai mult pentru tine",
+  "contextStep4Subtitle": "Astfel încât ghidarea ta să se alinieze cu ceea ce îți pasă cu adevărat",
+  "contextPriorityRequired": "Te rugăm să selectezi cel puțin o zonă de prioritate.",
+  "contextSaveFailed": "Eșec la salvarea profilului: {error}",
+  "@contextSaveFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "contextSaveContinue": "Salvează și Continuă",
+  "contextRelationshipStatusTitle": "Starea actuală a relației",
+  "contextSeekingRelationshipTitle": "Cauți o relație?",
+  "contextHasChildrenTitle": "Ai copii?",
+  "contextChildrenDetailsOptional": "Detalii despre copii (opțional)",
+  "contextAddChild": "Adaugă copil",
+  "contextChildAgeLabel": "Vârstă",
+  "contextChildAgeYears": "{age} {age, plural, =1{an} other{ani}}",
+  "@contextChildAgeYears": {
+    "placeholders": {
+      "age": {}
+    }
+  },
+  "contextChildGenderLabel": "Gen",
+  "contextRelationshipSingle": "Singur",
+  "contextRelationshipInRelationship": "Într-o relație",
+  "contextRelationshipMarried": "Căsătorit / Parteneriat civil",
+  "contextRelationshipSeparated": "Separat / Divorțat",
+  "contextRelationshipWidowed": "Văduv",
+  "contextRelationshipPreferNotToSay": "Prefer să nu spun",
+  "contextProfessionalStatusTitle": "Starea profesională actuală",
+  "contextProfessionalStatusOtherHint": "Te rugăm să specifici statutul tău profesional",
+  "contextIndustryTitle": "Industria/domeniul principal",
+  "contextWorkStatusStudent": "Student",
+  "contextWorkStatusUnemployed": "Șomer / Între locuri de muncă",
+  "contextWorkStatusEmployedIc": "Angajat (Contribuitor individual)",
+  "contextWorkStatusEmployedManagement": "Angajat (Management)",
+  "contextWorkStatusExecutive": "Executiv / Leadership (nivel C)",
+  "contextWorkStatusSelfEmployed": "Întreprinzător / Freelancer",
+  "contextWorkStatusEntrepreneur": "Antreprenor / Proprietar de afacere",
+  "contextWorkStatusInvestor": "Investitor",
+  "contextWorkStatusRetired": "Pensionat",
+  "contextWorkStatusHomemaker": "Îngrijitor de casă / Părinte care stă acasă",
+  "contextWorkStatusCareerBreak": "Pauză în carieră / Sabbatic",
+  "contextWorkStatusOther": "Altceva",
+  "contextIndustryTech": "Tehnologie / IT",
+  "contextIndustryFinance": "Finanțe / Investiții",
+  "contextIndustryHealthcare": "Sănătate",
+  "contextIndustryEducation": "Educație",
+  "contextIndustrySalesMarketing": "Vânzări / Marketing",
+  "contextIndustryRealEstate": "Imobiliare",
+  "contextIndustryHospitality": "Ospitalitate",
+  "contextIndustryGovernment": "Guvern / Sector public",
+  "contextIndustryCreative": "Industria creativă",
+  "contextIndustryOther": "Altceva",
+  "contextSelfAssessmentIntro": "Evaluează-ți situația actuală în fiecare domeniu (1 = dificultăți, 5 = prosperitate)",
+  "contextSelfHealthTitle": "Sănătate & Energie",
+  "contextSelfHealthSubtitle": "1 = probleme serioase/energie scăzută, 5 = vitalitate excelentă",
+  "contextSelfSocialTitle": "Viața socială",
+  "contextSelfSocialSubtitle": "1 = izolat, 5 = conexiuni sociale prospere",
+  "contextSelfRomanceTitle": "Viața romantică",
+  "contextSelfRomanceSubtitle": "1 = absentă/provocatoare, 5 = împlinită",
+  "contextSelfFinanceTitle": "Stabilitate financiară",
+  "contextSelfFinanceSubtitle": "1 = dificultăți majore, 5 = excelent",
+  "contextSelfCareerTitle": "Satisfacția în carieră",
+  "contextSelfCareerSubtitle": "1 = blocat/stresat, 5 = progres/claritate",
+  "contextSelfGrowthTitle": "Interes pentru dezvoltare personală",
+  "contextSelfGrowthSubtitle": "1 = interes scăzut, 5 = foarte ridicat",
+  "contextSelfStruggling": "În dificultate",
+  "contextSelfThriving": "Prosper",
+  "contextPrioritiesTitle": "Care sunt prioritățile tale principale în acest moment?",
+  "contextPrioritiesSubtitle": "Selectează până la 2 domenii pe care vrei să te concentrezi",
+  "contextGuidanceStyleTitle": "Stilul de ghidare preferat",
+  "contextSensitivityTitle": "Mod de sensibilitate",
+  "contextSensitivitySubtitle": "Evită formulările care induc anxietate sau sunt deterministe în ghidare",
+  "contextPriorityHealth": "Sănătate & obiceiuri",
+  "contextPriorityCareer": "Dezvoltare profesională",
+  "contextPriorityBusiness": "Decizii de afaceri",
+  "contextPriorityMoney": "Bani & stabilitate",
+  "contextPriorityLove": "Dragoste & relație",
+  "contextPriorityFamily": "Familie & parenting",
+  "contextPrioritySocial": "Viața socială",
+  "contextPriorityGrowth": "Dezvoltare personală / mentalitate",
+  "contextGuidanceStyleDirect": "Direct & practic",
+  "contextGuidanceStyleDirectDesc": "Obține sfaturi directe și acționabile",
+  "contextGuidanceStyleEmpathetic": "Empatic & reflexiv",
+  "contextGuidanceStyleEmpatheticDesc": "Ghidare caldă și de susținere",
+  "contextGuidanceStyleBalanced": "Echilibrat",
+  "contextGuidanceStyleBalancedDesc": "Amestec de suport practic și emoțional",
+  "homeGuidancePreparing": "Citind stelele și întrebând Universul despre tine…",
+  "homeGuidanceFailed": "Generarea ghidării a eșuat. Te rugăm să încerci din nou.",
+  "homeGuidanceTimeout": "Durată mai lungă decât era de așteptat. Apasă Retry sau verifică din nou în câteva momente.",
+  "homeGuidanceLoadFailed": "Încărcarea ghidării a eșuat",
+  "homeTodaysGuidance": "Ghidarea de astăzi",
+  "homeSeeAll": "Vezi tot",
+  "homeHealth": "Sănătate",
+  "homeCareer": "Carieră",
+  "homeMoney": "Bani",
+  "homeLove": "Dragoste",
+  "homePartners": "Parteneri",
+  "homeGrowth": "Dezvoltare",
+  "homeTraveler": "Călător",
+  "homeGreeting": "Bună, {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "homeFocusFallback": "Dezvoltare personală",
+  "homeDailyMessage": "Mesajul tău zilnic",
+  "homeNatalChartTitle": "Harta mea natală",
+  "homeNatalChartSubtitle": "Explorează-ți harta natală și interpretările",
+  "navHome": "Acasă",
+  "navHistory": "Istoric",
+  "navGuide": "Ghid",
+  "navProfile": "Profil",
+  "navForYou": "Pentru tine",
+  "commonToday": "Astăzi",
+  "commonTryAgain": "Încearcă din nou",
+  "natalChartTitle": "Harta mea natală",
+  "natalChartTabTable": "Tabel",
+  "natalChartTabChart": "Grafica",
+  "natalChartEmptyTitle": "Nu există date pentru harta natală",
+  "natalChartEmptySubtitle": "Te rugăm să completezi datele nașterii pentru a vedea harta ta natală.",
+  "natalChartAddBirthData": "Adaugă date de naștere",
+  "natalChartErrorTitle": "Imposibil de încărcat harta",
+  "guidanceTitle": "Îndrumare zilnică",
+  "guidanceLoadFailed": "Încărcarea îndrumării a eșuat",
+  "guidanceNoneAvailable": "Nu există îndrumări disponibile",
+  "guidanceCosmicEnergyTitle": "Energia cosmică de astăzi",
+  "guidanceMoodLabel": "Stare",
+  "guidanceFocusLabel": "Concentrare",
+  "guidanceYourGuidance": "Îndrumarea ta",
+  "guidanceTapToCollapse": "Apasă pentru a restrânge",
+  "historyTitle": "Istoricul îndrumărilor",
+  "historySubtitle": "Călătoria ta cosmică în timp",
+  "historyLoadFailed": "Încărcarea istoricului a eșuat",
+  "historyEmptyTitle": "Nu există istoric încă",
+  "historyEmptySubtitle": "Îndrumările tale zilnice vor apărea aici",
+  "historyNewBadge": "NOU",
+  "commonUnlocked": "Dezblocat",
+  "commonComingSoon": "În curând",
+  "commonSomethingWentWrong": "Ceva a mers prost",
+  "commonNoContent": "Nu există conținut disponibil.",
+  "commonUnknownError": "Eroare necunoscută",
+  "commonTakingLonger": "Durata este mai lungă decât era de așteptat. Te rugăm să încerci din nou.",
+  "commonErrorWithMessage": "Eroare: {error}",
+  "@commonErrorWithMessage": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "forYouTitle": "Pentru tine",
+  "forYouSubtitle": "Perspectivă cosmică personalizată",
+  "forYouNatalChartTitle": "Harta mea natală",
+  "forYouNatalChartSubtitle": "Analiza hărții tale natale",
+  "forYouCompatibilitiesTitle": "Compatibilități",
+  "forYouCompatibilitiesSubtitle": "Rapoarte despre dragoste, prietenie și parteneriate",
+  "forYouKarmicTitle": "Astrologie Karmică",
+  "forYouKarmicSubtitle": "Lecții ale sufletului și tipare din viețile anterioare",
+  "forYouLearnTitle": "Învață astrologie",
+  "forYouLearnSubtitle": "Conținut educațional gratuit",
+  "compatibilitiesTitle": "Compatibilități",
+  "compatibilitiesLoadFailed": "Încărcarea serviciilor a eșuat",
+  "compatibilitiesBetaFree": "Beta: Toate rapoartele sunt GRATUITE!",
+  "compatibilitiesChooseReport": "Alege un raport",
+  "compatibilitiesSubtitle": "Descoperă perspective despre tine și relațiile tale",
+  "compatibilitiesPartnerBadge": "+Partener",
+  "compatibilitiesPersonalityTitle": "Raport de personalitate",
+  "compatibilitiesPersonalitySubtitle": "Analiză cuprinzătoare a personalității tale bazată pe harta natală",
+  "compatibilitiesRomanticPersonalityTitle": "Raport de personalitate romantică",
+  "compatibilitiesRomanticPersonalitySubtitle": "Înțelege cum abordezi dragostea și romantismul",
+  "compatibilitiesLoveCompatibilityTitle": "Compatibilitate în dragoste",
+  "compatibilitiesLoveCompatibilitySubtitle": "Analiză detaliată a compatibilității romantice cu partenerul tău",
+  "compatibilitiesRomanticForecastTitle": "Previziune pentru cupluri romantice",
+  "compatibilitiesRomanticForecastSubtitle": "Perspective asupra viitorului relației tale",
+  "compatibilitiesFriendshipTitle": "Raport de prietenie",
+  "compatibilitiesFriendshipSubtitle": "Analizează dinamica prieteniei și compatibilitatea",
+  "moonPhaseTitle": "Raport despre faza lunii",
+  "moonPhaseSubtitle": "Înțelege energia lunară actuală și cum te afectează. Obține îndrumări aliniate cu faza lunii.",
+  "moonPhaseSelectDate": "Selectează data",
+  "moonPhaseOriginalPrice": "$2.99",
+  "moonPhaseGenerate": "Generează raport",
+  "moonPhaseGenerateDifferentDate": "Generează pentru o dată diferită",
+  "moonPhaseGenerationFailed": "Generarea a eșuat",
+  "moonPhaseGenerating": "Raportul este în curs de generare. Te rugăm să încerci din nou.",
+  "moonPhaseUnknownError": "Ceva a mers prost. Te rugăm să încerci din nou.",
+  "requiredFieldsNote": "Câmpurile marcate cu * sunt obligatorii.",
+  "karmicTitle": "Astrologie Karmică",
+  "karmicLoadFailed": "Încărcarea a eșuat: {error}",
+  "@karmicLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicOfferTitle": "🔮 Astrologie Karmică – Mesaje ale Sufletului",
+  "karmicOfferBody": "Astrologia Karmică dezvăluie tiparele profunde care îți modelează viața, dincolo de evenimentele cotidiene.\n\nOferă o interpretare care vorbește despre lecții nerezolvate, conexiuni karmice și calea de creștere a sufletului.\n\nAceasta nu este despre ce urmează,\nci despre de ce experimentezi ceea ce experimentezi.\n\n✨ Activează Astrologia Karmică și descoperă semnificația mai profundă a călătoriei tale.",
+  "karmicBetaFreeBadge": "Testeri Beta – Acces GRATUIT!",
+  "karmicPriceBeta": "${price} – Testeri Beta Gratuit",
+  "@karmicPriceBeta": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "karmicPriceUnlock": "Dezblochează pentru ${price}",
+  "@karmicPriceUnlock": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "karmicHintInstant": "Citirea ta va fi generată instantaneu",
+  "karmicHintOneTime": "Achiziție unică, fără abonament",
+  "karmicProgressHint": "Conectare la calea ta karmică…",
+  "karmicGenerateFailed": "Generarea a eșuat: {error}",
+  "@karmicGenerateFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicCheckoutTitle": "Plata pentru Astrologie Karmică",
+  "karmicCheckoutSubtitle": "Fluxul de achiziție va veni în curând",
+  "karmicGenerationFailed": "Generarea a eșuat: {error}",
+  "@karmicGenerationFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicLoading": "Se încarcă citirea ta karmică...",
+  "karmicGenerationFailedShort": "Generarea a eșuat",
+  "karmicGeneratingTitle": "Se generează citirea ta karmică...",
+  "karmicGeneratingSubtitle": "Se analizează harta ta natală pentru tipare karmice și lecții ale sufletului.",
+  "karmicReadingTitle": "🔮 Citirea ta Karmică",
+  "karmicReadingSubtitle": "Mesaje ale Sufletului",
+  "karmicDisclaimer": "Această citire este pentru auto-reflecție și scopuri de divertisment. Nu constituie sfaturi profesionale.",
+  "commonActive": "Activ",
+  "commonBackToHome": "Înapoi la Acasă",
+  "commonYesterday": "ieri",
+  "commonWeeksAgo": "{count} săptămâni în urmă",
+  "@commonWeeksAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonMonthsAgo": "{count} luni în urmă",
+  "@commonMonthsAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonEdit": "Editează",
+  "commonDelete": "Șterge",
+  "natalChartProGenerated": "Interpretări Pro generate! Derulează în sus pentru a le vedea.",
+  "natalChartHouse1": "Sine & Identitate",
+  "natalChartHouse2": "Bani & Valori",
+  "natalChartHouse3": "Comunicare",
+  "natalChartHouse4": "Acasă & Familie",
+  "natalChartHouse5": "Creativitate & Romantism",
+  "natalChartHouse6": "Sănătate & Rutine",
+  "natalChartHouse7": "Relații",
+  "natalChartHouse8": "Transformare",
+  "natalChartHouse9": "Filozofie și Călătorii",
+  "natalChartHouse10": "Carieră și Statut",
+  "natalChartHouse11": "Prietenii și Obiectivele",
+  "natalChartHouse12": "Spiritualitate",
+  "helpSupportTitle": "Ajutor și Suport",
+  "helpSupportContactTitle": "Contactați Suportul",
+  "helpSupportContactSubtitle": "De obicei, răspundem în termen de 24 de ore",
+  "helpSupportFaqTitle": "Întrebări Frecvente",
+  "helpSupportEmailSubject": "Cerere de Suport Inner Wisdom",
+  "helpSupportEmailAppFailed": "Nu s-a putut deschide aplicația de email. Vă rugăm să trimiteți un email la support@innerwisdomapp.com",
+  "helpSupportEmailFallback": "Vă rugăm să ne trimiteți un email la support@innerwisdomapp.com",
+  "helpSupportFaq1Q": "Cât de precisă este ghidarea zilnică?",
+  "helpSupportFaq1A": "Ghidarea noastră zilnică combină principii astrologice tradiționale cu harta dumneavoastră natală. Deși astrologia este interpretativă, AI-ul nostru oferă perspective personalizate bazate pe pozițiile planetare reale și aspectele acestora.",
+  "helpSupportFaq2Q": "De ce am nevoie de ora nașterii mele?",
+  "helpSupportFaq2A": "Ora nașterii dumneavoastră determină Ascendentul (Semnul Ascendent) și pozițiile caselor din harta dumneavoastră. Fără aceasta, folosim prânzul ca valoare implicită, ceea ce poate afecta precizia interpretărilor legate de case.",
+  "helpSupportFaq3Q": "Cum îmi schimb datele de naștere?",
+  "helpSupportFaq3A": "În prezent, datele de naștere nu pot fi schimbate după configurarea inițială pentru a asigura consistența citirilor dumneavoastră. Contactați suportul dacă trebuie să faceți corecții.",
+  "helpSupportFaq4Q": "Ce este un subiect de Focus?",
+  "helpSupportFaq4A": "Un subiect de Focus este o preocupare actuală sau o zonă de viață pe care doriți să o accentuați. Când este setat, ghidarea dumneavoastră zilnică va acorda o atenție specială acestei zone, oferind perspective mai relevante.",
+  "helpSupportFaq5Q": "Cum funcționează abonamentul?",
+  "helpSupportFaq5A": "Nivelul gratuit include ghidare zilnică de bază. Abonații premium beneficiază de personalizare îmbunătățită, citiri audio și acces la funcții speciale, cum ar fi citirile de Astrologie Karmică.",
+  "helpSupportFaq6Q": "Datele mele sunt private?",
+  "helpSupportFaq6A": "Da! Luăm în serios confidențialitatea. Datele dumneavoastră de naștere și informațiile personale sunt criptate și nu sunt niciodată partajate cu terțe părți. Puteți șterge contul dumneavoastră în orice moment.",
+  "helpSupportFaq7Q": "Ce se întâmplă dacă nu sunt de acord cu o citire?",
+  "helpSupportFaq7A": "Astrologia este interpretativă și nu fiecare citire va rezonează. Folosiți funcția de feedback pentru a ne ajuta să ne îmbunătățim. AI-ul nostru învață din preferințele dumneavoastră în timp.",
+  "notificationsSaved": "Setările de notificare au fost salvate",
+  "notificationsTitle": "Notificări",
+  "notificationsSectionTitle": "Notificări Push",
+  "notificationsDailyTitle": "Ghidare Zilnică",
+  "notificationsDailySubtitle": "Fiți notificat când ghidarea dumneavoastră zilnică este gata",
+  "notificationsWeeklyTitle": "Puncte Săptămânale",
+  "notificationsWeeklySubtitle": "Prezentare cosmică săptămânală și tranzite cheie",
+  "notificationsSpecialTitle": "Evenimente Speciale",
+  "notificationsSpecialSubtitle": "Luni pline, eclipse și retrograde",
+  "notificationsDeviceHint": "De asemenea, puteți controla notificările în setările dispozitivului dumneavoastră.",
+  "concernsTitle": "Focusul Tău",
+  "concernsSubtitle": "Subiecte care modelează ghidarea ta",
+  "concernsTabActive": "Activ ({count})",
+  "@concernsTabActive": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsTabResolved": "Rezolvat ({count})",
+  "@concernsTabResolved": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsTabArchived": "Arhivat ({count})",
+  "@concernsTabArchived": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsEmptyTitle": "Nici o preocupare aici",
+  "concernsEmptySubtitle": "Adăugați un subiect de focus pentru a obține ghidare personalizată",
+  "concernsCategoryCareer": "Carieră și Loc de Muncă",
+  "concernsCategoryHealth": "Sănătate",
+  "concernsCategoryRelationship": "Relație",
+  "concernsCategoryFamily": "Familie",
+  "concernsCategoryMoney": "Bani",
+  "concernsCategoryBusiness": "Afaceri",
+  "concernsCategoryPartnership": "Parteneriat",
+  "concernsCategoryGrowth": "Dezvoltare Personală",
+  "concernsMinLength": "Vă rugăm să descrieți preocuparea dumneavoastră în mai multe detalii (cel puțin 10 caractere)",
+  "concernsSubmitFailed": "Nu s-a putut trimite preocuparea. Vă rugăm să încercați din nou.",
+  "concernsAddTitle": "Ce ai pe minte?",
+  "concernsAddDescription": "Împărtășiți-vă preocuparea, întrebarea sau situația de viață actuală. AI-ul nostru o va analiza și va oferi ghidare concentrată începând de mâine.",
+  "concernsExamplesTitle": "Exemple de preocupări:",
+  "concernsExampleCareer": "Decizia de schimbare a carierei",
+  "concernsExampleRelationship": "Provocări în relație",
+  "concernsExampleFinance": "Timpul de investiție financiară",
+  "concernsExampleHealth": "Focus pe sănătate și bunăstare",
+  "concernsExampleGrowth": "Direcția de dezvoltare personală",
+  "concernsSubmitButton": "Trimite Preocuparea",
+  "concernsSuccessTitle": "Preocupare Înregistrată!",
+  "concernsCategoryLabel": "Categorie: ",
+  "concernsSuccessMessage": "Începând de mâine, ghidarea dumneavoastră zilnică se va concentra mai mult pe acest subiect.",
+  "concernsViewFocusTopics": "Vizualizați Subiectele Mele de Focus",
+  "deleteAccountTitle": "Șterge Contul",
+  "deleteAccountHeading": "Ștergeți Contul Dumneavoastră?",
+  "deleteAccountConfirmError": "Vă rugăm să tastați DELETE pentru a confirma",
+  "deleteAccountFinalWarningTitle": "Avertizare Finală",
+  "deleteAccountFinalWarningBody": "Această acțiune nu poate fi anulată. Toate datele dumneavoastră, inclusiv:\n\n• Profilul și datele de naștere\n• Harta natală și interpretările\n• Istoricul ghidării zilnice\n• Contextul personal și preferințele\n• Toate conținuturile achiziționate\n\nVor fi șterse permanent.",
+  "deleteAccountConfirmButton": "Șterge pentru Totdeauna",
+  "deleteAccountSuccess": "Contul dumneavoastră a fost șters",
+  "deleteAccountFailed": "Nu s-a putut șterge contul. Vă rugăm să încercați din nou.",
+  "deleteAccountPermanentWarning": "Această acțiune este permanentă și nu poate fi anulată",
+  "deleteAccountWarningDetail": "Toate datele dumneavoastră personale, inclusiv harta natală, istoricul ghidării și orice achiziții vor fi șterse permanent.",
+  "deleteAccountWhatTitle": "Ce va fi șters:",
+  "deleteAccountItemProfile": "Profilul și contul dumneavoastră",
+  "deleteAccountItemBirthData": "Datele de naștere și harta natală",
+  "deleteAccountItemGuidance": "Întreg istoricul ghidării zilnice",
+  "deleteAccountItemContext": "Context personal și preferințe",
+  "deleteAccountItemKarmic": "Citiri de astrologie karmică",
+  "deleteAccountItemPurchases": "Toate conținuturile achiziționate",
+  "deleteAccountTypeDelete": "Tastați DELETE pentru a confirma",
+  "deleteAccountDeleteHint": "DELETE",
+  "deleteAccountButton": "Șterge Contul Meu",
+  "deleteAccountCancel": "Anulează, păstrează-mi contul",
+  "learnArticleLoadFailed": "Nu s-a putut încărca articolul",
+  "learnContentInEnglish": "Conținut în engleză",
+  "learnArticlesLoadFailed": "Nu s-au putut încărca articolele",
+  "learnArticlesEmpty": "Nu sunt articole disponibile încă",
+  "learnContentFallback": "Se afișează conținut în engleză (nu este disponibil în limba dumneavoastră)",
+  "checkoutTitle": "Finalizare Comandă",
+  "checkoutOrderSummary": "Sumar Comandă",
+  "checkoutProTitle": "Harta Natală Pro",
+  "checkoutProSubtitle": "Interpretări planetare complete",
+  "checkoutTotalLabel": "Total",
+  "checkoutTotalAmount": "$9.99 USD",
+  "checkoutPaymentTitle": "Integrarea Plății",
+  "checkoutPaymentSubtitle": "Integrarea achizițiilor în aplicație este în curs de finalizare. Vă rugăm să verificați din nou în curând!",
+  "checkoutProcessing": "Se procesează...",
+  "checkoutDemoPurchase": "Achiziție Demo (Testare)",
+  "checkoutSecurityNote": "Plata este procesată în siguranță prin Apple/Google. Detaliile cardului tău nu sunt niciodată stocate.",
+  "checkoutSuccess": "🎉 Graficul Natal Pro deblocat cu succes!",
+  "checkoutGenerateFailed": "Generarea interpretărilor a eșuat. Te rugăm să încerci din nou.",
+  "checkoutErrorWithMessage": "A apărut o eroare: {error}",
+  "@checkoutErrorWithMessage": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "billingUpgrade": "Upgrade la Premium",
+  "billingFeatureLocked": "{feature} este o caracteristică Premium",
+  "@billingFeatureLocked": {
+    "placeholders": {
+      "feature": {}
+    }
+  },
+  "billingUpgradeBody": "Upgrade la Premium pentru a debloca această caracteristică și a obține cele mai personalizate îndrumări.",
+  "contextReviewFailed": "Actualizarea a eșuat. Te rugăm să încerci din nou.",
+  "contextReviewTitle": "Timp pentru o Verificare Rapidă",
+  "contextReviewBody": "Au trecut 3 luni de când am actualizat ultima dată contextul tău personal. A schimbat ceva important în viața ta de care ar trebui să știm?",
+  "contextReviewHint": "Acest lucru ne ajută să îți oferim îndrumări mai personalizate.",
+  "contextReviewNoChanges": "Nicio schimbare",
+  "contextReviewYesUpdate": "Da, actualizează",
+  "contextProfileLoadFailed": "Încărcarea profilului a eșuat",
+  "contextCardTitle": "Context Personal",
+  "contextCardSubtitle": "Configurează-ți contextul personal pentru a primi îndrumări mai adaptate.",
+  "contextCardSetupNow": "Configurează Acum",
+  "contextCardVersionUpdated": "Versiunea {version} • Ultima actualizare {date}",
+  "@contextCardVersionUpdated": {
+    "placeholders": {
+      "version": {},
+      "date": {}
+    }
+  },
+  "contextCardAiSummary": "Rezumat AI",
+  "contextCardToneTag": "ton {tone}",
+  "@contextCardToneTag": {
+    "placeholders": {
+      "tone": {}
+    }
+  },
+  "contextCardSensitivityTag": "sensibilitate activată",
+  "contextCardReviewDue": "Revizuire necesară - actualizează-ți contextul",
+  "contextCardNextReview": "Următoarea revizuire în {days} zile",
+  "@contextCardNextReview": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "contextDeleteTitle": "Ștergi Contextul Personal?",
+  "contextDeleteBody": "Aceasta va șterge profilul tău de context personal. Îndrumările tale vor deveni mai puțin personalizate.",
+  "contextDeleteFailed": "Ștergerea profilului a eșuat",
+  "appTitle": "Înțelepciune Interioară",
+  "concernsHintExample": "Exemplu: Am o ofertă de muncă într-un alt oraș și nu sunt sigur dacă ar trebui să o accept...",
+  "learnTitle": "Învață Astrologie",
+  "learnFreeTitle": "Resurse de Învățare Gratuite",
+  "learnFreeSubtitle": "Explorează fundamentele astrologiei",
+  "learnSignsTitle": "Semne",
+  "learnSignsSubtitle": "12 semne zodiacale și semnificațiile lor",
+  "learnPlanetsTitle": "Planete",
+  "learnPlanetsSubtitle": "Corpi cerești în astrologie",
+  "learnHousesTitle": "Case",
+  "learnHousesSubtitle": "12 domenii de viață în graficul tău",
+  "learnTransitsTitle": "Tranzite",
+  "learnTransitsSubtitle": "Mișcările planetare și efectele lor",
+  "learnPaceTitle": "Învață în Ritmul Tău",
+  "learnPaceSubtitle": "Lecții cuprinzătoare pentru a-ți aprofunda cunoștințele astrologice",
+  "proNatalTitle": "Graficul Natal Pro",
+  "proNatalHeroTitle": "Deblochează Perspective Profunde",
+  "proNatalHeroSubtitle": "Obține interpretări cuprinzătoare de 150-200 de cuvinte pentru fiecare plasare planetară din graficul tău natal.",
+  "proNatalFeature1Title": "Perspective Profunde asupra Personalității",
+  "proNatalFeature1Body": "Înțelege cum fiecare planetă îți modelează personalitatea unică și calea în viață.",
+  "proNatalFeature2Title": "Analiză Alimentată de AI",
+  "proNatalFeature2Body": "Interpretări avansate adaptate pozițiilor tale planetare exacte.",
+  "proNatalFeature3Title": "Îndrumări Acționabile",
+  "proNatalFeature3Body": "Sfaturi practice pentru carieră, relații și dezvoltare personală.",
+  "proNatalFeature4Title": "Acces pe Viață",
+  "proNatalFeature4Body": "Interpretările tale sunt salvate pentru totdeauna. Accesează oricând.",
+  "proNatalOneTime": "Achiziție unică",
+  "proNatalNoSubscription": "Nu este necesar un abonament",
+  "askGuideLimitGetAddon": "Obține Add-On"
+}

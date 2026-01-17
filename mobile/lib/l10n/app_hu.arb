@@ -1,1 +1,742 @@
-{}
+{
+  "onboardingSkip": "Kihagyás",
+  "onboardingTitle1": "Üdvözöljük az Inner Wisdom Astro-nál",
+  "onboardingDesc1": "Az Innerwisdom Astro több mint 30 éves asztrológiai szakértelmet hoz össze Madi G. vezetésével és a fejlett mesterséges intelligencia erejével, létrehozva a legfinomabb és legmagasabb teljesítményű asztrológiai alkalmazások egyikét, amely ma elérhető.\n\nA mély emberi megértés és az intelligens technológia ötvözésével az Innerwisdom Astro pontos, személyre szabott és jelentős értelmezéseket nyújt, támogatva a felhasználókat önfelfedezésük, tisztánlátásuk és tudatos növekedésük útján.",
+  "onboardingTitle2": "Teljes Asztrológiai Utazásod",
+  "onboardingDesc2": "A személyre szabott napi útmutatásoktól kezdve a Natal Születési Térképedig, Karmikus Asztrológia, részletes személyiségi jelentések, Szerelmi és Barátsági Kompatibilitás, Romantikus Előrejelzések Párnak és még sok más — mindez most a kezed ügyében van.\n\nAz Innerwisdom Astro a tisztánlátás, a kapcsolat és az önmegértés támogatására lett tervezve, teljes asztrológiai élményt kínálva, amely a te igényeidhez van szabva.",
+  "onboardingNext": "Következő",
+  "onboardingGetStarted": "Kezdjük",
+  "onboardingAlreadyHaveAccount": "Már van fiókod? Bejelentkezés",
+  "birthDataTitle": "Születési Térképed",
+  "birthDataSubtitle": "Szükségünk van a születési adataidra, hogy létrehozzuk\na személyre szabott asztrológiai profilodat",
+  "birthDateLabel": "Születési Dátum",
+  "birthDateSelectHint": "Válaszd ki a születési dátumodat",
+  "birthTimeLabel": "Születési Idő",
+  "birthTimeUnknown": "Ismeretlen",
+  "birthTimeSelectHint": "Válaszd ki a születési idődet",
+  "birthTimeUnknownCheckbox": "Nem tudom a pontos születési időmet",
+  "birthPlaceLabel": "Születési Hely",
+  "birthPlaceHint": "Kezdj el gépelni egy városnevet...",
+  "birthPlaceValidation": "Kérlek, válassz egy helyet a javaslatok közül",
+  "birthPlaceSelected": "Kiválasztva: {location}",
+  "@birthPlaceSelected": {
+    "placeholders": {
+      "location": {}
+    }
+  },
+  "genderLabel": "Nem",
+  "genderMale": "Férfi",
+  "genderFemale": "Nő",
+  "genderPreferNotToSay": "Nem szeretném megmondani",
+  "birthDataSubmit": "Generálj Születési Térképet",
+  "birthDataPrivacyNote": "A születési adataidat csak a\nasztrológiai térkép kiszámításához használjuk, és biztonságosan tároljuk.",
+  "birthDateMissing": "Kérlek, válaszd ki a születési dátumodat",
+  "birthPlaceMissing": "Kérlek, válassz egy születési helyet a javaslatok közül",
+  "birthDataSaveError": "Nem sikerült menteni a születési adatokat. Kérlek, próbáld újra.",
+  "appearanceTitle": "Megjelenés",
+  "appearanceTheme": "Téma",
+  "appearanceDarkTitle": "Sötét",
+  "appearanceDarkSubtitle": "Könnyen olvasható gyenge fényben",
+  "appearanceLightTitle": "Világos",
+  "appearanceLightSubtitle": "Hagyományos világos megjelenés",
+  "appearanceSystemTitle": "Rendszer",
+  "appearanceSystemSubtitle": "Illeszkedj a készülék beállításaihoz",
+  "appearancePreviewTitle": "Előnézet",
+  "appearancePreviewBody": "A kozmikus téma célja, hogy magával ragadó asztrológiai élményt nyújtson. A sötét téma ajánlott a legjobb vizuális élmény érdekében.",
+  "appearanceThemeChanged": "A téma megváltozott: {theme}",
+  "@appearanceThemeChanged": {
+    "placeholders": {
+      "theme": {}
+    }
+  },
+  "profileUserFallback": "Felhasználó",
+  "profilePersonalContext": "Személyes Kontextus",
+  "profileSettings": "Beállítások",
+  "profileAppLanguage": "Alkalmazás Nyelve",
+  "profileContentLanguage": "Tartalom Nyelve",
+  "profileContentLanguageHint": "A mesterséges intelligencia tartalom a kiválasztott nyelvet használja.",
+  "profileNotifications": "Értesítések",
+  "profileNotificationsEnabled": "Engedélyezve",
+  "profileNotificationsDisabled": "Letiltva",
+  "profileAppearance": "Megjelenés",
+  "profileHelpSupport": "Segítség & Támogatás",
+  "profilePrivacyPolicy": "Adatvédelmi Irányelvek",
+  "profileTermsOfService": "Szolgáltatási Feltételek",
+  "profileLogout": "Kijelentkezés",
+  "profileLogoutConfirm": "Biztosan ki akarsz jelentkezni?",
+  "profileDeleteAccount": "Fiók Törlése",
+  "commonCancel": "Mégse",
+  "profileSelectLanguageTitle": "Nyelv Kiválasztása",
+  "profileSelectLanguageSubtitle": "Minden mesterséges intelligenciával generált tartalom a kiválasztott nyelven lesz.",
+  "profileLanguageUpdated": "Nyelv frissítve: {language}",
+  "@profileLanguageUpdated": {
+    "placeholders": {
+      "language": {}
+    }
+  },
+  "profileLanguageUpdateFailed": "A nyelv frissítése nem sikerült: {error}",
+  "@profileLanguageUpdateFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "profileVersion": "Inner Wisdom v{version}",
+  "@profileVersion": {
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "profileCosmicBlueprint": "A Te Kozmikus Terved",
+  "profileSunLabel": "☀️ Nap",
+  "profileMoonLabel": "🌙 Hold",
+  "profileRisingLabel": "⬆️ Felkelő",
+  "profileUnknown": "Ismeretlen",
+  "forgotPasswordTitle": "Elfelejtetted a Jelszavad?",
+  "forgotPasswordSubtitle": "Add meg az email címed, és küldünk egy kódot a jelszavad visszaállításához",
+  "forgotPasswordSent": "Ha létezik fiók, egy visszaállító kódot küldtünk az email címedre.",
+  "forgotPasswordFailed": "A visszaállító kód küldése nem sikerült. Kérlek, próbáld újra.",
+  "forgotPasswordSendCode": "Visszaállító Kód Küldése",
+  "forgotPasswordHaveCode": "Már van kódod?",
+  "forgotPasswordRemember": "Emlékszel a jelszavadra? ",
+  "loginWelcomeBack": "Üdvözlünk Vissza",
+  "loginSubtitle": "Jelentkezz be, hogy folytathasd kozmikus utazásodat",
+  "loginInvalidCredentials": "Érvénytelen email vagy jelszó",
+  "loginGoogleFailed": "A Google bejelentkezés nem sikerült. Kérlek, próbáld újra.",
+  "loginAppleFailed": "Az Apple bejelentkezés nem sikerült. Kérlek, próbáld újra.",
+  "loginNetworkError": "Hálózati hiba. Kérlek, ellenőrizd a kapcsolatodat.",
+  "loginSignInCancelled": "A bejelentkezés megszakítva.",
+  "loginPasswordHint": "Add meg a jelszavad",
+  "loginForgotPassword": "Elfelejtetted a Jelszavad?",
+  "loginSignIn": "Bejelentkezés",
+  "loginNoAccount": "Nincs fiókod? ",
+  "loginSignUp": "Regisztráció",
+  "commonEmailLabel": "Email",
+  "commonEmailHint": "Add meg az email címed",
+  "commonEmailRequired": "Kérlek, add meg az email címed",
+  "commonEmailInvalid": "Kérlek, adj meg egy érvényes email címet",
+  "commonPasswordLabel": "Jelszó",
+  "commonPasswordRequired": "Kérlek, add meg a jelszavad",
+  "commonOrContinueWith": "vagy folytasd a",
+  "commonGoogle": "Google",
+  "commonApple": "Apple",
+  "commonNameLabel": "Név",
+  "commonNameHint": "Add meg a neved",
+  "commonNameRequired": "Kérlek, add meg a neved",
+  "signupTitle": "Fiók Létrehozása",
+  "signupSubtitle": "Kezdd el kozmikus utazásodat az Inner Wisdom-mal",
+  "signupEmailExists": "Az email már létezik vagy érvénytelen adat",
+  "signupGoogleFailed": "A Google bejelentkezés nem sikerült. Kérjük, próbálja újra.",
+  "signupAppleFailed": "Az Apple bejelentkezés nem sikerült. Kérjük, próbálja újra.",
+  "signupPasswordHint": "Hozzon létre egy jelszót (min. 8 karakter)",
+  "signupPasswordMin": "A jelszónak legalább 8 karakterből kell állnia",
+  "signupConfirmPasswordLabel": "Jelszó megerősítése",
+  "signupConfirmPasswordHint": "Erősítse meg a jelszavát",
+  "signupConfirmPasswordRequired": "Kérjük, erősítse meg a jelszavát",
+  "signupPasswordMismatch": "A jelszavak nem egyeznek",
+  "signupPreferredLanguage": "Preferált nyelv",
+  "signupCreateAccount": "Fiók létrehozása",
+  "signupHaveAccount": "Már van fiókja? ",
+  "resetPasswordTitle": "Jelszó visszaállítása",
+  "resetPasswordSubtitle": "Adja meg az email címére küldött kódot, és állítson be egy új jelszót",
+  "resetPasswordSuccess": "A jelszó visszaállítása sikeres! Átirányítás a bejelentkezéshez...",
+  "resetPasswordFailed": "A jelszó visszaállítása nem sikerült. Kérjük, próbálja újra.",
+  "resetPasswordInvalidCode": "Érvénytelen vagy lejárt visszaállító kód. Kérjük, kérjen egy újat.",
+  "resetPasswordMaxAttempts": "A maximális próbálkozások száma túllépve. Kérjük, kérjen egy új kódot.",
+  "resetCodeLabel": "Visszaállító kód",
+  "resetCodeHint": "Adja meg a 6 számjegyű kódot",
+  "resetCodeRequired": "Kérjük, adja meg a visszaállító kódot",
+  "resetCodeLength": "A kódnak 6 számjegyűnek kell lennie",
+  "resetNewPasswordLabel": "Új jelszó",
+  "resetNewPasswordHint": "Hozzon létre egy új jelszót (min. 8 karakter)",
+  "resetNewPasswordRequired": "Kérjük, adjon meg egy új jelszót",
+  "resetConfirmPasswordHint": "Erősítse meg az új jelszavát",
+  "resetPasswordButton": "Jelszó visszaállítása",
+  "resetRequestNewCode": "Kérjen egy új kódot",
+  "serviceResultGenerated": "Jelentés generálva",
+  "serviceResultReady": "A személyre szabott {title} készen áll",
+  "@serviceResultReady": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "serviceResultBackToForYou": "Vissza a Számodra",
+  "serviceResultNotSavedNotice": "Ez a Jelentés nem lesz mentve. Ha szeretné, másolja ki, és mentse el máshol a Másolás funkcióval.",
+  "commonCopy": "Másolás",
+  "commonCopied": "Másolva a vágólapra",
+  "commonContinue": "Folytatás",
+  "partnerDetailsTitle": "Partner részletei",
+  "partnerBirthDataTitle": "Adja meg a partner születési adatait",
+  "partnerBirthDataFor": "\"{title}\" számára",
+  "@partnerBirthDataFor": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "partnerNameOptionalLabel": "Név (opcionális)",
+  "partnerNameHint": "Partner neve",
+  "partnerGenderOptionalLabel": "Nem (opcionális)",
+  "partnerBirthDateLabel": "Születési dátum *",
+  "partnerBirthDateSelect": "Válassza ki a születési dátumot",
+  "partnerBirthDateMissing": "Kérjük, válassza ki a születési dátumot",
+  "partnerBirthTimeOptionalLabel": "Születési idő (opcionális)",
+  "partnerBirthTimeSelect": "Válassza ki a születési időt",
+  "partnerBirthPlaceLabel": "Születési hely *",
+  "serviceOfferRequiresPartner": "Szükséges a partner születési adatai",
+  "serviceOfferBetaFree": "A béta tesztelők ingyenes hozzáférést kapnak!",
+  "serviceOfferUnlocked": "Feloldva",
+  "serviceOfferGenerate": "Jelentés generálása",
+  "serviceOfferUnlockFor": "Feloldás {price}-ért",
+  "@serviceOfferUnlockFor": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "serviceOfferPreparing": "A személyre szabott jelentésed előkészítése…",
+  "serviceOfferTimeout": "Túl sokáig tart. Kérjük, próbálja újra.",
+  "serviceOfferNotReady": "A jelentés még nem készült el. Kérjük, próbálja újra.",
+  "serviceOfferFetchFailed": "A jelentés lekérése nem sikerült: {error}",
+  "@serviceOfferFetchFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "commonFree": "INGYENES",
+  "commonLater": "Később",
+  "commonRetry": "Újrapróbálkozás",
+  "commonYes": "Igen",
+  "commonNo": "Nem",
+  "commonBack": "Vissza",
+  "commonOptional": "Opcionális",
+  "commonNotSpecified": "Nincs megadva",
+  "commonJustNow": "Éppen most",
+  "commonViewMore": "Továbbiak megtekintése",
+  "commonViewLess": "Kevesebb megtekintése",
+  "commonMinutesAgo": "{count} perce",
+  "@commonMinutesAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonHoursAgo": "{count} órája",
+  "@commonHoursAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonDaysAgo": "{count} napja",
+  "@commonDaysAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonDateShort": "{day}/{month}/{year}",
+  "@commonDateShort": {
+    "placeholders": {
+      "day": {},
+      "month": {},
+      "year": {}
+    }
+  },
+  "askGuideTitle": "Kérdezze meg az Útmutatóját",
+  "askGuideSubtitle": "Személyes kozmikus útmutatás",
+  "askGuideRemaining": "{count} maradt",
+  "@askGuideRemaining": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "askGuideQuestionHint": "Kérdezzen bármit - szerelem, karrier, döntések, érzelmek...",
+  "askGuideBasedOnChart": "A születési diagramja és a mai kozmikus energiák alapján",
+  "askGuideThinking": "Az Ön Útmutatója gondolkodik...",
+  "askGuideYourGuide": "Az Ön Útmutatója",
+  "askGuideEmptyTitle": "Kérdezze meg az Első Kérdését",
+  "askGuideEmptyBody": "Azonnali, mélyen személyes útmutatást kap a születési diagramja és a mai kozmikus energiák alapján.",
+  "askGuideEmptyHint": "Kérdezzen bármit — szerelem, karrier, döntések, érzelmek.",
+  "askGuideLoadFailed": "Az adatok betöltése nem sikerült",
+  "askGuideSendFailed": "A kérdés elküldése nem sikerült: {error}",
+  "@askGuideSendFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "askGuideLimitTitle": "Havi Korlát Elérve",
+  "askGuideLimitBody": "Elérte a havi kérésének korlátját.",
+  "askGuideLimitAddon": "Vásárolhat egy $1.99 kiegészítőt, hogy továbbra is használhassa ezt a szolgáltatást a jelenlegi számlázási hónap hátralévő részében.",
+  "askGuideLimitBillingEnd": "A számlázási hónapja vége: {date}",
+  "@askGuideLimitBillingEnd": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "askGuideLimitGetaddon": "Kiegészítő beszerzése",
+  "contextTitle": "Személyes Kontextus",
+  "contextStepOf": "{current} lépés a {total}-ból",
+  "@contextStepOf": {
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "contextStep1Title": "Az Önt körülvevő emberek",
+  "contextStep1Subtitle": "A kapcsolati és családi kontextus segít megérteni érzelmi táját.",
+  "contextStep2Title": "Szakmai élet",
+  "contextStep2Subtitle": "A munkája és napi ritmusa alakítja, hogyan tapasztalja meg a nyomást, a növekedést és a célt.",
+  "contextStep3Title": "Hogyan érzi most az életet",
+  "contextStep3Subtitle": "Nincsenek helyes vagy helytelen válaszok, csak a jelenlegi valósága",
+  "contextStep4Title": "Mi számít Önnek a legjobban",
+  "contextStep4Subtitle": "Így az útmutatása összhangban van azzal, ami igazán fontos Önnek",
+  "contextPriorityRequired": "Kérjük, válasszon ki legalább egy prioritási területet.",
+  "contextSaveFailed": "A profil mentése nem sikerült: {error}",
+  "@contextSaveFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "contextSaveContinue": "Mentés és folytatás",
+  "contextRelationshipStatusTitle": "Jelenlegi párkapcsolati státusz",
+  "contextSeekingRelationshipTitle": "Keresel párkapcsolatot?",
+  "contextHasChildrenTitle": "Vannak gyermekeid?",
+  "contextChildrenDetailsOptional": "Gyermekek részletei (opcionális)",
+  "contextAddChild": "Gyermek hozzáadása",
+  "contextChildAgeLabel": "Kor",
+  "contextChildAgeYears": "{age} {age, plural, =1{év} other{év}}",
+  "@contextChildAgeYears": {
+    "placeholders": {
+      "age": {}
+    }
+  },
+  "contextChildGenderLabel": "Nem",
+  "contextRelationshipSingle": "Egyedülálló",
+  "contextRelationshipInRelationship": "Kapcsolatban",
+  "contextRelationshipMarried": "Házas / Élettársi kapcsolat",
+  "contextRelationshipSeparated": "Elvált / Különélő",
+  "contextRelationshipWidowed": "Özvegy",
+  "contextRelationshipPreferNotToSay": "Nem szeretném megmondani",
+  "contextProfessionalStatusTitle": "Jelenlegi szakmai státusz",
+  "contextProfessionalStatusOtherHint": "Kérlek, add meg a munkavállalói státuszodat",
+  "contextIndustryTitle": "Fő iparág/terület",
+  "contextWorkStatusStudent": "Diák",
+  "contextWorkStatusUnemployed": "Munkanélküli / Két munka között",
+  "contextWorkStatusEmployedIc": "Foglalkoztatott (Egyéni hozzájáruló)",
+  "contextWorkStatusEmployedManagement": "Foglalkoztatott (Vezetői)",
+  "contextWorkStatusExecutive": "Vezető / Vezetőség (C-szint)",
+  "contextWorkStatusSelfEmployed": "Önálló vállalkozó / Szabadúszó",
+  "contextWorkStatusEntrepreneur": "Vállalkozó / Cégvezető",
+  "contextWorkStatusInvestor": "Befektető",
+  "contextWorkStatusRetired": "Nyugdíjas",
+  "contextWorkStatusHomemaker": "Háztartásbeli / Otthon maradó szülő",
+  "contextWorkStatusCareerBreak": "Karrier szünet / Szabadság",
+  "contextWorkStatusOther": "Egyéb",
+  "contextIndustryTech": "Technológia / IT",
+  "contextIndustryFinance": "Pénzügy / Befektetések",
+  "contextIndustryHealthcare": "Egészségügy",
+  "contextIndustryEducation": "Oktatás",
+  "contextIndustrySalesMarketing": "Értékesítés / Marketing",
+  "contextIndustryRealEstate": "Ingatlan",
+  "contextIndustryHospitality": "Vendéglátás",
+  "contextIndustryGovernment": "Kormány / Közszolgáltatás",
+  "contextIndustryCreative": "Kreatív iparágak",
+  "contextIndustryOther": "Egyéb",
+  "contextSelfAssessmentIntro": "Értékeld a jelenlegi helyzetedet minden területen (1 = küzdő, 5 = virágzó)",
+  "contextSelfHealthTitle": "Egészség és energia",
+  "contextSelfHealthSubtitle": "1 = súlyos problémák/alacsony energia, 5 = kiváló vitalitás",
+  "contextSelfSocialTitle": "Társadalmi élet",
+  "contextSelfSocialSubtitle": "1 = elszigetelt, 5 = virágzó társadalmi kapcsolatok",
+  "contextSelfRomanceTitle": "Romantikus élet",
+  "contextSelfRomanceSubtitle": "1 = hiányzó/kihívásokkal teli, 5 = beteljesült",
+  "contextSelfFinanceTitle": "Pénzügyi stabilitás",
+  "contextSelfFinanceSubtitle": "1 = jelentős nehézségek, 5 = kiváló",
+  "contextSelfCareerTitle": "Karrier elégedettség",
+  "contextSelfCareerSubtitle": "1 = megrekedt/stresszes, 5 = előrehaladás/tisztánlátás",
+  "contextSelfGrowthTitle": "Személyes fejlődés érdeklődés",
+  "contextSelfGrowthSubtitle": "1 = alacsony érdeklődés, 5 = nagyon magas",
+  "contextSelfStruggling": "Küzdő",
+  "contextSelfThriving": "Virágzó",
+  "contextPrioritiesTitle": "Mik a legfontosabb prioritásaid most?",
+  "contextPrioritiesSubtitle": "Válassz ki legfeljebb 2 területet, amire fókuszálni szeretnél",
+  "contextGuidanceStyleTitle": "Preferált útmutatási stílus",
+  "contextSensitivityTitle": "Érzékenységi mód",
+  "contextSensitivitySubtitle": "Kerüld az szorongást keltő vagy determinisztikus megfogalmazásokat az útmutatásban",
+  "contextPriorityHealth": "Egészség és szokások",
+  "contextPriorityCareer": "Karrier fejlődés",
+  "contextPriorityBusiness": "Üzleti döntések",
+  "contextPriorityMoney": "Pénz és stabilitás",
+  "contextPriorityLove": "Szerelem és párkapcsolat",
+  "contextPriorityFamily": "Család és szülőség",
+  "contextPrioritySocial": "Társadalmi élet",
+  "contextPriorityGrowth": "Személyes fejlődés / gondolkodásmód",
+  "contextGuidanceStyleDirect": "Közvetlen és praktikus",
+  "contextGuidanceStyleDirectDesc": "Közvetlenül a cselekvőképes tanácsra",
+  "contextGuidanceStyleEmpathetic": "Empatikus és reflektív",
+  "contextGuidanceStyleEmpatheticDesc": "Meleg, támogató útmutatás",
+  "contextGuidanceStyleBalanced": "Kiegyensúlyozott",
+  "contextGuidanceStyleBalancedDesc": "Praktikus és érzelmi támogatás keveréke",
+  "homeGuidancePreparing": "Olvasom a csillagokat és kérdezem az Univerzumban rólad…",
+  "homeGuidanceFailed": "Nem sikerült útmutatást generálni. Kérlek, próbáld újra.",
+  "homeGuidanceTimeout": "Több időt vesz igénybe, mint vártuk. Koppints a Próbáld újra gombra, vagy nézz vissza egy pillanat múlva.",
+  "homeGuidanceLoadFailed": "Nem sikerült betölteni az útmutatást",
+  "homeTodaysGuidance": "Mai útmutatás",
+  "homeSeeAll": "Összes megtekintése",
+  "homeHealth": "Egészség",
+  "homeCareer": "Karrier",
+  "homeMoney": "Pénz",
+  "homeLove": "Szerelem",
+  "homePartners": "Partnerek",
+  "homeGrowth": "Fejlődés",
+  "homeTraveler": "Utazó",
+  "homeGreeting": "Helló, {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "homeFocusFallback": "Személyes fejlődés",
+  "homeDailyMessage": "A napi üzeneted",
+  "homeNatalChartTitle": "Születési térképem",
+  "homeNatalChartSubtitle": "Fedezd fel a születési térképedet és értelmezéseit",
+  "navHome": "Kezdőlap",
+  "navHistory": "Történelem",
+  "navGuide": "Útmutató",
+  "navProfile": "Profil",
+  "navForYou": "Számodra",
+  "commonToday": "Ma",
+  "commonTryAgain": "Próbáld újra",
+  "natalChartTitle": "Születési térképem",
+  "natalChartTabTable": "Táblázat",
+  "natalChartTabChart": "Diagram",
+  "natalChartEmptyTitle": "Nincs születési diagram adat",
+  "natalChartEmptySubtitle": "Kérjük, töltsd ki a születési adataidat a születési diagram megtekintéséhez.",
+  "natalChartAddBirthData": "Születési adatok hozzáadása",
+  "natalChartErrorTitle": "A diagram betöltése nem sikerült",
+  "guidanceTitle": "Napi Útmutatás",
+  "guidanceLoadFailed": "Az útmutatás betöltése nem sikerült",
+  "guidanceNoneAvailable": "Nincs elérhető útmutatás",
+  "guidanceCosmicEnergyTitle": "A mai Kozmikus Energia",
+  "guidanceMoodLabel": "Hangulat",
+  "guidanceFocusLabel": "Fókusz",
+  "guidanceYourGuidance": "A te útmutatásod",
+  "guidanceTapToCollapse": "Koppints a bezáráshoz",
+  "historyTitle": "Útmutatás Történet",
+  "historySubtitle": "Kozmikus utazásod az időben",
+  "historyLoadFailed": "A történet betöltése nem sikerült",
+  "historyEmptyTitle": "Még nincs történet",
+  "historyEmptySubtitle": "A napi útmutatásaid itt fognak megjelenni",
+  "historyNewBadge": "ÚJ",
+  "commonUnlocked": "Feloldva",
+  "commonComingSoon": "Hamarosan",
+  "commonSomethingWentWrong": "Valami hiba történt",
+  "commonNoContent": "Nincs elérhető tartalom.",
+  "commonUnknownError": "Ismeretlen hiba",
+  "commonTakingLonger": "Hosszabb ideig tart, mint vártuk. Kérjük, próbáld újra.",
+  "commonErrorWithMessage": "Hiba: {error}",
+  "@commonErrorWithMessage": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "forYouTitle": "Számodra",
+  "forYouSubtitle": "Személyre szabott kozmikus betekintések",
+  "forYouNatalChartTitle": "Születési Diagramom",
+  "forYouNatalChartSubtitle": "A születési diagramod elemzése",
+  "forYouCompatibilitiesTitle": "Kompatibilitások",
+  "forYouCompatibilitiesSubtitle": "Szerelem, barátság és partnerségi jelentések",
+  "forYouKarmicTitle": "Karmikus Asztrológia",
+  "forYouKarmicSubtitle": "Lélekleckék és múltbeli életminták",
+  "forYouLearnTitle": "Tanulj Asztrológiát",
+  "forYouLearnSubtitle": "Ingyenes oktatási tartalom",
+  "compatibilitiesTitle": "Kompatibilitások",
+  "compatibilitiesLoadFailed": "A szolgáltatások betöltése nem sikerült",
+  "compatibilitiesBetaFree": "Béta: Minden jelentés INGYENES!",
+  "compatibilitiesChooseReport": "Jelentés választása",
+  "compatibilitiesSubtitle": "Fedezd fel önmagadra és kapcsolataidra vonatkozó betekintéseket",
+  "compatibilitiesPartnerBadge": "+Partner",
+  "compatibilitiesPersonalityTitle": "Személyiség Jelentés",
+  "compatibilitiesPersonalitySubtitle": "Átfogó elemzés a személyiségedről a születési diagramod alapján",
+  "compatibilitiesRomanticPersonalityTitle": "Romantikus Személyiség Jelentés",
+  "compatibilitiesRomanticPersonalitySubtitle": "Értsd meg, hogyan közelítesz a szerelemhez és a romantikához",
+  "compatibilitiesLoveCompatibilityTitle": "Szerelem Kompatibilitás",
+  "compatibilitiesLoveCompatibilitySubtitle": "Részletes romantikus kompatibilitási elemzés a partnereddel",
+  "compatibilitiesRomanticForecastTitle": "Romantikus Pár Előrejelzés",
+  "compatibilitiesRomanticForecastSubtitle": "Betekintés a kapcsolatod jövőjébe",
+  "compatibilitiesFriendshipTitle": "Barátság Jelentés",
+  "compatibilitiesFriendshipSubtitle": "Barátsági dinamikák és kompatibilitás elemzése",
+  "moonPhaseTitle": "Holdfázis Jelentés",
+  "moonPhaseSubtitle": "Értsd meg a jelenlegi holdenergiát és hogy ez hogyan hat rád. Kapj útmutatást a holdfázisnak megfelelően.",
+  "moonPhaseSelectDate": "Dátum kiválasztása",
+  "moonPhaseOriginalPrice": "$2.99",
+  "moonPhaseGenerate": "Jelentés generálása",
+  "moonPhaseGenerateDifferentDate": "Generálás másik dátumra",
+  "moonPhaseGenerationFailed": "Generálás nem sikerült",
+  "moonPhaseGenerating": "A jelentés generálása folyamatban. Kérjük, próbáld újra.",
+  "moonPhaseUnknownError": "Valami hiba történt. Kérjük, próbáld újra.",
+  "requiredFieldsNote": "A *-gal jelölt mezők kötelezőek.",
+  "karmicTitle": "Karmikus Asztrológia",
+  "karmicLoadFailed": "Betöltés nem sikerült: {error}",
+  "@karmicLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicOfferTitle": "🔮 Karmikus Asztrológia – A Lélek Üzenetei",
+  "karmicOfferBody": "A Karmikus Asztrológia felfedi az életet formáló mély mintákat, a mindennapi eseményeken túl.\n\nOlyan értelmezést kínál, amely a megoldatlan leckékről, karmikus kapcsolódásokról és a lélek növekedési útjáról szól.\n\nEz nem arról szól, hogy mi következik,\nhanem arról, hogy miért tapasztalod meg azt, amit megélsz.\n\n✨ Aktiváld a Karmikus Asztrológiát, és fedezd fel utazásod mélyebb jelentését.",
+  "karmicBetaFreeBadge": "Béta Tesztelők – INGYENES Hozzáférés!",
+  "karmicPriceBeta": "${price} – Béta Tesztelők Ingyenes",
+  "@karmicPriceBeta": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "karmicPriceUnlock": "Feloldás: ${price}",
+  "@karmicPriceUnlock": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "karmicHintInstant": "A felolvasás azonnal generálódik",
+  "karmicHintOneTime": "Egyszeri vásárlás, nincs előfizetés",
+  "karmicProgressHint": "Kapcsolódás a karmikus utadhoz...",
+  "karmicGenerateFailed": "Generálás nem sikerült: {error}",
+  "@karmicGenerateFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicCheckoutTitle": "Karmikus Asztrológia Pénztár",
+  "karmicCheckoutSubtitle": "Vásárlási folyamat hamarosan",
+  "karmicGenerationFailed": "Generálás nem sikerült: {error}",
+  "@karmicGenerationFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "karmicLoading": "A karmikus felolvasásod betöltése...",
+  "karmicGenerationFailedShort": "Generálás nem sikerült",
+  "karmicGeneratingTitle": "A Karmikus Felolvasásod Generálása...",
+  "karmicGeneratingSubtitle": "A születési diagramod elemzése karmikus minták és lélekleckék szempontjából.",
+  "karmicReadingTitle": "🔮 A Te Karmikus Felolvasásod",
+  "karmicReadingSubtitle": "A Lélek Üzenetei",
+  "karmicDisclaimer": "Ez a felolvasás önreflexióra és szórakozásra szolgál. Nem helyettesít szakmai tanácsadást.",
+  "commonActive": "Aktív",
+  "commonBackToHome": "Vissza a Főoldalra",
+  "commonYesterday": "tegnap",
+  "commonWeeksAgo": "{count} héttel ezelőtt",
+  "@commonWeeksAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonMonthsAgo": "{count} hónappal ezelőtt",
+  "@commonMonthsAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "commonEdit": "Szerkesztés",
+  "commonDelete": "Törlés",
+  "natalChartProGenerated": "Pro értelmezések generálva! Görgess fel, hogy lásd őket.",
+  "natalChartHouse1": "Önmagad és Identitás",
+  "natalChartHouse2": "Pénz és Értékek",
+  "natalChartHouse3": "Kommunikáció",
+  "natalChartHouse4": "Otthon és Család",
+  "natalChartHouse5": "Kreativitás és Romantika",
+  "natalChartHouse6": "Egészség és Rutin",
+  "natalChartHouse7": "Kapcsolatok",
+  "natalChartHouse8": "Átalakulás",
+  "natalChartHouse9": "Filozófia és Utazás",
+  "natalChartHouse10": "Karrier és Státusz",
+  "natalChartHouse11": "Barátok és Célok",
+  "natalChartHouse12": "Spiritualitás",
+  "helpSupportTitle": "Segítség és Támogatás",
+  "helpSupportContactTitle": "Támogatás Kapcsolat",
+  "helpSupportContactSubtitle": "Általában 24 órán belül válaszolunk",
+  "helpSupportFaqTitle": "Gyakran Ismételt Kérdések",
+  "helpSupportEmailSubject": "Belső Bölcsesség Támogatási Kérelem",
+  "helpSupportEmailAppFailed": "Nem sikerült megnyitni az e-mail alkalmazást. Kérjük, írjon a support@innerwisdomapp.com címre",
+  "helpSupportEmailFallback": "Kérjük, írjon nekünk a support@innerwisdomapp.com címre",
+  "helpSupportFaq1Q": "Mennyire pontos a napi útmutatás?",
+  "helpSupportFaq1A": "A napi útmutatásunk a hagyományos asztrológiai elveket ötvözi a személyes születési térképeddel. Míg az asztrológia értelmező, az AI-nk valós bolygóhelyzetek és aspektusok alapján nyújt személyre szabott betekintést.",
+  "helpSupportFaq2Q": "Miért van szükségem a születési időmre?",
+  "helpSupportFaq2A": "A születési időd határozza meg az Aszcendensedet (Fellépő jel) és a házak pozícióit a térképedben. Enélkül délben használjuk alapértelmezettként, ami befolyásolhatja a házakkal kapcsolatos értelmezések pontosságát.",
+  "helpSupportFaq3Q": "Hogyan tudom megváltoztatni a születési adataimat?",
+  "helpSupportFaq3A": "Jelenleg a születési adatokat nem lehet megváltoztatni az első beállítás után, hogy biztosítsuk az olvasások következetességét. Lépj kapcsolatba a támogatással, ha javításokra van szükséged.",
+  "helpSupportFaq4Q": "Mi az a Fókusz téma?",
+  "helpSupportFaq4A": "A Fókusz téma egy aktuális aggodalom vagy élet terület, amelyet hangsúlyozni szeretnél. Ha be van állítva, a napi útmutatásod külön figyelmet fordít erre a területre, relevánsabb betekintést nyújtva.",
+  "helpSupportFaq5Q": "Hogyan működik a előfizetés?",
+  "helpSupportFaq5A": "A ingyenes szint alapvető napi útmutatást tartalmaz. A prémium előfizetők fokozott személyre szabást, audio olvasásokat és hozzáférést kapnak különleges funkciókhoz, mint például a Karmikus Asztrológiai olvasások.",
+  "helpSupportFaq6Q": "Privát az adatom?",
+  "helpSupportFaq6A": "Igen! Komolyan vesszük a magánéletet. A születési adataid és személyes információid titkosítva vannak, és soha nem osztjuk meg harmadik felekkel. Bármikor törölheted a fiókodat.",
+  "helpSupportFaq7Q": "Mi van, ha nem értek egyet egy olvasással?",
+  "helpSupportFaq7A": "Az asztrológia értelmező, és nem minden olvasás fog rezonálni. Használj visszajelzési funkciót, hogy segíts nekünk fejlődni. Az AI-nk az idő múlásával tanul a preferenciáidból.",
+  "notificationsSaved": "Értesítési beállítások mentve",
+  "notificationsTitle": "Értesítések",
+  "notificationsSectionTitle": "Push Értesítések",
+  "notificationsDailyTitle": "Napi Útmutatás",
+  "notificationsDailySubtitle": "Értesítést kapsz, amikor a napi útmutatásod készen áll",
+  "notificationsWeeklyTitle": "Heti Főbb Események",
+  "notificationsWeeklySubtitle": "Heti kozmikus áttekintés és kulcsfontosságú tranzitok",
+  "notificationsSpecialTitle": "Különleges Események",
+  "notificationsSpecialSubtitle": "Teliholdak, napfogyatkozások és retrográdok",
+  "notificationsDeviceHint": "Az értesítéseket a készülék beállításaiban is vezérelheted.",
+  "concernsTitle": "A Te Fókuszod",
+  "concernsSubtitle": "Témák, amelyek formálják az útmutatásodat",
+  "concernsTabActive": "Aktív ({count})",
+  "@concernsTabActive": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsTabResolved": "Megoldott ({count})",
+  "@concernsTabResolved": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsTabArchived": "Archív ({count})",
+  "@concernsTabArchived": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "concernsEmptyTitle": "Nincsenek aggodalmak itt",
+  "concernsEmptySubtitle": "Adj hozzá egy fókusz témát, hogy személyre szabott útmutatást kapj",
+  "concernsCategoryCareer": "Karrier és Munka",
+  "concernsCategoryHealth": "Egészség",
+  "concernsCategoryRelationship": "Kapcsolat",
+  "concernsCategoryFamily": "Család",
+  "concernsCategoryMoney": "Pénz",
+  "concernsCategoryBusiness": "Üzlet",
+  "concernsCategoryPartnership": "Partnerség",
+  "concernsCategoryGrowth": "Személyes Fejlődés",
+  "concernsMinLength": "Kérjük, írd le az aggodalmadat részletesebben (legalább 10 karakter)",
+  "concernsSubmitFailed": "Nem sikerült benyújtani az aggodalmat. Kérjük, próbáld újra.",
+  "concernsAddTitle": "Mi jár a fejedben?",
+  "concernsAddDescription": "Oszd meg a jelenlegi aggodalmadat, kérdésedet vagy élethelyzetedet. Az AI-nk elemezni fogja, és fókuszált útmutatást ad holnaptól.",
+  "concernsExamplesTitle": "A gondok példái:",
+  "concernsExampleCareer": "Karrierváltás döntés",
+  "concernsExampleRelationship": "Kapcsolati kihívások",
+  "concernsExampleFinance": "Pénzügyi befektetés időzítése",
+  "concernsExampleHealth": "Egészség és wellness fókusz",
+  "concernsExampleGrowth": "Személyes fejlődés iránya",
+  "concernsSubmitButton": "Agyalás Benyújtása",
+  "concernsSuccessTitle": "Agyalás Rögzítve!",
+  "concernsCategoryLabel": "Kategória: ",
+  "concernsSuccessMessage": "Holnaptól a napi útmutatásod jobban fog fókuszálni erre a témára.",
+  "concernsViewFocusTopics": "Nézd meg a Fókusz Témáimat",
+  "deleteAccountTitle": "Fiók Törlése",
+  "deleteAccountHeading": "Törölni szeretnéd a fiókodat?",
+  "deleteAccountConfirmError": "Kérjük, írd be a DELETE-et a megerősítéshez",
+  "deleteAccountFinalWarningTitle": "Végső Figyelmeztetés",
+  "deleteAccountFinalWarningBody": "Ez a művelet nem vonható vissza. Minden adatod, beleértve:\n\n• A profilodat és születési adataidat\n• A születési térképedet és értelmezéseket\n• A napi útmutatás történetét\n• Személyes kontextust és preferenciákat\n• Minden megvásárolt tartalmat\n\nÖrökre törlésre kerül.",
+  "deleteAccountConfirmButton": "Törlés Örökre",
+  "deleteAccountSuccess": "A fiókod törölve lett",
+  "deleteAccountFailed": "Nem sikerült törölni a fiókot. Kérjük, próbáld újra.",
+  "deleteAccountPermanentWarning": "Ez a művelet végleges, és nem vonható vissza",
+  "deleteAccountWarningDetail": "Minden személyes adatod, beleértve a születési térképedet, az útmutatás történetét és bármilyen vásárlást, véglegesen törlésre kerül.",
+  "deleteAccountWhatTitle": "Mi fog törlődni:",
+  "deleteAccountItemProfile": "A profilod és fiókod",
+  "deleteAccountItemBirthData": "Születési adatok és születési térkép",
+  "deleteAccountItemGuidance": "Minden napi útmutatás története",
+  "deleteAccountItemContext": "Személyes kontextus és preferenciák",
+  "deleteAccountItemKarmic": "Karmikus asztrológiai olvasások",
+  "deleteAccountItemPurchases": "Minden megvásárolt tartalom",
+  "deleteAccountTypeDelete": "Írd be a DELETE-et a megerősítéshez",
+  "deleteAccountDeleteHint": "DELETE",
+  "deleteAccountButton": "Fiókom Törlése",
+  "deleteAccountCancel": "Mégse, tartsd meg a fiókomat",
+  "learnArticleLoadFailed": "Nem sikerült betölteni a cikket",
+  "learnContentInEnglish": "Tartalom angolul",
+  "learnArticlesLoadFailed": "Nem sikerült betölteni a cikkeket",
+  "learnArticlesEmpty": "Még nincsenek elérhető cikkek",
+  "learnContentFallback": "Tartalom angolul (nem elérhető a nyelveden)",
+  "checkoutTitle": "Pénztár",
+  "checkoutOrderSummary": "Rendelés Összegzés",
+  "checkoutProTitle": "Pro Születési Térkép",
+  "checkoutProSubtitle": "Teljes bolygóértelmezések",
+  "checkoutTotalLabel": "Összesen",
+  "checkoutTotalAmount": "$9.99 USD",
+  "checkoutPaymentTitle": "Fizetési Integráció",
+  "checkoutPaymentSubtitle": "Az alkalmazáson belüli vásárlás integrációja folyamatban van. Kérjük, nézd meg később!",
+  "checkoutProcessing": "Feldolgozás...",
+  "checkoutDemoPurchase": "Demó vásárlás (Tesztelés)",
+  "checkoutSecurityNote": "A fizetés biztonságosan történik az Apple/Google által. A kártyaadatok soha nem kerülnek tárolásra.",
+  "checkoutSuccess": "🎉 Pro Natal Chart sikeresen feloldva!",
+  "checkoutGenerateFailed": "A magyarázatok generálása sikertelen. Kérjük, próbálja újra.",
+  "checkoutErrorWithMessage": "Hiba történt: {error}",
+  "@checkoutErrorWithMessage": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "billingUpgrade": "Frissítés Prémiumra",
+  "billingFeatureLocked": "{feature} egy Prémium funkció",
+  "@billingFeatureLocked": {
+    "placeholders": {
+      "feature": {}
+    }
+  },
+  "billingUpgradeBody": "Frissítsen Prémiumra, hogy feloldja ezt a funkciót és a legszemélyre szabottabb útmutatást kapja.",
+  "contextReviewFailed": "Frissítés sikertelen. Kérjük, próbálja újra.",
+  "contextReviewTitle": "Ideje egy Gyors Ellenőrzésre",
+  "contextReviewBody": "3 hónap telt el azóta, hogy utoljára frissítettük a személyes kontextusát. Változott valami fontos az életében, amit tudnunk kellene?",
+  "contextReviewHint": "Ez segít nekünk abban, hogy személyre szabottabb útmutatást nyújtsunk.",
+  "contextReviewNoChanges": "Nincs változás",
+  "contextReviewYesUpdate": "Igen, frissítés",
+  "contextProfileLoadFailed": "Profil betöltése sikertelen",
+  "contextCardTitle": "Személyes Kontextus",
+  "contextCardSubtitle": "Állítsa be a személyes kontextusát, hogy személyre szabottabb útmutatást kapjon.",
+  "contextCardSetupNow": "Állítsa be most",
+  "contextCardVersionUpdated": "Verzió {version} • Utoljára frissítve: {date}",
+  "@contextCardVersionUpdated": {
+    "placeholders": {
+      "version": {},
+      "date": {}
+    }
+  },
+  "contextCardAiSummary": "AI Összefoglaló",
+  "contextCardToneTag": "{tone} hangvétel",
+  "@contextCardToneTag": {
+    "placeholders": {
+      "tone": {}
+    }
+  },
+  "contextCardSensitivityTag": "érzékenység be",
+  "contextCardReviewDue": "Felülvizsgálat esedékes - frissítse a kontextusát",
+  "contextCardNextReview": "Következő felülvizsgálat {days} napon belül",
+  "@contextCardNextReview": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "contextDeleteTitle": "Személyes Kontextus törlése?",
+  "contextDeleteBody": "Ez törli a személyes kontextus profilját. Az útmutatása kevésbé lesz személyre szabott.",
+  "contextDeleteFailed": "Profil törlése sikertelen",
+  "appTitle": "Belső Bölcsesség",
+  "concernsHintExample": "Példa: Van egy állásajánlatom egy másik városban, és nem vagyok biztos benne, hogy el kellene-e fogadnom...",
+  "learnTitle": "Tanulj Asztrológiát",
+  "learnFreeTitle": "Ingyenes Tanulási Források",
+  "learnFreeSubtitle": "Fedezze fel az asztrológia alapjait",
+  "learnSignsTitle": "Jelek",
+  "learnSignsSubtitle": "12 Zodiákus jel és jelentésük",
+  "learnPlanetsTitle": "Bolygók",
+  "learnPlanetsSubtitle": "Égi testek az asztrológiában",
+  "learnHousesTitle": "Házak",
+  "learnHousesSubtitle": "12 életterület a horoszkópjában",
+  "learnTransitsTitle": "Átmenetek",
+  "learnTransitsSubtitle": "Bolygómozgások és hatások",
+  "learnPaceTitle": "Tanulj a Saját Tempódban",
+  "learnPaceSubtitle": "Átfogó leckék az asztrológiai tudás elmélyítéséhez",
+  "proNatalTitle": "Pro Natal Chart",
+  "proNatalHeroTitle": "Mélységi Megértések Feloldása",
+  "proNatalHeroSubtitle": "Kapjon átfogó, 150-200 szavas magyarázatokat minden bolygóhelyzetre a születési horoszkópjában.",
+  "proNatalFeature1Title": "Mély Személyiség Megértések",
+  "proNatalFeature1Body": "Értsd meg, hogyan formálja minden bolygó az egyedi személyiségedet és életutad.",
+  "proNatalFeature2Title": "AI-vezérelt Elemzés",
+  "proNatalFeature2Body": "Fejlett magyarázatok, amelyek a pontos bolygóhelyzeteidhez vannak igazítva.",
+  "proNatalFeature3Title": "Használható Útmutatás",
+  "proNatalFeature3Body": "Gyakorlati tanácsok karrierhez, kapcsolatokhoz és személyes fejlődéshez.",
+  "proNatalFeature4Title": "Élethosszig Tartó Hozzáférés",
+  "proNatalFeature4Body": "A magyarázataid örökre elmentésre kerülnek. Bármikor hozzáférhetsz.",
+  "proNatalOneTime": "Egyszeri vásárlás",
+  "proNatalNoSubscription": "Előfizetés nem szükséges",
+  "askGuideLimitGetAddon": "Kiegészítő beszerzése"
+}
