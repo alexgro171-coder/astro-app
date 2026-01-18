@@ -252,35 +252,48 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  InkWell(
-                    onTap: _showLanguagePicker,
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceLight,
+                  DropdownButtonFormField<String>(
+                    value: _selectedLanguageCode,
+                    dropdownColor: AppColors.surface,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: AppColors.surfaceLight,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            _uiLanguages[_selectedLanguageCode]?['flag'] ?? '🌐',
-                            style: const TextStyle(fontSize: 22),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              _getUiLanguageDisplayName(_selectedLanguageCode),
-                              style: const TextStyle(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          const Icon(Icons.expand_more, color: AppColors.textMuted),
-                        ],
+                        borderSide: BorderSide.none,
                       ),
                     ),
+                    items: _uiLanguages.entries.map((entry) {
+                      final code = entry.key;
+                      final lang = entry.value;
+                      return DropdownMenuItem<String>(
+                        value: code,
+                        child: Row(
+                          children: [
+                            Text(lang['flag']!, style: const TextStyle(fontSize: 20)),
+                            const SizedBox(width: 10),
+                            Text(lang['name']!, style: const TextStyle(color: AppColors.textPrimary)),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) async {
+                      if (value == null) return;
+                      await ref.read(appLocaleProvider.notifier).setLocaleCode(value);
+                      if (mounted) {
+                        setState(() {
+                          _selectedLanguageCode = value;
+                          _errorMessage = null;
+                        });
+                      }
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return l10n.profileSelectLanguageTitle;
+                      }
+                      return null;
+                    },
                   ),
 
                   const SizedBox(height: 32),
@@ -571,98 +584,6 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
     final lang = code == null ? null : _uiLanguages[code];
     if (lang == null) return 'English 🇬🇧';
     return '${lang['name']} ${lang['flag']}';
-  }
-
-  Future<void> _showLanguagePicker() async {
-    final l10n = AppLocalizations.of(context)!;
-    final selected = await showModalBottomSheet<String>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  l10n.profileSelectLanguageTitle,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close, color: AppColors.textMuted),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.profileAppLanguage,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  ..._uiLanguages.entries.map((entry) {
-                    final code = entry.key;
-                    final lang = entry.value;
-                    final isSelected = _selectedLanguageCode == code;
-                    return ListTile(
-                      leading: Text(
-                        lang['flag']!,
-                        style: const TextStyle(fontSize: 28),
-                      ),
-                      title: Text(
-                        lang['name']!,
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        ),
-                      ),
-                      trailing: isSelected
-                          ? const Icon(Icons.check_circle, color: AppColors.accent)
-                          : null,
-                      onTap: () => Navigator.pop(context, code),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      tileColor: isSelected
-                          ? AppColors.accent.withOpacity(0.1)
-                          : null,
-                    );
-                  }),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-
-    if (!mounted) return;
-    if (selected == null) return;
-    await ref.read(appLocaleProvider.notifier).setLocaleCode(selected);
-    if (mounted) {
-      setState(() {
-        _selectedLanguageCode = selected;
-        _errorMessage = null;
-      });
-    }
   }
 }
 

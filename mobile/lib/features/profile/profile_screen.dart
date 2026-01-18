@@ -353,14 +353,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
           ),
         ),
-        _buildSettingsItem(
-          icon: Icons.language_rounded,
-          title: l10n.profileAppLanguage,
-          subtitle: _getUiLanguageDisplayName(
-            ref.watch(appLocaleProvider),
-          ),
-          onTap: () => _showAppLanguagePicker(l10n),
-        ),
+        _buildAppLanguageDropdown(),
         _buildSettingsItem(
           icon: Icons.notifications_rounded,
           title: l10n.profileNotifications,
@@ -416,91 +409,104 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return '${lang['name']} ${lang['flag']}';
   }
 
-  Future<void> _showAppLanguagePicker(AppLocalizations l10n) async {
-    final currentLocale = ref.read(appLocaleProvider);
+  Widget _buildAppLanguageDropdown() {
+    final l10n = AppLocalizations.of(context)!;
+    final currentLocale = ref.watch(appLocaleProvider);
 
-    final selected = await showModalBottomSheet<String>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: AppColors.surface.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(16),
       ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.textSecondary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.language_rounded,
+              color: AppColors.textSecondary,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10n.profileSelectLanguageTitle,
+                  l10n.profileAppLanguage,
                   style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
                     color: AppColors.textPrimary,
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.close, color: AppColors.textMuted),
-                  onPressed: () => Navigator.pop(context),
+                const SizedBox(height: 6),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: currentLocale.languageCode,
+                    isDense: true,
+                    dropdownColor: AppColors.surface,
+                    items: _uiLanguages.entries.map((entry) {
+                      final code = entry.key;
+                      final lang = entry.value;
+                      return DropdownMenuItem<String>(
+                        value: code,
+                        child: Row(
+                          children: [
+                            Text(lang['flag']!, style: const TextStyle(fontSize: 18)),
+                            const SizedBox(width: 8),
+                            Text(lang['name']!, style: const TextStyle(color: AppColors.textPrimary)),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (code) async {
+                      if (code == null) return;
+                      await _updateAppLanguage(code);
+                    },
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.profileAppLanguage,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  ..._uiLanguages.entries.map((entry) {
-                    final code = entry.key;
-                    final lang = entry.value;
-                    final isSelected = currentLocale.languageCode == code;
-                    return ListTile(
-                      leading: Text(
-                        lang['flag']!,
-                        style: const TextStyle(fontSize: 28),
-                      ),
-                      title: Text(
-                        lang['name']!,
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        ),
-                      ),
-                      trailing: isSelected
-                          ? const Icon(Icons.check_circle, color: AppColors.accent)
-                          : null,
-                      onTap: () => Navigator.pop(context, code),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      tileColor: isSelected
-                          ? AppColors.accent.withOpacity(0.1)
-                          : null,
-                    );
-                  }),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
 
-    if (!mounted) return;
-    if (selected == null) return;
-    await ref.read(appLocaleProvider.notifier).setLocaleCode(selected);
+  Future<void> _updateAppLanguage(String code) async {
+    final l10n = AppLocalizations.of(context)!;
+    final displayName = _uiLanguages[code]?['name'] ?? code;
+
+    await ref.read(appLocaleProvider.notifier).setLocaleCode(code);
+    try {
+      final apiClient = ref.read(apiClientProvider);
+      await apiClient.updateLanguage(code.toUpperCase());
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.profileLanguageUpdated(displayName)),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.profileLanguageUpdateFailed(e.toString())),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildSettingsItem({
