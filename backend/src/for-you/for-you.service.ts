@@ -287,31 +287,37 @@ export class ForYouService {
         dto.date,
       );
 
-      // Personalize with gender context if available (for personality reports)
+      // Personalize with gender context and language (for personality reports)
       let personalizedContent = apiResponse.reportText;
+      let usedOpenAiLocale = false;
       const genderStr = this.mapGenderToString(user.gender);
-      if (genderStr && this.isPersonalityReport(serviceType)) {
-        this.logger.log(`Personalizing ${serviceType} for ${genderStr}...`);
-        personalizedContent = await this.personalizeWithGender(
+      if (this.isPersonalityReport(serviceType)) {
+        this.logger.log(`Personalizing ${serviceType} for locale ${locale}...`);
+        const personalization = await this.personalizeWithGender(
           apiResponse.reportText,
           genderStr,
           locale,
         );
+        personalizedContent = personalization.content;
+        usedOpenAiLocale = personalization.usedOpenAi;
       }
 
-      // Translate if needed
-      this.logger.log(`Translating to ${locale}...`);
-      const translatedContent = await this.translationService.translate(
-        personalizedContent,
-        locale,
-      );
+      // Translate if needed (skip when OpenAI already produced locale output)
+      let finalContent = personalizedContent;
+      if (!usedOpenAiLocale) {
+        this.logger.log(`Translating to ${locale}...`);
+        finalContent = await this.translationService.translate(
+          personalizedContent,
+          locale,
+        );
+      }
 
       // Update reading with content
       const updatedReading = await this.prisma.oneTimeReading.update({
         where: { id: reading.id },
         data: {
           status: 'READY',
-          content: translatedContent,
+          content: finalContent,
         },
       });
 
@@ -326,7 +332,7 @@ export class ForYouService {
 
       return {
         status: 'READY',
-        content: updatedReading.content || undefined,
+          content: updatedReading.content || undefined,
         meta: {
           localeUsed: locale,
           inputHash,
@@ -482,22 +488,30 @@ export class ForYouService {
    */
   private async personalizeWithGender(
     content: string,
-    gender: string,
+    gender: string | null,
     locale: string,
-  ): Promise<string> {
+  ): Promise<{ content: string; usedOpenAi: boolean }> {
     try {
-      const pronouns = gender === 'male' ? 'he/him/his' : gender === 'female' ? 'she/her/hers' : 'they/them/their';
+      const pronouns = gender === 'male'
+        ? 'he/him/his'
+        : gender === 'female'
+        ? 'she/her/hers'
+        : 'they/them/their';
+      const languageInstruction = this.getLanguageInstruction(locale);
       
       const response = await this.openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
-            content: `You are a content adapter. Your task is to adapt astrological text to use gender-appropriate language for a ${gender} reader. 
+            content: `You are a content adapter. Your task is to adapt astrological text for a ${gender || 'neutral'} reader and ensure the output language matches the user preference.
+
+${languageInstruction}
             
 Rules:
-- Replace generic "you" with ${gender}-appropriate references where natural
-- Use pronouns ${pronouns} where appropriate when referring to the reader in third person
+- If gender is provided, replace generic "you" with ${gender}-appropriate references where natural
+- If gender is provided, use pronouns ${pronouns} where appropriate when referring to the reader in third person
+- If gender is not provided, keep language neutral and avoid gendered terms
 - Keep the same structure, meaning, and all astrological interpretations intact
 - Do NOT change the astrological content itself
 - Do NOT add new information
@@ -507,7 +521,7 @@ Rules:
           },
           {
             role: 'user',
-            content: `Adapt this astrological report for a ${gender} reader:\n\n${content}`,
+            content: `Adapt this astrological report:\n\n${content}`,
           },
         ],
         temperature: 0.2,
@@ -517,15 +531,20 @@ Rules:
       const adaptedContent = response.choices[0]?.message?.content?.trim();
       if (!adaptedContent) {
         this.logger.warn('Empty response from gender personalization, using original');
-        return content;
+        return { content, usedOpenAi: false };
       }
 
-      return adaptedContent;
+      return { content: adaptedContent, usedOpenAi: true };
     } catch (error) {
       this.logger.error(`Gender personalization failed: ${error.message}`);
       // Return original content if personalization fails
-      return content;
+      return { content, usedOpenAi: false };
     }
+  }
+
+  private getLanguageInstruction(locale: string): string {
+    const languageName = getLanguageName(locale);
+    return `IMPORTANT: Respond entirely in ${languageName}.`;
   }
 }
 
