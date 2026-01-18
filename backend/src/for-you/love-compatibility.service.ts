@@ -81,9 +81,9 @@ export class LoveCompatibilityService {
     const locale = dto.locale || acceptLanguage?.split(',')[0]?.split('-')[0] || user.language?.toLowerCase() || 'en';
 
     try {
-      // Step 1: Get partner's natal chart summary from AstrologyAPI (NOT saved)
+      // Step 1: Get partner's natal chart details from AstrologyAPI (NOT saved)
       this.logger.log('Generating partner natal chart via AstrologyAPI...');
-      const partnerNatalSummary = await this.getPartnerNatalChartSummary(dto.partner);
+      const partnerNatal = await this.getPartnerNatalChartDetails(dto.partner);
 
       // Step 2: Get user's personal context for personalization
       let personalContext = null;
@@ -104,12 +104,14 @@ export class LoveCompatibilityService {
 
       // Step 3: Generate comprehensive analysis with OpenAI
       this.logger.log('Generating compatibility analysis via OpenAI...');
-    const analysis = await this.generateAnalysis(
+      const analysis = await this.generateAnalysis(
         user,
         userNatalChart.summary as any,
-        partnerNatalSummary,
+        userNatalChart.rawData as any,
+        partnerNatal.summary,
+        partnerNatal.rawData,
         dto.partner.name,
-      dto.partner.gender,
+        dto.partner.gender,
         personalContext,
         locale,
       );
@@ -140,9 +142,9 @@ export class LoveCompatibilityService {
    * Get partner's natal chart from AstrologyAPI.
    * This data is NEVER saved to the database.
    */
-  private async getPartnerNatalChartSummary(partner: PartnerBirthDataDto): Promise<any> {
+  private async getPartnerNatalChartDetails(partner: PartnerBirthDataDto): Promise<{ summary: any; rawData: any }> {
     try {
-      return await this.astrologyService.generateNatalChartSummaryFromBirthData({
+      return await this.astrologyService.generateNatalChartDetailsFromBirthData({
         birthDate: partner.birthDate,
         birthTime: partner.birthTime,
         birthLat: partner.birthLat,
@@ -161,7 +163,9 @@ export class LoveCompatibilityService {
   private async generateAnalysis(
     user: User,
     userNatalSummary: any,
+    userNatalRaw: any,
     partnerNatalSummary: any,
+    partnerNatalRaw: any,
     partnerName: string | undefined,
     partnerGender: string | undefined,
     personalContext: any,
@@ -226,11 +230,11 @@ PARTNER PROFILE:
 - Name: ${partnerName || 'not specified'}
 - Gender: ${partnerGenderStr || 'not specified'}
 
-USER'S NATAL CHART:
-${this.formatNatalSummary(userNatalSummary)}
+USER'S NATAL CHART (DETAILED POSITIONS):
+${this.formatNatalChartDetails(userNatalSummary, userNatalRaw)}
 
-PARTNER'S NATAL CHART:
-${this.formatNatalSummary(partnerNatalSummary)}
+PARTNER'S NATAL CHART (DETAILED POSITIONS):
+${this.formatNatalChartDetails(partnerNatalSummary, partnerNatalRaw)}
 ${personalContextSection}
 Please provide a detailed, personalized compatibility analysis.`;
 
@@ -260,16 +264,210 @@ Please provide a detailed, personalized compatibility analysis.`;
     if (typeof summary === 'string') return summary.substring(0, 500);
 
     const parts: string[] = [];
-    if (summary.sunSign) parts.push(`Sun: ${summary.sunSign}`);
-    if (summary.moonSign) parts.push(`Moon: ${summary.moonSign}`);
-    if (summary.ascendant) parts.push(`Rising: ${summary.ascendant}`);
-    if (summary.planets) {
-      for (const [planet, data] of Object.entries(summary.planets || {})) {
-        if (data) parts.push(`${planet}: ${typeof data === 'string' ? data : JSON.stringify(data)}`);
+    if (summary.sun?.sign) parts.push(`Sun: ${summary.sun.sign}`);
+    if (summary.moon?.sign) parts.push(`Moon: ${summary.moon.sign}`);
+    if (summary.ascendant?.sign) parts.push(`Rising: ${summary.ascendant.sign}`);
+
+    const planetKeys = [
+      'mercury',
+      'venus',
+      'mars',
+      'jupiter',
+      'saturn',
+      'uranus',
+      'neptune',
+      'pluto',
+      'node',
+      'chiron',
+      'lilith',
+    ];
+    for (const key of planetKeys) {
+      if (summary[key]?.sign) {
+        parts.push(`${this.capitalize(key)}: ${summary[key].sign}`);
       }
     }
 
     return parts.length > 0 ? parts.join('\n') : JSON.stringify(summary).substring(0, 500);
+  }
+
+  private formatNatalChartDetails(summary: any, rawData?: any): string {
+    if (!summary && !rawData) return 'Natal chart data unavailable.';
+
+    const lines: string[] = [];
+    const planetLines = this.formatPlanetPositions(rawData?.planets, summary);
+    lines.push(...planetLines);
+
+    const ascendantLine = this.formatAngle('Ascendant', rawData?.ascendant, summary?.ascendant);
+    if (ascendantLine) lines.push(ascendantLine);
+    const midheavenLine = this.formatAngle('Midheaven', rawData?.midheaven, summary?.midheaven);
+    if (midheavenLine) lines.push(midheavenLine);
+
+    const aspectLines = this.formatAspects(rawData?.aspects);
+    if (aspectLines.length) {
+      lines.push('');
+      lines.push(...aspectLines);
+    }
+
+    return lines.length ? lines.join('\n') : this.formatNatalSummary(summary);
+  }
+
+  private formatPlanetPositions(planets?: any[], summary?: any): string[] {
+    const order = [
+      'sun',
+      'moon',
+      'mercury',
+      'venus',
+      'mars',
+      'jupiter',
+      'saturn',
+      'uranus',
+      'neptune',
+      'pluto',
+      'node',
+      'chiron',
+      'lilith',
+    ];
+
+    const fromRaw = Array.isArray(planets)
+      ? planets.map((planet) => {
+          const name = String(planet.name || '').toLowerCase().replace(/\s+/g, '');
+          return {
+            key: name,
+            label: planet.name || this.capitalize(name),
+            sign: planet.sign,
+            house: planet.house,
+            degree: planet.full_degree,
+            isRetro: planet.is_retro === true || planet.is_retro === 'true',
+          };
+        })
+      : [];
+
+    const byKey = new Map<string, any>();
+    for (const item of fromRaw) {
+      if (item.key) byKey.set(item.key, item);
+    }
+
+    const lines: string[] = [];
+    for (const key of order) {
+      const raw = byKey.get(key);
+      if (raw?.sign) {
+        lines.push(this.formatPlacement(raw.label, raw.sign, raw.degree, raw.house, raw.isRetro));
+        continue;
+      }
+      const fallback = summary?.[key];
+      if (fallback?.sign) {
+        lines.push(
+          this.formatPlacement(
+            this.capitalize(key),
+            fallback.sign,
+            fallback.degree ?? fallback.normDegree,
+            fallback.house,
+            fallback.isRetro,
+          ),
+        );
+      }
+    }
+
+    return lines;
+  }
+
+  private formatPlacement(
+    label: string,
+    sign?: string,
+    degree?: number,
+    house?: number,
+    isRetro?: boolean,
+  ): string {
+    const degreeStr = typeof degree === 'number' ? `${degree.toFixed(2)}°` : 'unknown°';
+    const houseStr = house ? `House ${house}` : 'House ?';
+    const retroStr = isRetro ? 'retrograde' : 'direct';
+    return `${label}: ${sign || 'Unknown'} ${degreeStr} (${houseStr}, ${retroStr})`;
+  }
+
+  private formatAngle(label: string, degree?: number, summaryAngle?: any): string | null {
+    if (typeof degree === 'number') {
+      const sign = this.degreeToSign(degree);
+      return `${label}: ${sign} ${degree.toFixed(2)}°`;
+    }
+    if (summaryAngle?.sign) {
+      const angleDegree =
+        typeof summaryAngle.degree === 'number' ? `${summaryAngle.degree.toFixed(2)}°` : 'unknown°';
+      return `${label}: ${summaryAngle.sign} ${angleDegree}`;
+    }
+    return null;
+  }
+
+  private formatAspects(aspects?: any[]): string[] {
+    if (!Array.isArray(aspects) || aspects.length === 0) return [];
+
+    const majorTypes = new Set([
+      'conjunction',
+      'trine',
+      'square',
+      'opposition',
+      'sextile',
+    ]);
+
+    const lines = aspects
+      .filter((aspect) => {
+        const type = String(
+          aspect?.aspect || aspect?.aspect_type || aspect?.aspectType || aspect?.type || '',
+        ).toLowerCase();
+        return majorTypes.has(type);
+      })
+      .slice(0, 12)
+      .map((aspect) => this.formatAspectLine(aspect))
+      .filter((line): line is string => Boolean(line));
+
+    return lines.length ? ['ASPECTS:', ...lines] : [];
+  }
+
+  private formatAspectLine(aspect: any): string | null {
+    if (!aspect) return null;
+    const planet1 =
+      aspect.planet1 ||
+      aspect.planet_1 ||
+      aspect.planet1_name ||
+      aspect.planet_name ||
+      aspect.planet ||
+      aspect.p1;
+    const planet2 =
+      aspect.planet2 ||
+      aspect.planet_2 ||
+      aspect.planet2_name ||
+      aspect.planet_name_2 ||
+      aspect.planet_partner ||
+      aspect.p2;
+    const type = aspect.aspect || aspect.aspect_type || aspect.aspectType || aspect.type;
+    const orb = aspect.orb ?? aspect.orb_deg ?? aspect.orb_degrees;
+
+    if (!planet1 || !planet2 || !type) return null;
+    const orbText = typeof orb === 'number' ? ` (orb ${orb.toFixed(2)}°)` : '';
+    return `${this.capitalize(String(planet1))} ${this.capitalize(String(type))} ${this.capitalize(String(planet2))}${orbText}`;
+  }
+
+  private degreeToSign(degree: number): string {
+    const signs = [
+      'Aries',
+      'Taurus',
+      'Gemini',
+      'Cancer',
+      'Leo',
+      'Virgo',
+      'Libra',
+      'Scorpio',
+      'Sagittarius',
+      'Capricorn',
+      'Aquarius',
+      'Pisces',
+    ];
+    const index = Math.floor(degree / 30) % 12;
+    return signs[index];
+  }
+
+  private capitalize(value: string): string {
+    if (!value) return value;
+    return value.charAt(0).toUpperCase() + value.slice(1);
   }
 
   private mapGenderToString(gender?: string | null): string | null {

@@ -40,6 +40,17 @@ interface BirthDataInput {
   birthTimezone?: number | string;
 }
 
+interface NatalChartDetails {
+  summary: any;
+  rawData: {
+    planets: any[];
+    houses: any[];
+    aspects: any[];
+    ascendant?: number;
+    midheaven?: number;
+  };
+}
+
 @Injectable()
 export class AstrologyService {
   private readonly logger = new Logger(AstrologyService.name);
@@ -581,6 +592,14 @@ export class AstrologyService {
    * Generate a natal chart summary from birth data without saving to DB.
    */
   async generateNatalChartSummaryFromBirthData(input: BirthDataInput): Promise<any> {
+    const details = await this.generateNatalChartDetailsFromBirthData(input);
+    return details.summary;
+  }
+
+  /**
+   * Generate natal chart details from birth data without saving to DB.
+   */
+  async generateNatalChartDetailsFromBirthData(input: BirthDataInput): Promise<NatalChartDetails> {
     const birthDate = new Date(input.birthDate);
     const [hour, minute] = (input.birthTime || '12:00').split(':').map(Number);
     const tzone = typeof input.birthTimezone === 'number'
@@ -598,14 +617,23 @@ export class AstrologyService {
       tzone,
     };
 
-    this.logger.log(`Generating natal chart summary (no-save): ${JSON.stringify(birthData)}`);
+    this.logger.log(`Generating natal chart details (no-save): ${JSON.stringify(birthData)}`);
 
     try {
       const response = await this.apiClient.post('/western_horoscope', birthData);
-      return this.parseWesternNatalChartSummary(response.data);
+      const summary = this.parseWesternNatalChartSummary(response.data);
+      const rawData = {
+        planets: response.data?.planets || [],
+        houses: response.data?.houses || [],
+        aspects: response.data?.aspects || [],
+        ascendant: response.data?.ascendant,
+        midheaven: response.data?.midheaven,
+      };
+
+      return { summary, rawData };
     } catch (error) {
-      this.logger.error('Failed to generate natal chart summary:', error.message);
-      throw new BadRequestException('Failed to generate natal chart summary');
+      this.logger.error('Failed to generate natal chart details:', error.message);
+      throw new BadRequestException('Failed to generate natal chart details');
     }
   }
 }
