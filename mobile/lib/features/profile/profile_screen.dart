@@ -24,18 +24,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Map<String, dynamic>? _user;
   bool _isLoading = true;
 
-  // Supported languages with their display names and flags
-  static const Map<String, Map<String, String>> _languages = {
-    'EN': {'name': 'English', 'flag': '🇬🇧'},
-    'RO': {'name': 'Română', 'flag': '🇷🇴'},
-    'FR': {'name': 'Français', 'flag': '🇫🇷'},
-    'DE': {'name': 'Deutsch', 'flag': '🇩🇪'},
-    'ES': {'name': 'Español', 'flag': '🇪🇸'},
-    'IT': {'name': 'Italiano', 'flag': '🇮🇹'},
-    'HU': {'name': 'Magyar', 'flag': '🇭🇺'},
-    'PL': {'name': 'Polski', 'flag': '🇵🇱'},
-  };
-
   // UI languages (lowercase codes)
   static const Map<String, Map<String, String>> _uiLanguages = {
     'en': {'name': 'English', 'flag': '🇬🇧'},
@@ -370,15 +358,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           title: l10n.profileAppLanguage,
           subtitle: _getUiLanguageDisplayName(
             ref.watch(appLocaleProvider),
-            l10n,
           ),
           onTap: () => _showAppLanguagePicker(l10n),
-        ),
-        _buildSettingsItem(
-          icon: Icons.translate_rounded,
-          title: l10n.profileContentLanguage,
-          subtitle: _getLanguageDisplayName(_user?['language'] ?? 'EN'),
-          onTap: _showLanguagePicker,
         ),
         _buildSettingsItem(
           icon: Icons.notifications_rounded,
@@ -427,15 +408,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  String _getLanguageDisplayName(String code) {
-    final lang = _languages[code];
-    if (lang == null) return 'English 🇬🇧';
-    return '${lang['name']} ${lang['flag']}';
-  }
-
-  String _getUiLanguageDisplayName(Locale locale, AppLocalizations l10n) {
+  String _getUiLanguageDisplayName(Locale locale) {
     final lang = _uiLanguages[locale.languageCode];
-  if (lang == null) return _uiLanguages['en']!['name']! + ' ' + _uiLanguages['en']!['flag']!;
+    if (lang == null) {
+      return _uiLanguages['en']!['name']! + ' ' + _uiLanguages['en']!['flag']!;
+    }
     return '${lang['name']} ${lang['flag']}';
   }
 
@@ -524,130 +501,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     if (!mounted) return;
     if (selected == null) return;
     await ref.read(appLocaleProvider.notifier).setLocaleCode(selected);
-  }
-
-  Future<void> _showLanguagePicker() async {
-    final currentLanguage = _user?['language'] ?? 'EN';
-    final l10n = AppLocalizations.of(context)!;
-    
-    final selected = await showModalBottomSheet<String>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  l10n.profileSelectLanguageTitle,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close, color: AppColors.textMuted),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.profileSelectLanguageSubtitle,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _languages.length,
-                itemBuilder: (context, index) {
-                  final code = _languages.keys.elementAt(index);
-                  final lang = _languages[code]!;
-                  final isSelected = code == currentLanguage;
-                  
-                  return ListTile(
-                    leading: Text(
-                      lang['flag']!,
-                      style: const TextStyle(fontSize: 28),
-                    ),
-                    title: Text(
-                      lang['name']!,
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                    trailing: isSelected
-                        ? const Icon(Icons.check_circle, color: AppColors.accent)
-                        : null,
-                    onTap: () => Navigator.pop(context, code),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    tileColor: isSelected
-                        ? AppColors.accent.withOpacity(0.1)
-                        : null,
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-
-    if (selected != null && selected != currentLanguage) {
-      await _updateLanguage(selected);
-    }
-  }
-
-  Future<void> _updateLanguage(String languageCode) async {
-    final l10n = AppLocalizations.of(context)!;
-    try {
-      setState(() => _isLoading = true);
-      
-      final apiClient = ref.read(apiClientProvider);
-      await apiClient.updateLanguage(languageCode);
-      
-      // Reload profile to get updated data
-      await _loadProfile();
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              l10n.profileLanguageUpdated(
-                _languages[languageCode]?['name'] ?? languageCode,
-              ),
-            ),
-            backgroundColor: AppColors.success,
-          ),
-        );
-      }
-    } catch (e) {
-      setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.profileLanguageUpdateFailed(e.toString())),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    }
   }
 
   Widget _buildSettingsItem({

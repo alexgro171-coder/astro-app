@@ -7,6 +7,7 @@ import 'package:astro_app/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/network/api_client.dart';
 import '../../core/widgets/location_autocomplete.dart';
+import '../../core/providers/locale_provider.dart';
 
 class BirthDataScreen extends ConsumerStatefulWidget {
   const BirthDataScreen({super.key});
@@ -41,10 +42,29 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
   String? _errorMessage;
   LocationResult? _selectedLocation;
   Gender? _selectedGender;
+  String? _selectedLanguageCode;
+
+  static const Map<String, Map<String, String>> _uiLanguages = {
+    'en': {'name': 'English', 'flag': '🇬🇧'},
+    'ro': {'name': 'Română', 'flag': '🇷🇴'},
+    'fr': {'name': 'Français', 'flag': '🇫🇷'},
+    'de': {'name': 'Deutsch', 'flag': '🇩🇪'},
+    'es': {'name': 'Español', 'flag': '🇪🇸'},
+    'it': {'name': 'Italiano', 'flag': '🇮🇹'},
+    'hu': {'name': 'Magyar', 'flag': '🇭🇺'},
+    'pl': {'name': 'Polski', 'flag': '🇵🇱'},
+  };
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final currentLocale = ref.read(appLocaleProvider);
+    _selectedLanguageCode = currentLocale.languageCode;
   }
 
   Future<void> _selectDate() async {
@@ -110,6 +130,10 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final l10n = AppLocalizations.of(context)!;
+    if (_selectedLanguageCode == null || _selectedLanguageCode!.isEmpty) {
+      setState(() => _errorMessage = l10n.profileSelectLanguageTitle);
+      return;
+    }
     if (_selectedDate == null) {
       setState(() => _errorMessage = l10n.birthDateMissing);
       return;
@@ -126,6 +150,7 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
 
     try {
       final apiClient = ref.read(apiClientProvider);
+      await apiClient.updateLanguage(_selectedLanguageCode!.toUpperCase());
       
       String? birthTime;
       if (_unknownTime) {
@@ -215,7 +240,50 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 24),
+
+                  // Language (required)
+                  Text(
+                    l10n.profileAppLanguage,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  InkWell(
+                    onTap: _showLanguagePicker,
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceLight,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            _uiLanguages[_selectedLanguageCode]?['flag'] ?? '🌐',
+                            style: const TextStyle(fontSize: 22),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              _getUiLanguageDisplayName(_selectedLanguageCode),
+                              style: const TextStyle(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const Icon(Icons.expand_more, color: AppColors.textMuted),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
 
                   // Error message
                   if (_errorMessage != null)
@@ -497,6 +565,104 @@ class _BirthDataScreenState extends ConsumerState<BirthDataScreen> {
         ),
       ),
     );
+  }
+
+  String _getUiLanguageDisplayName(String? code) {
+    final lang = code == null ? null : _uiLanguages[code];
+    if (lang == null) return 'English 🇬🇧';
+    return '${lang['name']} ${lang['flag']}';
+  }
+
+  Future<void> _showLanguagePicker() async {
+    final l10n = AppLocalizations.of(context)!;
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.profileSelectLanguageTitle,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: AppColors.textMuted),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.profileAppLanguage,
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  ..._uiLanguages.entries.map((entry) {
+                    final code = entry.key;
+                    final lang = entry.value;
+                    final isSelected = _selectedLanguageCode == code;
+                    return ListTile(
+                      leading: Text(
+                        lang['flag']!,
+                        style: const TextStyle(fontSize: 28),
+                      ),
+                      title: Text(
+                        lang['name']!,
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                      trailing: isSelected
+                          ? const Icon(Icons.check_circle, color: AppColors.accent)
+                          : null,
+                      onTap: () => Navigator.pop(context, code),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      tileColor: isSelected
+                          ? AppColors.accent.withOpacity(0.1)
+                          : null,
+                    );
+                  }),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    if (selected == null) return;
+    await ref.read(appLocaleProvider.notifier).setLocaleCode(selected);
+    if (mounted) {
+      setState(() {
+        _selectedLanguageCode = selected;
+        _errorMessage = null;
+      });
+    }
   }
 }
 
